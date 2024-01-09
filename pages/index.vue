@@ -5,9 +5,7 @@
       <div class="row d-flex justify-content-between text-md-left">
       <div class="col-md-6 col-lg-6 col-xl-6 pt-5 mt-5">
         <h1> Transfer digital assets privately </h1>
-        <p> Welcome to Incognitee - an exclusive and discreet lounge in the heart of Web3. You
-          can transfer, vote, or play away from the crowd's eyes. <br><br>Your transactions? - Secret handshakes
-          between you and your chosen peers. </p>
+        <p> Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlink-able voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers. </p>
         <div class="main__button"> <a href="#">Test Now</a></div>
       </div>
 
@@ -40,10 +38,9 @@
       <div class="row d-flex justify-content-between text-md-left">
       <div class="col-md-6 col-lg-6 col-xl-6">
         <h2> Become a validator </h2>
-        <p> Join the Validator Program: Aspiring validators must lock in a minimum amount of 5000
-          TEER tokens to become a part of Incognitee’s backbone. <br>
-          Earn from Transactions: Validators receive a proportional amount of every transaction they validate,
-          creating an opportunity for continual rewards in line with Incognitee’s activity. </p>
+        <p> Earn from Transactions: Validators receive a proportional amount of every transaction they validate, creating an opportunity for continual rewards in line with Incognitee’s activity.
+<br>
+Join the Validator Program: Aspiring validators have to participate in the Testnet phase to be eligible for the main net launch to become a part of Incognitee’s backbone.</p>
         <div href="#" class=" main__button">Become a Validator</div>
       </div>
 
@@ -58,10 +55,10 @@
       <div class="row d-flex justify-content-between text-md-left">
       <div class="col-md-6 col-lg-6 col-xl-6">
         <h2> Become a delegator </h2>
-        <p> Join the Delegator Program: TEER holders can delegate their TEER tokens to existing
-          Validators to help securing Incognitee’s backbone. <br>
-          Earn from locking your TEER: Validators receive transaction fees and can share them with TEER holders via
-          Delegation. </p>
+        <p>  Earn from locking your TEER: Validators receive transaction fees and can share them with TEER holders via
+          Delegation. <br>
+          Join the Delegator Program: TEER holders can delegate their TEER tokens to existing
+          Validators to help securing Incognitee’s backbone. </p>
         <div href="#" class="main__button">Become a Delegator</div>
       </div>
 
@@ -92,8 +89,7 @@
       <div class="row d-flex justify-content-between text-md-left">
       <div class="col-md-6 col-lg-6 col-xl-6">
         <h2> Are you a bounty hunter? </h2>
-            <p> We want to make our platform as secure as possible, that's why have launched a bug
-              bounty to attract the best talents to battle test our solution. </p>
+            <p> We want to make our platform as secure as possible, that's why we will launch a bug bounty to attract the best talents to battle test our solution. </p>
         <div href="#" class="main__button">Start Hunting</div>
       </div>
 
@@ -114,33 +110,10 @@
           <li>Transfer in confidence: Keep your transaction history private for sensitive actions – you dont want your
             neighbor to know what you are buying right?</li>
         </ul><br>
-        Unlike other platforms where anonymity can shield the wrongdoers, our privacy sidechain is built for responsible
-        concealment. Selective transparency, compliance adherence, auditable yet confidential transactions, and a
-        governance that includes you — it's privacy designed with accountability at its core. </p>
+        Unlike other platforms, our privacy sidechain is built for responsible concealment. Selective disclosure, compliance adherence, auditable yet confidential transactions, and a governance that includes you — it's privacy designed with accountability at its core. </p>
 </div>
 </div>
 </section>
-
-
-
-<section id="what_about" class="pt-5 pb-5 mt-5 mb-5">
-
-  <div class="row d-flex justify-content-between text-md-left">
-      <div class="col-md-12 col-lg-12 col-xl-12 mt-3 justify-content-between">
-  <h2> What about crypto fundamentals and ideals? </h2>
-        <p> We're not waiting for the old to fall; we're building the new alongside it. Our privacy
-          sidechain isn't just another option — it's the future, outshining the old, one private transaction at a time.
-          When enough of us step into this new world, the old market won't need to close down; it'll simply become the
-          less-traveled path. <br><br>
-          Step into privacy with us for the pioneers, the innovators, the discreet — Incognitee is your call to action.
-          Join us in shaping a market that values a whisper as much as a shout. Because sometimes, the most powerful
-          revolutions are the most quiet ones. </p>
-</div>
-</div>
-</section>
-
-
-
 
     <div class="image-wrap-bottom">
       <div class="container"><img src="../assets/bg-lines.png" class="" alt="Lines"></div>

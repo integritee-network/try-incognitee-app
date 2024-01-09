@@ -5,7 +5,7 @@
             <div class="container">
                
                 <nuxt />
-                
+                 
             </div>
 
         </main>

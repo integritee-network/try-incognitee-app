@@ -6,7 +6,6 @@
       <div class="col-md-6 col-lg-6 col-xl-6 pt-5 mt-5">
         <h1> Transfer digital assets privately </h1>
         <p> Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlink-able voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers. </p>
-        <div class="main__button"> <a href="#">Test Now</a></div>
       </div>
 
       <div class="desktop-only col-md-4 col-lg-4 col-xl-4">

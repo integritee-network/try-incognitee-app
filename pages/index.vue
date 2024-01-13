@@ -40,7 +40,8 @@
         <p> Earn from Transactions: Validators receive a proportional amount of every transaction they validate, creating an opportunity for continual rewards in line with Incognitee’s activity.
 <br>
 Join the Validator Program: Aspiring validators have to participate in the Testnet phase to be eligible for the main net launch to become a part of Incognitee’s backbone.</p>
-        <div href="#" class=" main__button">Become a Validator</div>
+        <div href="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.1-become-a-validator" class=" main__button">Become a Validator</div>
       </div>
 
       <div class="col-md-4 col-lg-4 col-xl-4 mt-3">
@@ -58,7 +59,8 @@ Join the Validator Program: Aspiring validators have to participate in the Testn
           Delegation. <br>
           Join the Delegator Program: TEER holders can delegate their TEER tokens to existing
           Validators to help securing Incognitee’s backbone. </p>
-        <div href="#" class="main__button">Become a Delegator</div>
+        <div href="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.2-become-a-delegator" class="main__button">Become a Delegator</div>
       </div>
 
       <div class="col-md-4 col-lg-4 col-xl-4 ">
@@ -74,7 +76,8 @@ Join the Validator Program: Aspiring validators have to participate in the Testn
         <h2> Become a partner </h2>
         <p> If you are a wallet provider, an exchange or an vaildator operator, get in touch with
           us. </p>
-        <div href="#" class="main__button">Contact</div>
+        <div href="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.3-become-a-partner" class="main__button">Contact</div>
       </div>
 
       <div class="col-md-4 col-lg-4 col-xl-4">
@@ -89,7 +92,8 @@ Join the Validator Program: Aspiring validators have to participate in the Testn
       <div class="col-md-6 col-lg-6 col-xl-6">
         <h2> Are you a bounty hunter? </h2>
             <p> We want to make our platform as secure as possible, that's why we will launch a bug bounty to attract the best talents to battle test our solution. </p>
-        <div href="#" class="main__button">Start Hunting</div>
+        <div href="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.4-become-a-bug-hunter" class="main__button">Start Hunting</div>
       </div>
 
       <div class="col-md-4 col-lg-4 col-xl-4">

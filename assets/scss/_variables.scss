@@ -1,0 +1,72 @@
+// Text sizes (1em = 16px)
+$tDef: 3em;
+
+// Small paragraph .paragraph_small
+$pSm: 0.875em;
+$sm_pSm: 0.875em;
+
+// Default Paragraph .paragraph_medium
+$pDef: 1.125em;
+$md_pDef: 1em;
+$sm_pDef: .875em;
+
+// Large paragraph .paragraph_large
+$pLg: 1.5em;
+$sm_pLg: 1.125em;
+
+// Subtitle .title_sub
+$tSmd: 2em;
+$sm_tSmd: 1.5em;
+
+// H2 title .title_h2
+$tMd: 4em;
+$md_tMd: 3em;
+$sm_tMd: 2.25em;
+
+// Hero title .title_hero
+$tLg: 4.5em;
+$md_tLg: 3.375em;
+$sm_tLg: 2.5em;
+
+$ltBlue: #5B92FF;
+$gray: #88888C;
+$alphaGray: rgba(255, 255, 255, 0.2);
+$darkBlue: #11111A;
+
+// Breakpoints
+$lg: 1366px;
+$slg: 1200px;
+$md: 1024px;
+$sm: 840px;
+$xsm: 420px;
+
+@mixin lg {
+    @media screen and (max-width: $lg) {
+        @content;
+    }
+}
+
+@mixin slg {
+    @media screen and (max-width: $slg) {
+        @content;
+    }
+}
+
+@mixin md {
+    @media screen and (max-width: $md) {
+        @content;
+    }
+}
+
+
+@mixin sm {
+    @media screen and (max-width: $sm) {
+        @content;
+    }
+}
+
+@mixin xsm {
+    @media screen and (max-width: $xsm) {
+        @content;
+    }
+}

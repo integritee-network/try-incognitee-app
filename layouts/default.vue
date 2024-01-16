@@ -1,28 +1,11 @@
-<template>
-    <div>
-        <Navbar />
-        <main>
-            <div class="container">
-               
-                <nuxt />
-                 
-            </div>
+<script lang="ts" setup>
+</script>
 
-        </main>
-        <Footer />
-    </div>
-   </template>
-   
-   <script>
-   import Navbar from '@/components/Navbar'
-   import Footer from '@/components/Footer'
-   export default {
-     components: {
-        Navbar,
-        Footer
-     }
-   }
-   </script>
-   <style>
-   
-   </style>
+<template>
+  <div>
+    Layout: default
+    <slot />
+  </div>
+</template>
+
+<style scoped></style>

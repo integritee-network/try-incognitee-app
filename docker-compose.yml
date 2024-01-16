@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  website:
+    image: node:18.15.0
+    working_dir: /app
+    command: ./start.sh
+    #command: npm start
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app

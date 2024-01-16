@@ -1,0 +1,370 @@
+@import url('./_fonts.scss');
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    background: #111119;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+textarea {
+    font-family: 'Inter', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+
+a {
+    color: #fff;
+    text-decoration: none;
+    transition: .3s ease;
+
+    &.text-link {
+        &:hover {
+            color: #5B92FF;
+        }
+    }
+
+    &.blue {
+        color: $ltBlue;
+    }
+}
+
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+
+    @include lg {
+        max-width: 1120px;
+    }
+
+    @include slg {
+        max-width: 980px;
+    }
+
+    @include md {
+        max-width: 800px;
+    }
+
+    @include sm {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    @include xsm {
+        padding: 0 12px;
+    }
+}
+
+.btn {
+    position: relative;
+    display: inline-block;
+    font-size: $pDef;
+    padding: 14px 22px;
+    font-weight: 500;
+    border-radius: 12px;
+    line-height: 150%;
+    transition: .3s ease;
+    cursor: pointer;
+    backdrop-filter: blur(30px);
+
+    @include sm {
+        font-size: $sm_pDef;
+        padding: 12px 18px;
+        border-radius: 10px;
+    }
+
+    &_gradient {
+        background: linear-gradient(84.58deg, #24ad7c 0%, #1845b9 100%);
+
+        &:before {
+            position: absolute;
+            content: "";
+            inset: 0;
+            background: linear-gradient(0deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.15)), linear-gradient(84.58deg, rgb(36, 173, 124) 0%, rgb(24, 69, 185) 100%);
+            transition: opacity 0.25s ease;
+            opacity: 0;
+            border-radius: 12px;
+            z-index: -1;
+
+            @include sm {
+                border-radius: 10px;
+            }
+        }
+
+        &:hover {
+            &:before {
+                opacity: 1;
+                box-shadow: 0px 0px 20px 0px rgba(36, 173, 124, 0.65);
+            }
+
+        }
+    }
+
+    &_border {
+        border: 2px solid rgba(255, 255, 255, 0.2);
+
+        &:hover {
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+    }
+
+}
+
+.title {
+    font-family: 'WhyteInktrap';
+    margin: 0;
+
+    &_h2 {
+        line-height: 110%;
+        font-size: $tMd;
+        font-weight: 500;
+        margin-bottom: 24px;
+
+        @include slg {
+            font-size: $md_tMd;
+            margin-bottom: 16px;
+        }
+
+        @include sm {
+            font-size: $sm_tMd;
+        }
+    }
+
+    &_sub {
+        font-size: $tSmd;
+        font-weight: 500;
+
+        @include sm {
+            font-size: $sm_tSmd;
+        }
+    }
+
+    &_hero {
+        font-size: $tLg;
+        font-weight: 500;
+
+        @include slg {
+            font-size: $md_tLg;
+        }
+
+        @include sm {
+            font-size: $sm_tLg;
+        }
+    }
+
+}
+
+.paragraph {
+    line-height: 150%;
+
+    &_medium {
+        font-size: $pDef;
+
+        @include slg {
+            font-size: $md_pDef;
+        }
+
+        @include sm {
+            font-size: $sm_pDef;
+        }
+    }
+
+    &_large {
+        font-weight: 500;
+        font-size: $pLg;
+
+        @include sm {
+            font-size: $sm_pLg;
+        }
+    }
+
+    &_small {
+        font-size: $pSm;
+
+        @include sm {
+            font-size: $sm_pSm;
+        }
+    }
+}
+
+.row {
+    display: flex;
+
+    &.jcsb {
+        justify-content: space-between;
+    }
+}
+
+.column {
+    &_large {
+        width: 800px;
+        flex-shrink: 0;
+
+        @include md {
+            width: 600px;
+        }
+
+        @include sm {
+            width: 100%;
+        }
+    }
+
+    &_medium {
+        width: 600px;
+        flex-shrink: 0;
+    }
+}
+
+.color {
+    &_blue {
+        color: $ltBlue;
+    }
+}
+
+.block {
+    margin-bottom: 180px;
+
+    @include slg {
+        margin-bottom: 140px;
+    }
+
+    @include sm {
+        margin-bottom: 100px;
+    }
+}
+
+.margin {
+    &_large {
+        margin-bottom: 48px;
+
+        @include slg {
+            margin-bottom: 32px;
+        }
+
+        @include sm {
+            margin-bottom: 24px;
+        }
+    }
+
+    &_medium {
+        margin-bottom: 24px;
+
+        @include slg {
+            margin-bottom: 16px;
+        }
+
+        @include sm {
+            margin-bottom: 8px;
+        }
+    }
+
+    &_xmedium {
+        margin-bottom: 18px;
+    }
+
+    &_small {
+        margin-bottom: 12px;
+    }
+}
+
+.text-gradient {
+    &_purple-blue {
+        background: linear-gradient(90deg, #A416FE, #4DAAFF 110%);
+    }
+
+    &_blue-purple {
+        background: linear-gradient(90deg, #30DAFF -25%, #A11BFE);
+    }
+}
+
+
+.tag {
+    font-size: $pSm;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #34343a;
+    backdrop-filter: blur(30px);
+    border-radius: 8px;
+    padding: 9px 12px;
+}
+
+.date {
+    color: #E5E5E5;
+    opacity: 0.5;
+}
+
+.blur-gradient {
+    &.blur-gradient_extra-top {
+        &:before {
+            top: -100%;
+        }
+    }
+
+    &.blur-gradient_bottom {
+        &:before {
+            bottom: 0;
+            top: unset;
+        }
+    }
+
+    &.blur-gradient_top {
+        &:before {
+            top: -75%;
+        }
+    }
+
+    &.blur-gradient_top-middle {
+        &:before {
+            top: -50%;
+        }
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 856px;
+        height: 856px;
+        background: radial-gradient(49.25% 49.25% at 50% 50.00%, #30A8FF 0%, rgba(48, 168, 255, 0.00) 100%);
+        opacity: 0.2;
+        transform: rotate(-20deg) translateX(-50%);
+        z-index: -1;
+
+        @include lg {
+            width: 818px;
+            height: 818px;
+        }
+
+        @include slg {
+            width: 806px;
+            height: 806px;
+        }
+
+        @include sm {
+            width: 732px;
+            height: 732px;
+            right: unset;
+            left: 0;
+        }
+    }
+}

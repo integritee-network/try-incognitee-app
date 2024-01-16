@@ -30,7 +30,7 @@
                     </svg><span class="socials__list-item-name paragraph_medium">Twitter</span></a>
             </div>
         </div>
-        </section>
+        </section>sss
 
         <section>
             <div class="container">

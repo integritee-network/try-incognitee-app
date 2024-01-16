@@ -7,7 +7,7 @@
             Become a delegator
           </h2>
           <p class="paragraph paragraph_medium margin_large delegator__description">
-            Earn from locking your TEER: Validators receive transaction fees and can share them with TEER holders via Delegation.
+            Earn from locking your TEER: Validators receive transaction fees and can share them with TEER holders via Delegation.<br /><br />
 Join the Delegator Program: TEER holders can delegate their TEER tokens to existing Validators to help securing Incognitee’s backbone.
           </p>
           <NuxtLink to="https://docs.incognitee.io

@@ -5,13 +5,8 @@
         <div class="row jcsb socials__row">
           <div class="socials__text">
             <h2 class="title title_h2 margin_medium socials__title">
-              We're Integritee
+              Powered by Integritee
             </h2>
-            <p class="paragraph paragraph_medium socials__description">
-              Whether you’re a developer, investor, or Web 3.0 enthusiast, get
-              <br />
-              in touch to learn more about our tools and solutions.
-            </p>
           </div>
           <div class="column_medium socials__list">
             <a

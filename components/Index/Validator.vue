@@ -7,7 +7,7 @@
             Become a validator
           </h2>
           <p class="paragraph paragraph_medium margin_large validator__description">
-            Earn from Transactions: Validators receive a proportional amount of every transaction they validate, creating an opportunity for continual rewards in line with Incognitee’s activity.
+            Earn from Transactions: Validators receive a proportional amount of every transaction they validate, creating an opportunity for continual rewards in line with Incognitee’s activity.<br /><br />
 Join the Validator Program: Aspiring validators have to participate in the Testnet phase to be eligible for the main net launch to become a part of Incognitee’s backbone.
           </p>
           <NuxtLink to="https://docs.incognitee.io

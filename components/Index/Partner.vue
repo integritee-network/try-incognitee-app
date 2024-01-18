@@ -7,7 +7,7 @@
             Become a partner
           </h2>
           <p class="paragraph paragraph_medium margin_large partner__description">
-            If you are a wallet provider, an exchange or an vaildator operator, get in touch with us.
+            If you are a wallet provider, an exchange or an validator operator, get in touch with us.
           </p>
           <NuxtLink to="https://docs.incognitee.io
 /4.-want-to-join-or-support-incognitee/4.3-become-a-partner" class="btn btn_gradient">Contact</NuxtLink>

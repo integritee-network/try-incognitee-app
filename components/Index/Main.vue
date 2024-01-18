@@ -8,7 +8,7 @@
             <span class="gradient gradient_two">assets</span> privately
           </h1>
           <p class="paragraph paragraph_medium main__description margin_large">
-            Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlink-able voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers.
+            Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlinkable voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers.
           </p>
         </div>
         <div class="main__img-wrapper">
@@ -17,7 +17,7 @@
       </div>
     </div>
   </section>
-</template>
+</template> 
 <style lang="scss" scoped>
 .main {
   padding-top: 90px;

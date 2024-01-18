@@ -50,10 +50,11 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 
 .top-lines {
   position: absolute;
-  right: -430px;
-  top: -300px;
-  width: 1468px;
-  transform: rotate(-159.84deg);
+    right: -152px;
+    top: 436px;
+    width: 1061px;
+    transform: rotate(-159.84deg);
+    z-index: -1;
 
   @include lg {
     width: 1417px;
@@ -85,11 +86,11 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 
 .bottom-lines {
   position: absolute;
-  left: -280px;
-  top: -1062px;
-  width: 1060px;
-  transform: rotate(159.84deg) scale(-1, 1);
-  z-index: -1;
+    left: -198px;
+    top: -1858px;
+    width: 936px;
+    transform: rotate(159.84deg) scale(-1, 1);
+    z-index: -1;
 
   @include lg {
     width: 1023px;

@@ -11,7 +11,7 @@
 Join the Validator Program: Aspiring validators have to participate in the Testnet phase to be eligible for the main net launch to become a part of Incognitee’s backbone.
           </p>
           <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.1-become-a-validator" class="btn btn_gradient">Become a Validator</NuxtLink>
+/4.-want-to-join-or-support-incognitee/4.1-become-a-validator" target="blank" class="btn btn_gradient">Become a Validator</NuxtLink>
         </div>
         <div class="validator__image-wrapper">
           <!-- <img src="/img/index/validator/polygons.svg" class="validator__image" alt="Polygons" /> -->

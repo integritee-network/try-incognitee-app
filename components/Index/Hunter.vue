@@ -10,7 +10,7 @@
             We want to make our platform as secure as possible, that's why we will launch a bug bounty to attract the best talents to battle test our solution.
           </p>
           <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.4-become-a-bug-hunter" class="btn btn_gradient">Start Hunting</NuxtLink>
+/4.-want-to-join-or-support-incognitee/4.4-become-a-bug-hunter" target="blank" class="btn btn_gradient">Start Hunting</NuxtLink>
         </div>
         <div class="hunter__image-wrapper">
           <!-- <img src="/img/index/hunter/polygons.svg" class="hunter__image" alt="Polygons" /> -->

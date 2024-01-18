@@ -10,7 +10,7 @@
             If you are a wallet provider, an exchange or an validator operator, get in touch with us.
           </p>
           <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.3-become-a-partner" class="btn btn_gradient">Contact</NuxtLink>
+/4.-want-to-join-or-support-incognitee/4.3-become-a-partner" target="blank" class="btn btn_gradient">Contact</NuxtLink>
         </div>
         <div class="partner__image-wrapper">
           <!-- <img src="/img/index/partner/polygons.svg" class="partner__image" alt="Polygons" /> -->

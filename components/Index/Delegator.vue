@@ -11,7 +11,7 @@
 Join the Delegator Program: TEER holders can delegate their TEER tokens to existing Validators to help securing Incognitee’s backbone.
           </p>
           <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.2-become-a-delegator" class="btn btn_gradient">Become a delegator</NuxtLink>
+/4.-want-to-join-or-support-incognitee/4.2-become-a-delegator" target="blank" class="btn btn_gradient">Become a delegator</NuxtLink>
         </div>
         <div class="delegator__image-wrapper">
           <!-- <img src="/img/index/delegator/polygons.svg" class="delegator__image" alt="Polygons" /> -->

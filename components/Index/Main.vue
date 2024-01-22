@@ -12,9 +12,6 @@
           </p>
            <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Test Now</NuxtLink>
         </div>
-        <div class="main__img-wrapper">
-          <img src="/img/index/main/header-lock.svg" class="main__scheme" alt="Scheme" />
-        </div>
       </div>
     </div>
   </section>

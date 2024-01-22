@@ -10,6 +10,7 @@
           <p class="paragraph paragraph_medium main__description margin_large">
             Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlinkable voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers.
           </p>
+           <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Test Now</NuxtLink>
         </div>
         <div class="main__img-wrapper">
           <img src="/img/index/main/header-lock.svg" class="main__scheme" alt="Scheme" />

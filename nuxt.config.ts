@@ -53,17 +53,15 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   routeRules: {
     '/': { ssr: true },
   },
   imports: {
     autoImport: false,
   },
-  css: ['@/assets/scss/main.scss'],
-  modules: [
-    'nuxt-svgo',
-    '@pinia/nuxt'
-  ],
+  css: ['~/assets/scss/main.scss'],
+  modules: ['nuxt-svgo', '@pinia/nuxt', '@nuxt/content', '@nuxt/ui', '@nuxtjs/tailwindcss' ],
   plugins: [{ src: '~/plugins/lockScroll', mode: 'client' }],
   svgo: {
     defaultImport: 'component',

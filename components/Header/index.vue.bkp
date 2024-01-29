@@ -1,31 +1,25 @@
 <template>
-  <header class="header" :class="{ 'header_no-bg': active }">
+<header class="header" :class="{ 'header_no-bg': active }">
     <div class="container">
       <NuxtLink to="/" class="header__logo">
         <Logo />
       </NuxtLink>
-      <div v-if="width > breakpoints.slg" class="header__nav grid grid-cols-4 gap-8 content-start ">
-				
-				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_one">Wallet Address
-        </span><p>xxxxxxxx...</p></NuxtLink>
-
-				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Rococo Balance
-        </span><p>0.0000000 ROC</p></NuxtLink>
-
-				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_one">Incognitee Balance
-        </span><p>0.0000000 pROC</p></NuxtLink>
-
-				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Incognitee Status
-        </span><p><UBadge label="Online" /></p></NuxtLink>
+      <div v-if="width > breakpoints.slg" class="header__nav">
 
       </div>
-      <div  class="header__nav-right">
+      <div class="header__nav-right">
+        <NuxtLink to="/products" class="text-link paragraph_smll">
+          <span class="gradient gradient_one">Wallet Address
+        </span><br>xxxxxxxx...</NuxtLink>
+        <NuxtLink to="/usecases" class="text-link paragraph_smll">
+          <span class="gradient gradient_two">Rococo Balance</span><br>0.0000000 ROC
+        </NuxtLink>
+        <NuxtLink to="/technology" class="text-link paragraph_smll"><span class="gradient gradient_one">Incognitee Balance</span><br>0.0000000 pROC</NuxtLink>
+        <NuxtLink to="/technology" class="text-link paragraph_smll"><span class="gradient gradient_two">Incognitee Status</span><br>
+          <UBadge label="Online" />
+  </NuxtLink>
         <Socials />
-      
+
         <button v-if="width <= breakpoints.slg" class="header__burger" :class="{
           active: active,
         }" type="button" @click="toggleMenu()">
@@ -119,7 +113,7 @@ watch(
   }
 
   &__logo {
-   
+ 
 
     @include xsm {
       width: 118px;
@@ -145,7 +139,7 @@ watch(
 
     a {
       font-size: 0.875em;
-      
+      margin-left: 24px;
 
       @include lg {
         margin-left: 18px;

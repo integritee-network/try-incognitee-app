@@ -2,7 +2,24 @@
   <Transition name="menu-toggle">
     <div v-show="active" class="menu">
       <nav class="menu__nav">
+				<NuxtLink class="text-link paragraph_smll">
+          <span class="gradient gradient_one">Wallet Address
+        </span><p>xxxxxxxx...</p></NuxtLink>
+
+				<NuxtLink class="text-link paragraph_smll">
+          <span class="gradient gradient_two">Rococo Balance
+        </span><p>0.0000000 ROC</p></NuxtLink>
+
+				<NuxtLink class="text-link paragraph_smll">
+          <span class="gradient gradient_one">Incognitee Balance
+        </span><p>0.0000000 pROC</p></NuxtLink>
+
+				<NuxtLink class="text-link paragraph_smll">
+          <span class="gradient gradient_two">Incognitee Status
+        </span><p><UBadge label="Online" /></p></NuxtLink>
+
       </nav>
+
     </div>
   </Transition>
 </template>

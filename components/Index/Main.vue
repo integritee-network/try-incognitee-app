@@ -4,13 +4,14 @@
       <div class="container">
         <div class="column column_large main__column">
           <h1 class="title title_hero main__title margin_medium">
-            <span class="gradient gradient_one">Transfer</span> digital<br />
-            <span class="gradient gradient_two">assets</span> privately
+            <span class="gradient gradient_one">Welcome to</span> our<br />
+            Incognitee <span class="gradient gradient_two"> Beta</span> <br/>
+            <span class="gradient gradient_one">Test</span> Campaign
           </h1>
           <p class="paragraph paragraph_medium main__description margin_large">
-            Welcome to Incognitee - an exclusive and discreet hub in the heart of Web3. We enable private transfers and unlinkable voting, so you can play away from the crowd's eyes. Your transactions? - Secret handshakes between you and your chosen peers.
+            Become one of the first users to help improving Incognitee and get a chance to win one of the juicy prices.
           </p>
-           <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Test Now</NuxtLink>
+           <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Get Started</NuxtLink>
         </div>
       </div>
     </div>

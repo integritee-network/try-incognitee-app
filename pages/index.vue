@@ -1,24 +1,18 @@
 <template>
   <div class='home-section'>
     <Main />
-    <Work />
-    <Validator />
-    <Delegator />
-    <Partner />
-    <Hunter />
-    <UseCases />
+    <Steps />
+    <Rules />
+    <Prizes />
     <Socials />
   </div>
 </template>
 
 <script setup lang="ts">
 import Main from '~/components/Index/Main.vue'
-import Work from '~/components/Index/Work.vue'
-import Validator from '~/components/Index/Validator.vue'
-import Delegator from '~/components/Index/Delegator.vue'
-import Partner from '~/components/Index/Partner.vue'
-import Hunter from '~/components/Index/Hunter.vue'
-import UseCases from '~/components/Index/UseCases.vue'
+import Prizes from '~/components/Index/Prizes.vue'
+import Rules from '~/components/Index/Rules.vue'
+import Steps from '~/components/Index/Steps.vue'
 import Socials from '~/components/Socials/Section.vue'
 import { generateSEO } from '~/helpers/generateSEO'
 

@@ -57,6 +57,7 @@ const pollCounter = useInterval(10000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
+const paseoStore = usePaseo()
 
 const active = ref(false)
 
@@ -98,6 +99,7 @@ watch(
 
 onMounted(() => {
   incogniteeStore.initializeApi()
+  paseoStore.initializeApi()
 })
 </script>
 

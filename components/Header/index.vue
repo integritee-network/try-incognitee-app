@@ -48,8 +48,11 @@ import { breakpoints } from '@/configs/app.config'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
 import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
+import { useIncognitee } from '@/store/incognitee.ts'
+import { usePaseo } from '@/store/paseo.ts'
 
 const accountStore = useAccount()
+const incogniteeStore = useIncognitee()
 
 const active = ref(false)
 
@@ -74,10 +77,8 @@ watch(
 )
 
 onMounted(() => {
-  accountStore.initializePaseoApi()
-  accountStore.initializeIncogniteeApi()
+  incogniteeStore.initializeApi()
 })
-
 </script>
 
 <style lang="scss">

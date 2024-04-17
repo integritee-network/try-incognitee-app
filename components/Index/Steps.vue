@@ -6,9 +6,10 @@
       </h2>
     </div>
     <div class=''>
-      <UTabs :items="items" class="w-full">
+      <UTabs :items="items" v-model="currentTabIndex" class="w-full">
         <template #default="{ item, index, selected }">
           <div
+              :class="{ 'text-gray-400': !selected }"
               class=" relative truncate"
               @click="currentTabIndex = index"
           >
@@ -172,8 +173,4 @@ export default {
     }
   }
 }
-
-
-
-
 </style>

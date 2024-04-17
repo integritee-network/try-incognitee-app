@@ -5,10 +5,10 @@
         <Logo />
       </NuxtLink>
       <div v-if="width > breakpoints.slg" class="header__nav grid grid-cols-4 gap-8 content-start ">
-				
+
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Wallet Address
-        </span><p>xxxxxxxx...</p></NuxtLink>
+        </span><p>{{ accountStore.getShortAddress }}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Rococo Balance
@@ -25,7 +25,7 @@
       </div>
       <div  class="header__nav-right">
         <Socials />
-      
+
         <button v-if="width <= breakpoints.slg" class="header__burger" :class="{
           active: active,
         }" type="button" @click="toggleMenu()">
@@ -39,7 +39,7 @@
   <Menu v-if="width <= breakpoints.slg" :active="active" :clickHandler='toggleMenu' />
 </template>
 
-<script setup>
+<script setup lang="ts">
 // import Logo from '@/assets/img/logo.svg'
 import { useNuxtApp, useRoute } from '#imports'
 import Menu from '@/components/Header/Menu.vue'
@@ -48,6 +48,11 @@ import Socials from '@/components/Socials'
 import { breakpoints } from '@/configs/app.config'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
 import { ref, watch } from 'vue'
+import { useAccount } from '@/store/account.ts'
+import { storeToRefs } from 'pinia'
+
+const accountStore = useAccount()
+const { account } = storeToRefs(accountStore)
 
 const active = ref(false)
 
@@ -119,7 +124,7 @@ watch(
   }
 
   &__logo {
-   
+
 
     @include xsm {
       width: 118px;
@@ -145,7 +150,7 @@ watch(
 
     a {
       font-size: 0.875em;
-      
+
 
       @include lg {
         margin-left: 18px;

@@ -8,10 +8,10 @@
    <div class='text-lg'>By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with your friends and let them participate. ​​</div>
     <div class="flex flex-cols-2 ">
      <div class='mt-10 mr-8'>
-      <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Invite Friend</NuxtLink> </div>
+       <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton> </div>
    <div class='mt-10'>
     <div class="flex items-center">
-      <input type="text" ref="copyInput" class="dynamic-width border-2 border-gray-300 p-2" value="Incognitee.io/campaign1/privatetransfer?privatekey=XXX">
+      <input type="text" ref="urlToShareWithFriend" class="dynamic-width border-2 border-gray-200 p-2" style="color: black;" :value="inputValue">
         <button @click="copyToClipboard" class="button ml-10">
             Copy
         </button>
@@ -20,33 +20,38 @@
  </div>
  </div>
 
- 
- 
+
+
  </div></div></div></section>
 </template>
 
+<script setup lang="ts">
+import {Keyring} from '@polkadot/keyring'
+import {mnemonicGenerate, mnemonicToMiniSecret} from '@polkadot/util-crypto'
+import {u8aToHex} from "@polkadot/util";
+import { ref } from 'vue';
 
+const inputValue = ref('initvalue')
+const copyToClipboard = () => {
+  const input = this.$refs.copyInput;
+  input.select();
+  input.setSelectionRange(0, 99999); // Für mobile Geräte
+  document.execCommand("copy");
 
+  alert("Kopiert: " + input.value); // Optional: Bestätigungsnachricht
 
-<script>
-export default {
-    methods: {
-        copyToClipboard() {
-            const input = this.$refs.copyInput;
-            input.select();
-            input.setSelectionRange(0, 99999); // Für mobile Geräte
-            document.execCommand("copy");
-
-            alert("Kopiert: " + input.value); // Optional: Bestätigungsnachricht
-
-            // Aktualisieren Sie die Breite des Input-Feldes
-            this.updateInputWidth();
-        },
-        updateInputWidth() {
-            // Logik, um die Breite basierend auf dem Inhalt zu berechnen
-        }
-    }
+  this.updateInputWidth();
 }
+const inviteFriend = () => {
+  console.log('creating wallet for your friend');
+  const generatedMnemonic = mnemonicGenerate();
+  const localKeyring = new Keyring({type: 'sr25519', ss58Format: 42});
+  const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {name: 'fresh'});
+  const seed = mnemonicToMiniSecret(generatedMnemonic);
+  const privateKeyHex = u8aToHex(seed);
+  console.log(`friend account ${newAccount.address} with private key in hex: ${privateKeyHex}`);
+  inputValue.value = window.location.protocol + window.location.hostname + (window.location.port ? `:${window.location.port}` : '') + '/?seed=' + privateKeyHex
+};
 </script>
 
 <style>

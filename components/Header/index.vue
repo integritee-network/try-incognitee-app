@@ -53,7 +53,7 @@ import { usePaseo } from '@/store/paseo.ts'
 import { useInterval } from '@vueuse/core'
 import {poll} from "@polkadot/types/interfaces/definitions";
 
-const pollCounter = useInterval(2000)
+const pollCounter = useInterval(10000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()

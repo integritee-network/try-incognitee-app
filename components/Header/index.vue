@@ -46,7 +46,7 @@ import Logo from '@/components/Logo'
 import Socials from '@/components/Socials'
 import { breakpoints } from '@/configs/app.config'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
 
 const accountStore = useAccount()
@@ -72,6 +72,12 @@ watch(
     $lockScroll(false)
   },
 )
+
+onMounted(() => {
+  accountStore.initializePaseoApi()
+  accountStore.initializeIncogniteeApi()
+})
+
 </script>
 
 <style lang="scss">

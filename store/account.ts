@@ -29,7 +29,7 @@ export const useAccount = defineStore('account', {
       try {
         const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
         this.paseoApi = await ApiPromise.create({ provider: wsProvider, types: {} });
-        console.log("api connected to paseo relay chain")
+        console.log("Paseo api connected relay chain")
       } catch (error) {
         console.error('Failed to initialize API:', error);
       }
@@ -47,6 +47,7 @@ export const useAccount = defineStore('account', {
       });
       const shard = '5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c';
       const mrenclave = '7RuM6U4DLEtrTnVntDjDPBCAN4LbCGRpnmcTYUGhLqc7';
+      console.log("Incognitee Api connected to sidechain")
     }
   },
 })

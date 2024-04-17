@@ -24,15 +24,6 @@ const accountStore = useAccount()
 
 const shield = () => {
   console.log('shielding all your PAS');
-  const worker = new IntegriteeWorker('wss://scv1.paseo.api.incognitee.io:443', {
-    createWebSocket: (url) => new WebSocket(url),
-    types: {}
-  })
 };
-
-onMounted(() => {
-  accountStore.initializePaseoApi()
-  accountStore.initializeIncogniteeApi()
-})
 
 </script>

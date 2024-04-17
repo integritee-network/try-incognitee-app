@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@encointer/worker-api": "^0.12.0-alpha.12",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@material-tailwind/html": "^2.2.2",
     "@nuxt/content": "^2.11.0",
     "@nuxt/http": "^0.6.4",
@@ -42,6 +43,7 @@
     "nuxt-svgo": "^3.1.0",
     "pinia": "^2.1.4",
     "sass": "^1.62.1",
+    "vite-plugin-node-polyfills": "^0.21.0",
     "vue3-form-wizard": "^0.2.3"
   }
 }

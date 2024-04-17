@@ -40,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-// import Logo from '@/assets/img/logo.svg'
 import { useNuxtApp, useRoute } from '#imports'
 import Menu from '@/components/Header/Menu.vue'
 import Logo from '@/components/Logo'
@@ -49,10 +48,8 @@ import { breakpoints } from '@/configs/app.config'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
 import { ref, watch } from 'vue'
 import { useAccount } from '@/store/account.ts'
-import { storeToRefs } from 'pinia'
 
 const accountStore = useAccount()
-const { account } = storeToRefs(accountStore)
 
 const active = ref(false)
 

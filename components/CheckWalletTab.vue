@@ -5,7 +5,7 @@
       <div class="container">
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
-    <div class='text-lg'>1. If you don’t own any ROC yet, follow the button below to obtain some ROC for free.
+    <div class='text-lg'>1. If you don’t own any ROC yet, follow the button below to obtain some ROC for free on {{accountStore.getAddress}}.
      <br/> ​​2. if you already have some ROC you can shield them now to Incognitee. ​​</div>
      <div class="grid grid-cols-2 gap-4 ">
       <div class='mt-4'>

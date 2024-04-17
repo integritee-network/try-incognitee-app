@@ -16,11 +16,11 @@
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance
-        </span><p>0.0000000 pROC</p></NuxtLink>
+        </span><p>{{ accountStore.getIncogniteeHumanBalance}}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status
-        </span><p><UBadge label="Online" /></p></NuxtLink>
+        </span><p><UBadge label="Online" />{{ pollCounter }} </p></NuxtLink>
 
       </div>
       <div  class="header__nav-right">
@@ -50,6 +50,10 @@ import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
 import { usePaseo } from '@/store/paseo.ts'
+import { useInterval } from '@vueuse/core'
+import {poll} from "@polkadot/types/interfaces/definitions";
+
+const pollCounter = useInterval(2000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
@@ -74,6 +78,22 @@ watch(
     active.value = false
     $lockScroll(false)
   },
+)
+
+watch(
+    pollCounter,
+    async () => {
+      console.log("ping: " + pollCounter.value)
+      if (!incogniteeStore.apiReady) return
+      console.log("api ready")
+      if (!accountStore.account) return
+      console.log("account ready")
+      incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
+          .then((balance) => {
+            console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
+            accountStore.setIncogniteeBalance(balance)
+          });
+    }
 )
 
 onMounted(() => {

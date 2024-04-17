@@ -8,11 +8,11 @@ export const useIncognitee = defineStore('incognitee', {
         shard: '',
         fingerprint: '',
     }),
-    getters: {
-        getApi() {
-            return this.api;
-        },
-    },
+/*    getters: {
+        api() { return this.api; },
+        shard() {return this.shard },
+        fingerprint() {return this.fingerprint }
+    },*/
     actions: {
         async initializeApi() {
 
@@ -26,10 +26,10 @@ export const useIncognitee = defineStore('incognitee', {
                 console.log(sk[0])
             });
             // todo! hard-coded for now. soon to be fetched
-            //this.incogniteeShard = '5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c';
-            //this.incogniteeFingerprint = '7RuM6U4DLEtrTnVntDjDPBCAN4LbCGRpnmcTYUGhLqc7';
+            this.shard = '5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c';
+            this.fingerprint = '7RuM6U4DLEtrTnVntDjDPBCAN4LbCGRpnmcTYUGhLqc7';
             console.log("Incognitee Api connected to sidechain")
-            //this.incogniteeApiReady = true
+            this.apiReady = true
         }
     },
 })

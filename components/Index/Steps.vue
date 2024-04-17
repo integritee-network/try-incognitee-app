@@ -1,88 +1,37 @@
 <template>
+  <div>
+    <UTabs :items="tabs" v-model:selected="currentTabIndex" class="w-full">
+      <template #default="{ item, selected }">
+        <div @click="changeTab(item.index)" :class="{ 'bg-gray-200': selected }" class="cursor-pointer px-4 py-2">{{ item.label }}</div>
+      </template>
+    </UTabs>
 
-      <div class="container flex flex-col">
-        <div class=''>
-        <h2 class="title title_h2 partner__title text-left">
-          Campaign
-          </h2>
-        </div>
-        <div class=''>
-      <!-- Tabs -->
-      <UTabs :items="items" class="w-full">
-        <template #default="{ item, index, selected }">
-          <div 
-            class=" relative truncate"
-            @click="currentTabIndex = index"
-          >
-            
-            <span class="truncate">{{ index + 1 }}. {{ item.label }}</span>
-            <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"/>
-          </div>
-        </template>
-      </UTabs>
-          <!-- Content des ausgewählten Tabs -->
-          </div>
-    <div class="tab-content mt-4">
-      <component :is="items[currentTabIndex].component" />
-    </div>
-    </div>
+    <component :is="currentTabComponent" @change-tab="changeTab"/>
 
+  </div>
 </template>
 
-
-<script>
+<script setup>
 import CheckWalletTab from '~/components/CheckWalletTab.vue'
 import CreateWalletTab from '~/components/CreateWalletTab.vue'
 import InviteFriendTab from '~/components/InviteFriendTab.vue'
 import PublishonxTab from '~/components/PublishonxTab.vue'
 import UnshieldTab from '~/components/UnshieldTab.vue'
+import { ref, computed } from 'vue';
 
-export default {
-  components: {
-    CreateWalletTab,
-    CheckWalletTab,
-    InviteFriendTab,
-    UnshieldTab,
-    PublishonxTab
-  },
-  data() {
-    return {
-      currentTabIndex: 0, // Setze eine Standardkomponente
-      items: [
-        {
-          label: 'Step',
-          component: CreateWalletTab
-        },
-        {
-          label: 'Step​',
-          component: CheckWalletTab
-        },
-        {
-          label: 'Step​',
-          component: InviteFriendTab
-        },
-        {
-          label: 'Step',
-          component: UnshieldTab
-        },
-        {
-          label: 'Step​',
-          component: PublishonxTab
-        }
-        // Füge hier weitere Tabs hinzu, falls benötigt
-      ]
-    }
-  },
-  methods: {
-    onTabChanged(tabIndex) {
-      this.currentComponent = this.items[tabIndex].component;
-    }
-  },
-  mounted() {
-    // Standardmäßig wird der erste Tab-Inhalt angezeigt
-    this.currentComponent = this.items[0].component;
-  }
-}
+const currentTabIndex = ref(0);
+const tabs = [
+  { label: 'Create Wallet', component: CreateWalletTab, index: 0 },
+  { label: 'Check Balance', component: CheckWalletTab, index: 1 },
+  // Add more tabs as needed
+];
+
+const currentTabComponent = computed(() => tabs[currentTabIndex.value].component);
+
+const changeTab = (index) => {
+  console.log("changeTab called")
+  currentTabIndex.value = index;
+};
 </script>
 
 <style lang="scss">

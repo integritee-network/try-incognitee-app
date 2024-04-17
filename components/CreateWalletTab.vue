@@ -19,11 +19,13 @@ import {u8aToHex} from "@polkadot/util";
 import { useAccount } from '@/store/account.ts'
 import { useRouter } from 'vue-router';
 import {hexToU8a} from '@polkadot/util';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 const router = useRouter();
 const accountStore = useAccount()
-
+const moveToTab = ref<Function>(); // Define a reference to store the moveToTab method
+const emit = defineEmits(['change-tab'])
 const createWallet = () => {
   console.log('creating fresh wallet');
   const generatedMnemonic = mnemonicGenerate();
@@ -37,6 +39,7 @@ const createWallet = () => {
     query:{ seed: privateKeyHex}
   })
   accountStore.setAccount(newAccount)
+  emit('change-tab',1);
 };
 
 onMounted(() => {
@@ -47,6 +50,11 @@ onMounted(() => {
     const account = localKeyring.addFromSeed(hexToU8a(seedHex));
     accountStore.setAccount(account)
   }
+
+  moveToTab.value = (router.currentRoute.value.meta as any).moveToTab;
 })
 
+defineComponent({
+  emits: ['change-tab']
+});
 </script>

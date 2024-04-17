@@ -11,12 +11,11 @@
           <p class="paragraph paragraph_medium main__description margin_large">
             Become one of the first users to help improving Incognitee and get a chance to win one of the juicy prices.
           </p>
-           <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Get Started</NuxtLink>
         </div>
       </div>
     </div>
   </section>
-</template> 
+</template>
 <style lang="scss" scoped>
 .main {
   padding-top: 90px;

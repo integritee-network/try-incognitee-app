@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {IntegriteeWorker} from "@encointer/worker-api";
+import { encodeAddress} from "@polkadot/keyring";
 
 export const useIncognitee = defineStore('incognitee', {
     state: () => ({
@@ -7,12 +8,8 @@ export const useIncognitee = defineStore('incognitee', {
         apiReady: false,
         shard: '',
         fingerprint: '',
+        vault: '',
     }),
-/*    getters: {
-        api() { return this.api; },
-        shard() {return this.shard },
-        fingerprint() {return this.fingerprint }
-    },*/
     actions: {
         async initializeApi() {
 
@@ -22,8 +19,8 @@ export const useIncognitee = defineStore('incognitee', {
             })
             this.api = worker
             worker.getShardVault().then((sk) => {
-                console.log('Vault: ')
-                console.log(sk[0])
+                this.vault = encodeAddress(sk[0])
+                console.log('Vault: ' + this.vault)
             });
             // todo! hard-coded for now. soon to be fetched
             this.shard = '5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c';

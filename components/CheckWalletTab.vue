@@ -18,12 +18,25 @@
 
 <script setup lang="ts">
 import { useAccount } from '@/store/account.ts'
+import { useIncognitee } from '@/store/incognitee.ts'
 import { onMounted, ref } from 'vue';
 import {IntegriteeWorker} from "@encointer/worker-api";
 const accountStore = useAccount()
+const incogniteeStore = useIncognitee()
+const emit = defineEmits(['change-tab'])
 
 const shield = () => {
-  console.log('shielding all your PAS');
+  console.log('shielding 99% of all your PAS')
+  if (incogniteeStore.vault) {
+    let balance = accountStore.paseoBalance
+    // todo! instead of sending 99% we should check fees explicitly and handle edge cases
+    let amount = 0.99 * balance
+    console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
+    // todo! send amount to vault and show progress
+
+    // once successful, move to next tab
+    emit('change-tab',2);
+  }
 };
 
 </script>

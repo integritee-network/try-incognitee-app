@@ -11,8 +11,8 @@
         </span><p>{{ accountStore.getShortAddress }}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Rococo Balance
-        </span><p>0.0000000 ROC</p></NuxtLink>
+          <span class="gradient gradient_two">Paseo Balance
+        </span><p>{{ accountStore.getPaseoHumanBalance }} </p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance
@@ -49,7 +49,6 @@ import { useWindowScroll, useWindowSize } from '@vueuse/core'
 import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
-import { usePaseo } from '@/store/paseo.ts'
 import { useInterval } from '@vueuse/core'
 import {ApiPromise, WsProvider} from "@polkadot/api";
 
@@ -57,7 +56,6 @@ const pollCounter = useInterval(10000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
-const paseoStore = usePaseo()
 
 const active = ref(false)
 
@@ -97,17 +95,20 @@ watch(
     }
 )
 
-onMounted(() => {
-  console.log("trying to init api")
-  const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
-  ApiPromise.create({ provider: wsProvider, types: {} }).then((api)=>{
-    console.log("successfully initialized api: " + api)
-    console.log(api.registry.chainDecimals)
-    // todo! when I add this I get Error: Uncaught (in promise) Error: Cannot convert 'Composite' via asVariant
-    // although the above worked
-    // paseoStore.api = api
-  });
+watch(
+    accountStore,
+    async () => {
+      console.log("trying to init api")
+      const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+      const api = await ApiPromise.create({ provider: wsProvider });
+      api.query.system.account(accountStore.account.address, ({ data: { free: currentFree }}) => {
+        console.log("paseo balance:" + currentFree)
+        accountStore.paseoBalance = Number(currentFree)
+      });
+    }
+)
 
+onMounted(() => {
   incogniteeStore.initializeApi()
 })
 </script>

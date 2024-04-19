@@ -21,6 +21,9 @@ export const useAccount = defineStore('account', {
     },
     getIncogniteeHumanBalance({incogniteeBalance}): number {
       return formatBalance(incogniteeBalance)
+    },
+    getPaseoHumanBalance({paseoBalance}): number {
+      return formatBalance(paseoBalance)
     }
   },
   actions: {

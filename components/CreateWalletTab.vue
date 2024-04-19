@@ -1,15 +1,21 @@
 <!-- components/CreateWalletTab.vue -->
 <template>
- <section id="steps">
+  <section id="steps">
     <div class="block steps">
       <div class="container">
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Create a Wallet</div>
-    <div class='text-lg'>By clicking the “Create Wallet” button, you will create a new wallet on Rococo and Incognitee.</div>
-<div>
-		<UButton class="btn btn_gradient" @click="createWallet">Create a Wallet</UButton>
-  </div>
-  </div></div></div></section>
+          <div class='text-lg'>
+            By clicking the “Create Wallet” button, you will create a new wallet on Rococo and
+            Incognitee.
+          </div>
+          <div>
+            <UButton class="btn btn_gradient" @click="createWallet">Create a Wallet</UButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +30,7 @@ import { defineComponent } from 'vue';
 
 const router = useRouter();
 const accountStore = useAccount()
-const moveToTab = ref<Function>(); // Define a reference to store the moveToTab method
+
 const emit = defineEmits(['change-tab'])
 const createWallet = () => {
   console.log('creating fresh wallet');
@@ -51,8 +57,6 @@ onMounted(() => {
     accountStore.setAccount(account)
     emit('change-tab',1);
   }
-
-  moveToTab.value = (router.currentRoute.value.meta as any).moveToTab;
 })
 
 defineComponent({

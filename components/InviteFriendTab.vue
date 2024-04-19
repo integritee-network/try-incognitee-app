@@ -1,28 +1,33 @@
 <!-- components/CreateWalletTab.vue -->
 <template>
   <section id="steps">
-   <div class="block steps">
-     <div class="container">
-       <div class=''>
-         <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
-   <div class='text-lg'>By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with your friends and let them participate. ​​</div>
-    <div class="flex flex-cols-2 ">
-     <div class='mt-10 mr-8'>
-       <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton> </div>
-   <div class='mt-10'>
-    <div class="flex items-center">
-      <input type="text" ref="urlToShareWithFriend" class="dynamic-width border-2 border-gray-200 p-2" style="color: black;" :value="inviteUrl" readonly>
-        <button @click="copyToClipboard" class="button ml-10">
-            Copy
-        </button>
+    <div class="block steps">
+      <div class="container">
+        <div class=''>
+          <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
+          <div class='text-lg'>
+            By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your
+            available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with
+            your friends and let them participate.
+          </div>
+          <div class="flex flex-cols-2 ">
+            <div class='mt-10 mr-8'>
+              <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
+            </div>
+            <div class='mt-10'>
+              <div class="flex items-center">
+                <input type="text" ref="urlToShareWithFriend" class="dynamic-width border-2 border-gray-200 p-2"
+                       style="color: black;" :value="inviteUrl" readonly>
+                <button @click="copyToClipboard" class="button ml-10">
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
- </div>
- </div>
-
-
-
- </div></div></div></section>
+  </section>
 </template>
 
 <script setup lang="ts">

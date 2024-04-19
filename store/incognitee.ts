@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import {IntegriteeWorker} from "@encointer/worker-api";
+//import {IntegriteeWorker} from "@encointer/worker-api";
 import { encodeAddress} from "@polkadot/keyring";
 
 export const useIncognitee = defineStore('incognitee', {
@@ -12,7 +12,7 @@ export const useIncognitee = defineStore('incognitee', {
     }),
     actions: {
         async initializeApi() {
-
+/*
             const worker = new IntegriteeWorker('wss://scv1.paseo.api.incognitee.io:443', {
                 createWebSocket: (url) => new WebSocket(url),
                 types: {}
@@ -26,7 +26,9 @@ export const useIncognitee = defineStore('incognitee', {
             this.shard = '5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c';
             this.fingerprint = '7RuM6U4DLEtrTnVntDjDPBCAN4LbCGRpnmcTYUGhLqc7';
             console.log("Incognitee Api connected to sidechain")
+            */
             this.apiReady = true
+
         }
     },
 })

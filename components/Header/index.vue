@@ -98,14 +98,15 @@ watch(
 )
 
 onMounted(() => {
-  incogniteeStore.initializeApi()
-  console.log("trying to init paseo api")
+  console.log("trying to init api")
   const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
-  ApiPromise.create({ provider: wsProvider, types: {} }).then(async (api) => {
-    paseoStore.api = api
-    const test = await api.registry.chainDecimals
-    console.log("successfully initialized api. decimals: " + test)
+  ApiPromise.create({ provider: wsProvider, types: {} }).then((api)=>{
+    console.log("successfully initialized api: " + api)
+    console.log(api.registry.chainDecimals)
   });
+
+  incogniteeStore.initializeApi()
+
 })
 </script>
 

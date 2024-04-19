@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
+import {onMounted} from "vue";
+import {ApiPromise, WsProvider} from "@polkadot/api";
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 const emit = defineEmits(['change-tab'])
@@ -44,4 +46,13 @@ const shield = () => {
     emit('change-tab',2);
   }
 };
+
+onMounted(() => {
+  console.log("trying to init api")
+  const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+  const api = ApiPromise.create({ provider: wsProvider, types: {} }).then(()=>{
+        console.log("successfully initialized api")
+  });
+
+})
 </script>

@@ -51,7 +51,7 @@ import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
 import { usePaseo } from '@/store/paseo.ts'
 import { useInterval } from '@vueuse/core'
-import {poll} from "@polkadot/types/interfaces/definitions";
+import {ApiPromise, WsProvider} from "@polkadot/api";
 
 const pollCounter = useInterval(10000)
 
@@ -99,7 +99,13 @@ watch(
 
 onMounted(() => {
   incogniteeStore.initializeApi()
-  paseoStore.initializeApi()
+  console.log("trying to init paseo api")
+  const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+  ApiPromise.create({ provider: wsProvider, types: {} }).then(async (api) => {
+    paseoStore.api = api
+    const test = await api.registry.chainDecimals
+    console.log("successfully initialized api. decimals: " + test)
+  });
 })
 </script>
 

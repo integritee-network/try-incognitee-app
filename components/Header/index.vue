@@ -5,10 +5,10 @@
         <Logo />
       </NuxtLink>
       <div v-if="width > breakpoints.slg" class="header__nav grid grid-cols-4 gap-8 content-start ">
-				
+
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Wallet Address
-        </span><p>xxxxxxxx...</p></NuxtLink>
+        </span><p>{{ accountStore.getShortAddress }}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Rococo Balance
@@ -16,16 +16,16 @@
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance
-        </span><p>0.0000000 pROC</p></NuxtLink>
+        </span><p>{{ accountStore.getIncogniteeHumanBalance}}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status
-        </span><p><UBadge label="Online" /></p></NuxtLink>
+        </span><p><UBadge label="Online" />{{ pollCounter }} </p></NuxtLink>
 
       </div>
       <div  class="header__nav-right">
         <Socials />
-      
+
         <button v-if="width <= breakpoints.slg" class="header__burger" :class="{
           active: active,
         }" type="button" @click="toggleMenu()">
@@ -39,15 +39,25 @@
   <Menu v-if="width <= breakpoints.slg" :active="active" :clickHandler='toggleMenu' />
 </template>
 
-<script setup>
-// import Logo from '@/assets/img/logo.svg'
+<script setup lang="ts">
 import { useNuxtApp, useRoute } from '#imports'
 import Menu from '@/components/Header/Menu.vue'
 import Logo from '@/components/Logo'
 import Socials from '@/components/Socials'
 import { breakpoints } from '@/configs/app.config'
 import { useWindowScroll, useWindowSize } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import {onMounted, ref, watch} from 'vue'
+import { useAccount } from '@/store/account.ts'
+import { useIncognitee } from '@/store/incognitee.ts'
+import { usePaseo } from '@/store/paseo.ts'
+import { useInterval } from '@vueuse/core'
+import {poll} from "@polkadot/types/interfaces/definitions";
+
+const pollCounter = useInterval(10000)
+
+const accountStore = useAccount()
+const incogniteeStore = useIncognitee()
+const paseoStore = usePaseo()
 
 const active = ref(false)
 
@@ -70,6 +80,27 @@ watch(
     $lockScroll(false)
   },
 )
+
+watch(
+    pollCounter,
+    async () => {
+      console.log("ping: " + pollCounter.value)
+      if (!incogniteeStore.apiReady) return
+      console.log("api ready")
+      if (!accountStore.account) return
+      console.log("account ready")
+      incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
+          .then((balance) => {
+            console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
+            accountStore.setIncogniteeBalance(balance)
+          });
+    }
+)
+
+onMounted(() => {
+  incogniteeStore.initializeApi()
+  paseoStore.initializeApi()
+})
 </script>
 
 <style lang="scss">
@@ -119,7 +150,7 @@ watch(
   }
 
   &__logo {
-   
+
 
     @include xsm {
       width: 118px;
@@ -145,7 +176,7 @@ watch(
 
     a {
       font-size: 0.875em;
-      
+
 
       @include lg {
         margin-left: 18px;

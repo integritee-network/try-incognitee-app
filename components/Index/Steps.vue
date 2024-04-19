@@ -1,32 +1,28 @@
 <template>
-
-      <div class="container flex flex-col">
-        <div class=''>
-        <h2 class="title title_h2 partner__title text-left">
-          Campaign
-          </h2>
-        </div>
-        <div class=''>
-      <!-- Tabs -->
-      <UTabs :items="items" class="w-full">
+  <div class="container flex flex-col">
+    <div class=''>
+      <h2 class="title title_h2 partner__title text-left">
+        Campaign
+      </h2>
+    </div>
+    <div class=''>
+      <UTabs :items="items" v-model="currentTabIndex" class="w-full">
         <template #default="{ item, index, selected }">
-          <div 
-            class=" relative truncate"
-            @click="currentTabIndex = index"
+          <div
+              :class="{ 'text-gray-400': !selected }"
+              class=" relative truncate"
+              @click="currentTabIndex = index"
           >
-            
             <span class="truncate">{{ index + 1 }}. {{ item.label }}</span>
             <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"/>
           </div>
         </template>
       </UTabs>
-          <!-- Content des ausgewählten Tabs -->
-          </div>
+    </div>
     <div class="tab-content mt-4">
-      <component :is="items[currentTabIndex].component" />
+      <component :is="items[currentTabIndex].component" @change-tab="(i) => currentTabIndex = i"/>
     </div>
-    </div>
-
+  </div>
 </template>
 
 
@@ -47,29 +43,28 @@ export default {
   },
   data() {
     return {
-      currentTabIndex: 0, // Setze eine Standardkomponente
+      currentTabIndex: 0,
       items: [
         {
-          label: 'Step',
+          label: 'Create',
           component: CreateWalletTab
         },
         {
-          label: 'Step​',
+          label: 'Shield',
           component: CheckWalletTab
         },
         {
-          label: 'Step​',
+          label: 'Invite',
           component: InviteFriendTab
         },
         {
-          label: 'Step',
+          label: 'Unshield',
           component: UnshieldTab
         },
         {
-          label: 'Step​',
+          label: 'Share',
           component: PublishonxTab
         }
-        // Füge hier weitere Tabs hinzu, falls benötigt
       ]
     }
   },
@@ -79,7 +74,6 @@ export default {
     }
   },
   mounted() {
-    // Standardmäßig wird der erste Tab-Inhalt angezeigt
     this.currentComponent = this.items[0].component;
   }
 }
@@ -179,8 +173,4 @@ export default {
     }
   }
 }
-
-
-
-
 </style>

@@ -1,52 +1,81 @@
 <!-- components/CreateWalletTab.vue -->
 <template>
   <section id="steps">
-   <div class="block steps">
-     <div class="container">
-       <div class=''>
-         <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
-   <div class='text-lg'>By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with your friends and let them participate. ​​</div>
-    <div class="flex flex-cols-2 ">
-     <div class='mt-10 mr-8'>
-      <NuxtLink to="https://docs.incognitee.io/2.-get-started/2.2-get-started-with-incognitee-test-net" target="blank" class="btn btn_gradient">Invite Friend</NuxtLink> </div>
-   <div class='mt-10'>
-    <div class="flex items-center">
-      <input type="text" ref="copyInput" class="dynamic-width border-2 border-gray-300 p-2" value="Incognitee.io/campaign1/privatetransfer?privatekey=XXX">
-        <button @click="copyToClipboard" class="button ml-10">
-            Copy
-        </button>
+    <div class="block steps">
+      <div class="container">
+        <div class=''>
+          <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
+          <div class='text-lg'>
+            By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your
+            available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with
+            your friends and let them participate.
+          </div>
+          <div class="flex flex-cols-2 ">
+            <div class='mt-10 mr-8'>
+              <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
+            </div>
+            <div class='mt-10'>
+              <div class="flex items-center">
+                <input type="text" ref="urlToShareWithFriend" class="dynamic-width border-2 border-gray-200 p-2"
+                       style="color: black;" :value="inviteUrl" readonly>
+                <button @click="copyToClipboard" class="button ml-10">
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
- </div>
- </div>
-
- 
- 
- </div></div></div></section>
+  </section>
 </template>
 
+<script setup lang="ts">
+import {Keyring} from '@polkadot/keyring'
+import {mnemonicGenerate, mnemonicToMiniSecret} from '@polkadot/util-crypto'
+import {formatBalance, u8aToHex} from "@polkadot/util";
+import { ref } from 'vue';
 
+import { useAccount } from '@/store/account.ts'
+import { useIncognitee } from '@/store/incognitee.ts'
+const accountStore = useAccount()
+const incogniteeStore = useIncognitee()
 
+const inviteUrl = ref('click "invite friend" to generate a new wallet for them')
 
-<script>
-export default {
-    methods: {
-        copyToClipboard() {
-            const input = this.$refs.copyInput;
-            input.select();
-            input.setSelectionRange(0, 99999); // Für mobile Geräte
-            document.execCommand("copy");
+formatBalance.setDefaults({
+  decimals: 10,
+  unit: 'PAS'
+});
 
-            alert("Kopiert: " + input.value); // Optional: Bestätigungsnachricht
-
-            // Aktualisieren Sie die Breite des Input-Feldes
-            this.updateInputWidth();
-        },
-        updateInputWidth() {
-            // Logik, um die Breite basierend auf dem Inhalt zu berechnen
-        }
-    }
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(inviteUrl.value).then(() => alert("copied invite url to clipboard. please share it with your friend"));
 }
+const inviteFriend = () => {
+  console.log('creating wallet for your friend');
+  const generatedMnemonic = mnemonicGenerate();
+  const localKeyring = new Keyring({type: 'sr25519', ss58Format: 42});
+  const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {name: 'fresh'});
+  const seed = mnemonicToMiniSecret(generatedMnemonic);
+  const privateKeyHex = u8aToHex(seed);
+  console.log(`friend account ${newAccount.address} with private key in hex: ${privateKeyHex}`);
+  inviteUrl.value = window.location.protocol + window.location.hostname + (window.location.port ? `:${window.location.port}` : '') + '/?seed=' + privateKeyHex
+
+  console.log("sending 30% of your funds to your friend's account")
+  let balance = accountStore.incogniteeBalance
+  // todo! instead of sending 30% we should check fees explicitly and handle edge cases
+  let amount = 0.30 * balance
+  let signer = accountStore.account
+  console.log(`sending ${formatBalance(amount)} from ${signer.address} privately to ${newAccount.address}`)
+  incogniteeStore.api.trustedBalanceTransfer(
+      signer,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      signer.address,
+      newAccount.address,
+      amount
+  ).then((hash) => console.log(`trustedOperationHash: ${hash}`));
+};
 </script>
 
 <style>

@@ -103,10 +103,12 @@ onMounted(() => {
   ApiPromise.create({ provider: wsProvider, types: {} }).then((api)=>{
     console.log("successfully initialized api: " + api)
     console.log(api.registry.chainDecimals)
+    // todo! when I add this I get Error: Uncaught (in promise) Error: Cannot convert 'Composite' via asVariant
+    // although the above worked
+    // paseoStore.api = api
   });
 
   incogniteeStore.initializeApi()
-
 })
 </script>
 

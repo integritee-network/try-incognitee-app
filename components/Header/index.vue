@@ -20,7 +20,14 @@
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status
-        </span><p><UBadge label="Online" />{{ pollCounter }} </p></NuxtLink>
+        </span>
+          <template v-if="incogniteeStore.apiReady">
+            <p><UBadge label="Online" /> </p>
+          </template>
+          <template v-else>
+            <p><UBadge label="checking..." color="orange"/> </p>
+          </template>
+        </NuxtLink>
 
       </div>
       <div  class="header__nav-right">

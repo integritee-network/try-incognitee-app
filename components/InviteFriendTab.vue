@@ -64,7 +64,7 @@ const inviteFriend = () => {
   console.log("sending 30% of your funds to your friend's account")
   let balance = accountStore.incogniteeBalance
   // todo! instead of sending 30% we should check fees explicitly and handle edge cases
-  let amount = 0.30 * balance
+  let amount = Math.floor(0.30 * balance)
   let signer = accountStore.account
   console.log(`sending ${formatBalance(amount)} from ${signer.address} privately to ${newAccount.address}`)
   incogniteeStore.api.trustedBalanceTransfer(

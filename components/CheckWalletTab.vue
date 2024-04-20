@@ -5,19 +5,28 @@
       <div class="container">
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
-          <div class='text-lg'>1. If you don’t own any ROC yet, follow the button below to obtain some ROC for free on
-            {{ accountStore.getAddress }}.
-            <br/> 2. if you already have some ROC you can shield them now to Incognitee.
-          </div>
           <div class="grid grid-cols-2 gap-4 ">
-            <div class='mt-4'>
-              <NuxtLink to="https://faucet.polkadot.io/paseo" target="blank" class="btn btn_gradient">Get free PAS
-                tokens
-              </NuxtLink>
-            </div>
-            <div class='mt-4'>
-              <UButton class="btn btn_gradient" @click="shield">Shield PAS to pPAS</UButton>
-              <div>{{txStatus}}</div>
+            <div class='text-lg'>
+              <template v-if="accountStore.paseoBalance > 0">
+                Shielding your tokens means that you send them from Paseo to Incognitee where you can then trandfer them
+                privately
+
+                <div class='mt-4'>
+                  <UButton class="btn btn_gradient" @click="shield">Shield PAS to Incognitee</UButton>
+                  <div>{{ txStatus }}</div>
+                </div>
+              </template>
+              <template v-else>
+                You don’t have any PAS on your new account yet. Follow the link below to obtain some PAS for free
+                from the Polkadot faucet. Use your address to claim tokens:
+                <code>{{ accountStore.getAddress }}</code>.
+
+                <div class='mt-4'>
+                  <NuxtLink to="https://faucet.polkadot.io/paseo" target="blank" class="btn btn_gradient">Get free PAS
+                    tokens
+                  </NuxtLink>
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -89,7 +98,7 @@ const shield = async () => {
     const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
     const api = await ApiPromise.create({provider: wsProvider});
     console.log("api initialized for shielding")
-    await api.tx.balances.transferKeepAlive(incogniteeStore.vault, amount).signAndSend(accountStore.account,txResHandler)
+    await api.tx.balances.transferKeepAlive(incogniteeStore.vault, amount).signAndSend(accountStore.account, txResHandler)
         .catch(txErrHandler)
   }
 };

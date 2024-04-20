@@ -98,6 +98,7 @@ watch(
 watch(
     accountStore,
     async () => {
+      //todo! only reinitilize if account changes
       console.log("trying to init api")
       const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
       const api = await ApiPromise.create({ provider: wsProvider });

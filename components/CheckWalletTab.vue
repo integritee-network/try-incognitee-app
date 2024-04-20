@@ -17,6 +17,7 @@
             </div>
             <div class='mt-4'>
               <UButton class="btn btn_gradient" @click="shield">Shield PAS to pPAS</UButton>
+              <div>{{txStatus}}</div>
             </div>
           </div>
         </div>
@@ -26,22 +27,76 @@
 </template>
 
 <script setup lang="ts">
-import { useAccount } from '@/store/account.ts'
-import { useIncognitee } from '@/store/incognitee.ts'
+import {useAccount} from '@/store/account.ts'
+import {useIncognitee} from '@/store/incognitee.ts'
+import {onMounted, ref, watch} from 'vue'
+import {ApiPromise, WsProvider} from "@polkadot/api";
+import {Keyring} from "@polkadot/keyring";
+import {hexToU8a} from "@polkadot/util";
+
+const txStatus = ref(null)
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 const emit = defineEmits(['change-tab'])
+const txResHandler = ({events = [], status, txHash}) => {
+  status.isFinalized
+      ? txStatus.value = `😉 Finalized. Block hash: ${status.asFinalized.toString()}`
+      : txStatus.value = `Current transaction status: ${status.type}`
 
-const shield = () => {
-  console.log('shielding 99% of all your PAS')
+  // Loop through Vec<EventRecord> to display all events
+  events.forEach(({_, event: {data, method, section}}) => {
+    if ((section + ":" + method) === 'system:ExtrinsicFailed') {
+      // extract the data for this event
+      const [dispatchError, dispatchInfo] = data;
+      console.log(`dispatchinfo: ${dispatchInfo}`)
+      let errorInfo;
+
+      // decode the error
+      if (dispatchError.isModule) {
+        // for module errors, we have the section indexed, lookup
+        // (For specific known errors, we can also do a check against the
+        // api.errors.<module>.<ErrorName>.is(dispatchError.asModule) guard)
+        const mod = dispatchError.asModule
+        const error = api.registry.findMetaError(
+            new Uint8Array([mod.index.toNumber(), bnFromHex(mod.error.toHex().slice(0, 4)).toNumber()])
+        )
+        let message = `${error.section}.${error.name}${
+            Array.isArray(error.docs) ? `(${error.docs.join('')})` : error.docs || ''
+        }`
+
+        errorInfo = `${message}`;
+        console.log(`Error-info::${JSON.stringify(error)}`)
+      } else {
+        // Other, CannotLookup, BadOrigin, no extra info
+        errorInfo = dispatchError.toString();
+      }
+      txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`
+    } else if (section + ":" + method === 'system:ExtrinsicSuccess') {
+      txStatus.value`❤️️ Transaction successful! tx hash: ${txHash} , Block hash: ${status.asFinalized.toString()} please proceed to the next tab and invite a friend`
+    }
+  });
+}
+
+const txErrHandler = err =>
+    txStatus.value = `😞 Transaction Failed: ${err.toString()}`
+const shield = async () => {
+  console.log('shielding 90% of all your PAS')
   if (incogniteeStore.vault) {
     let balance = accountStore.paseoBalance
-    // todo! instead of sending 99% we should check fees explicitly and handle edge cases
-    let amount = 0.99 * balance
+    // todo! instead of sending 90% we should check fees and ED explicitly and handle edge cases
+    let amount = Math.floor(0.9 * balance)
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
-    // todo! send amount to vault on L1 and show progress
+    const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+    const api = await ApiPromise.create({provider: wsProvider});
+    console.log("api initialized for shielding")
+    await api.tx.balances.transferKeepAlive(incogniteeStore.vault, amount).signAndSend(accountStore.account,txResHandler)
+        .catch(txErrHandler)
     // once successful, move to next tab
-    emit('change-tab',2);
+    //emit('change-tab', 2);
   }
 };
+
+onMounted(() => {
+  txStatus.value = "hello this is a pretty long message that might need to be wrapped helooooooooo sooommee morrrrrrre"
+})
 </script>

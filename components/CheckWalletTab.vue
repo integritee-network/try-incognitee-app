@@ -40,7 +40,7 @@ const incogniteeStore = useIncognitee()
 const emit = defineEmits(['change-tab'])
 const txResHandler = ({events = [], status, txHash}) => {
   status.isFinalized
-      ? txStatus.value = `😉 Finalized. Block hash: ${status.asFinalized.toString()}`
+      ? txStatus.value = `😉 Finalized. please proceed to the next tab and invite a friend`
       : txStatus.value = `Current transaction status: ${status.type}`
 
   // Loop through Vec<EventRecord> to display all events
@@ -72,7 +72,7 @@ const txResHandler = ({events = [], status, txHash}) => {
       }
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`
     } else if (section + ":" + method === 'system:ExtrinsicSuccess') {
-      txStatus.value`❤️️ Transaction successful! tx hash: ${txHash} , Block hash: ${status.asFinalized.toString()} please proceed to the next tab and invite a friend`
+      txStatus.value`❤️️ Transaction successful! please proceed to the next tab and invite a friend`
     }
   });
 }
@@ -91,12 +91,7 @@ const shield = async () => {
     console.log("api initialized for shielding")
     await api.tx.balances.transferKeepAlive(incogniteeStore.vault, amount).signAndSend(accountStore.account,txResHandler)
         .catch(txErrHandler)
-    // once successful, move to next tab
-    //emit('change-tab', 2);
   }
 };
 
-onMounted(() => {
-  txStatus.value = "hello this is a pretty long message that might need to be wrapped helooooooooo sooommee morrrrrrre"
-})
 </script>

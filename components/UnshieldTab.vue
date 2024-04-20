@@ -35,7 +35,7 @@ const unshieldFunds = () => {
   console.log('will unshield 30% of your private funds to same account on L1');
   const balance = accountStore.incogniteeBalance
   // todo! instead of sending 30% we should check fees explicitly and handle edge cases
-  const amount = 0.30 * balance
+  const amount = Math.floor(0.30 * balance)
   const signer = accountStore.account
   console.log(`sending ${formatBalance(amount)} from ${signer.address} privately to self on L1 (shard: ${incogniteeStore.shard}`)
   incogniteeStore.api.balanceUnshieldFunds(

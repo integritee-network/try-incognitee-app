@@ -362,29 +362,29 @@
   dependencies:
     "@iconify/utils" "^2.1.20"
 
-"@encointer/node-api@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@encointer/node-api/-/node-api-0.12.0.tgz#5f6b59fde14de5857cf9c54339522cbfe153541c"
-  integrity sha512-TwvdI/KmEO6aA9jkZsv29bpzeL9tU+vmpB5Jx3RrrcXEI8JQ+zunm2YiedzIKPThWk8AmPGtuNYOlW1Qv6h0CQ==
+"@encointer/node-api@^0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@encointer/node-api/-/node-api-0.12.1.tgz#f6bcad50c1927f756598cf8d1090218d68bb0b1a"
+  integrity sha512-Q/KUcmlVrqfMyr3sMI6VH7ItQD56XFwpq3FFA1eB2/61qtId4A9Ef95Bh8Qr3juO99Q++igWBn01B/O082A4Ww==
   dependencies:
-    "@encointer/types" "^0.12.0"
+    "@encointer/types" "^0.12.1"
     "@polkadot/api" "^10.9.1"
     tslib "^2.5.3"
 
-"@encointer/types@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@encointer/types/-/types-0.12.0.tgz#21cafcbf352e0ded83912c95ce163a640a7a32e7"
-  integrity sha512-JxPwynNZVb2A7afXZWlzL7gEP/f6jnglIkrpZU7O78+NFWdVcLTDjM2Ue16d12dz60DvXZLImLp0VN/nQFJmUQ==
+"@encointer/types@^0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@encointer/types/-/types-0.12.1.tgz#5a33260436374732ee212b4348315c7495ee742e"
+  integrity sha512-z+QjqJuivJQj/RMJq0ujcJkJtO8grORq+7Te89ziQemxVCdc0xko5Nllc/FJ0c8V/GTt9/X577fcaCNnvvHfPQ==
   dependencies:
     "@polkadot/api" "^10.9.1"
     "@polkadot/types" "^10.9.1"
     "@polkadot/types-codec" "^10.9.1"
     "@polkadot/util" "^12.3.2"
 
-"@encointer/util@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@encointer/util/-/util-0.12.0.tgz#2ed406ab42dbd3e6b4f2e3e2c0046ec82d8d42c2"
-  integrity sha512-ZfFKgR6EZxkUCtTlmJmcYy8V3FaXt03Y+F4shRmTLmwveEWcPJfy9qnTMPogPW+3azut8dsiryxbIP24iNkuUw==
+"@encointer/util@^0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@encointer/util/-/util-0.12.1.tgz#76a27dc25e2a830b7a43bc9cfa1f2b41a7cf8653"
+  integrity sha512-++3tOHazZfs1zoEd+TwlK+tOLkwIPEwAixeqHXmlh/cp4oyHzfyKZ/UGNBDu/F+o+UORFdRaEgXk6lqmn1JTUA==
   dependencies:
     "@babel/runtime" "^7.18.9"
     "@polkadot/util" "^12.3.2"
@@ -393,14 +393,14 @@
     assert "^2.0.0"
     bn.js "^5.2.1"
 
-"@encointer/worker-api@^0.12.0-alpha.12":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@encointer/worker-api/-/worker-api-0.12.0.tgz#965658004983446db99124d1389d1e2350560add"
-  integrity sha512-leObO35oBAybvEL7Eq4MzItX3S6oBrtrMV6d7CbmzVTPKiFllvLCtrrto5s0WHq9j/P2jUtctAQGEGg3lput5g==
+"@encointer/worker-api@^0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@encointer/worker-api/-/worker-api-0.12.1.tgz#7b4a7d38a6ec6cf3ab8386d33c875dda3d1486f3"
+  integrity sha512-p7cRwHq5f2/yw8SCWJv87h73dNsZlkaK7lnd87uALWd5UuZAiU5YSjLUaVSaMjXDlg2sWVRoG32ZEpL0rXvRfA==
   dependencies:
-    "@encointer/node-api" "^0.12.0"
-    "@encointer/types" "^0.12.0"
-    "@encointer/util" "^0.12.0"
+    "@encointer/node-api" "^0.12.1"
+    "@encointer/types" "^0.12.1"
+    "@encointer/util" "^0.12.1"
     "@polkadot/api" "^10.9.1"
     "@polkadot/keyring" "^12.3.2"
     "@polkadot/types" "^10.9.1"

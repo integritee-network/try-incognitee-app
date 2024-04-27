@@ -1,5 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
-//import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 export default defineNuxtConfig({
   app: {
     head: {
@@ -60,11 +60,11 @@ export default defineNuxtConfig({
   imports: {
     autoImport: false,
   },
-//  hooks: {
-//    'vite:extendConfig': (config) => {
-//      config.plugins!.push(nodePolyfills()); // unshift ?
-//    },
-//  },
+  hooks: {
+    'vite:extendConfig': (config) => {
+      config.plugins!.push(nodePolyfills()); // unshift ?
+    },
+  },
   css: ['~/assets/scss/main.scss'],
   modules: ['nuxt-svgo', '@pinia/nuxt', '@nuxt/content', '@nuxt/ui', '@nuxtjs/tailwindcss' ],
   plugins: [{ src: '~/plugins/lockScroll', mode: 'client' }],

@@ -1,5 +1,4 @@
-
-<script setup lang="ts">
+git<script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
 import { useAsyncData } from '#imports'
 import Footer from '@/components/Footer'

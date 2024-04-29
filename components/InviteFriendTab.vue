@@ -59,7 +59,7 @@ const inviteFriend = () => {
   const seed = mnemonicToMiniSecret(generatedMnemonic);
   const privateKeyHex = u8aToHex(seed);
   console.log(`friend account ${newAccount.address} with private key in hex: ${privateKeyHex}`);
-  inviteUrl.value = window.location.protocol + window.location.hostname + (window.location.port ? `:${window.location.port}` : '') + '/?seed=' + privateKeyHex
+  inviteUrl.value = window.location.protocol + "//" + window.location.hostname + (window.location.port ? `:${window.location.port}` : '') + '/?seed=' + privateKeyHex
 
   console.log("sending 30% of your funds to your friend's account")
   let balance = accountStore.incogniteeBalance

@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import {Keyring} from '@polkadot/keyring'
-import {mnemonicGenerate, mnemonicToMiniSecret} from '@polkadot/util-crypto'
+import {cryptoWaitReady, mnemonicGenerate, mnemonicToMiniSecret} from '@polkadot/util-crypto'
 import {u8aToHex} from "@polkadot/util";
 import { useAccount } from '@/store/account.ts'
 import { useRouter } from 'vue-router';
@@ -32,8 +32,9 @@ const router = useRouter();
 const accountStore = useAccount()
 
 const emit = defineEmits(['change-tab'])
-const createWallet = () => {
+const createWallet = async () => {
   console.log('creating fresh wallet');
+  await cryptoWaitReady()
   const generatedMnemonic = mnemonicGenerate();
   const localKeyring = new Keyring({type: 'sr25519', ss58Format: 42});
   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {name: 'fresh'});
@@ -41,11 +42,11 @@ const createWallet = () => {
   const privateKeyHex = u8aToHex(seed);
   console.log(`Private Key in Hex: ${privateKeyHex}`);
   // change url to contain new seed to allow bookmarking
-  router.push({
-    query:{ seed: privateKeyHex}
+  await router.push({
+    query: {seed: privateKeyHex}
   })
   accountStore.setAccount(newAccount)
-  emit('change-tab',1);
+  emit('change-tab', 1);
 };
 
 onMounted(() => {

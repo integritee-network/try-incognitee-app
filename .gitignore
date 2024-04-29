@@ -7,9 +7,18 @@ node_modules
 .env
 dist
 .DS_Store
-.idea 
+.idea
 assets/.DS_Store
 assets/img/.DS_Store
 components/.DS_Store
 public/.DS_Store
 public/img/.DS_Store
+
+# Yarn 3 files
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

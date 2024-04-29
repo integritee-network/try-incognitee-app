@@ -62,7 +62,14 @@ export default defineNuxtConfig({
   },
   hooks: {
     'vite:extendConfig': (config) => {
-      config.plugins!.push(nodePolyfills()); // unshift ?
+      config.plugins!.push(nodePolyfills({
+            globals: {
+              Buffer: true,
+              global: true,
+              process: false,
+            },
+          }
+      )); // unshift ?
     },
   },
   css: ['~/assets/scss/main.scss'],

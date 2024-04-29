@@ -53,7 +53,9 @@ export default defineNuxtConfig({
       ],
     },
   },
-
+  experimental: {
+    externalVue: false,
+  },
   routeRules: {
     '/': { ssr: true },
   },

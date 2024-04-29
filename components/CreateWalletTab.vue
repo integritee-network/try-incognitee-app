@@ -53,10 +53,12 @@ onMounted(() => {
   const seedHex = router.currentRoute.value.query.seed
   if (seedHex) {
     console.log("found seed in url: " + seedHex)
-    const localKeyring = new Keyring({ type: 'sr25519' });
-    const account = localKeyring.addFromSeed(hexToU8a(seedHex));
-    accountStore.setAccount(account)
-    emit('change-tab',1);
+    cryptoWaitReady().then(() => {
+      const localKeyring = new Keyring({ type: 'sr25519' });
+      const account = localKeyring.addFromSeed(hexToU8a(seedHex));
+      accountStore.setAccount(account)
+      emit('change-tab',1);
+    })
   }
 })
 

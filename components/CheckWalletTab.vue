@@ -95,7 +95,7 @@ const shield = async () => {
     // todo! instead of sending 90% we should check fees and ED explicitly and handle edge cases
     let amount = Math.floor(0.9 * balance)
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
-    const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+    const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
     const api = await ApiPromise.create({provider: wsProvider});
     console.log("api initialized for shielding")
     await api.tx.balances.transferKeepAlive(incogniteeStore.vault, amount).signAndSend(accountStore.account, txResHandler)

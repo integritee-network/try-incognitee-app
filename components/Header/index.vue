@@ -107,7 +107,7 @@ watch(
     async () => {
       //todo! only reinitilize if account changes
       console.log("trying to init api")
-      const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+      const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
       const api = await ApiPromise.create({ provider: wsProvider });
       api.query.system.account(accountStore.account.address, ({ data: { free: currentFree }}) => {
         console.log("paseo balance:" + currentFree)

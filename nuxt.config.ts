@@ -58,6 +58,7 @@ export default defineNuxtConfig({
     },
   },
   experimental: {
+    clientNodeCompat: true,
     externalVue: false,
   },
   routeRules: {
@@ -73,6 +74,7 @@ export default defineNuxtConfig({
     defaultImport: 'component',
     global: false,
   },
+  ssr: false,
   vite: {
     css: {
       preprocessorOptions: {

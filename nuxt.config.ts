@@ -71,13 +71,13 @@ export default defineNuxtConfig({
     defaultImport: 'component',
     global: false,
   },
-  ssr: true,
+  ssr: false,
   vite: {
     define: {
       process: {},
       global: 'globalThis',
     },
-    // This is not ideal and should work via `unenv` directly..
+    // This is not ideal and should work via `unenv` directly.
     resolve: {
       alias: {
         crypto: './node_modules/unenv/runtime/node/crypto/node.cjs',

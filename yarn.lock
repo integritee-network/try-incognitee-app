@@ -8622,6 +8622,7 @@ __metadata:
     postcss: "npm:^8.4.38"
     sass: "npm:^1.75.0"
     tailwindcss: "npm:^3.4.3"
+    unenv: "npm:^1.9.0"
     vite: "npm:^5.2.10"
     vue: "npm:^3.4.26"
     vue-router: "npm:^4.3.2"

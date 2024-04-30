@@ -81,7 +81,7 @@ export default defineNuxtConfig({
     resolve: {
       alias: {
         crypto: './node_modules/unenv/runtime/node/crypto/node.cjs',
-        // assert: './node_modules/unenv/runtime/mock/proxy.cjs',
+        assert: './node_modules/unenv/runtime/mock/proxy.cjs',
         http: './node_modules/unenv/runtime/node/http/index.cjs',
         buffer: './node_modules/unenv/runtime/node/buffer/index.cjs',
         os: './node_modules/unenv/runtime/mock/proxy.cjs',

@@ -26,7 +26,7 @@
     "vue-router": "^4.3.2"
   },
   "dependencies": {
-    "@encointer/worker-api": "^0.12.5-alpha.0",
+    "@encointer/worker-api": "^0.12.5-alpha.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@material-tailwind/html": "^2.2.2",
     "@nuxt/content": "^2.12.1",

@@ -74,7 +74,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       nodePolyfills({
-        include: ['buffer', 'constants', 'vm', 'stream'],
+        include: ['buffer', 'constants', 'vm', 'stream', 'crypto'],
         globals: {
           Buffer: true,
           process: true,

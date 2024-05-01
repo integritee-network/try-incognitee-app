@@ -485,32 +485,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@encointer/node-api@npm:^0.12.5-alpha.4":
-  version: 0.12.5-alpha.4
-  resolution: "@encointer/node-api@npm:0.12.5-alpha.4"
+"@encointer/node-api@npm:^0.12.5-alpha.8":
+  version: 0.12.5-alpha.8
+  resolution: "@encointer/node-api@npm:0.12.5-alpha.8"
   dependencies:
-    "@encointer/types": "npm:^0.12.5-alpha.4"
+    "@encointer/types": "npm:^0.12.5-alpha.8"
     "@polkadot/api": "npm:^10.9.1"
     tslib: "npm:^2.5.3"
-  checksum: 10c0/f623da640795621ddd568655bfd1712d085a0d0f94cbc5a03022f157a3e9489406012a9a760b9cc73ef3c9da875d955df5593b47edccb89dd0ea8401389a13f1
+  checksum: 10c0/463baf09401913755d6917e698aea6bb128671ed3d699bf8ba351e8510fd31b1e2e52daed33969e4dfac65f2bfc68b9ec972085cdad03cae19b10edefdaa320c
   languageName: node
   linkType: hard
 
-"@encointer/types@npm:^0.12.5-alpha.4":
-  version: 0.12.5-alpha.4
-  resolution: "@encointer/types@npm:0.12.5-alpha.4"
+"@encointer/types@npm:^0.12.5-alpha.8":
+  version: 0.12.5-alpha.8
+  resolution: "@encointer/types@npm:0.12.5-alpha.8"
   dependencies:
     "@polkadot/api": "npm:^10.9.1"
     "@polkadot/types": "npm:^10.9.1"
     "@polkadot/types-codec": "npm:^10.9.1"
     "@polkadot/util": "npm:^12.3.2"
-  checksum: 10c0/5ab3cceecb6efefdcb922c325b160de4592601bdfa93d887975df4b230f895f391e0545bb36a1a8ead9ec4814f79606f51a0755bbf51ce6273fe18bf1470436f
+  checksum: 10c0/079a6ed4da6c670a63e8497d491c11d97fddd820c6fab91bcf82a9aa570df460a4361be4b2f2a2c9b194895fbe09e3e84a0b16810fc2871113f5aaf8e970f757
   languageName: node
   linkType: hard
 
-"@encointer/util@npm:^0.12.5-alpha.4":
-  version: 0.12.5-alpha.4
-  resolution: "@encointer/util@npm:0.12.5-alpha.4"
+"@encointer/util@npm:^0.12.5-alpha.8":
+  version: 0.12.5-alpha.8
+  resolution: "@encointer/util@npm:0.12.5-alpha.8"
   dependencies:
     "@babel/runtime": "npm:^7.18.9"
     "@polkadot/util": "npm:^12.3.2"
@@ -518,18 +518,18 @@ __metadata:
     "@types/bn.js": "npm:^5.1.1"
     assert: "npm:^2.0.0"
     bn.js: "npm:^5.2.1"
-  checksum: 10c0/a2038788f0ad86b5e46198e132a05e8f7faa88aaf0a3ae4c58a5dd9f1e6fd40dbcb625df069732d47b86fc819405fbd5efd66d46101c34767fc4ee0a57585c43
+  checksum: 10c0/84cdf5a2c7453faa0ac8fbb7737e8681d7f6970d4245983d846328e465a28e664b8e53a0d40d78a262820874b7a816355585c1714f224e6f793c07a0c7a55549
   languageName: node
   linkType: hard
 
-"@encointer/worker-api@npm:^0.12.5-alpha.4":
-  version: 0.12.5-alpha.4
-  resolution: "@encointer/worker-api@npm:0.12.5-alpha.4"
+"@encointer/worker-api@npm:^0.12.5-alpha.8":
+  version: 0.12.5-alpha.8
+  resolution: "@encointer/worker-api@npm:0.12.5-alpha.8"
   dependencies:
-    "@encointer/node-api": "npm:^0.12.5-alpha.4"
-    "@encointer/types": "npm:^0.12.5-alpha.4"
-    "@encointer/util": "npm:^0.12.5-alpha.4"
-    "@learntheropes/node-rsa": "npm:~1.1.3"
+    "@encointer/node-api": "npm:^0.12.5-alpha.8"
+    "@encointer/types": "npm:^0.12.5-alpha.8"
+    "@encointer/util": "npm:^0.12.5-alpha.8"
+    "@peculiar/webcrypto": "npm:^1.4.6"
     "@polkadot/api": "npm:^10.9.1"
     "@polkadot/keyring": "npm:^12.3.2"
     "@polkadot/types": "npm:^10.9.1"
@@ -542,7 +542,7 @@ __metadata:
     websocket-as-promised: "npm:^2.0.1"
   peerDependencies:
     "@polkadot/x-randomvalues": ^12.3.2
-  checksum: 10c0/0ed5484e841ab9e879072eafcc4e0571a999bea28268bd7da05cddfd729829afb02800af236769d72085de1af43a5bc5a107f5c944e951b4fe71fe52ce3c7b62
+  checksum: 10c0/d37e831e91fd09d30a21d6b0914d4a20987a056365b795970b5053449c10524c32e56e49d03475d3d2879102c7635b6b3115f0472ea0a860c3226e4793d488ff
   languageName: node
   linkType: hard
 
@@ -909,16 +909,6 @@ __metadata:
   version: 1.1.1
   resolution: "@kwsites/promise-deferred@npm:1.1.1"
   checksum: 10c0/ef1ad3f1f50991e3bed352b175986d8b4bc684521698514a2ed63c1d1fc9848843da4f2bc2df961c9b148c94e1c34bf33f0da8a90ba2234e452481f2cc9937b1
-  languageName: node
-  linkType: hard
-
-"@learntheropes/node-rsa@npm:~1.1.3":
-  version: 1.1.3
-  resolution: "@learntheropes/node-rsa@npm:1.1.3"
-  dependencies:
-    asn1: "npm:^0.2.4"
-    buffer: "npm:^6.0.3"
-  checksum: 10c0/d96d934ae9e76e9d46d609a10dfddc5a28cadf3a757ac4284b91f6cc6939420660aff70ee3eaffc3bf90cfbab9110388a6604f32ce96c765ebaa36de42b5ac03
   languageName: node
   linkType: hard
 
@@ -1645,6 +1635,39 @@ __metadata:
     "@parcel/watcher-win32-x64":
       optional: true
   checksum: 10c0/33b7112094b9eb46c234d824953967435b628d3d93a0553255e9910829b84cab3da870153c3a870c31db186dc58f3b2db81382fcaee3451438aeec4d786a6211
+  languageName: node
+  linkType: hard
+
+"@peculiar/asn1-schema@npm:^2.3.8":
+  version: 2.3.8
+  resolution: "@peculiar/asn1-schema@npm:2.3.8"
+  dependencies:
+    asn1js: "npm:^3.0.5"
+    pvtsutils: "npm:^1.3.5"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/65f16b2a7eb91365b6dac47730ffcad4617ef04b821e0a4286c379ac7283588b0a6744032ee686e0914a0886c2a055108ed945b9c4d22821a3b123640b61f3b2
+  languageName: node
+  linkType: hard
+
+"@peculiar/json-schema@npm:^1.1.12":
+  version: 1.1.12
+  resolution: "@peculiar/json-schema@npm:1.1.12"
+  dependencies:
+    tslib: "npm:^2.0.0"
+  checksum: 10c0/202132c66dcc6b6aca5d0af971c015be2e163da2f7f992910783c5d39c8a7db59b6ec4f4ce419459a1f954b7e1d17b6b253f0e60072c1b3d254079f4eaebc311
+  languageName: node
+  linkType: hard
+
+"@peculiar/webcrypto@npm:^1.4.6":
+  version: 1.4.6
+  resolution: "@peculiar/webcrypto@npm:1.4.6"
+  dependencies:
+    "@peculiar/asn1-schema": "npm:^2.3.8"
+    "@peculiar/json-schema": "npm:^1.1.12"
+    pvtsutils: "npm:^1.3.5"
+    tslib: "npm:^2.6.2"
+    webcrypto-core: "npm:^1.7.9"
+  checksum: 10c0/b9c80b1a0a3e3ebbf045bd5167fe99ec4a83b170e9aa15a5952a9138afc278210d772306dcc57101d9407c3f9c70dbf6bfb4d8b3f20996ad35c650bb0fe6a90c
   languageName: node
   linkType: hard
 
@@ -3522,12 +3545,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1@npm:^0.2.4":
-  version: 0.2.6
-  resolution: "asn1@npm:0.2.6"
+"asn1js@npm:^3.0.1, asn1js@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "asn1js@npm:3.0.5"
   dependencies:
-    safer-buffer: "npm:~2.1.0"
-  checksum: 10c0/00c8a06c37e548762306bcb1488388d2f76c74c36f70c803f0c081a01d3bdf26090fc088cd812afc5e56a6d49e33765d451a5f8a68ab9c2b087eba65d2e980e0
+    pvtsutils: "npm:^1.3.2"
+    pvutils: "npm:^1.1.3"
+    tslib: "npm:^2.4.0"
+  checksum: 10c0/bb8eaf4040c8f49dd475566874986f5976b81bae65a6b5526e2208a13cdca323e69ce297bcd435fdda3eb6933defe888e71974d705b6fcb14f2734a907f8aed4
   languageName: node
   linkType: hard
 
@@ -8588,7 +8613,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nuxt-app@workspace:."
   dependencies:
-    "@encointer/worker-api": "npm:^0.12.5-alpha.4"
+    "@encointer/worker-api": "npm:^0.12.5-alpha.8"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
     "@material-tailwind/html": "npm:^2.2.2"
     "@nuxt/content": "npm:^2.12.1"
@@ -8622,7 +8647,6 @@ __metadata:
     postcss: "npm:^8.4.38"
     sass: "npm:^1.75.0"
     tailwindcss: "npm:^3.4.3"
-    unenv: "npm:^1.9.0"
     vite: "npm:^5.2.10"
     vue: "npm:^3.4.26"
     vue-router: "npm:^4.3.2"
@@ -9696,6 +9720,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pvtsutils@npm:^1.3.2, pvtsutils@npm:^1.3.5":
+  version: 1.3.5
+  resolution: "pvtsutils@npm:1.3.5"
+  dependencies:
+    tslib: "npm:^2.6.1"
+  checksum: 10c0/d425aed316907e0b447a459bfb97c55d22270c3cfdba5a07ec90da0737b0e40f4f1771a444636f85bb6a453de90ff8c6b5f4f6ddba7597977166af49974b4534
+  languageName: node
+  linkType: hard
+
+"pvutils@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "pvutils@npm:1.1.3"
+  checksum: 10c0/23489e6b3c76b6afb6964a20f891d6bef092939f401c78bba186b2bfcdc7a13904a0af0a78f7933346510f8c1228d5ab02d3c80e968fd84d3c76ff98d8ec9aac
+  languageName: node
+  linkType: hard
+
 "queue-microtask@npm:^1.2.2":
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
@@ -10238,7 +10278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"safer-buffer@npm:>= 2.1.2 < 3.0.0, safer-buffer@npm:~2.1.0":
+"safer-buffer@npm:>= 2.1.2 < 3.0.0":
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
   checksum: 10c0/7e3c8b2e88a1841c9671094bbaeebd94448111dd90a81a1f606f3f67708a6ec57763b3b47f06da09fc6054193e0e6709e77325415dc8422b04497a8070fa02d4
@@ -11157,7 +11197,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.1.0, tslib@npm:^2.5.3, tslib@npm:^2.6.2":
+"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.5.3, tslib@npm:^2.6.1, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
@@ -12089,6 +12129,19 @@ __metadata:
   version: 3.3.3
   resolution: "web-streams-polyfill@npm:3.3.3"
   checksum: 10c0/64e855c47f6c8330b5436147db1c75cb7e7474d924166800e8e2aab5eb6c76aac4981a84261dd2982b3e754490900b99791c80ae1407a9fa0dcff74f82ea3a7f
+  languageName: node
+  linkType: hard
+
+"webcrypto-core@npm:^1.7.9":
+  version: 1.7.9
+  resolution: "webcrypto-core@npm:1.7.9"
+  dependencies:
+    "@peculiar/asn1-schema": "npm:^2.3.8"
+    "@peculiar/json-schema": "npm:^1.1.12"
+    asn1js: "npm:^3.0.1"
+    pvtsutils: "npm:^1.3.5"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/29075c0fd6afdd11473dcf98623b929fae6a0861a54725af109df824e3c55c00580103a2f934baabff52d588e9c6c3892db80346061fd835c55e0a83264c19f5
   languageName: node
   linkType: hard
 

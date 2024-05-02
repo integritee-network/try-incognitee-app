@@ -1,7 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
-import 'node:crypto';
-
 export default defineNuxtConfig({
   app: {
     head: {
@@ -71,7 +69,6 @@ export default defineNuxtConfig({
     defaultImport: 'component',
     global: false,
   },
-  ssr: false,
   vite: {
     css: {
       preprocessorOptions: {

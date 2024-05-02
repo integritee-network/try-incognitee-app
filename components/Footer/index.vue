@@ -106,7 +106,7 @@
       <div class="footer__bottom">
         <span class="paragraph_medium">©{{ new Date().getFullYear() }} Integritee, Inc.</span>
         <span>
-          <NuxtLink to="/privacy-policy" class="blue paragraph_medium">Imprint and Privacy Policy</NuxtLink>
+          <NuxtLink to="https://www.integritee.network/privacy-policy" class="blue paragraph_medium">Imprint and Privacy Policy</NuxtLink>
         </span>
       </div>
     </div>

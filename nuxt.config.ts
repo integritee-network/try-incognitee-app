@@ -1,6 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
+  target: 'static',
   app: {
     head: {
       title: 'Incognitee',

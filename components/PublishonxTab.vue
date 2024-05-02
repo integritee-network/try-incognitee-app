@@ -2,8 +2,8 @@
   <section id="steps">
     <div class="block steps">
       <div class="container">
-        <div class='grid grid-rows-3 grid-flow-col gap-4'>
-          <div class='text-4xl mt-10'>Publish on X</div>
+        <div class=''>
+          <div class='text-4xl mt-10 mb-10'>Publish on X</div>
           <div class='text-lg'>
             By clicking the ”Check” button, you will be redirected to the Paseo Subscan Portal,
             where you have to check for your unshielding event.

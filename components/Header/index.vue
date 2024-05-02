@@ -4,7 +4,7 @@
       <NuxtLink to="/" class="header__logo">
         <Logo />
       </NuxtLink>
-      <div v-if="width > breakpoints.slg" class="header__nav grid grid-cols-4 gap-8 content-start ">
+      <div class="header__nav grid grid-cols-4 gap-8 content-start ">
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Wallet Address
@@ -18,7 +18,7 @@
           <span class="gradient gradient_one">Incognitee Balance
         </span><p>{{ accountStore.getIncogniteeHumanBalance}}</p></NuxtLink>
 
-				<NuxtLink class="text-link paragraph_smll">
+				<NuxtLink v-if="width > breakpoints.slg" class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status
         </span>
           <template v-if="incogniteeStore.apiReady">
@@ -30,7 +30,7 @@
         </NuxtLink>
 
       </div>
-      <div  class="header__nav-right">
+      <div  v-if="width > breakpoints.slg" class="header__nav-right">
         <Socials />
 
         <button v-if="width <= breakpoints.slg" class="header__burger" :class="{
@@ -259,6 +259,14 @@ onMounted(() => {
 
   &_no-bg {
     background: rgba(81, 81, 81, 0) !important;
+  }
+}
+.header__nav {
+  display: flex;
+  flex-direction: row; // default to horizontal layout
+
+  @media screen and (max-width: 660px) {
+    flex-direction: column; // switch to vertical layout on mobile
   }
 }
 </style>

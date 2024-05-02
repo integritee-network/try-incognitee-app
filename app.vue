@@ -28,7 +28,7 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 <style lang="scss">
 .page-wrapper {
   position: relative;
-  padding-top: 91px;
+  padding-top: 200px;
 }
 
 .wrapper {

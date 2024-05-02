@@ -5,29 +5,27 @@
       <div class="container">
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
-          <div class="grid grid-cols-2 gap-4 ">
-            <div class='text-lg'>
-              <template v-if="accountStore.paseoBalance > 0">
-                Shielding your tokens means that you send them from Paseo to Incognitee where you can then trandfer them
-                privately
+          <div class='text-lg'>
+            <template v-if="accountStore.paseoBalance > 0">
+              Shielding your tokens means that you send them from Paseo to Incognitee where you can then trandfer them
+              privately
 
-                <div class='mt-4'>
-                  <UButton class="btn btn_gradient" @click="shield">Shield PAS to Incognitee</UButton>
-                  <div>{{ txStatus }}</div>
-                </div>
-              </template>
-              <template v-else>
-                You don’t have any PAS on your new account yet. Follow the link below to obtain some PAS for free
-                from the Polkadot faucet. Use your address to claim tokens:
-                <code>{{ accountStore.getAddress }}</code>.
+              <div class='mt-4'>
+                <UButton class="btn btn_gradient" @click="shield">Shield PAS to Incognitee</UButton>
+                <div>{{ txStatus }}</div>
+              </div>
+            </template>
+            <template v-else>
+              You don’t have any PAS on your new account yet. Follow the link below to obtain some PAS for free
+              from the Polkadot faucet. Use your address to claim tokens:
+              <code>{{ accountStore.getAddress }}</code>.
 
-                <div class='mt-4'>
-                  <NuxtLink to="https://faucet.polkadot.io/paseo" target="blank" class="btn btn_gradient">Get free PAS
-                    tokens
-                  </NuxtLink>
-                </div>
-              </template>
-            </div>
+              <div class='mt-4'>
+                <NuxtLink to="https://faucet.polkadot.io/paseo" target="blank" class="btn btn_gradient">Get free PAS
+                  tokens
+                </NuxtLink>
+              </div>
+            </template>
           </div>
         </div>
       </div>

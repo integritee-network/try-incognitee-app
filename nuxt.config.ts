@@ -1,9 +1,5 @@
 import { defineNuxtConfig } from 'nuxt/config'
 
-// Add polyfills: https://github.com/nuxt/nuxt/pull/25028
-import { Buffer } from 'node:buffer'
-import process from 'node:process'
-
 export default defineNuxtConfig({
   app: {
     head: {

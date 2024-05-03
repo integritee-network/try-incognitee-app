@@ -11,12 +11,16 @@
         </span><p>{{ accountStore.getShortAddress }}</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Paseo Balance
-        </span><p>{{ accountStore.getPaseoHumanBalance }} </p></NuxtLink>
+          <span class="gradient gradient_two">Paseo Balance</span>
+          <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+          <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
+        </NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_one">Incognitee Balance
-        </span><p>{{ accountStore.getIncogniteeHumanBalance}}</p></NuxtLink>
+          <span class="gradient gradient_one">Incognitee Balance</span>
+          <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+          <div v-else>{{ accountStore.getIncogniteeHumanBalance}}</div>
+        </NuxtLink>
 
 				<NuxtLink v-if="width > breakpoints.slg" class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status
@@ -59,12 +63,14 @@ import { useIncognitee } from '@/store/incognitee.ts'
 import { useInterval } from '@vueuse/core'
 import {ApiPromise, WsProvider} from "@polkadot/api";
 
-const pollCounter = useInterval(10000)
+const pollCounter = useInterval(2000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 
 const active = ref(false)
+const isFetchingPaseoBalance = ref(true)
+const isFetchingIncogniteeBalance = ref(true)
 
 const { width } = useWindowSize()
 const { y } = useWindowScroll()
@@ -90,17 +96,20 @@ watch(
     pollCounter,
     async () => {
       console.log("ping: " + pollCounter.value)
+      await fetchIncogniteeBalance()
+    }
+)
+
+const fetchIncogniteeBalance = async () => {
       if (!incogniteeStore.apiReady) return
-      console.log("api ready")
       if (!accountStore.account) return
-      console.log("account ready")
       incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
           .then((balance) => {
             console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
             accountStore.setIncogniteeBalance(balance)
+            isFetchingIncogniteeBalance.value = false;
           });
-    }
-)
+}
 
 watch(
     accountStore,
@@ -112,7 +121,9 @@ watch(
       api.query.system.account(accountStore.account.address, ({ data: { free: currentFree }}) => {
         console.log("paseo balance:" + currentFree)
         accountStore.paseoBalance = Number(currentFree)
+        isFetchingPaseoBalance.value = false;
       });
+      fetchIncogniteeBalance().then(() => console.log("fetched incognitee balance"))
     }
 )
 
@@ -268,5 +279,19 @@ onMounted(() => {
   @media screen and (max-width: 660px) {
     flex-direction: column; // switch to vertical layout on mobile
   }
+}
+.spinner {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 1em; /* Adjust the size here */
+  height: 1em; /* Adjust the size here */
+  animation: spin 2s linear infinite;
+  vertical-align: middle; /* Align with the text */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

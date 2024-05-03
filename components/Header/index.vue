@@ -97,7 +97,14 @@ watch(
     pollCounter,
     async () => {
       console.log("ping: " + pollCounter.value)
-      await fetchIncogniteeBalance()
+
+      if (!accountStore.account) {
+        console.log('[watchAccount] Account has not been set yet...');
+        return;
+      }
+
+      fetchPaseoBalance();
+      fetchIncogniteeBalance();
     }
 )
 
@@ -130,22 +137,9 @@ const fetchPaseoBalance = async () => {
   console.log('[fetchPaseoBalance] fetched paseo balance')
 }
 
-watch(
-    accountStore,
-    () => {
-      if (!!accountStore.account) {
-        console.log('[watchAccount] Account has not been set yet...');
-        return;
-      }
-
-      fetchPaseoBalance();
-      fetchIncogniteeBalance();
-    }
-)
-
 onMounted(() => {
-  incogniteeStore.initializeApi();
   polkadotStore.initializeApi();
+  incogniteeStore.initializeApi();
 })
 </script>
 

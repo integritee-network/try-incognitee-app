@@ -9,11 +9,16 @@ export const usePolkadotApi = defineStore('polkadotApi', {
     }),
     actions: {
         async initializeApi() {
-            console.log("trying to init api");
+            console.log("[polkadotApi] initializing...");
 
-            const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
-            this.api = await ApiPromise.create({provider: wsProvider});
-            this.apiReady = true;
+            const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
+            await ApiPromise.create({provider: wsProvider})
+                .then((api) => {
+                    this.api = api;
+                    console.log("[polkadotApi] initialized");
+                    this.apiReady = true;
+                })
+                .catch((reason) => console.log(reason));
         }
     },
 })

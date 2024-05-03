@@ -4,26 +4,30 @@
       <div class="container">
         <div class="column column_medium partner__column">
           <h2 class="title title_h2 partner__title">
-           Rules
+            Rules
           </h2>
-         
-         <ul class="paragraph paragraph_medium margin_large partner__description list-disc list-outside">  <li>Every shielding event will give you 1 Point </li>
-          <li>Every unshield event will give you 2 Points</li>
+
+          <ul class="paragraph paragraph_medium margin_large partner__description list-disc list-outside">
+            <li>Every shielding event will give you 1 Point</li>
+            <li>Every unshield event will give you 2 Points</li>
             <li>Perform Step 5 to be considered as a participant and get additional 5 points</li>
-              <li>Don’t post multiple times with the same X account</li>
-                <li>You can perform the first 2 tasks as many times as long as your wallets have funds.</li>
-                  <li>The goal of this campaign is to test the limits of the chain with heavy traffic. If at a certain time, the chain will break and will not be usable anymore, the campaign will be stopped and the winners will be selected based on available data.</li>
-                    <li>The top 3 participants will win a prize.</li>
-                      <li>Winners will be announced latest 2 weeks after the event via X</li></ul>
-     
+            <li>Don’t post multiple times with the same X account</li>
+            <li>You can perform steps 2-4 repeatedly until you run out of funds</li>
+            <li>The goal of this campaign is to test the limits of the chain with heavy traffic. If at a certain time,
+              the chain will break and will not be usable anymore, the campaign will be stopped and the winners will be
+              selected based on available data.
+            </li>
+            <li>The top 3 participants will win a prize.</li>
+            <li>Winners will be announced latest 2 weeks after the event via X</li>
+          </ul>
+
         </div>
         <div class="partner__image-wrapper">
           <!-- <img src="/img/index/partner/polygons.svg" class="partner__image" alt="Polygons" /> -->
-          <img src="/img/index/rules/rules.svg" class="partner__image" alt="Polygons" />
+          <img src="/img/index/rules/rules.svg" class="partner__image" alt="Polygons"/>
         </div>
       </div>
     </div>
-
 
 
   </section>

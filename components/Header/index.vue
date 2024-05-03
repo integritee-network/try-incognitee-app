@@ -61,12 +61,13 @@ import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
 import { useInterval } from '@vueuse/core'
-import {ApiPromise, WsProvider} from "@polkadot/api";
+import { usePolkadotApi } from "~/store/polkadotApi";
 
 const pollCounter = useInterval(2000)
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
+const polkadotStore = usePolkadotApi()
 
 const active = ref(false)
 const isFetchingPaseoBalance = ref(true)
@@ -101,34 +102,50 @@ watch(
 )
 
 const fetchIncogniteeBalance = async () => {
-      if (!incogniteeStore.apiReady) return
-      if (!accountStore.account) return
-      incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
-          .then((balance) => {
-            console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
-            accountStore.setIncogniteeBalance(balance)
-            isFetchingIncogniteeBalance.value = false;
-          });
+  if (!incogniteeStore.apiReady) return
+  if (!accountStore.account) return
+
+  await incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
+      .then((balance) => {
+        console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
+        accountStore.setIncogniteeBalance(balance)
+        isFetchingIncogniteeBalance.value = false;
+      });
+
+  console.log("fetched incognitee balance");
+}
+
+const fetchPaseoBalance = async () => {
+  if (!polkadotStore.apiReady) {
+    console.log('[fetchPaseoBalance] Polkadot Api is not ready yet...');
+    return;
+  }
+
+  await polkadotStore.api.query.system.account(accountStore.account.address, ({data: {free: currentFree}}) => {
+    console.log("[fetchPaseoBalance] paseo balance:" + currentFree)
+    accountStore.paseoBalance = Number(currentFree)
+    isFetchingPaseoBalance.value = false;
+  });
+
+  console.log('[fetchPaseoBalance] fetched paseo balance')
 }
 
 watch(
     accountStore,
-    async () => {
-      //todo! only reinitilize if account changes
-      console.log("trying to init api")
-      const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
-      const api = await ApiPromise.create({ provider: wsProvider });
-      api.query.system.account(accountStore.account.address, ({ data: { free: currentFree }}) => {
-        console.log("paseo balance:" + currentFree)
-        accountStore.paseoBalance = Number(currentFree)
-        isFetchingPaseoBalance.value = false;
-      });
-      fetchIncogniteeBalance().then(() => console.log("fetched incognitee balance"))
+    () => {
+      if (!!accountStore.account) {
+        console.log('[watchAccount] Account has not been set yet...');
+        return;
+      }
+
+      fetchPaseoBalance();
+      fetchIncogniteeBalance();
     }
 )
 
 onMounted(() => {
-  incogniteeStore.initializeApi()
+  incogniteeStore.initializeApi();
+  polkadotStore.initializeApi();
 })
 </script>
 

@@ -6,6 +6,7 @@ formatBalance.setDefaults({
     decimals: 10,
     unit: 'PAS'
 });
+
 export const useAccount = defineStore('account', {
   state: () => ({
     account: <KeyringPair | null>null,
@@ -19,10 +20,10 @@ export const useAccount = defineStore('account', {
     getAddress({account}): string {
       return account? account.address : 'none'
     },
-    getIncogniteeHumanBalance({incogniteeBalance}): number {
+    getIncogniteeHumanBalance({incogniteeBalance}): string {
       return formatBalance(incogniteeBalance)
     },
-    getPaseoHumanBalance({paseoBalance}): number {
+    getPaseoHumanBalance({paseoBalance}): string {
       return formatBalance(paseoBalance)
     }
   },
@@ -30,7 +31,7 @@ export const useAccount = defineStore('account', {
     setAccount(account: KeyringPair) {
       this.account = account
     },
-    setIncogniteeBalance(balance: Number) {
+    setIncogniteeBalance(balance: number) {
       this.incogniteeBalance = balance
     }
   },

@@ -7,7 +7,7 @@
         </span><p>xxxxxxxx...</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Rococo Balance
+          <span class="gradient gradient_two">Paseo Balance
         </span><p>0.0000000 ROC</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">

@@ -6,7 +6,7 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Create a Wallet</div>
           <div class='text-lg'>
-            By clicking the “Create Wallet” button, you will create a new wallet on Rococo and
+            By clicking the “Create Wallet” button, you will create a new wallet on Paseo and
             Incognitee.
           </div>
           <div>

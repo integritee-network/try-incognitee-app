@@ -7,8 +7,9 @@
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
           <div class='text-lg'>
             <template v-if="accountStore.paseoBalance > 0">
-              Shielding your tokens means that you send them from Paseo to Incognitee where you can then trandfer them
+              Shielding your tokens means that you send them from Paseo to Incognitee where you can then transfer them
               privately
+
 
               <div class='mt-4'>
                 <UButton class="btn btn_gradient" @click="shield">Shield PAS to Incognitee</UButton>
@@ -16,10 +17,13 @@
               </div>
             </template>
             <template v-else>
-              You don’t have any PAS on your new account yet. Follow the link below to obtain some PAS for free
-              from the Polkadot faucet. Use your address to claim tokens:
-              <code>{{ accountStore.getAddress }}</code>.
-
+              You don’t have any PAS on your new account yet. Copy your address and follow the link below to obtain some PAS for free
+              from the Polkadot faucet.
+              <div class='mt-3 mb-8'>
+                <button @click="copyToClipboard" class="button">
+                  Copy My Address
+                </button>
+              </div>
               <div class='mt-4'>
                 <NuxtLink to="https://faucet.polkadot.io/paseo" target="blank" class="btn btn_gradient">Get free PAS
                   tokens
@@ -48,7 +52,7 @@ const emit = defineEmits(['change-tab'])
 const txResHandler = ({events = [], status, txHash}) => {
   status.isFinalized
       ? txStatus.value = `😉 Finalized. please proceed to the next tab and invite a friend`
-      : txStatus.value = `Current transaction status: ${status.type}`
+      : txStatus.value = `Current transaction status: ${status.type}. please be patient a few more seconds`
 
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({_, event: {data, method, section}}) => {
@@ -101,4 +105,7 @@ const shield = async () => {
   }
 };
 
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(accountStore.getAddress).then(() => alert("copied your account address to clipboard. Please paste it into the address field on the Paseo faucet."));
+}
 </script>

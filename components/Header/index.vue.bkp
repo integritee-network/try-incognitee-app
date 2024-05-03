@@ -12,7 +12,7 @@
           <span class="gradient gradient_one">Wallet Address
         </span><br>xxxxxxxx...</NuxtLink>
         <NuxtLink to="/usecases" class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Rococo Balance</span><br>0.0000000 ROC
+          <span class="gradient gradient_two">Paseo Balance</span><br>0.0000000 ROC
         </NuxtLink>
         <NuxtLink to="/technology" class="text-link paragraph_smll"><span class="gradient gradient_one">Incognitee Balance</span><br>0.0000000 pROC</NuxtLink>
         <NuxtLink to="/technology" class="text-link paragraph_smll"><span class="gradient gradient_two">Incognitee Status</span><br>
@@ -113,7 +113,7 @@ watch(
   }
 
   &__logo {
- 
+
 
     @include xsm {
       width: 118px;

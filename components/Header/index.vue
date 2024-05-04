@@ -115,6 +115,8 @@ const fetchIncogniteeBalance = async () => {
       });
 }
 
+let api: ApiPromise | null = null
+
 watch(
     accountStore,
     async () => {
@@ -123,14 +125,20 @@ watch(
         console.log("skipping api init. no address")
         return
       }
+      if (api?.isReady ) {
+        console.log("skipping api init. I seems the Paseo api is already subscribed to balance changes")
+        return
+      }
+
       console.log("trying to init api")
       const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
-      const api = await ApiPromise.create({provider: wsProvider});
+      api = await ApiPromise.create({provider: wsProvider});
       api.query.system.account(accountStore.account.address, ({data: {free: currentFree}}) => {
         console.log("paseo balance:" + currentFree)
         accountStore.paseoBalance = Number(currentFree)
         isFetchingPaseoBalance.value = false;
       });
+      // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
       fetchIncogniteeBalance().then(() => console.log("fetched incognitee balance"))
     }
 )

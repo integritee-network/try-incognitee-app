@@ -13,13 +13,13 @@
 
         <NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Paseo Balance</span>
-          <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+          <div v-if="isFetchingPaseoBalance && accountStore.getShortAddress != 'none'" class="spinner"></div>
           <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
         </NuxtLink>
 
         <NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance</span>
-          <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+          <div v-if="isFetchingIncogniteeBalance && accountStore.getShortAddress != 'none'" class="spinner"></div>
           <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
         </NuxtLink>
 

@@ -3,7 +3,7 @@
     <div class="block steps">
       <div class="container">
         <div class=''>
-          <div class='text-4xl mt-10 mb-10'>Publish on X</div>
+          <div class='text-4xl mt-10 mb-10'>Tell the World - or Stay Anon</div>
           <div class='text-lg'>
             <div v-if="accountStore.incogniteeBalance == 0">
               <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
@@ -11,21 +11,11 @@
             <div v-if="accountStore.paseoBalance == 0">
               <i><b>You have no balance on Paseo. Please go back to step 2</b></i>
             </div>
-
-            By clicking the ”Check” button, you will be redirected to the Paseo Subscan Portal,
-            where you have to check for your unshielding event.
-            <div class='mt-5'>
-              <template v-if="!isIndexerLinkDisabled">
-                <NuxtLink :to="indexerLinkUrl" target="blank" class="btn btn_gradient">Check Public History</NuxtLink>
-              </template>
-              <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border">loading...</NuxtLink>
-              </template>
-            </div>
           </div>
           <div class='text-lg'>
+            To be eligible for our prices, please either tweet or send us a message over SimpleX
 
-            To be eligible for our prices, please tweet about our successful test using the button below. Make sure to
+            Tweet about your successful test using the button below. Make sure to
             include hashtag #incognitee and your account
             <div class='mt-5'>
               <template v-if="!isTwitterLinkDisabled">
@@ -33,10 +23,28 @@
                 </NuxtLink>
               </template>
               <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border">loading...</NuxtLink>
+                <NuxtLink to="" target="blank" class="btn btn_border">No account with a balance yet</NuxtLink>
               </template>
             </div>
-
+            <div class='mt-5'>Or, if you prefer to stay anonymous, use one of the best private messengers out there.
+            </div>
+            <div class='mt-5'>
+              <template v-if="!isTwitterLinkDisabled">
+                <NuxtLink
+                    to="https://simplex.chat/contact#/?v=2-5&smp=smp%3A%2F%2F1OwYGt-yqOfe2IyVHhxz3ohqo3aCCMjtB-8wn4X_aoY%3D%40smp11.simplex.im%2FbXnLZ9ksJdcW3G_yRoo_0GZefWNjVzMI%23%2F%3Fv%3D1-2%26dh%3DMCowBQYDK2VuAyEAkEgKgkeLKpJi-1y8iW19tvIIRYL6CiObZbp7pWR-4UE%253D%26srv%3D6ioorbm6i3yxmuoezrhjk6f6qgkc4syabh7m3so74xunb5nzr4pwgfqd.onion"
+                    target="blank" class="btn btn_gradient">send us a simpleX message
+                </NuxtLink>
+                <div class='mt-5'><textarea readonly class="template-textarea">Dear Integritee team. I have participated in the incognitee beta campaign with account {{accountStore.getAddress}}
+                </textarea>
+                </div>
+              </template>
+              <template v-else>
+                <NuxtLink to="" target="blank" class="btn btn_border">No account with a balance yet</NuxtLink>
+              </template>
+            </div>
+            <div class='mt-5'>
+              In case of a win, we will reach out to you over the same channel
+            </div>
           </div>
         </div>
       </div>
@@ -77,3 +85,20 @@ watch(
 onMounted(updateLinks)
 
 </script>
+<style scoped>
+.template-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  border-left: 10px solid #ccc;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  background-color: transparent;
+  font-style: italic;
+  font-size: 1.0em;
+  line-height: 1.6;
+  resize: none;
+  overflow: hidden;
+}
+</style>

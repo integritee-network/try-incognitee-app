@@ -6,7 +6,7 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
           <div class='text-lg'>
-            <template v-if="accountStore.paseoBalance > 0">
+            <template v-if="accountStore.paseoBalance > existential_deposit*10">
               Shielding your tokens means that you send them from Paseo to Incognitee where you can then transfer them
               privately
 
@@ -17,7 +17,7 @@
               </div>
             </template>
             <template v-else>
-              You don’t have any PAS on your new account yet. Copy your address and follow the link below to obtain some PAS for free
+              You don’t have enough PAS on your new account yet. Copy your address and follow the link below to obtain some PAS for free
               from the Polkadot faucet.
               <div class='mt-3 mb-8'>
                 <button @click="copyToClipboard" class="button">
@@ -45,6 +45,7 @@ import {ApiPromise, WsProvider} from "@polkadot/api";
 import {Keyring} from "@polkadot/keyring";
 import {hexToU8a} from "@polkadot/util";
 
+const existential_deposit = 10000000000;
 const txStatus = ref(null)
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
@@ -92,10 +93,15 @@ const txErrHandler = err =>
     txStatus.value = `😞 Transaction Failed: ${err.toString()}`
 const shield = async () => {
   console.log('shielding 90% of all your PAS')
+  txStatus.value = 'connecting to Paseo....please be patient'
   if (incogniteeStore.vault) {
     let balance = accountStore.paseoBalance
-    // todo! instead of sending 90% we should check fees and ED explicitly and handle edge cases
     let amount = Math.floor(0.9 * balance)
+    if (balance-amount < existential_deposit) {
+      alert("Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet")
+      txStatus.value = ''
+      return
+    }
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
     const api = await ApiPromise.create({provider: wsProvider});

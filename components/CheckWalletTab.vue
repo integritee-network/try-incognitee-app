@@ -6,7 +6,7 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
           <div class='text-lg'>
-            <template v-if="accountStore.paseoBalance > existential_deposit*10 || txStatus != ''">
+            <template v-if="accountStore.paseoBalance > existential_deposit*10 || (accountStore.paseoBalance > 0 && txStatus != '')">
               Shielding your tokens means that you send them from Paseo to Incognitee where you can then transfer them
               privately
 
@@ -46,7 +46,7 @@ import {Keyring} from "@polkadot/keyring";
 import {hexToU8a} from "@polkadot/util";
 
 const existential_deposit = 10000000000;
-const txStatus = ref(null)
+const txStatus = ref('')
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 const emit = defineEmits(['change-tab'])

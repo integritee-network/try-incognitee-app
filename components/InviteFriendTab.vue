@@ -15,7 +15,12 @@
           </div>
 
           <div class='mt-10 mb-8'>
-            <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
+            <template v-if="accountStore.incogniteeBalance > 0">
+              <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
+            </template>
+            <template v-else>
+              <NuxtLink to="" target="blank" class="btn btn_border">can't invite with zero balance</NuxtLink>
+            </template>
           </div>
           <div class='mt-10 mb-3'>
             <input type="text" ref="urlToShareWithFriend" class="dynamic-width border-2 border-gray-200 p-2"

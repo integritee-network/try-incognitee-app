@@ -6,16 +6,15 @@
           <div class='text-4xl mt-10 mb-10'>Tell the World - or Stay Anon</div>
           <div class='text-lg'>
             <div v-if="accountStore.incogniteeBalance == 0">
-              <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+              <i><b>You have no balance on Incognitee. Please go back to step 2 to collect more points</b></i>
             </div>
             <div v-if="accountStore.paseoBalance == 0">
-              <i><b>You have no balance on Paseo. Please go back to step 2</b></i>
+              <i><b>You have no balance on Paseo. Please go back to step 2 to collect more points</b></i>
             </div>
           </div>
           <div class='text-lg'>
-            To be eligible for our prices, please either tweet or send us a message over SimpleX
-
-            Tweet about your successful test using the button below. Make sure to
+            To be eligible for our prices, please either tweet or send us a message over SimpleX.
+            Tell the world about your successful test using the button below. Make sure to
             include hashtag #incognitee and your account
             <div class='mt-5'>
               <template v-if="!isTwitterLinkDisabled">
@@ -26,6 +25,23 @@
                 <NuxtLink to="" target="blank" class="btn btn_border">No account with a balance yet</NuxtLink>
               </template>
             </div>
+            <div class='mt-5'>If X is too centralized for you, we also accept posts on Nostr mentioning our profile and your test account
+            </div>
+            <div class='mt-5'>
+              <template v-if="!isTwitterLinkDisabled">
+                <NuxtLink
+                    to="https://njump.me/npub1teerer7l6q4aweperlunlgrn9jd5y956cuxkrpju6tmj3qsulvast0weax"
+                    target="blank" class="btn btn_gradient">post a note on nostr
+                </NuxtLink>
+                <div class='mt-5'>
+                  <textarea readonly class="template-textarea">I have successfully tested #incognitee private token transfers on https://try.incognitee.io by @integritee with my account {{accountStore.getAddress}}</textarea>
+                </div>
+              </template>
+              <template v-else>
+                <NuxtLink to="" target="blank" class="btn btn_border">No account with a balance yet</NuxtLink>
+              </template>
+            </div>
+
             <div class='mt-5'>Or, if you prefer to stay anonymous, use one of the best private messengers out there.
             </div>
             <div class='mt-5'>
@@ -71,7 +87,7 @@ const updateLinks = () => {
     isIndexerLinkDisabled.value = false
 
     const incogniteeUrl = encodeURIComponent("https://incognitee.io")
-    const text = encodeURIComponent(`I have successfully tested #incognitee private token transfers with my account ${accountStore.getAddress}`)
+    const text = encodeURIComponent(`I have successfully tested #incognitee private token transfers on https://try.incognitee.io with my account ${accountStore.getAddress}`)
     // todo! upload a tweet image using twitter API
     twitterLinkUrl.value = `https://twitter.com/intent/tweet?url=${incogniteeUrl}&text=${text}`
     isTwitterLinkDisabled.value = false

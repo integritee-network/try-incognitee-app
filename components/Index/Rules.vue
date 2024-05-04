@@ -11,7 +11,7 @@
             <li>Every shielding event will give you 1 Point</li>
             <li>Every unshield event will give you 2 Points</li>
             <li>Perform Step 5 to be considered as a participant and get additional 5 points</li>
-            <li>Don’t post multiple times with the same X account. However, sending us a message over simpleX will give you additional 5 points</li>
+            <li>Don’t post multiple times with the same X account. However, sending us a message over simpleX and posting on nostr will give you additional 5 points each</li>
             <li>You can perform steps 2-4 repeatedly until you run out of funds</li>
             <li>The goal of this campaign is to test the limits of the chain with heavy traffic. If at a certain time,
               the chain will break and will not be usable anymore, the campaign will be stopped and the winners will be

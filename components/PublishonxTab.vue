@@ -99,6 +99,5 @@ onMounted(updateLinks)
   font-size: 1.0em;
   line-height: 1.6;
   resize: none;
-  overflow: hidden;
 }
 </style>

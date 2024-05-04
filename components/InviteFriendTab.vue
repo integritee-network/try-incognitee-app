@@ -7,7 +7,7 @@
           <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
           <div class='text-lg'>
             By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your
-            available ROC from your Incognitee wallet to another wallet with an invite link. You can share this with
+            available PAS from your Incognitee wallet to another wallet with an invite link. You can share this with
             your friends and let them participate.
           </div>
 

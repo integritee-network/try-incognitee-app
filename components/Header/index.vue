@@ -2,65 +2,69 @@
   <header class="header" :class="{ 'header_no-bg': active }">
     <div class="container">
       <NuxtLink to="/" class="header__logo">
-        <Logo />
+        <Logo/>
       </NuxtLink>
       <div class="header__nav grid grid-cols-4 gap-8 content-start ">
 
-				<NuxtLink class="text-link paragraph_smll">
-          <span class="gradient gradient_one">Wallet Address
-        </span><p>{{ accountStore.getShortAddress }}</p></NuxtLink>
+        <NuxtLink class="text-link paragraph_smll">
+          <span class="gradient gradient_one">Wallet Address</span>
+          <p>{{ accountStore.getShortAddress }}</p>
+        </NuxtLink>
 
-				<NuxtLink class="text-link paragraph_smll">
+        <NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Paseo Balance</span>
           <div v-if="isFetchingPaseoBalance" class="spinner"></div>
           <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
         </NuxtLink>
 
-				<NuxtLink class="text-link paragraph_smll">
+        <NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance</span>
           <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
-          <div v-else>{{ accountStore.getIncogniteeHumanBalance}}</div>
+          <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
         </NuxtLink>
 
-				<NuxtLink v-if="width > breakpoints.slg" class="text-link paragraph_smll">
-          <span class="gradient gradient_two">Incognitee Status
-        </span>
+        <NuxtLink v-if="width > breakpoints.slg" class="text-link paragraph_smll">
+          <span class="gradient gradient_two">Incognitee Status</span>
           <template v-if="incogniteeStore.apiReady">
-            <p><UBadge label="Online" /> </p>
+            <p>
+              <UBadge label="Online"/>
+            </p>
           </template>
           <template v-else>
-            <p><UBadge label="checking..." color="orange"/> </p>
+            <p>
+              <UBadge label="checking..." color="orange"/>
+            </p>
           </template>
         </NuxtLink>
 
       </div>
-      <div  v-if="width > breakpoints.slg" class="header__nav-right">
-        <Socials />
+      <div v-if="width > breakpoints.slg" class="header__nav-right">
+        <Socials/>
 
         <button v-if="width <= breakpoints.slg" class="header__burger" :class="{
           active: active,
         }" type="button" @click="toggleMenu()">
-          <div class="header__burger-line" />
-          <div class="header__burger-line" />
-          <div class="header__burger-line" />
+          <div class="header__burger-line"/>
+          <div class="header__burger-line"/>
+          <div class="header__burger-line"/>
         </button>
       </div>
     </div>
   </header>
-  <Menu v-if="width <= breakpoints.slg" :active="active" :clickHandler='toggleMenu' />
+  <Menu v-if="width <= breakpoints.slg" :active="active" :clickHandler='toggleMenu'/>
 </template>
 
 <script setup lang="ts">
-import { useNuxtApp, useRoute } from '#imports'
+import {useNuxtApp, useRoute} from '#imports'
 import Menu from '@/components/Header/Menu.vue'
 import Logo from '@/components/Logo'
 import Socials from '@/components/Socials'
-import { breakpoints } from '@/configs/app.config'
-import { useWindowScroll, useWindowSize } from '@vueuse/core'
+import {breakpoints} from '@/configs/app.config'
+import {useWindowScroll, useWindowSize} from '@vueuse/core'
 import {onMounted, ref, watch} from 'vue'
-import { useAccount } from '@/store/account.ts'
-import { useIncognitee } from '@/store/incognitee.ts'
-import { useInterval } from '@vueuse/core'
+import {useAccount} from '@/store/account.ts'
+import {useIncognitee} from '@/store/incognitee.ts'
+import {useInterval} from '@vueuse/core'
 import {ApiPromise, WsProvider} from "@polkadot/api";
 
 const pollCounter = useInterval(2000)
@@ -72,10 +76,10 @@ const active = ref(false)
 const isFetchingPaseoBalance = ref(true)
 const isFetchingIncogniteeBalance = ref(true)
 
-const { width } = useWindowSize()
-const { y } = useWindowScroll()
+const {width} = useWindowSize()
+const {y} = useWindowScroll()
 
-const { $lockScroll } = useNuxtApp()
+const {$lockScroll} = useNuxtApp()
 
 const route = useRoute()
 
@@ -85,11 +89,11 @@ const toggleMenu = () => {
 }
 
 watch(
-  route,
-  () => {
-    active.value = false
-    $lockScroll(false)
-  },
+    route,
+    () => {
+      active.value = false
+      $lockScroll(false)
+    },
 )
 
 watch(
@@ -101,24 +105,28 @@ watch(
 )
 
 const fetchIncogniteeBalance = async () => {
-      if (!incogniteeStore.apiReady) return
-      if (!accountStore.account) return
-      incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
-          .then((balance) => {
-            console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
-            accountStore.setIncogniteeBalance(balance)
-            isFetchingIncogniteeBalance.value = false;
-          });
+  if (!incogniteeStore.apiReady) return
+  if (!accountStore.account) return
+  incogniteeStore.api.getBalance(accountStore.account, incogniteeStore.shard)
+      .then((balance) => {
+        console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`)
+        accountStore.setIncogniteeBalance(balance)
+        isFetchingIncogniteeBalance.value = false;
+      });
 }
 
 watch(
     accountStore,
     async () => {
       //todo! only reinitilize if account changes
+      if (accountStore.getAddress === 'none') {
+        console.log("skipping api init. no address")
+        return
+      }
       console.log("trying to init api")
       const wsProvider = new WsProvider('wss://rpc.ibp.network/paseo');
-      const api = await ApiPromise.create({ provider: wsProvider });
-      api.query.system.account(accountStore.account.address, ({ data: { free: currentFree }}) => {
+      const api = await ApiPromise.create({provider: wsProvider});
+      api.query.system.account(accountStore.account.address, ({data: {free: currentFree}}) => {
         console.log("paseo balance:" + currentFree)
         accountStore.paseoBalance = Number(currentFree)
         isFetchingPaseoBalance.value = false;
@@ -139,6 +147,7 @@ onMounted(() => {
   border-radius: 9px;
   padding: 10px 16px;
 }
+
 .gradient {
   display: inline-block;
 
@@ -272,6 +281,7 @@ onMounted(() => {
     background: rgba(81, 81, 81, 0) !important;
   }
 }
+
 .header__nav {
   display: flex;
   flex-direction: row; // default to horizontal layout
@@ -280,6 +290,7 @@ onMounted(() => {
     flex-direction: column; // switch to vertical layout on mobile
   }
 }
+
 .spinner {
   border: 2px solid #f3f3f3; /* Light grey */
   border-top: 2px solid #3498db; /* Blue */
@@ -291,7 +302,11 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

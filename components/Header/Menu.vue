@@ -8,11 +8,11 @@
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Paseo Balance
-        </span><p>0.0000000 ROC</p></NuxtLink>
+        </span><p>0.0000000 PAS</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_one">Incognitee Balance
-        </span><p>0.0000000 pROC</p></NuxtLink>
+        </span><p>0.0000000 PAS</p></NuxtLink>
 
 				<NuxtLink class="text-link paragraph_smll">
           <span class="gradient gradient_two">Incognitee Status

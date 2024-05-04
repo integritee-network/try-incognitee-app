@@ -5,8 +5,8 @@
       <div class="container">
         <div class=''>
           <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
-          <div v-if="accountStore.incogniteeBalance == 0">
-            <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+          <div v-if="accountStore.incogniteeBalance <= min_incognitee_balance">
+            <i><b>You don't have enough balance on Incognitee to invite someone. Please go back to step 2</b></i>
           </div>
           <div class='text-lg'>
             By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your
@@ -15,11 +15,11 @@
           </div>
 
           <div class='mt-10 mb-8'>
-            <template v-if="accountStore.incogniteeBalance > 0">
+            <template v-if="accountStore.incogniteeBalance > min_incognitee_balance">
               <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
             </template>
             <template v-else>
-              <NuxtLink to="" target="blank" class="btn btn_border">can't invite with zero balance</NuxtLink>
+              <NuxtLink to="" target="blank" class="btn btn_border">balance too low: go back to step 2</NuxtLink>
             </template>
           </div>
           <div class='mt-10 mb-3'>
@@ -50,6 +50,8 @@ const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 
 const inviteUrl = ref('click "invite friend" to generate a new wallet for them')
+
+const min_incognitee_balance = 0.02 *10**10
 
 formatBalance.setDefaults({
   decimals: 10,

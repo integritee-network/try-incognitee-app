@@ -5,8 +5,8 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Unshield</div>
           <div class='text-lg'>
-            By clicking the ”Unshield” button, you perform a transfer of 30% of your incognitee
-            balance to your Paseo wallet.
+            By clicking the ”Unshield” button, you perform a transfer of 30% of your Incognitee
+            balance to your wallet on Paseo.
           </div>
           <div>
             <UButton class="btn btn_gradient" @click="unshieldFunds">Unshield Funds</UButton>

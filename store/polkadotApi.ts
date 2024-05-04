@@ -12,7 +12,7 @@ export const usePolkadotApi = defineStore('polkadotApi', {
             console.log("[polkadotApi] initializing...");
 
             const wsProvider = new WsProvider('wss://paseo.rpc.amforc.com');
-            await ApiPromise.create({provider: wsProvider})
+            await new ApiPromise({provider: wsProvider}).isReady
                 .then((api) => {
                     this.api = api;
                     console.log("[polkadotApi] initialized");

@@ -61,7 +61,7 @@ import {onMounted, ref, watch} from 'vue'
 import { useAccount } from '@/store/account.ts'
 import { useIncognitee } from '@/store/incognitee.ts'
 import { useInterval } from '@vueuse/core'
-import { usePolkadotApi } from "~/store/polkadotApi";
+import { usePolkadotApi } from "@/store/polkadotApi";
 
 const pollCounter = useInterval(2000)
 

@@ -15,7 +15,7 @@
             <a href="https://incognitee.io/"> Incognitee</a> is a fast and scalable privacy enhancement for <a href="https://polkadot.network">Polkadot</a>,
             and we are approaching production readiness.
             Help us testing and do some private token transfers to win a prize!
-            You are going to obtain PAS tokens (Polkadot Testnet Tokens) and convert them to private Incognitee Tokens - a process we call token shielding.
+            You are going to obtain free PAS tokens (Polkadot Testnet Tokens) and convert them to private Incognitee Tokens - a process we call token shielding.
             Afterwards you can transfer them to a friend privately via invite link or convert them back to PAS tokens without disclosing any transfer history - cool isn't it?
           </p>
         </div>

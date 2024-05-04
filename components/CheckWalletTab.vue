@@ -6,7 +6,7 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Shield PAS tokens to Incognitee</div>
           <div class='text-lg'>
-            <template v-if="accountStore.paseoBalance > existential_deposit*10">
+            <template v-if="accountStore.paseoBalance > existential_deposit*10 || txStatus != ''">
               Shielding your tokens means that you send them from Paseo to Incognitee where you can then transfer them
               privately
 
@@ -17,7 +17,7 @@
               </div>
             </template>
             <template v-else>
-              You don’t have enough PAS on your new account yet. Copy your address and follow the link below to obtain some PAS for free
+              You don’t have enough Paseo PAS on your account. Copy your address and follow the link below to obtain some PAS for free
               from the Polkadot faucet.
               <div class='mt-3 mb-8'>
                 <button @click="copyToClipboard" class="button">

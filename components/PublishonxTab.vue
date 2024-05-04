@@ -5,6 +5,13 @@
         <div class=''>
           <div class='text-4xl mt-10 mb-10'>Publish on X</div>
           <div class='text-lg'>
+            <div v-if="accountStore.incogniteeBalance == 0">
+              <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+            </div>
+            <div v-if="accountStore.paseoBalance == 0">
+              <i><b>You have no balance on Paseo. Please go back to step 2</b></i>
+            </div>
+
             By clicking the ”Check” button, you will be redirected to the Paseo Subscan Portal,
             where you have to check for your unshielding event.
             <div class='mt-5'>

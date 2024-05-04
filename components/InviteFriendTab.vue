@@ -5,6 +5,9 @@
       <div class="container">
         <div class=''>
           <div class='text-4xl mt-10 mb-10'>Invite a friend</div>
+          <div v-if="accountStore.incogniteeBalance == 0">
+            <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+          </div>
           <div class='text-lg'>
             By clicking the ”Invite Friend” button, you perform a private transfer of 30% of your
             available PAS from your Incognitee wallet to another wallet with an invite link. You can share this with

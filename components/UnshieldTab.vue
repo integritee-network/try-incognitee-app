@@ -5,11 +5,16 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Unshield</div>
           <div class='text-lg'>
-            By clicking the ”Unshield” button, you perform a transfer of 30% of your Incognitee
-            balance to your wallet on Paseo.
-          </div>
-          <div>
-            <UButton class="btn btn_gradient" @click="unshieldFunds">Unshield Funds</UButton>
+            <div v-if="accountStore.incogniteeBalance == 0">
+              <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+            </div>
+            <div class='mt-4'>
+              By clicking the ”Unshield” button, you perform a transfer of 30% of your Incognitee
+              balance to your wallet on Paseo.
+            </div>
+            <div>
+              <UButton class="btn btn_gradient" @click="unshieldFunds">Unshield Funds</UButton>
+            </div>
           </div>
         </div>
       </div>
@@ -20,8 +25,9 @@
 <script setup lang="ts">
 import {formatBalance} from "@polkadot/util";
 
-import { useAccount } from '@/store/account.ts'
-import { useIncognitee } from '@/store/incognitee.ts'
+import {useAccount} from '@/store/account.ts'
+import {useIncognitee} from '@/store/incognitee.ts'
+
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
 
@@ -48,11 +54,11 @@ const unshieldFunds = () => {
   ).then((hash) => {
     console.log(`trustedOperationHash: ${hash}`)
     // todo! wait for evidence on L1
-    emit('change-tab',4);
+    emit('change-tab', 4);
   });
 
   // todo! remove this and only change tab upon success above
-  emit('change-tab',4);
+  emit('change-tab', 4);
 };
 
 </script>

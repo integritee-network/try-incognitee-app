@@ -5,8 +5,8 @@
         <div class='grid grid-rows-3 grid-flow-col gap-4'>
           <div class='text-4xl mt-10'>Unshield</div>
           <div class='text-lg'>
-            <div v-if="accountStore.incogniteeBalance == 0">
-              <i><b>You have no balance on Incognitee. Please go back to step 2</b></i>
+            <div v-if="accountStore.incogniteeBalance < existential_deposit * 4">
+              <i><b>Your balance on Incognitee is too low to unshield. Please go back to step 2</b></i>
             </div>
             <div class='mt-4'>
               By clicking the ”Unshield” button, you perform a transfer of 30% of your Incognitee
@@ -30,6 +30,7 @@ import {useIncognitee} from '@/store/incognitee.ts'
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
+const existential_deposit = 10000000000;
 
 const emit = defineEmits(['change-tab'])
 

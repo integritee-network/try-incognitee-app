@@ -18,7 +18,7 @@
             </template>
             <template v-else>
               You don’t have enough Paseo PAS on your account. Copy your address and follow the link below to obtain some PAS for free
-              from the Polkadot faucet.
+              from the Paseo faucet.
               <div class='mt-3 mb-8'>
                 <button @click="copyToClipboard" class="button">
                   Copy My Address

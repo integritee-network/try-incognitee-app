@@ -89,7 +89,7 @@ const inviteFriend = () => {
       amount
   ).then((hash) => {
     console.log(`trustedOperationHash: ${hash}`)
-    topStatus.value = '😀 Success: sent 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease.'
+    topStatus.value = "😀 Success: sent 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need"
   });
 };
 </script>

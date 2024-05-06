@@ -52,8 +52,8 @@ const incogniteeStore = useIncognitee()
 const emit = defineEmits(['change-tab'])
 const txResHandler = ({events = [], status, txHash}) => {
   status.isFinalized
-      ? txStatus.value = `😉 Finalized. You should see your Incognitee balance increase in seconds. Please proceed to the next tab and invite a friend`
-      : txStatus.value = `Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`
+      ? txStatus.value = `😀 Finalized. You should see your Incognitee balance increase in seconds. Please proceed to the next tab and invite a friend`
+      : txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`
 
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({_, event: {data, method, section}}) => {
@@ -93,7 +93,7 @@ const txErrHandler = err =>
     txStatus.value = `😞 Transaction Failed: ${err.toString()}`
 const shield = async () => {
   console.log('shielding 90% of all your PAS')
-  txStatus.value = 'connecting to Paseo....please be patient'
+  txStatus.value = '⌛ connecting to Paseo....please be patient'
   if (incogniteeStore.vault) {
     let balance = accountStore.paseoBalance
     let amount = Math.floor(0.9 * balance)

@@ -43,7 +43,7 @@ formatBalance.setDefaults({
 });
 const unshieldFunds = () => {
   console.log('will unshield 30% of your private funds to same account on L1');
-  topStatus.value = 'will unshield 30% of your private funds to same account on L1'
+  topStatus.value = '⌛ will unshield 30% of your private funds to same account on L1'
   const balance = accountStore.incogniteeBalance
   // todo! instead of sending 30% we should check fees explicitly and handle edge cases
   const amount = Math.floor(0.30 * balance)
@@ -57,7 +57,7 @@ const unshieldFunds = () => {
       signer.address,
       amount
   ).then((hash) => {
-    topStatus.value = 'Triggered unshielding of funds successfully. please proceed to step 5'
+    topStatus.value = '😀 Triggered unshielding of funds successfully. please proceed to step 5'
     console.log(`trustedOperationHash: ${hash}`)
     // todo! wait for evidence on L1
     // emit('change-tab', 4);

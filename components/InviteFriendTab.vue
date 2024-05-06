@@ -17,6 +17,7 @@
           <div class='mt-10 mb-8'>
             <template v-if="accountStore.incogniteeBalance > min_incognitee_balance">
               <UButton class="btn btn_gradient" @click="inviteFriend">Invite Friend</UButton>
+              <div>{{ topStatus }}</div>
             </template>
             <template v-else>
               <NuxtLink to="" target="blank" class="btn btn_border">balance too low: go back to step 2</NuxtLink>
@@ -48,6 +49,7 @@ import {useIncognitee} from '@/store/incognitee.ts'
 
 const accountStore = useAccount()
 const incogniteeStore = useIncognitee()
+const topStatus = ref('')
 
 const inviteUrl = ref('click "invite friend" to generate a new wallet for them')
 
@@ -63,6 +65,7 @@ const copyToClipboard = () => {
 }
 const inviteFriend = () => {
   console.log('creating wallet for your friend');
+  topStatus.value = '⌛ sending 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend'
   const generatedMnemonic = mnemonicGenerate();
   const localKeyring = new Keyring({type: 'sr25519', ss58Format: 42});
   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {name: 'fresh'});
@@ -84,7 +87,10 @@ const inviteFriend = () => {
       signer.address,
       newAccount.address,
       amount
-  ).then((hash) => console.log(`trustedOperationHash: ${hash}`));
+  ).then((hash) => {
+    console.log(`trustedOperationHash: ${hash}`)
+    topStatus.value = '😀 Success: sent 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease.'
+  });
 };
 </script>
 

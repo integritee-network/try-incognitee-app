@@ -86,8 +86,8 @@ const updateLinks = () => {
     indexerLinkUrl.value = url
     isIndexerLinkDisabled.value = false
 
-    const incogniteeUrl = encodeURIComponent("https://incognitee.io")
-    const text = encodeURIComponent(`Just aced the #incognitee private token transfers test with my account ${accountStore.getAddress}! Join me and explore the beta test campaign at https://try.incognitee.io. Let's shape the future of @polkadot #privacy together!`)
+    const incogniteeUrl = encodeURIComponent("https://try.incognitee.io")
+    const text = encodeURIComponent(`Just aced the #incognitee private token transfers test with my account ${accountStore.getAddress}! Join me and explore the beta test campaign run by @integri_t_e_e. Let's shape the future of @polkadot #privacy together!`)
     // todo! upload a tweet image using twitter API
     twitterLinkUrl.value = `https://twitter.com/intent/tweet?url=${incogniteeUrl}&text=${text}`
     isTwitterLinkDisabled.value = false

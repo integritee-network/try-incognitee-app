@@ -6,7 +6,7 @@
           <div class="text-4xl mt-10">Unshield</div>
           <div class="text-lg">
             <div
-              v-if="accountStore.incogniteeBalance < existential_deposit * 4"
+              v-if="accountStore.incogniteeBalance < existential_deposit * 5"
             >
               <i
                 ><b

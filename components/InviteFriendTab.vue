@@ -15,7 +15,7 @@
           </div>
           <div class="text-lg">
             By clicking the ”Invite Friend” button, you perform a private
-            transfer of 30% of your available PAS from your Incognitee wallet to
+            transfer of 10% of your available PAS from your Incognitee wallet to
             another wallet with an invite link. You can share this with your
             friends and let them participate.
           </div>
@@ -88,7 +88,7 @@ const copyToClipboard = () => {
 const inviteFriend = () => {
   console.log("creating wallet for your friend");
   topStatus.value =
-    "⌛ sending 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend";
+    "⌛ sending 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend";
   const generatedMnemonic = mnemonicGenerate();
   const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
@@ -107,10 +107,10 @@ const inviteFriend = () => {
     "/?seed=" +
     privateKeyHex;
 
-  console.log("sending 30% of your funds to your friend's account");
+  console.log("sending 10% of your funds to your friend's account");
   const balance = accountStore.incogniteeBalance;
-  // todo! instead of sending 30% we should check fees explicitly and handle edge cases
-  const amount = Math.floor(0.3 * balance);
+  // todo! instead of sending 10% we should check fees explicitly and handle edge cases
+  const amount = Math.floor(0.1 * balance);
   const signer = accountStore.account;
   console.log(
     `sending ${formatBalance(amount)} from ${signer.address} privately to ${newAccount.address}`,
@@ -127,7 +127,7 @@ const inviteFriend = () => {
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
       topStatus.value =
-        "😀 Success: sent 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need";
+        "😀 Success: sent 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need";
     });
 };
 </script>

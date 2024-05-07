@@ -20,11 +20,11 @@
 <script setup lang="ts">
 defineProps<{
   item: {
-    title: string
-    text: string
-    img: string
-  }
-}>()
+    title: string;
+    text: string;
+    img: string;
+  };
+}>();
 </script>
 <style lang="scss" scoped>
 .simple {
@@ -66,7 +66,7 @@ defineProps<{
   &__item-title {
     position: relative;
     z-index: 2;
-    font-family: 'WhyteInktrap';
+    font-family: "WhyteInktrap";
     font-weight: 500;
     font-size: $tDef;
     line-height: 110%;

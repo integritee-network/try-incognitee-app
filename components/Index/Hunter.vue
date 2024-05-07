@@ -3,18 +3,29 @@
     <div class="block hunter">
       <div class="container">
         <div class="column column_medium hunter__column">
-          <h2 class="title title_h2 hunter__title">
-            Are you a bounty hunter?
-          </h2>
-          <p class="paragraph paragraph_medium margin_large hunter__description">
-            We want to make our platform as secure as possible, that's why we will launch a bug bounty to attract the best talents to battle test our solution.
+          <h2 class="title title_h2 hunter__title">Are you a bounty hunter?</h2>
+          <p
+            class="paragraph paragraph_medium margin_large hunter__description"
+          >
+            We want to make our platform as secure as possible, that's why we
+            will launch a bug bounty to attract the best talents to battle test
+            our solution.
           </p>
-          <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.4-become-a-bug-hunter" target="blank" class="btn btn_gradient">Start Hunting</NuxtLink>
+          <NuxtLink
+            to="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.4-become-a-bug-hunter"
+            target="blank"
+            class="btn btn_gradient"
+            >Start Hunting</NuxtLink
+          >
         </div>
         <div class="hunter__image-wrapper">
           <!-- <img src="/img/index/hunter/polygons.svg" class="hunter__image" alt="Polygons" /> -->
-          <img src="/img/index/hunter/bounty-hunter-picture.svg" class="hunter__image" alt="Polygons" />
+          <img
+            src="/img/index/hunter/bounty-hunter-picture.svg"
+            class="hunter__image"
+            alt="Polygons"
+          />
           <GlobalRadialGradient class="work__image-gradient" />
         </div>
       </div>

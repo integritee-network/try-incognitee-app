@@ -1,10 +1,11 @@
-git<script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
-import { useAsyncData } from '#imports'
-import Footer from '@/components/Footer'
+git
+<script setup lang="ts">
+import { defineAsyncComponent } from "vue";
+import { useAsyncData } from "#imports";
+import Footer from "@/components/Footer";
 
-var exports = {};
-const Header = defineAsyncComponent(() => import('@/components/Header'))
+const exports = {};
+const Header = defineAsyncComponent(() => import("@/components/Header"));
 </script>
 
 <template>
@@ -51,11 +52,11 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 
 .top-lines {
   position: absolute;
-    right: -152px;
-    top: 436px;
-    width: 1061px;
-    transform: rotate(-159.84deg);
-    z-index: -1;
+  right: -152px;
+  top: 436px;
+  width: 1061px;
+  transform: rotate(-159.84deg);
+  z-index: -1;
 
   @include lg {
     width: 1417px;
@@ -87,11 +88,11 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 
 .bottom-lines {
   position: absolute;
-    left: -198px;
-    top: -1858px;
-    width: 936px;
-    transform: rotate(159.84deg) scale(-1, 1);
-    z-index: -1;
+  left: -198px;
+  top: -1858px;
+  width: 936px;
+  transform: rotate(159.84deg) scale(-1, 1);
+  z-index: -1;
 
   @include lg {
     width: 1023px;
@@ -113,7 +114,7 @@ const Header = defineAsyncComponent(() => import('@/components/Header'))
 }
 
 .cookie-wrapper {
-  font-family: 'Inter';
+  font-family: "Inter";
   .cookieControl__BarContainer {
     border-radius: 24px;
     background: rgba(81, 81, 81, 0.25);

@@ -3,16 +3,22 @@
     <div class="block work">
       <div class="container">
         <div class="column column_medium work__column">
-          <h2 class="title title_h2 work__title">
-            How does it work
-          </h2>
+          <h2 class="title title_h2 work__title">How does it work</h2>
           <p class="paragraph paragraph_medium margin_large work__description">
-            Alice would like to transfer funds to Bob privately or participate in on-chain Governance without revealing her pseudonym. She uses Incognitee to obtain a privacy shield without traces back to her account. Our TEE technology keeps sensitive data away from the chain and provides full privacy without security concerns.
+            Alice would like to transfer funds to Bob privately or participate
+            in on-chain Governance without revealing her pseudonym. She uses
+            Incognitee to obtain a privacy shield without traces back to her
+            account. Our TEE technology keeps sensitive data away from the chain
+            and provides full privacy without security concerns.
           </p>
         </div>
         <div class="work__image-wrapper">
           <!-- <img src="/img/index/work/polygons.svg" class="work__image" alt="Polygons" /> -->
-          <img src="/img/index/work/how-does-it-work-picture.svg" class="work__image" alt="Polygons" />
+          <img
+            src="/img/index/work/how-does-it-work-picture.svg"
+            class="work__image"
+            alt="Polygons"
+          />
           <GlobalRadialGradient class="work__image-gradient" />
         </div>
       </div>

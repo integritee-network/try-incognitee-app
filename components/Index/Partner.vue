@@ -3,18 +3,28 @@
     <div class="block partner">
       <div class="container">
         <div class="column column_medium partner__column">
-          <h2 class="title title_h2 partner__title">
-            Become a partner
-          </h2>
-          <p class="paragraph paragraph_medium margin_large partner__description">
-            If you are a wallet provider, an exchange or an validator operator, get in touch with us.
+          <h2 class="title title_h2 partner__title">Become a partner</h2>
+          <p
+            class="paragraph paragraph_medium margin_large partner__description"
+          >
+            If you are a wallet provider, an exchange or an validator operator,
+            get in touch with us.
           </p>
-          <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.3-become-a-partner" target="blank" class="btn btn_gradient">Contact</NuxtLink>
+          <NuxtLink
+            to="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.3-become-a-partner"
+            target="blank"
+            class="btn btn_gradient"
+            >Contact</NuxtLink
+          >
         </div>
         <div class="partner__image-wrapper">
           <!-- <img src="/img/index/partner/polygons.svg" class="partner__image" alt="Polygons" /> -->
-          <img src="/img/index/partner/become-a-partner-picture.svg" class="partner__image" alt="Polygons" />
+          <img
+            src="/img/index/partner/become-a-partner-picture.svg"
+            class="partner__image"
+            alt="Polygons"
+          />
         </div>
       </div>
     </div>

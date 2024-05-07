@@ -1,15 +1,14 @@
 <template>
-  <div class='container'>
-    <div class='text-block'>
+  <div class="container">
+    <div class="text-block">
       <slot />
     </div>
   </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .text-block {
   width: 715px;
   @include lg {
@@ -23,8 +22,8 @@
     width: 100%;
   }
   :slotted(h1) {
-    color: #FFF;
-    font-family: 'WhyteInktrap';
+    color: #fff;
+    font-family: "WhyteInktrap";
     font-size: 4em;
     font-weight: 500;
     line-height: 110%;
@@ -38,8 +37,8 @@
     }
   }
   :slotted(h2) {
-    color: #FFF;
-    font-family: 'Inter';
+    color: #fff;
+    font-family: "Inter";
     font-size: 2em;
     font-weight: 500;
     line-height: 120%;
@@ -59,8 +58,8 @@
     }
   }
   :slotted(p) {
-    color: #FFF;
-    font-family: 'Inter';
+    color: #fff;
+    font-family: "Inter";
     font-size: 1.125em;
     font-weight: 400;
     line-height: 150%;

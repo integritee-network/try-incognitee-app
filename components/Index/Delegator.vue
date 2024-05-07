@@ -3,19 +3,31 @@
     <div class="block delegator">
       <div class="container">
         <div class="column column_medium delegator__column">
-          <h2 class="title title_h2 delegator__title">
-            Become a delegator
-          </h2>
-          <p class="paragraph paragraph_medium margin_large delegator__description">
-            Earn from locking your TEER: Validators receive transaction fees and can share them with TEER holders via Delegation.<br /><br />
-Join the Delegator Program: TEER holders can delegate their TEER tokens to existing Validators to help securing Incognitee’s backbone.
+          <h2 class="title title_h2 delegator__title">Become a delegator</h2>
+          <p
+            class="paragraph paragraph_medium margin_large delegator__description"
+          >
+            Earn from locking your TEER: Validators receive transaction fees and
+            can share them with TEER holders via Delegation.<br /><br />
+            Join the Delegator Program: TEER holders can delegate their TEER
+            tokens to existing Validators to help securing Incognitee’s
+            backbone.
           </p>
-          <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.2-become-a-delegator" target="blank" class="btn btn_gradient">Become a delegator</NuxtLink>
+          <NuxtLink
+            to="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.2-become-a-delegator"
+            target="blank"
+            class="btn btn_gradient"
+            >Become a delegator</NuxtLink
+          >
         </div>
         <div class="delegator__image-wrapper">
           <!-- <img src="/img/index/delegator/polygons.svg" class="delegator__image" alt="Polygons" /> -->
-          <img src="/img/index/delagator/become-a-delegator-picture.svg" class="delegator__image" alt="Polygons" />
+          <img
+            src="/img/index/delagator/become-a-delegator-picture.svg"
+            class="delegator__image"
+            alt="Polygons"
+          />
           <GlobalRadialGradient class="work__image-gradient" />
         </div>
       </div>

@@ -5,24 +5,31 @@
         <div class="column column_large main__column">
           <h1 class="title title_hero main__title margin_medium">
             <span class="gradient gradient_one">Welcome to</span> our<br />
-            Incognitee <span class="gradient gradient_two"> Beta</span> <br/>
+            Incognitee <span class="gradient gradient_two"> Beta</span> <br />
             <span class="gradient gradient_one">Test</span> Campaign
           </h1>
           <p class="paragraph paragraph_medium main__description margin_large">
-            Become one of the first users to help improving Incognitee and get a chance to win one of the juicy prices.
+            Become one of the first users to help improving Incognitee and get a
+            chance to win one of the juicy prices.
           </p>
           <p class="paragraph paragraph_medium main__description margin_large">
-            <a href="https://incognitee.io/"> Incognitee</a> is a fast and scalable privacy enhancement for <a href="https://polkadot.network">Polkadot</a>,
-            and we are approaching production readiness.
-            Help us testing and do some private token transfers to win a prize!
-            You are going to obtain free PAS tokens (Polkadot Testnet Tokens) and convert them to private Incognitee Tokens - a process we call token shielding.
-            Afterwards you can transfer them to a friend privately via invite link or convert them back to PAS tokens without disclosing any transfer history - cool isn't it?
+            <a href="https://incognitee.io/"> Incognitee</a> is a fast and
+            scalable privacy enhancement for
+            <a href="https://polkadot.network">Polkadot</a>, and we are
+            approaching production readiness. Help us testing and do some
+            private token transfers to win a prize! You are going to obtain free
+            PAS tokens (Polkadot Testnet Tokens) and convert them to private
+            Incognitee Tokens - a process we call token shielding. Afterwards
+            you can transfer them to a friend privately via invite link or
+            convert them back to PAS tokens without disclosing any transfer
+            history - cool isn't it?
           </p>
         </div>
       </div>
     </div>
   </section>
 </template>
+<script setup lang="ts"></script>
 <style lang="scss" scoped>
 .main {
   padding-top: 90px;
@@ -55,7 +62,6 @@
     }
   }
 
-
   .gradient {
     display: inline-block;
 
@@ -81,7 +87,7 @@
     @include slg {
       right: -380px;
       top: -81px;
-      width: 741px
+      width: 741px;
     }
 
     @include md {
@@ -90,9 +96,8 @@
     }
 
     @include sm {
-display: none;
+      display: none;
     }
-
 
     @include xsm {
       width: 550px;
@@ -154,5 +159,3 @@ display: none;
   }
 }
 </style>
-<script setup lang="ts">
-</script>

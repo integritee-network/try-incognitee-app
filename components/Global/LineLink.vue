@@ -6,7 +6,7 @@
   </a>
 </template>
 <script setup>
-import LinkIcon from '@/assets/img/link.svg'
+import LinkIcon from "@/assets/img/link.svg";
 
 const props = defineProps({
   link: {
@@ -16,8 +16,8 @@ const props = defineProps({
   text: {
     type: String,
     required: true,
-  }
-})
+  },
+});
 </script>
 <style lang="scss" scoped>
 .line-link {
@@ -57,16 +57,21 @@ const props = defineProps({
     width: 100%;
     height: 2px;
     background: rgba(255, 255, 255, 0.2);
-    transition: .6s ease;
+    transition: 0.6s ease;
 
     &:before {
       position: absolute;
-      content: '';
+      content: "";
       inset: 0;
       width: 0%;
       height: 100%;
-      transition: width .6s ease;
-      background: linear-gradient(90deg, #B000FD 0.01%, #B000FD 0.02%, #30DAFF 97.96%);
+      transition: width 0.6s ease;
+      background: linear-gradient(
+        90deg,
+        #b000fd 0.01%,
+        #b000fd 0.02%,
+        #30daff 97.96%
+      );
     }
   }
 }

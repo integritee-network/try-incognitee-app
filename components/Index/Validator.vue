@@ -3,19 +3,32 @@
     <div class="block validator">
       <div class="container">
         <div class="column column_medium validator__column">
-          <h2 class="title title_h2 validator__title">
-            Become a validator
-          </h2>
-          <p class="paragraph paragraph_medium margin_large validator__description">
-            Earn from Transactions: Validators receive a proportional amount of every transaction they validate, creating an opportunity for continual rewards in line with Incognitee’s activity.<br /><br />
-Join the Validator Program: Aspiring validators have to participate in the Testnet phase to be eligible for the main net launch to become a part of Incognitee’s backbone.
+          <h2 class="title title_h2 validator__title">Become a validator</h2>
+          <p
+            class="paragraph paragraph_medium margin_large validator__description"
+          >
+            Earn from Transactions: Validators receive a proportional amount of
+            every transaction they validate, creating an opportunity for
+            continual rewards in line with Incognitee’s activity.<br /><br />
+            Join the Validator Program: Aspiring validators have to participate
+            in the Testnet phase to be eligible for the main net launch to
+            become a part of Incognitee’s backbone.
           </p>
-          <NuxtLink to="https://docs.incognitee.io
-/4.-want-to-join-or-support-incognitee/4.1-become-a-validator" target="blank" class="btn btn_gradient">Become a Validator</NuxtLink>
+          <NuxtLink
+            to="https://docs.incognitee.io
+/4.-want-to-join-or-support-incognitee/4.1-become-a-validator"
+            target="blank"
+            class="btn btn_gradient"
+            >Become a Validator</NuxtLink
+          >
         </div>
         <div class="validator__image-wrapper">
           <!-- <img src="/img/index/validator/polygons.svg" class="validator__image" alt="Polygons" /> -->
-          <img src="/img/index/validator/become-a-validator-picture.svg" class="validator__image" alt="Polygons" />
+          <img
+            src="/img/index/validator/become-a-validator-picture.svg"
+            class="validator__image"
+            alt="Polygons"
+          />
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ $sm_pSm: 0.875em;
 // Default Paragraph .paragraph_medium
 $pDef: 1.125em;
 $md_pDef: 1em;
-$sm_pDef: .875em;
+$sm_pDef: 0.875em;
 
 // Large paragraph .paragraph_large
 $pLg: 1.5em;
@@ -28,10 +28,10 @@ $tLg: 4.5em;
 $md_tLg: 3.375em;
 $sm_tLg: 2.5em;
 
-$ltBlue: #5B92FF;
-$gray: #88888C;
+$ltBlue: #5b92ff;
+$gray: #88888c;
 $alphaGray: rgba(255, 255, 255, 0.2);
-$darkBlue: #11111A;
+$darkBlue: #11111a;
 
 // Breakpoints
 $lg: 1366px;
@@ -41,32 +41,31 @@ $sm: 840px;
 $xsm: 420px;
 
 @mixin lg {
-    @media screen and (max-width: $lg) {
-        @content;
-    }
+  @media screen and (max-width: $lg) {
+    @content;
+  }
 }
 
 @mixin slg {
-    @media screen and (max-width: $slg) {
-        @content;
-    }
+  @media screen and (max-width: $slg) {
+    @content;
+  }
 }
 
 @mixin md {
-    @media screen and (max-width: $md) {
-        @content;
-    }
+  @media screen and (max-width: $md) {
+    @content;
+  }
 }
 
-
 @mixin sm {
-    @media screen and (max-width: $sm) {
-        @content;
-    }
+  @media screen and (max-width: $sm) {
+    @content;
+  }
 }
 
 @mixin xsm {
-    @media screen and (max-width: $xsm) {
-        @content;
-    }
+  @media screen and (max-width: $xsm) {
+    @content;
+  }
 }

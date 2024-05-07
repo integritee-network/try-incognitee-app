@@ -1,37 +1,40 @@
 <template>
   <div class="container flex flex-col">
-    <div class=''>
-      <h2 class="title title_h2 partner__title text-left">
-        Campaign
-      </h2>
+    <div class="">
+      <h2 class="title title_h2 partner__title text-left">Campaign</h2>
     </div>
-    <div class=''>
-      <UTabs :items="items" v-model="currentTabIndex" class="w-full">
+    <div class="">
+      <UTabs v-model="currentTabIndex" :items="items" class="w-full">
         <template #default="{ item, index, selected }">
           <div
-              :class="{ 'text-gray-400': !selected }"
-              class=" relative truncate"
-              @click="currentTabIndex = index"
+            :class="{ 'text-gray-400': !selected }"
+            class="relative truncate"
+            @click="currentTabIndex = index"
           >
             <span class="truncate">{{ index + 1 }}. {{ item.label }}</span>
-            <span v-if="selected" class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"/>
+            <span
+              v-if="selected"
+              class="absolute -right-4 w-2 h-2 rounded-full bg-primary-500 dark:bg-primary-400"
+            />
           </div>
         </template>
       </UTabs>
     </div>
     <div class="tab-content mt-4">
-      <component :is="items[currentTabIndex].component" @change-tab="(i) => currentTabIndex = i"/>
+      <component
+        :is="items[currentTabIndex].component"
+        @change-tab="(i) => (currentTabIndex = i)"
+      />
     </div>
   </div>
 </template>
 
-
 <script>
-import CheckWalletTab from '~/components/CheckWalletTab.vue'
-import CreateWalletTab from '~/components/CreateWalletTab.vue'
-import InviteFriendTab from '~/components/InviteFriendTab.vue'
-import PublishonxTab from '~/components/PublishonxTab.vue'
-import UnshieldTab from '~/components/UnshieldTab.vue'
+import CheckWalletTab from "~/components/CheckWalletTab.vue";
+import CreateWalletTab from "~/components/CreateWalletTab.vue";
+import InviteFriendTab from "~/components/InviteFriendTab.vue";
+import PublishonxTab from "~/components/PublishonxTab.vue";
+import UnshieldTab from "~/components/UnshieldTab.vue";
 
 export default {
   components: {
@@ -39,44 +42,44 @@ export default {
     CheckWalletTab,
     InviteFriendTab,
     UnshieldTab,
-    PublishonxTab
+    PublishonxTab,
   },
   data() {
     return {
       currentTabIndex: 0,
       items: [
         {
-          label: 'Create',
-          component: CreateWalletTab
+          label: "Create",
+          component: CreateWalletTab,
         },
         {
-          label: 'Shield',
-          component: CheckWalletTab
+          label: "Shield",
+          component: CheckWalletTab,
         },
         {
-          label: 'Invite',
-          component: InviteFriendTab
+          label: "Invite",
+          component: InviteFriendTab,
         },
         {
-          label: 'Unshield',
-          component: UnshieldTab
+          label: "Unshield",
+          component: UnshieldTab,
         },
         {
-          label: 'Share',
-          component: PublishonxTab
-        }
-      ]
-    }
+          label: "Share",
+          component: PublishonxTab,
+        },
+      ],
+    };
+  },
+  mounted() {
+    this.currentComponent = this.items[0].component;
   },
   methods: {
     onTabChanged(tabIndex) {
       this.currentComponent = this.items[tabIndex].component;
-    }
+    },
   },
-  mounted() {
-    this.currentComponent = this.items[0].component;
-  }
-}
+};
 </script>
 
 <style lang="scss">

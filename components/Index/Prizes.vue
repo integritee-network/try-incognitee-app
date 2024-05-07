@@ -3,19 +3,33 @@
     <div class="block prizes">
       <div class="container">
         <div class="column column_medium prizes__column">
-          <h2 class="title title_h2 prizes__title">
-            Prizes
-          </h2>
+          <h2 class="title title_h2 prizes__title">Prizes</h2>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-          <img src="/img/index/prizes/prize1.svg" class="prize__image" alt="Polygons" />
-          <img src="/img/index/prizes/prize2.svg" class="prize__image" alt="Polygons" />
-          <img src="/img/index/prizes/prize3.svg" class="prize__image" alt="Polygons" />
-      </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+            <img
+              src="/img/index/prizes/prize1.svg"
+              class="prize__image"
+              alt="Polygons"
+            />
+            <img
+              src="/img/index/prizes/prize2.svg"
+              class="prize__image"
+              alt="Polygons"
+            />
+            <img
+              src="/img/index/prizes/prize3.svg"
+              class="prize__image"
+              alt="Polygons"
+            />
+          </div>
         </div>
         <div class="prizes__image-wrapper">
           <!-- <img src="/img/index/prizes/polygons.svg" class="prizes__image" alt="Polygons" /> -->
-          <img src="/img/index/prizes/prizes.svg" class="prizes__image" alt="Polygons" />
+          <img
+            src="/img/index/prizes/prizes.svg"
+            class="prizes__image"
+            alt="Polygons"
+          />
         </div>
       </div>
     </div>
@@ -47,8 +61,6 @@
       width: 90%;
     }
   }
-
-  
 
   &__image-wrapper {
     position: relative;
@@ -121,11 +133,10 @@
 }
 
 .prize {
-
   &__image {
-      justify-content: space-between;
-      padding-right: 20px;
-  width: 200px;
+    justify-content: space-between;
+    padding-right: 20px;
+    width: 200px;
 
     @include sm {
       width: 90%;

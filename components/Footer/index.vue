@@ -16,19 +16,39 @@
           <div class="footer__column">
             <div class="footer__column-title">TEER Token</div>
             <div class="footer__column-list">
-              <a :href="KRAKEN_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="KRAKEN_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Kraken
               </a>
-              <a :href="GATE_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="GATE_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Gate.io
               </a>
-              <a :href="COIN_MARKET_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="COIN_MARKET_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 CoinMarketCap
               </a>
-              <a :href="COIN_GECKO_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="COIN_GECKO_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 CoinGecko
               </a>
-              <a :href="TRADING_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="TRADING_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 TradingView
               </a>
             </div>
@@ -36,13 +56,25 @@
           <div class="footer__column">
             <div class="footer__column-title">Network</div>
             <div class="footer__column-list">
-              <a :href="GOVERNANCE_FOOTER_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="GOVERNANCE_FOOTER_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Governance
               </a>
-              <a :href="SUBSCAN_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="SUBSCAN_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Integritee Subscan
               </a>
-              <a :href="INTEGRITEE_NETWORK_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="INTEGRITEE_NETWORK_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Integritee Network
               </a>
             </div>
@@ -50,16 +82,32 @@
           <div class="footer__column">
             <div class="footer__column-title">Resources</div>
             <div class="footer__column-list">
-              <a :href="TOKENOMICS_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="TOKENOMICS_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Tokenomics
               </a>
-              <a :href="DOCS_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="DOCS_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Documentation
               </a>
-              <a :href="LIGHTPAPER_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="LIGHTPAPER_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Lightpaper
               </a>
-              <a :href="HELP_CENTER_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="HELP_CENTER_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Help Center
               </a>
             </div>
@@ -67,19 +115,39 @@
           <div class="footer__column">
             <div class="footer__column-title">Community</div>
             <div class="footer__column-list">
-              <a :href="WATERCOOLER_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="WATERCOOLER_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Watercooler
               </a>
-              <a :href="SUBSOCIAL_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="SUBSOCIAL_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Subsocial
               </a>
-              <a :href="YOUTUBE_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="YOUTUBE_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 YouTube
               </a>
-              <a :href="MEDIUM_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="MEDIUM_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Medium
               </a>
-              <a :href="REDDIT_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="REDDIT_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Reddit
               </a>
             </div>
@@ -87,13 +155,25 @@
           <div class="footer__column">
             <div class="footer__column-title">Company</div>
             <div class="footer__column-list">
-              <NuxtLink to="https://www.integritee.network/about#join" target="_blank" class="footer__column-link text-link">
+              <NuxtLink
+                to="https://www.integritee.network/about#join"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Jobs
               </NuxtLink>
-              <NuxtLink to="https://www.integritee.network/about#roadmap" target="_blank" class="footer__column-link text-link">
+              <NuxtLink
+                to="https://www.integritee.network/about#roadmap"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 Roadmap
               </NuxtLink>
-              <a :href="LINKEDIN_LINK" target="_blank" class="footer__column-link text-link">
+              <a
+                :href="LINKEDIN_LINK"
+                target="_blank"
+                class="footer__column-link text-link"
+              >
                 LinkedIn
               </a>
               <!--              <a href="/" target="_blank" class="footer__column-link text-link">-->
@@ -104,18 +184,24 @@
         </div>
       </div>
       <div class="footer__bottom">
-        <span class="paragraph_medium">©{{ new Date().getFullYear() }} Integritee, Inc.</span>
+        <span class="paragraph_medium"
+          >©{{ new Date().getFullYear() }} Integritee, Inc.</span
+        >
         <span>
-          <NuxtLink to="https://www.integritee.network/privacy-policy" class="blue paragraph_medium">Imprint and Privacy Policy</NuxtLink>
+          <NuxtLink
+            to="https://www.integritee.network/privacy-policy"
+            class="blue paragraph_medium"
+            >Imprint and Privacy Policy</NuxtLink
+          >
         </span>
       </div>
     </div>
   </footer>
 </template>
 
-<script setup lang='ts'>
-import Logo from '@/components/LogoIntegritee/index.vue'
-import Socials from '@/components/Socials/index.vue'
+<script setup lang="ts">
+import Logo from "@/components/LogoIntegritee/index.vue";
+import Socials from "@/components/Socials/index.vue";
 import {
   KRAKEN_LINK,
   GATE_LINK,
@@ -134,8 +220,8 @@ import {
   REDDIT_LINK,
   LINKEDIN_LINK,
   LIGHTPAPER_LINK,
-  TOKENOMICS_LINK
-} from '@/configs/app.config';
+  TOKENOMICS_LINK,
+} from "@/configs/app.config";
 </script>
 
 <style lang="scss" scoped>
@@ -245,7 +331,6 @@ import {
         margin-bottom: 24px !important;
         font-size: 0.875em;
       }
-
     }
 
     &:last-child {
@@ -350,7 +435,7 @@ import {
     }
 
     a {
-      transition: .3s ease;
+      transition: 0.3s ease;
 
       &:hover {
         color: #7ca8ff;

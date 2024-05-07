@@ -6,21 +6,26 @@
           Network <NuxtLink to="/blog" class="color_blue">news</NuxtLink>
         </h2>
         <div class="row news__list">
-          <New v-for="post in data" :post="post" class="news__item" :key="post.id" />
+          <New
+            v-for="post in data"
+            :key="post.id"
+            :post="post"
+            class="news__item"
+          />
         </div>
       </div>
     </div>
   </section>
 </template>
 <script setup lang="ts">
-import { useWpApi } from '@/api/wordpress'
-import New from '@/components/Blog/New.vue'
+import { useWpApi } from "@/api/wordpress";
+import New from "@/components/Blog/New.vue";
 
-const wpApi = useWpApi()
+const wpApi = useWpApi();
 
 const { data, error } = await wpApi.getPosts({
   limit: 3,
-})
+});
 </script>
 <style lang="scss">
 .news {

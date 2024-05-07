@@ -1,10 +1,10 @@
-import { defineAppConfig } from '#imports'
+import { defineAppConfig } from "#imports";
 
 export default defineAppConfig({
-  title: 'Integritee',
+  title: "Integritee",
   theme: {
     colors: {
-      primary: '#ff0000',
+      primary: "#ff0000",
     },
   },
-})
+});

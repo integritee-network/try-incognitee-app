@@ -160,8 +160,6 @@ watch(accountStore, updateLinks);
 onMounted(updateLinks);
 </script>
 <style scoped>
-
-
 .text-sm.text-green-700 {
   word-wrap: break-word;
   overflow-wrap: break-word;

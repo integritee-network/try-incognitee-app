@@ -17,9 +17,9 @@
             <template
               v-if="accountStore.incogniteeBalance > min_incognitee_balance"
             >
-              <UButton class="btn btn_gradient" @click="inviteFriend"
-                >Invite Friend</UButton
-              >
+              <UButton class="btn btn_gradient" @click="inviteFriend">
+                Invite Friend
+              </UButton>
               <div class="mt-4">{{ topStatus }}</div>
               <template v-if="inviteUrl">
                 <div class="mt-10 mb-3">
@@ -28,9 +28,9 @@
                   </p>
                 </div>
                 <div class="flex space-x-4 mt-10">
-                  <a class="btn btn_gradient" @click="copyToClipboard"
-                    >Copy Link</a
-                  >
+                  <a class="btn btn_gradient" @click="copyToClipboard">
+                    Copy Link
+                  </a>
                 </div>
               </template>
             </template>

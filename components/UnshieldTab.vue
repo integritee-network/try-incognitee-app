@@ -32,8 +32,8 @@
             </div>
             <div v-else>
               <div>
-                <UButton class="mt-10 btn btn_gradient" @click="unshieldFunds"
-                  >Unshield Funds
+                <UButton class="mt-10 btn btn_gradient" @click="unshieldFunds">
+                  Unshield Funds
                 </UButton>
                 <div class="mt-4">{{ topStatus }}</div>
               </div>

@@ -36,15 +36,16 @@
 
               <div class="container mx-auto mt-10">
                 <div class="flex space-x-4 justify-center mt-10">
-                  <a class="button btn" @click="copyToClipboard"
-                    >Copy My Address</a
-                  >
+                  <a class="button btn" @click="copyToClipboard">
+                    Copy My Address
+                  </a>
                   <a
                     href="https://faucet.polkadot.io/paseo"
                     target="_blank"
                     class="btn btn_gradient"
-                    >Get free PAS tokens</a
                   >
+                    Get free PAS tokens
+                  </a>
                 </div>
               </div>
             </template>
@@ -58,10 +59,8 @@
 <script setup lang="ts">
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { hexToU8a } from "@polkadot/util";
 
 const existential_deposit = 10000000000;
 const txStatus = ref("");

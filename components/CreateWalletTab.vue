@@ -10,9 +10,9 @@
             on Paseo and Incognitee.
           </div>
           <div>
-            <a class="btn btn_gradient" @click="createWallet"
-              >Create a Wallet</a
-            >
+            <a class="btn btn_gradient" @click="createWallet">
+              Create a Wallet
+            </a>
           </div>
         </div>
       </div>

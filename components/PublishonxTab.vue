@@ -85,9 +85,9 @@
                 </div>
               </template>
               <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border"
-                  >No account with a balance yet</NuxtLink
-                >
+                <NuxtLink to="" target="blank" class="btn btn_border">
+                  No account with a balance yet
+                </NuxtLink>
               </template>
             </div>
 
@@ -111,9 +111,9 @@
                 </div>
               </template>
               <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border"
-                  >No account with a balance yet</NuxtLink
-                >
+                <NuxtLink to="" target="blank" class="btn btn_border">
+                  No account with a balance yet
+                </NuxtLink>
               </template>
             </div>
             <div class="mt-5">

@@ -70,6 +70,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxt/ui",
     "@nuxtjs/tailwindcss",
+    "@nuxt/eslint",
   ],
   plugins: [{ src: "~/plugins/lockScroll", mode: "client" }],
   svgo: {

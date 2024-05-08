@@ -82,11 +82,11 @@ import Menu from "@/components/Header/Menu.vue";
 import Logo from "@/components/Logo";
 import Socials from "@/components/Socials";
 import { breakpoints } from "@/configs/app.config";
-import { useWindowScroll, useWindowSize, useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { useInterval, useWindowScroll, useWindowSize } from "@vueuse/core";
+import { onMounted, ref, watch } from "vue";
 
 const pollCounter = useInterval(2000);
 

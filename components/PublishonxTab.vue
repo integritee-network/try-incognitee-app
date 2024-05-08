@@ -6,23 +6,45 @@
           <div class="text-4xl mt-10 mb-10">Tell the World - or Stay Anon</div>
           <div class="text-lg">
             <div v-if="accountStore.incogniteeBalance == 0">
-              <i
-                ><b
-                  >You have no balance on Incognitee. Please go back to step 2
-                  to collect more points</b
-                ></i
-              >
+              <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <ExclamationTriangleIcon
+                      class="h-5 w-5 text-yellow-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      You have no balance on Incognitee. Please go back to step
+                      2 to collect more points
+                      {{ " " }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div v-if="accountStore.paseoBalance == 0">
-              <i
-                ><b
-                  >You have no balance on Paseo. Please go back to step 2 to
-                  collect more points</b
-                ></i
-              >
+            <div v-else-if="accountStore.paseoBalance == 0">
+              <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <ExclamationTriangleIcon
+                      class="h-5 w-5 text-yellow-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      You have no balance on Paseo. Please go back to step 2 to
+                      collect more points
+                      {{ " " }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="text-lg">
+          <div class="text-lg mt-4">
             To be eligible for our prices, please either tweet or send us a
             message over SimpleX. Tell the world about your successful test
             using the button below. Make sure to include hashtag #incognitee and
@@ -55,17 +77,17 @@
                   >post a note on nostr
                 </NuxtLink>
                 <div class="mt-5">
-                  <textarea readonly class="template-textarea">
-I have successfully tested #incognitee private token transfers on https://try.incognitee.io by @integritee with my account {{
-                      accountStore.getAddress
-                    }}</textarea
-                  >
+                  <p class="text-sm text-green-700">
+                    I have successfully tested #incognitee private token
+                    transfers on https://try.incognitee.io by @integritee with
+                    my account {{ accountStore.getAddress }}
+                  </p>
                 </div>
               </template>
               <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border"
-                  >No account with a balance yet</NuxtLink
-                >
+                <NuxtLink to="" target="blank" class="btn btn_border">
+                  No account with a balance yet
+                </NuxtLink>
               </template>
             </div>
 
@@ -82,18 +104,16 @@ I have successfully tested #incognitee private token transfers on https://try.in
                   >send us a simpleX message
                 </NuxtLink>
                 <div class="mt-5">
-                  <textarea readonly class="template-textarea">
-Dear Integritee team. I have participated in the incognitee beta campaign with account {{
-                      accountStore.getAddress
-                    }}
-                </textarea
-                  >
+                  <p class="text-sm text-green-700">
+                    Dear Integritee team. I have participated in the incognitee
+                    beta campaign with account {{ accountStore.getAddress }}
+                  </p>
                 </div>
               </template>
               <template v-else>
-                <NuxtLink to="" target="blank" class="btn btn_border"
-                  >No account with a balance yet</NuxtLink
-                >
+                <NuxtLink to="" target="blank" class="btn btn_border">
+                  No account with a balance yet
+                </NuxtLink>
               </template>
             </div>
             <div class="mt-5">
@@ -109,6 +129,7 @@ Dear Integritee team. I have participated in the incognitee beta campaign with a
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useAccount } from "@/store/account.ts";
+import { ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
 
 const accountStore = useAccount();
 
@@ -138,18 +159,8 @@ watch(accountStore, updateLinks);
 onMounted(updateLinks);
 </script>
 <style scoped>
-.template-textarea {
-  width: 100%;
-  height: 80px;
-  padding: 10px;
-  border-left: 10px solid #ccc;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
-  background-color: transparent;
-  font-style: italic;
-  font-size: 1em;
-  line-height: 1.6;
-  resize: none;
+.text-sm.text-green-700 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 </style>

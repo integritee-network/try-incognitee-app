@@ -3,7 +3,7 @@
   <section id="steps">
     <div class="block steps">
       <div class="container">
-        <div class="grid grid-rows-3 grid-flow-col gap-4">
+        <div class="grid gap-4">
           <div class="text-4xl mt-10">Shield PAS tokens to Incognitee</div>
           <div class="text-lg">
             <template
@@ -15,29 +15,38 @@
               Shielding your tokens means that you send them from Paseo to
               Incognitee where you can then transfer them privately
 
-              <div class="mt-4">
-                <UButton class="btn btn_gradient" @click="shield"
-                  >Shield PAS to Incognitee</UButton
-                >
+              <div>
+                <NuxtLink
+                  target="blank"
+                  class="mb-5 mt-8 btn btn_gradient"
+                  @click="shield"
+                  >Shield PAS to Incognitee
+                </NuxtLink>
                 <div>{{ txStatus }}</div>
               </div>
             </template>
+
             <template v-else>
               You don’t have enough Paseo PAS on your account. Copy your address
+              <span style="word-break: break-word; overflow-wrap: break-word">
+                <code>{{ accountStore.getAddress }}</code>
+              </span>
               and follow the link below to obtain some PAS for free from the
               Paseo faucet.
-              <div class="mt-3 mb-8">
-                <button class="button" @click="copyToClipboard">
-                  Copy My Address
-                </button>
-              </div>
-              <div class="mt-4">
-                <NuxtLink
-                  to="https://faucet.polkadot.io/paseo"
-                  target="blank"
-                  class="btn btn_gradient"
-                  >Get free PAS tokens
-                </NuxtLink>
+
+              <div class="container mx-auto mt-10">
+                <div class="flex space-x-4 justify-center mt-10">
+                  <a class="button btn" @click="copyToClipboard">
+                    Copy My Address
+                  </a>
+                  <a
+                    href="https://faucet.polkadot.io/paseo"
+                    target="_blank"
+                    class="btn btn_gradient"
+                  >
+                    Get free PAS tokens
+                  </a>
+                </div>
               </div>
             </template>
           </div>
@@ -50,10 +59,8 @@
 <script setup lang="ts">
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { hexToU8a } from "@polkadot/util";
 
 const existential_deposit = 10000000000;
 const txStatus = ref("");

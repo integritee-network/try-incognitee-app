@@ -2,28 +2,41 @@
   <section id="steps">
     <div class="block steps">
       <div class="container">
-        <div class="grid grid-rows-3 grid-flow-col gap-4">
+        <div class="grid gap-4">
           <div class="text-4xl mt-10">Unshield</div>
+          <div class="mt-4">
+            By clicking the ”Unshield” button, you perform a transfer of 30% of
+            your Incognitee balance to your wallet on Paseo.
+          </div>
           <div class="text-lg">
             <div
-              v-if="accountStore.incogniteeBalance < existential_deposit * 5"
+              v-if="accountStore.incogniteeBalance < existential_deposit * 4"
             >
-              <i
-                ><b
-                  >Your balance on Incognitee is getting low. Please go back to
-                  step 2 to top up</b
-                ></i
-              >
+              <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <ExclamationTriangleIcon
+                      class="h-5 w-5 text-yellow-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      Your balance on Incognitee is too low. Please go back to
+                      step 2 to top up
+                      {{ " " }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mt-4">
-              By clicking the ”Unshield” button, you perform a transfer of 30%
-              of your Incognitee balance to your wallet on Paseo.
-            </div>
-            <div>
-              <UButton class="btn btn_gradient" @click="unshieldFunds"
-                >Unshield Funds</UButton
-              >
-              <div>{{ topStatus }}</div>
+            <div v-else>
+              <div>
+                <UButton class="mt-10 btn btn_gradient" @click="unshieldFunds">
+                  Unshield Funds
+                </UButton>
+                <div class="mt-4">{{ topStatus }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -59,7 +72,9 @@ const unshieldFunds = () => {
   const amount = Math.floor(0.3 * balance);
   const signer = accountStore.account;
   console.log(
-    `sending ${formatBalance(amount)} from ${signer.address} privately to self on L1 (shard: ${incogniteeStore.shard}`,
+    `sending ${formatBalance(amount)} from ${
+      signer.address
+    } privately to self on L1 (shard: ${incogniteeStore.shard}`,
   );
   incogniteeStore.api
     .balanceUnshieldFunds(

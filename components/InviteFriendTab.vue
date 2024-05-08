@@ -5,14 +5,7 @@
       <div class="container">
         <div class="">
           <div class="text-4xl mt-10 mb-10">Invite a friend</div>
-          <div v-if="accountStore.incogniteeBalance <= min_incognitee_balance">
-            <i
-              ><b
-                >You don't have enough balance on Incognitee to invite someone.
-                Please go back to step 2</b
-              ></i
-            >
-          </div>
+
           <div class="text-lg">
             By clicking the ”Invite Friend” button, you perform a private
             transfer of 10% of your available PAS from your Incognitee wallet to
@@ -24,29 +17,44 @@
             <template
               v-if="accountStore.incogniteeBalance > min_incognitee_balance"
             >
-              <UButton class="btn btn_gradient" @click="inviteFriend"
-                >Invite Friend
+              <UButton class="btn btn_gradient" @click="inviteFriend">
+                Invite Friend
               </UButton>
-              <div>{{ topStatus }}</div>
+              <div class="mt-4">{{ topStatus }}</div>
+              <template v-if="inviteUrl">
+                <div class="mt-10 mb-3">
+                  <p class="text-sm text-green-700">
+                    {{ inviteUrl }}
+                  </p>
+                </div>
+                <div class="flex space-x-4 mt-10">
+                  <a class="btn btn_gradient" @click="copyToClipboard">
+                    Copy Link
+                  </a>
+                </div>
+              </template>
             </template>
-            <template v-else>
-              <NuxtLink to="" target="blank" class="btn btn_border"
-                >balance too low: go back to step 2
-              </NuxtLink>
+            <template
+              v-if="accountStore.incogniteeBalance <= min_incognitee_balance"
+            >
+              <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <ExclamationTriangleIcon
+                      class="h-5 w-5 text-yellow-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                      You don't have enough balance on Incognitee to invite
+                      someone. Please go back to step 2.
+                      {{ " " }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </template>
-          </div>
-          <div class="mt-10 mb-3">
-            <input
-              ref="urlToShareWithFriend"
-              type="text"
-              class="dynamic-width border-2 border-gray-200 p-2"
-              style="color: black"
-              :value="inviteUrl"
-              readonly
-            />
-          </div>
-          <div class="mt-3 mb-8">
-            <button class="button" @click="copyToClipboard">Copy</button>
           </div>
         </div>
       </div>
@@ -55,9 +63,10 @@
 </template>
 
 <script setup lang="ts">
+import { ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
 import { Keyring } from "@polkadot/keyring";
-import { mnemonicGenerate, mnemonicToMiniSecret } from "@polkadot/util-crypto";
 import { formatBalance, u8aToHex } from "@polkadot/util";
+import { mnemonicGenerate, mnemonicToMiniSecret } from "@polkadot/util-crypto";
 import { ref } from "vue";
 
 import { useAccount } from "@/store/account.ts";
@@ -67,9 +76,7 @@ const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const topStatus = ref("");
 
-const inviteUrl = ref(
-  'click "invite friend" to generate a new wallet for them',
-);
+const inviteUrl = ref("");
 
 const min_incognitee_balance = 0.02 * 10 ** 10;
 
@@ -155,5 +162,10 @@ const inviteFriend = () => {
   border-radius: 8px;
   border-color: #24ad7c;
   height: 55px;
+}
+
+.text-sm.text-green-700 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 </style>

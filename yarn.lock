@@ -866,6 +866,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@headlessui/vue@npm:^1.7.21":
+  version: 1.7.22
+  resolution: "@headlessui/vue@npm:1.7.22"
+  dependencies:
+    "@tanstack/vue-virtual": "npm:^3.0.0-beta.60"
+  peerDependencies:
+    vue: ^3.2.0
+  checksum: 10c0/0e86ab60ac471ae36d60b05f365c7d707feb8884e4aea49875bd2b9d53ccfbd0001b2e18b5e7c2f88e9b535acd4dc58b461a046cde5ee70204cf53ec1e520889
+  languageName: node
+  linkType: hard
+
+"@heroicons/vue@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "@heroicons/vue@npm:2.1.3"
+  peerDependencies:
+    vue: ">= 3"
+  checksum: 10c0/af0b1336409aa054c22c572f9214009042aec163131c1de58b995fbec1dd4508b768500614100ed750e8911ca8a695e43efc87a8627c86a8c2387422fe2f6dd4
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
@@ -9830,6 +9850,8 @@ __metadata:
   dependencies:
     "@encointer/worker-api": "npm:^0.12.5"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
+    "@headlessui/vue": "npm:^1.7.21"
+    "@heroicons/vue": "npm:^2.1.3"
     "@material-tailwind/html": "npm:^2.2.2"
     "@nuxt/content": "npm:^2.12.1"
     "@nuxt/devtools": "npm:^1.2.0"

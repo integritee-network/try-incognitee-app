@@ -10,9 +10,9 @@
             on Paseo and Incognitee.
           </div>
           <div>
-            <UButton class="btn btn_gradient" @click="createWallet"
-              >Create a Wallet</UButton
-            >
+            <a class="btn btn_gradient" @click="createWallet">
+              Create a Wallet
+            </a>
           </div>
         </div>
       </div>
@@ -21,16 +21,16 @@
 </template>
 
 <script setup lang="ts">
+import { useAccount } from "@/store/account.ts";
 import { Keyring } from "@polkadot/keyring";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
-import { u8aToHex, hexToU8a } from "@polkadot/util";
-import { useAccount } from "@/store/account.ts";
+import { defineComponent, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { onMounted, ref, defineComponent } from "vue";
 
 const router = useRouter();
 const accountStore = useAccount();

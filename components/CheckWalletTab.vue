@@ -18,18 +18,19 @@
               <div>
                 <NuxtLink
                   target="blank"
-                  class="mb-5 btn btn_gradient"
+                  class="mb-5 mt-8 btn btn_gradient"
                   @click="shield"
                   >Shield PAS to Incognitee
                 </NuxtLink>
-
-                >
                 <div>{{ txStatus }}</div>
               </div>
             </template>
 
             <template v-else>
               You don’t have enough Paseo PAS on your account. Copy your address
+              <span style="word-break: break-word; overflow-wrap: break-word;">
+                <code>{{accountStore.getAddress}}</code>
+  </span>
               and follow the link below to obtain some PAS for free from the
               Paseo faucet.
 
@@ -57,8 +58,10 @@
 <script setup lang="ts">
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
+import { onMounted, ref, watch } from "vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { ref } from "vue";
+import { Keyring } from "@polkadot/keyring";
+import { hexToU8a } from "@polkadot/util";
 
 const existential_deposit = 10000000000;
 const txStatus = ref("");

@@ -5,33 +5,32 @@
         <div class="column column_medium partner__column">
           <h2 class="title title_h2 partner__title">Rules</h2>
 
-          <ul
-            class="paragraph paragraph_medium margin_large partner__description list-disc list-outside"
-          >
-            <li>Every shielding event will give you 1 Point</li>
-            <li>Every unshield event will give you 2 Points</li>
-            <li>
-              Perform step 5 to be considered as a participant and get
-              additional 5 points
-            </li>
-            <li>
-              Don’t post multiple times with the same X account. However,
-              sending us a message over simpleX and posting on nostr will give
-              you additional 5 points each
-            </li>
-            <li>
-              You can perform steps 2-4 repeatedly until you run out of funds
-            </li>
-            <li>
-              This campaign aims to test the limits of incognitee by generating
-              substantial traffic. Should the chain reach its limit and maybe
-              even become inoperable at any point, the campaign will conclude.
-              Winners will then be determined based on the data available up to
-              that moment.
-            </li>
-            <li>The top 3 participants will win a prize.</li>
-          </ul>
-
+          <li>Every shielding event will give you 1 Point</li>
+          <li>Every unshield event will give you 2 Points</li>
+          <li>
+            Perform step 5 to be considered as a participant and get additional
+            5 points
+          </li>
+          <li>
+            Don’t post multiple times with the same X account. However, sending
+            us a message over simpleX and posting on nostr will give you
+            additional 5 points each
+          </li>
+          <li>
+            You can perform steps 2-4 repeatedly until you run out of funds
+          </li>
+          <li>
+            This campaign aims to test the limits of incognitee by generating
+            substantial traffic. Should the chain reach its limit and maybe even
+            become inoperable at any point, the campaign will conclude. Winners
+            will then be determined based on the data available up to that
+            moment.
+          </li>
+          <li>The top 3 participants will win a prize.</li>
+          <li>
+            Winners will be announced latest 2 weeks after the event via X
+          </li>
+          <div class="mt-10"></div>
           <h2 class="title title_h2 partner__title">Info</h2>
           <li>
             Your invites to other people are invisible even to us, but you'll
@@ -62,7 +61,6 @@
             or contact us via Discord
           </li>
         </div>
-
         <div class="partner__image-wrapper">
           <!-- <img src="/img/index/partner/polygons.svg" class="partner__image" alt="Polygons" /> -->
           <img

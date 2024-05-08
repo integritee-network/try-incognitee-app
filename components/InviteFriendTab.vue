@@ -8,7 +8,7 @@
 
           <div class="text-lg">
             By clicking the ”Invite Friend” button, you perform a private
-            transfer of 30% of your available PAS from your Incognitee wallet to
+            transfer of 10% of your available PAS from your Incognitee wallet to
             another wallet with an invite link. You can share this with your
             friends and let them participate.
           </div>
@@ -20,7 +20,17 @@
               <UButton class="btn btn_gradient" @click="inviteFriend"
                 >Invite Friend</UButton
               >
-              <div>{{ topStatus }}</div>
+              <div class="mt-4">{{ topStatus }}</div>
+              <template v-if="inviteUrl">
+                <div class="mt-10 mb-3">
+                  <p class="text-sm text-green-700">
+                    {{inviteUrl}}
+                  </p>
+                </div>
+                <div class="flex space-x-4 mt-10">
+                  <a class="btn btn_gradient" @click="copyToClipboard">Copy Link</a>
+                </div>
+              </template>
             </template>
             <template
               v-if="accountStore.incogniteeBalance <= min_incognitee_balance"
@@ -45,19 +55,7 @@
             </template>
           </div>
 
-          <div class="mt-10 mb-3">
-            <input
-              ref="urlToShareWithFriend"
-              type="text"
-              class="dynamic-width border-2 border-gray-200 p-2"
-              style="color: black"
-              :value="inviteUrl"
-              readonly
-            />
-          </div>
-          <div class="flex space-x-4 mt-10">
-            <a class="btn btn_gradient" @click="copyToClipboard">Copy</a>
-          </div>
+
         </div>
       </div>
     </div>
@@ -79,7 +77,7 @@ const incogniteeStore = useIncognitee();
 const topStatus = ref("");
 
 const inviteUrl = ref(
-  'click "invite friend" to generate a new wallet for them',
+  '',
 );
 
 const min_incognitee_balance = 0.02 * 10 ** 10;
@@ -99,7 +97,7 @@ const copyToClipboard = () => {
 const inviteFriend = () => {
   console.log("creating wallet for your friend");
   topStatus.value =
-    "⌛ sending 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend";
+    "⌛ sending 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend";
   const generatedMnemonic = mnemonicGenerate();
   const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
@@ -118,15 +116,13 @@ const inviteFriend = () => {
     "/?seed=" +
     privateKeyHex;
 
-  console.log("sending 30% of your funds to your friend's account");
+  console.log("sending 10% of your funds to your friend's account");
   const balance = accountStore.incogniteeBalance;
-  // todo! instead of sending 30% we should check fees explicitly and handle edge cases
-  const amount = Math.floor(0.3 * balance);
+  // todo! instead of sending 10% we should check fees explicitly and handle edge cases
+  const amount = Math.floor(0.1 * balance);
   const signer = accountStore.account;
   console.log(
-    `sending ${formatBalance(amount)} from ${signer.address} privately to ${
-      newAccount.address
-    }`,
+    `sending ${formatBalance(amount)} from ${signer.address} privately to ${newAccount.address}`,
   );
   incogniteeStore.api
     .trustedBalanceTransfer(
@@ -140,7 +136,7 @@ const inviteFriend = () => {
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
       topStatus.value =
-        "😀 Success: sent 30% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need";
+        "😀 Success: sent 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need";
     });
 };
 </script>
@@ -168,5 +164,10 @@ const inviteFriend = () => {
   border-radius: 8px;
   border-color: #24ad7c;
   height: 55px;
+}
+
+.text-sm.text-green-700 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 </style>

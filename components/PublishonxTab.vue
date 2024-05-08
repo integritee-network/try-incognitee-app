@@ -16,8 +16,8 @@
                   </div>
                   <div class="ml-3">
                     <p class="text-sm text-yellow-700">
-                      You have no balance on Incognitee. Please go back to step 2
-                      to collect more points
+                      You have no balance on Incognitee. Please go back to step
+                      2 to collect more points
                       {{ " " }}
                     </p>
                   </div>
@@ -78,9 +78,9 @@
                 </NuxtLink>
                 <div class="mt-5">
                   <p class="text-sm text-green-700">
-                    I have successfully tested #incognitee private token transfers on https://try.incognitee.io by @integritee with my account {{
-                      accountStore.getAddress
-                    }}
+                    I have successfully tested #incognitee private token
+                    transfers on https://try.incognitee.io by @integritee with
+                    my account {{ accountStore.getAddress }}
                   </p>
                 </div>
               </template>
@@ -105,9 +105,8 @@
                 </NuxtLink>
                 <div class="mt-5">
                   <p class="text-sm text-green-700">
-                    Dear Integritee team. I have participated in the incognitee beta campaign with account {{
-                      accountStore.getAddress
-                    }}
+                    Dear Integritee team. I have participated in the incognitee
+                    beta campaign with account {{ accountStore.getAddress }}
                   </p>
                 </div>
               </template>
@@ -130,7 +129,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useAccount } from "@/store/account.ts";
-import {ExclamationTriangleIcon} from "@heroicons/vue/20/solid";
+import { ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
 
 const accountStore = useAccount();
 

@@ -5,8 +5,8 @@
         <div class="grid gap-4">
           <div class="text-4xl mt-10">Unshield</div>
           <div class="mt-4">
-            By clicking the ”Unshield” button, you perform a transfer of 30%
-            of your Incognitee balance to your wallet on Paseo.
+            By clicking the ”Unshield” button, you perform a transfer of 30% of
+            your Incognitee balance to your wallet on Paseo.
           </div>
           <div class="text-lg">
             <div
@@ -22,8 +22,8 @@
                   </div>
                   <div class="ml-3">
                     <p class="text-sm text-yellow-700">
-                      Your balance on Incognitee is too low. Please go back
-                      to step 2 to top up
+                      Your balance on Incognitee is too low. Please go back to
+                      step 2 to top up
                       {{ " " }}
                     </p>
                   </div>
@@ -33,9 +33,8 @@
             <div v-else>
               <div>
                 <UButton class="mt-10 btn btn_gradient" @click="unshieldFunds"
-                >Unshield Funds
-                </UButton
-                >
+                  >Unshield Funds
+                </UButton>
                 <div class="mt-4">{{ topStatus }}</div>
               </div>
             </div>
@@ -47,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import {formatBalance} from "@polkadot/util";
+import { formatBalance } from "@polkadot/util";
 
-import {useAccount} from "@/store/account.ts";
-import {useIncognitee} from "@/store/incognitee.ts";
-import {ref} from "vue";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
+import { ref } from "vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

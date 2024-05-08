@@ -28,9 +28,9 @@
 
             <template v-else>
               You don’t have enough Paseo PAS on your account. Copy your address
-              <span style="word-break: break-word; overflow-wrap: break-word;">
-                <code>{{accountStore.getAddress}}</code>
-  </span>
+              <span style="word-break: break-word; overflow-wrap: break-word">
+                <code>{{ accountStore.getAddress }}</code>
+              </span>
               and follow the link below to obtain some PAS for free from the
               Paseo faucet.
 

@@ -24,11 +24,13 @@
               <template v-if="inviteUrl">
                 <div class="mt-10 mb-3">
                   <p class="text-sm text-green-700">
-                    {{inviteUrl}}
+                    {{ inviteUrl }}
                   </p>
                 </div>
                 <div class="flex space-x-4 mt-10">
-                  <a class="btn btn_gradient" @click="copyToClipboard">Copy Link</a>
+                  <a class="btn btn_gradient" @click="copyToClipboard"
+                    >Copy Link</a
+                  >
                 </div>
               </template>
             </template>
@@ -54,8 +56,6 @@
               </div>
             </template>
           </div>
-
-
         </div>
       </div>
     </div>
@@ -76,9 +76,7 @@ const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const topStatus = ref("");
 
-const inviteUrl = ref(
-  '',
-);
+const inviteUrl = ref("");
 
 const min_incognitee_balance = 0.02 * 10 ** 10;
 

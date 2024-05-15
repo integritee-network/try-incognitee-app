@@ -13,6 +13,10 @@
             friends and let them participate.
           </div>
 
+            <div>
+              <qrcode-stream @detect="onDecode" ></qrcode-stream>
+              <p>QRcode result: {{ result }}</p>
+            </div>
           <div class="mt-10 mb-8">
             <template
               v-if="accountStore.incogniteeBalance > min_incognitee_balance"
@@ -55,7 +59,9 @@
                 </div>
               </div>
             </template>
+
           </div>
+
         </div>
       </div>
     </div>
@@ -63,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { ExclamationTriangleIcon } from "@heroicons/vue/20/solid";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, u8aToHex } from "@polkadot/util";
-import { mnemonicGenerate, mnemonicToMiniSecret } from "@polkadot/util-crypto";
-import { ref } from "vue";
-
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
+import {ExclamationTriangleIcon} from "@heroicons/vue/20/solid";
+import {Keyring} from "@polkadot/keyring";
+import {formatBalance, u8aToHex} from "@polkadot/util";
+import {mnemonicGenerate, mnemonicToMiniSecret} from "@polkadot/util-crypto";
+import {ref} from "vue";
+import { QrcodeStream } from 'vue-qrcode-reader'
+import {useAccount} from "@/store/account.ts";
+import {useIncognitee} from "@/store/incognitee.ts";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -97,7 +103,7 @@ const inviteFriend = () => {
   topStatus.value =
     "⌛ sending 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. make sure to copy the url below and share it with your friend";
   const generatedMnemonic = mnemonicGenerate();
-  const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+  const localKeyring = new Keyring({type: "sr25519", ss58Format: 42});
   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
     name: "fresh",
   });
@@ -137,6 +143,12 @@ const inviteFriend = () => {
         "😀 Success: sent 10% of your funds to a fresh wallet for your friend. you should see your incognitee balance decrease. Please copy the url below and share it with your friend. It's all they need";
     });
 };
+
+const result = ref('No QR code data yet')
+const onDecode = (decodeResult) => {
+  result.value = decodeResult[0].rawValue
+}
+
 </script>
 
 <style>

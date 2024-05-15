@@ -3020,6 +3020,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dom-webcodecs@npm:^0.1.11":
+  version: 0.1.11
+  resolution: "@types/dom-webcodecs@npm:0.1.11"
+  checksum: 10c0/1cc8296f5da5b82fa5e27fe270222d3988b5d6f665c71041b14aaacce1c753ad688bbd3763ac881ea1d797ecd4ba51d89c40501a42f645d03924f5b5ee4ee2af
+  languageName: node
+  linkType: hard
+
+"@types/emscripten@npm:^1.39.10":
+  version: 1.39.12
+  resolution: "@types/emscripten@npm:1.39.12"
+  checksum: 10c0/62d5682278c5ad1dc7d8b1089edc2556b7f82efd8ddb36446e30aef0964c0916b1ca8092d1cc6f14106791d0372e0b2da240e713f223ba724ca875cdd69df345
+  languageName: node
+  linkType: hard
+
 "@types/eslint@npm:^8.56.10":
   version: 8.56.10
   resolution: "@types/eslint@npm:8.56.10"
@@ -4244,6 +4258,16 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 10c0/9308baf0a7e4838a82bbfd11e01b1cb0f0cf2893bc1676c27c2a8c0e70cbae1c59120c3268517a8ae7fb6376b4639ef81ca22582611dbee4ed28df945134aaee
+  languageName: node
+  linkType: hard
+
+"barcode-detector@npm:2.2.2":
+  version: 2.2.2
+  resolution: "barcode-detector@npm:2.2.2"
+  dependencies:
+    "@types/dom-webcodecs": "npm:^0.1.11"
+    zxing-wasm: "npm:1.1.3"
+  checksum: 10c0/e5f2313c2a2213bf384936e8f229cdff70d0c1dbaeffc31448ffc0d3f2aaef624ed5e59247eb4799725da20213d850ca41abd86aa39b8fb4a6e3fcdef82716b3
   languageName: node
   linkType: hard
 
@@ -9892,6 +9916,7 @@ __metadata:
     typescript: "npm:^5.4.5"
     vite: "npm:^5.2.10"
     vue: "npm:^3.4.26"
+    vue-qrcode-reader: "npm:^5.5.4"
     vue-router: "npm:^4.3.2"
     vue3-form-wizard: "npm:^0.2.3"
   languageName: unknown
@@ -11754,6 +11779,13 @@ __metadata:
   version: 1.3.0
   resolution: "scule@npm:1.3.0"
   checksum: 10c0/5d1736daa10622c420f2aa74e60d3c722e756bfb139fa784ae5c66669fdfe92932d30ed5072e4ce3107f9c3053e35ad73b2461cb18de45b867e1d4dea63f8823
+  languageName: node
+  linkType: hard
+
+"sdp@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "sdp@npm:3.2.0"
+  checksum: 10c0/fa0146132b4c9185f276b80e09f52259b103e609565ac40c560250dbe7fc47723d30530c0db9cac6217c83153944a71af81fa70dc0367f195aabcf110f8185fd
   languageName: node
   linkType: hard
 
@@ -13649,6 +13681,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vue-qrcode-reader@npm:^5.5.4":
+  version: 5.5.4
+  resolution: "vue-qrcode-reader@npm:5.5.4"
+  dependencies:
+    barcode-detector: "npm:2.2.2"
+    webrtc-adapter: "npm:8.2.3"
+  checksum: 10c0/a3048f22138347c759b6dd24858a037dd61254eb07b67499f7392e1b28507025ad66e7e34a5d947edde329d74338e5941d3e89d0c71942de52484316f200598d
+  languageName: node
+  linkType: hard
+
 "vue-resize@npm:^2.0.0-alpha.1":
   version: 2.0.0-alpha.1
   resolution: "vue-resize@npm:2.0.0-alpha.1"
@@ -13752,6 +13794,15 @@ __metadata:
   version: 0.6.1
   resolution: "webpack-virtual-modules@npm:0.6.1"
   checksum: 10c0/696bdc1acf3806374bdeb4b9b9856b79ee70b31e92f325dfab9b8c8c7e14bb6ddffa9f895a214770c4fb8fea45a21f34ca64310f74e877292a90f4a9966c9c2f
+  languageName: node
+  linkType: hard
+
+"webrtc-adapter@npm:8.2.3":
+  version: 8.2.3
+  resolution: "webrtc-adapter@npm:8.2.3"
+  dependencies:
+    sdp: "npm:^3.2.0"
+  checksum: 10c0/936f6e8aaa522f201d2918a5ccde8ece2e1f2d0273f2ede8a3a5a95fe17889b50d967e8a8aba6423687fb671f112d923e59fd6cc9a377236c53533f273240622
   languageName: node
   linkType: hard
 
@@ -14041,5 +14092,14 @@ __metadata:
   version: 2.0.4
   resolution: "zwitch@npm:2.0.4"
   checksum: 10c0/3c7830cdd3378667e058ffdb4cf2bb78ac5711214e2725900873accb23f3dfe5f9e7e5a06dcdc5f29605da976fc45c26d9a13ca334d6eea2245a15e77b8fc06e
+  languageName: node
+  linkType: hard
+
+"zxing-wasm@npm:1.1.3":
+  version: 1.1.3
+  resolution: "zxing-wasm@npm:1.1.3"
+  dependencies:
+    "@types/emscripten": "npm:^1.39.10"
+  checksum: 10c0/6c48c79500f92df58a169dfafcf59fa20bc061bb62bce714c4b6fcf3387822d114effd96b90b8decd3b167a25130bcc6428654c89470e8f2744cea77ef151227
   languageName: node
   linkType: hard

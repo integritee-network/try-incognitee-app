@@ -61,6 +61,7 @@
     "nuxt-svgo": "^4.0.0",
     "pinia": "^2.1.7",
     "sass": "^1.75.0",
+    "vue-qrcode-reader": "^5.5.4",
     "vue3-form-wizard": "^0.2.3"
   }
 }

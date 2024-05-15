@@ -72,7 +72,7 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxt/eslint",
   ],
-  plugins: [{ src: "~/plugins/lockScroll", mode: "client" }],
+  plugins: [{ src: "~/plugins/lockScroll", mode: "client" }, '~/plugins/qrcode-reader.ts'],
   svgo: {
     defaultImport: "component",
     global: false,

@@ -12,11 +12,13 @@
             another wallet with an invite link. You can share this with your
             friends and let them participate.
           </div>
-
-            <div>
-              <qrcode-stream @detect="onDecode" ></qrcode-stream>
-              <p>QRcode result: {{ result }}</p>
-            </div>
+          <div>
+            <qrcode :value="accountStore.getAddress"></qrcode>
+          </div>
+          <div>
+            <qrcode-stream @detect="onDecode"></qrcode-stream>
+            <p>QRcode result: {{ result }}</p>
+          </div>
           <div class="mt-10 mb-8">
             <template
               v-if="accountStore.incogniteeBalance > min_incognitee_balance"
@@ -74,7 +76,8 @@ import {Keyring} from "@polkadot/keyring";
 import {formatBalance, u8aToHex} from "@polkadot/util";
 import {mnemonicGenerate, mnemonicToMiniSecret} from "@polkadot/util-crypto";
 import {ref} from "vue";
-import { QrcodeStream } from 'vue-qrcode-reader'
+import {QrcodeStream} from 'vue-qrcode-reader'
+import Qrcode from 'vue-qrcode'
 import {useAccount} from "@/store/account.ts";
 import {useIncognitee} from "@/store/incognitee.ts";
 

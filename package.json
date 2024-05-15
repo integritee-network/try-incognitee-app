@@ -20,6 +20,7 @@
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.12.7",
     "@types/nodemailer": "^6.4.8",
+    "@types/qrcode": "^1",
     "autoprefixer": "^10.4.17",
     "esbuild": "^0.20.2",
     "eslint": "^9.2.0",
@@ -60,7 +61,9 @@
     "nodemailer": "^6.9.4",
     "nuxt-svgo": "^4.0.0",
     "pinia": "^2.1.7",
+    "qrcode": "^1.5.3",
     "sass": "^1.75.0",
+    "vue-qrcode": "^2.2.2",
     "vue-qrcode-reader": "^5.5.4",
     "vue3-form-wizard": "^0.2.3"
   }

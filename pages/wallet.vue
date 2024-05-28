@@ -8,10 +8,7 @@
 
     <div class="balance">
       <div
-        v-if="
-              isFetchingIncogniteeBalance &&
-              accountStore.getShortAddress != 'none'
-            "
+        v-if="isFetchingIncogniteeBalance"
         class="spinner"
       />
       <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
@@ -43,9 +40,7 @@
 
     <div class="balance-naked">
       <div
-        v-if="
-              isFetchingPaseoBalance && accountStore.getShortAddress != 'none'
-            "
+        v-if="isFetchingPaseoBalance"
         class="spinner"
       />
       <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
@@ -398,4 +393,22 @@ hr {
   width: 50%; /* Reduce the width by 50% */
 }
 
+.spinner {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 1em; /* Adjust the size here */
+  height: 1em; /* Adjust the size here */
+  animation: spin 2s linear infinite;
+  vertical-align: middle; /* Align with the text */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>

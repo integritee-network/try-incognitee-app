@@ -9,7 +9,7 @@ const Header = defineAsyncComponent(() => import("@/components/Header"));
 </script>
 
 <template>
-  <DefaultLayout />
+  <NuxtLayout />
 </template>
 
 <style lang="scss">

@@ -70,12 +70,13 @@ import {Keyring} from "@polkadot/keyring";
 import {hexToU8a, u8aToHex} from "@polkadot/util";
 import {useRouter} from "vue-router";
 import {useAccount} from "@/store/account.ts";
-//import {useIncognitee} from "@/store/incognitee.ts";
+import {useIncognitee} from "@/store/incognitee.ts";
 import {ApiPromise, WsProvider} from "@polkadot/api";
+import {useInterval} from "@vueuse/core";
 
 const router = useRouter();
 const accountStore = useAccount();
-//const incogniteeStore = useIncognitee();
+const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 
@@ -90,7 +91,6 @@ const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
 
-/*
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
@@ -104,7 +104,14 @@ const fetchIncogniteeBalance = async () => {
       isFetchingIncogniteeBalance.value = false;
     });
 };
-*/
+
+const pollCounter = useInterval(2000);
+
+watch(pollCounter, async () => {
+  console.log("ping: " + pollCounter.value);
+  await fetchIncogniteeBalance();
+});
+
 watch(accountStore, async () => {
   //todo! only reinitialize if account changes
   if (accountStore.getAddress === "none") {
@@ -130,13 +137,15 @@ watch(accountStore, async () => {
     },
   );
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-/*  fetchIncogniteeBalance().then(() =>
+  fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
-  );*/
+  );
 });
 
 
 onMounted(() => {
+  incogniteeStore.initializeApi();
+
   const seedHex = router.currentRoute.value.query.seed;
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
@@ -164,7 +173,6 @@ onMounted(() => {
       // TODO: inform the user that wallet was created and that they should store a bookmark
     });
   }
-  //incogniteeStore.initializeApi();
 });
 </script>
 

@@ -3,8 +3,7 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-        <p class="status">Connection Status: OK</p>
-        <p class="address">Wallet Address: 0x1234</p>
+        <p class="address">{{ accountStore.getShortAddress }}</p>
       </div>
     </header>
 
@@ -15,9 +14,9 @@
     <footer class="footer">
       <nav class="footer-content">
         <ul>
-          <li><nuxt-link to="/wallet">Wallet</nuxt-link></li>
-          <li><nuxt-link to="/swap">Swap</nuxt-link></li>
-          <li><nuxt-link to="/gov">Gov</nuxt-link></li>
+          <li><nuxt-link :to="{ path: '/wallet', query: $route.query }">Wallet</nuxt-link></li>
+          <li><nuxt-link :to="{ path: '/swap', query: $route.query }">Swap</nuxt-link></li>
+          <li><nuxt-link :to="{ path: '/gov', query: $route.query }">Gov</nuxt-link></li>
         </ul>
       </nav>
     </footer>
@@ -26,6 +25,8 @@
 
 <script setup lang="ts">
 import Incognitee from "@/assets/img/incognitee-mask.svg";
+import { useAccount } from "@/store/account.ts";
+const accountStore = useAccount();
 
 </script>
 

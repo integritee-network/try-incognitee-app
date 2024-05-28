@@ -18,8 +18,12 @@
     </div>
 
     <div class="buttons">
-      <NuxtLink to="/receive" class="btn btn_gradient">receive</NuxtLink>
-      <NuxtLink to="/send" class="btn btn_gradient">send</NuxtLink>
+      <UButton class="btn btn_gradient" @click="openReceiveOverlay">
+        receive
+      </UButton>
+      <UButton class="btn btn_gradient" @click="openSendOverlay">
+        send
+      </UButton>
     </div>
 
     <div class="privacy-separator">
@@ -56,6 +60,68 @@
         <button @click="closeAssetsInfo" class="mt-8">Got it</button>
       </div>
     </div>
+
+    <div v-if="showReceiveOverlay" class="action-overlay">
+      <div class="action">
+        <h1 class="mb-8">Receive</h1>
+        <div class="qrcode-container">
+          <qrcode class="qrcode" :value="accountStore.getAddress"></qrcode>
+        </div>
+        <div class="mt-3">
+          <p>your address: </p>
+          <span style="word-break: break-word; overflow-wrap: break-word">
+            <code>{{ accountStore.getAddress }}</code><br>
+            <button @click="copyOwnAddressToClipboard">⧉</button>
+          </span>
+
+
+        </div>
+        <div class="mt-8">
+          <a
+            href="https://faucet.polkadot.io/paseo"
+            target="_blank"
+            class="btn btn_gradient"
+          >
+            Get free PAS tokens from faucet
+          </a>
+        </div>
+
+        <button @click="closeReceiveOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
+    <div v-if="showSendOverlay" class="action-overlay">
+      <div class="action">
+        <h1 class="mb-8">Send</h1>
+        <div class="mt-8">
+          <form @submit.prevent="submitSendForm" class="form-container">
+            <label for="recipientAddress">Recipient:</label>
+            <input id="recipientAddress" v-model="recipientAddress" type="text" required>
+            <UButton class="btn btn_gradient" @click="openScanOverlay">
+              scan QR
+            </UButton>
+            <label for="amount" class="mt-8">Amount:</label>
+            <p>available balance {{accountStore.getIncogniteeHumanBalance}}</p>
+            <input id="amount" v-model="amount" type="number" step="0.01" min="0" required>
+            <p>fee: 0.001 PAS</p>
+            <button type="submit" class="btn btn_gradient">transfer</button>
+          </form>
+        </div>
+        <button @click="closeSendOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
+    <div v-if="showScanOverlay" class="action-overlay">
+      <div class="action">
+        <h1 class="mb-8">Scan QR code</h1>
+
+        <div class="qrcode-container">
+          <qrcode-stream @detect="onDecode"></qrcode-stream>
+        </div>
+        <div><p>QRcode result: {{ scanResult }}</p></div>
+        <button @click="closeScanOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -73,6 +139,8 @@ import {useAccount} from "@/store/account.ts";
 import {useIncognitee} from "@/store/incognitee.ts";
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import {useInterval} from "@vueuse/core";
+import Qrcode from "vue-qrcode";
+import {QrcodeStream} from "vue-qrcode-reader";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -80,17 +148,51 @@ const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 
-const showAssetsInfo = ref(false);
-
 let api: ApiPromise | null = null;
 
+const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {
   showAssetsInfo.value = true;
 };
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
+const showReceiveOverlay = ref(false);
+const openReceiveOverlay = () => {
+  showReceiveOverlay.value = true;
+};
+const closeReceiveOverlay = () => {
+  showReceiveOverlay.value = false;
+};
+const showSendOverlay = ref(false);
+const recipientAddress = ref('');
+const amount = ref('');
+const openSendOverlay = () => {
+  showSendOverlay.value = true;
+};
+const closeSendOverlay = () => {
+  showSendOverlay.value = false;
+};
+const submitSendForm = () => {
+  // Handle the form submission here
+  console.log("do send: " + address.value);
+};
+const showScanOverlay = ref(false);
+const openScanOverlay = () => {
+  scanResult.value = 'No QR code data yet';
+  showScanOverlay.value = true;
+};
+const closeScanOverlay = () => {
+  showScanOverlay.value = false;
+};
 
+const scanResult = ref('No QR code data yet')
+const onDecode = (decodeResult) => {
+  console.log("QR scan decoded: " + decodeResult[0].rawValue)
+  scanResult.value = decodeResult[0].rawValue
+  recipientAddress.value = decodeResult[0].rawValue
+  closeScanOverlay()
+}
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
@@ -142,6 +244,15 @@ watch(accountStore, async () => {
   );
 });
 
+const copyOwnAddressToClipboard = () => {
+  navigator.clipboard
+    .writeText(accountStore.getAddress)
+    .then(() =>
+      alert(
+        "copied your account address to clipboard. Please paste it into the address field on the Paseo faucet.",
+      ),
+    );
+};
 
 onMounted(() => {
   incogniteeStore.initializeApi();
@@ -239,4 +350,52 @@ hr {
   width: 90%;
   border-radius: 10px;
 }
+
+.action-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action {
+  background: #222;
+  padding: 20px;
+  width: 90%;
+  border-radius: 10px;
+}
+
+.qrcode-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.qrcode {
+  width: min(90vw, 80vh);
+  height: min(90vw, 80vh);
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-container input {
+  background-color: #333;
+  color: #fff; /* You might want to change the text color to ensure it's readable against the dark background */
+}
+.form-container input#amount {
+  font-size: 2em; /* Make the font size twice as large */
+  text-align: center; /* Center the text */
+  width: 50%; /* Reduce the width by 50% */
+}
+
 </style>

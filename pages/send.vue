@@ -51,6 +51,13 @@ const submitForm = () => {
 
 const accountStore = useAccount();
 
+const result = ref('No QR code data yet')
+const onDecode = (decodeResult) => {
+  result.value = decodeResult[0].rawValue
+  address.value = decodeResult[0].rawValue
+  closeQrScanner()
+}
+
 const showQrScanner = ref(false);
 const openQrScanner = () => {
   showQrScanner.value = true;

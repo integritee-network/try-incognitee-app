@@ -1,10 +1,10 @@
 <template>
   <div class="home-section">
     <Main />
-    <Steps />
     <Rules />
     <Prizes />
     <Socials />
+    <Footer />
   </div>
 </template>
 
@@ -12,7 +12,7 @@
 import Main from "~/components/Index/Main.vue";
 import Prizes from "~/components/Index/Prizes.vue";
 import Rules from "~/components/Index/Rules.vue";
-import Steps from "~/components/Index/Steps.vue";
+import Footer from "~/components/Footer/index.vue";
 import Socials from "~/components/Socials/Section.vue";
 import { generateSEO } from "~/helpers/generateSEO";
 
@@ -25,6 +25,10 @@ generateSEO({
 
 <style lang="scss">
 .home-section {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
 }
 </style>

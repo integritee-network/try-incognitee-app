@@ -135,10 +135,15 @@
               v-model="shieldAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="
+                (accountStore.paseoBalance - existential_deposit_paseo) /
+                  Math.pow(10, 10) -
+                0.1
+              "
               required
             />
-            <p>fee: 0.1%</p>
+            <p>fee: 16 mPAS for Paseo, 0.175% for Incognitee</p>
             <button type="submit" class="btn btn_gradient">shield</button>
           </form>
         </div>
@@ -165,7 +170,7 @@
               available balance {{ accountStore.getIncogniteeHumanBalance }}
             </p>
             <p>
-              for optimal k-anonymity, we advise you to unshield exactly 1 PAS
+              for optimal k-anonymity, we advise you to unshield exactly 10 PAS
               at the time. In the future we will provide a score including
               timing and popular amounts to enhance unlinkability of your
               actions
@@ -174,11 +179,12 @@
               id="unshieldAmount"
               v-model="unshieldAmount"
               type="number"
-              step="1.0"
-              min="1"
+              step="10"
+              :min="1.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
-            <p>fee: 0.01 PAS</p>
+            <p>fee: 30m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">unshield</button>
           </form>
         </div>
@@ -236,10 +242,11 @@
               v-model="sendAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
-            <p>fee: 0.001 PAS</p>
+            <p>fee: 10m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">transfer</button>
           </form>
         </div>
@@ -325,7 +332,7 @@ const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
-const unshieldAmount = ref(1.0);
+const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 
 let api: ApiPromise | null = null;
@@ -407,13 +414,6 @@ const shield = async () => {
   if (incogniteeStore.vault) {
     const balance = accountStore.paseoBalance;
     const amount = Math.pow(10, 10) * shieldAmount.value;
-    if (balance - amount < existential_deposit_paseo) {
-      alert(
-        "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
-      );
-      txStatus.value = "";
-      return;
-    }
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
@@ -454,8 +454,6 @@ const unshield = () => {
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
-
-  const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * sendAmount.value;
   const signer = accountStore.account;
   console.log(
@@ -606,6 +604,7 @@ const closeShieldOverlay = () => {
 };
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
+  unshieldAmount.value = 10;
   showUnshieldOverlay.value = true;
 };
 const closeUnshieldOverlay = () => {

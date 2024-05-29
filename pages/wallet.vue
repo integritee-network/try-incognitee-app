@@ -129,9 +129,9 @@
             <UButton class="btn btn_gradient" @click="openScanOverlay">
               scan QR
             </UButton>
-            <label for="amount" class="mt-8">Amount:</label>
+            <label for="sendAmount" class="mt-8">Amount:</label>
             <p>available balance {{accountStore.getIncogniteeHumanBalance}}</p>
-            <input id="amount" v-model="amount" type="number" step="0.01" min="0" required>
+            <input id="sendAmount" v-model="sendAmount" type="number" step="0.01" min="0" required>
             <p>fee: 0.001 PAS</p>
             <button type="submit" class="btn btn_gradient">transfer</button>
           </form>
@@ -148,6 +148,25 @@
         </div>
         <div><p>QRcode result: {{ scanResult }}</p></div>
         <button @click="closeScanOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
+    <div v-if="showNewWalletOverlay" class="alert-overlay">
+      <div class="alert">
+        <h1>New Wallet</h1>
+        <p>We have created a new wallet for you</p>
+        <span style="word-break: break-word; overflow-wrap: break-word">
+          <code>{{ accountStore.getAddress }}</code><br>
+          <button @click="copyOwnAddressToClipboard">⧉</button>
+        </span>
+        <p>
+          In order to keep your wallet, please store a bookmark to the current url
+          which includes your secret <b>NOW</b>. (i.e. type Ctrl+D to bookmark this page).
+          If you lose the bookmark, you will lose access to your wallet.
+          If you share your personal url with others, they can spend your funds.
+          The purpose of this demo is not security but optimal user experience for testing purposes.
+        </p>
+        <p>You will have zero funds. Please tap "receive" and got to Paseo Faucet to get your first PAS tokens</p>
+        <button @click="closeNewWalletOverlay" class="mt-8">close</button>
       </div>
     </div>
     <div v-if="showStatusOverlay" class="status-overlay">
@@ -186,7 +205,7 @@ const isFetchingIncogniteeBalance = ref(true);
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
 const recipientAddress = ref('');
-const amount = ref('');
+const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
 const unshieldAmount = ref(1.0);
 const scanResult = ref('No QR code data yet')
@@ -196,16 +215,19 @@ let api: ApiPromise | null = null;
 const submitSendForm = () => {
   // Handle the form submission here
   openStatusOverlay()
-  console.log("do send: " + address.value);
+  closeSendOverlay()
+  sendPrivately()
 };
 const submitShieldForm = () => {
   // Handle the form submission here
   openStatusOverlay()
+  closeShieldOverlay()
   shield()
 };
 const submitUnshieldForm = () => {
   // Handle the form submission here
   openStatusOverlay()
+  closeUnshieldOverlay()
   unshield()
 };
 const onDecode = (decodeResult) => {
@@ -313,6 +335,33 @@ const unshield = () => {
     });
 };
 
+const sendPrivately = () => {
+  console.log("sending funds on incognitee");
+  txStatus.value =
+    "⌛ sending funds privately on incognitee";
+
+  const balance = accountStore.incogniteeBalance;
+  const amount = Math.pow(10, 10) * sendAmount.value;
+  const signer = accountStore.account;
+  console.log(
+    `sending ${formatBalance(amount)} from ${signer.address} privately to ${recipientAddress.value}`,
+  );
+  incogniteeStore.api
+    .trustedBalanceTransfer(
+      signer,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      signer.address,
+      recipientAddress.value,
+      amount,
+    )
+    .then((hash) => {
+      console.log(`trustedOperationHash: ${hash}`);
+      txStatus.value =
+        "😀 Success";
+    });
+};
+
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
@@ -401,7 +450,7 @@ onMounted(() => {
         query: { seed: privateKeyHex },
       });
       accountStore.setAccount(newAccount);
-      // TODO: inform the user that wallet was created and that they should store a bookmark
+      openNewWalletOverlay()
     });
   }
 });
@@ -410,6 +459,9 @@ onMounted(() => {
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => { showAssetsInfo.value = true; };
 const closeAssetsInfo = () => { showAssetsInfo.value = false; };
+const showNewWalletOverlay = ref(false);
+const openNewWalletOverlay = () => { showNewWalletOverlay.value = true; };
+const closeNewWalletOverlay = () => { showNewWalletOverlay.value = false; };
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => { showShieldOverlay.value = true; };
 const closeShieldOverlay = () => { showShieldOverlay.value = false; };

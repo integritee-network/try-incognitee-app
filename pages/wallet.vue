@@ -135,7 +135,12 @@
               v-model="shieldAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="
+                (accountStore.paseoBalance - existential_deposit_paseo) /
+                  Math.pow(10, 10) -
+                0.1
+              "
               required
             />
             <p>fee: 16 mPAS for Paseo, 0.175% for Incognitee</p>
@@ -165,7 +170,7 @@
               available balance {{ accountStore.getIncogniteeHumanBalance }}
             </p>
             <p>
-              for optimal k-anonymity, we advise you to unshield exactly 1 PAS
+              for optimal k-anonymity, we advise you to unshield exactly 10 PAS
               at the time. In the future we will provide a score including
               timing and popular amounts to enhance unlinkability of your
               actions
@@ -174,8 +179,9 @@
               id="unshieldAmount"
               v-model="unshieldAmount"
               type="number"
-              step="1.0"
-              min="1"
+              step="10"
+              :min="1.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
             <p>fee: 30m PAS for incognitee</p>
@@ -236,7 +242,8 @@
               v-model="sendAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
             <p>fee: 10m PAS for incognitee</p>
@@ -325,7 +332,7 @@ const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
-const unshieldAmount = ref(1.0);
+const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 
 let api: ApiPromise | null = null;
@@ -430,6 +437,13 @@ const unshield = () => {
   txStatus.value = "⌛ will unshield to L1";
   const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
+  if (amount < existential_deposit_paseo) {
+    alert(
+      "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
+    );
+    txStatus.value = "";
+    return;
+  }
   const signer = accountStore.account;
   console.log(
     `sending ${formatBalance(amount)} from ${
@@ -606,6 +620,7 @@ const closeShieldOverlay = () => {
 };
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
+  unshieldAmount.value = 10;
   showUnshieldOverlay.value = true;
 };
 const closeUnshieldOverlay = () => {

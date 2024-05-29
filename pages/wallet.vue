@@ -58,12 +58,39 @@
     <div v-if="showShieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Shield PAS</h1>
+        <div class="mt-8">
+          <form @submit.prevent="submitShieldForm" class="form-container">
+            <label for="shieldAmount" class="mt-8">Amount:</label>
+            <p>available balance {{accountStore.getPaseoHumanBalance}}</p>
+            <input id="shieldAmount" v-model="shieldAmount" type="number" step="0.01" min="0" required>
+            <p>fee: 0.1%</p>
+            <button type="submit" class="btn btn_gradient">shield</button>
+          </form>
+        </div>
         <button @click="closeShieldOverlay" class="mt-8">cancel</button>
       </div>
     </div>
     <div v-if="showUnshieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Unshield PAS</h1>
+        <div class="mt-8">
+          <form @submit.prevent="submitUnshieldForm" class="form-container">
+            <label for="recipientAddress">Recipient:</label>
+            <input id="recipientAddress" v-model="recipientAddress" type="text" required>
+            <UButton class="btn btn_gradient" @click="openScanOverlay">
+              scan QR
+            </UButton>
+            <label for="unshieldAmount" class="mt-8">Amount:</label>
+            <p>available balance {{accountStore.getIncogniteeHumanBalance}}</p>
+            <p>for optimal k-anonymity, we advise you to unshield exactly 1 PAS at the time.
+              In the future we will provide a score including timing and popular amounts to enhance
+              unlinkability of your actions</p>
+            <input id="unshieldAmount" v-model="unshieldAmount" type="number" step="1.0" min="1" required>
+            <p>fee: 0.01 PAS</p>
+            <button type="submit" class="btn btn_gradient">unshield</button>
+          </form>
+        </div>
+
         <button @click="closeUnshieldOverlay" class="mt-8">cancel</button>
       </div>
     </div>
@@ -126,7 +153,7 @@
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
         <div class="spinner" />
-        <p>Transaction in progress</p>
+        <div>{{ txStatus }}</div>
         <button @click="closeStatusOverlay" class="mt-8">close</button>
       </div>
     </div>
@@ -141,7 +168,7 @@ import USDC from "@/assets/img/usdc-logo.svg";
 import {onMounted, ref, watch} from 'vue';
 import {cryptoWaitReady, mnemonicGenerate, mnemonicToMiniSecret} from "@polkadot/util-crypto";
 import {Keyring} from "@polkadot/keyring";
-import {hexToU8a, u8aToHex} from "@polkadot/util";
+import {formatBalance, hexToU8a, u8aToHex} from "@polkadot/util";
 import {useRouter} from "vue-router";
 import {useAccount} from "@/store/account.ts";
 import {useIncognitee} from "@/store/incognitee.ts";
@@ -156,76 +183,136 @@ const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 
-let api: ApiPromise | null = null;
-
-const showAssetsInfo = ref(false);
-const openAssetsInfo = () => {
-  showAssetsInfo.value = true;
-};
-const closeAssetsInfo = () => {
-  showAssetsInfo.value = false;
-};
-const showShieldOverlay = ref(false);
-const openShieldOverlay = () => {
-  showShieldOverlay.value = true;
-};
-const closeShieldOverlay = () => {
-  showShieldOverlay.value = false;
-};
-const showUnshieldOverlay = ref(false);
-const openUnshieldOverlay = () => {
-  showUnshieldOverlay.value = true;
-};
-const closeUnshieldOverlay = () => {
-  showUnshieldOverlay.value = false;
-};
-const showReceiveOverlay = ref(false);
-const openReceiveOverlay = () => {
-  showReceiveOverlay.value = true;
-};
-const closeReceiveOverlay = () => {
-  showReceiveOverlay.value = false;
-};
-const showSendOverlay = ref(false);
+const existential_deposit_paseo = 10000000000;
+const txStatus = ref("");
 const recipientAddress = ref('');
 const amount = ref('');
-const openSendOverlay = () => {
-  showSendOverlay.value = true;
-};
-const closeSendOverlay = () => {
-  showSendOverlay.value = false;
-};
+const shieldAmount = ref(1.0);
+const unshieldAmount = ref(1.0);
+const scanResult = ref('No QR code data yet')
+
+let api: ApiPromise | null = null;
+
 const submitSendForm = () => {
   // Handle the form submission here
   openStatusOverlay()
   console.log("do send: " + address.value);
 };
-const showScanOverlay = ref(false);
-const openScanOverlay = () => {
-  scanResult.value = 'No QR code data yet';
-  showScanOverlay.value = true;
+const submitShieldForm = () => {
+  // Handle the form submission here
+  openStatusOverlay()
+  shield()
 };
-const closeScanOverlay = () => {
-  showScanOverlay.value = false;
+const submitUnshieldForm = () => {
+  // Handle the form submission here
+  openStatusOverlay()
+  unshield()
 };
-const showStatusOverlay = ref(false);
-const openStatusOverlay = () => {
-  showStatusOverlay.value = true;
-};
-const closeStatusOverlay = () => {
-  showStatusOverlay.value = false;
-  showSendOverlay.value = false;
-  showShieldOverlay.value = false;
-  showUnshieldOverlay.value = false;
-};
-
-const scanResult = ref('No QR code data yet')
 const onDecode = (decodeResult) => {
   console.log("QR scan decoded: " + decodeResult[0].rawValue)
   scanResult.value = decodeResult[0].rawValue
   recipientAddress.value = decodeResult[0].rawValue
   closeScanOverlay()
 }
+
+const txResHandlerPaseo = ({ events = [], status, txHash }) => {
+  status.isFinalized
+    ? (txStatus.value = `😀 Finalized. You should see your Incognitee balance increase in seconds. Please proceed to the next tab and invite a friend`)
+    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
+
+  // Loop through Vec<EventRecord> to display all events
+  events.forEach(({ _, event: { data, method, section } }) => {
+    if (section + ":" + method === "system:ExtrinsicFailed") {
+      // extract the data for this event
+      const [dispatchError, dispatchInfo] = data;
+      console.log(`dispatchinfo: ${dispatchInfo}`);
+      let errorInfo;
+
+      // decode the error
+      if (dispatchError.isModule) {
+        // for module errors, we have the section indexed, lookup
+        // (For specific known errors, we can also do a check against the
+        // api.errors.<module>.<ErrorName>.is(dispatchError.asModule) guard)
+        const mod = dispatchError.asModule;
+        const error = api.registry.findMetaError(
+          new Uint8Array([
+            mod.index.toNumber(),
+            bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
+          ]),
+        );
+        const message = `${error.section}.${error.name}${
+          Array.isArray(error.docs)
+            ? `(${error.docs.join("")})`
+            : error.docs || ""
+        }`;
+
+        errorInfo = `${message}`;
+        console.log(`Error-info::${JSON.stringify(error)}`);
+      } else {
+        // Other, CannotLookup, BadOrigin, no extra info
+        errorInfo = dispatchError.toString();
+      }
+      txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
+    } else if (section + ":" + method === "system:ExtrinsicSuccess") {
+      txStatus.value`❤️️ Transaction successful! please proceed to the next tab and invite a friend`;
+    }
+  });
+};
+
+const txErrHandlerPaseo = (err) =>
+  (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
+const shield = async () => {
+  console.log("shielding .....");
+  txStatus.value = "⌛ connecting to Paseo....please be patient";
+  if (incogniteeStore.vault) {
+    const balance = accountStore.paseoBalance;
+    const amount = Math.pow(10, 10) * shieldAmount.value;
+    if (balance - amount < existential_deposit_paseo) {
+      alert(
+        "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
+      );
+      txStatus.value = "";
+      return;
+    }
+    console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
+    const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
+    const api = await ApiPromise.create({ provider: wsProvider });
+    console.log("api initialized for shielding");
+    await api.tx.balances
+      .transferKeepAlive(incogniteeStore.vault, amount)
+      .signAndSend(accountStore.account, txResHandlerPaseo)
+      .catch(txErrHandlerPaseo);
+  }
+};
+
+const unshield = () => {
+  console.log("will unshield 30% of your private funds to same account on L1");
+  txStatus.value =
+    "⌛ will unshield to L1";
+  const balance = accountStore.incogniteeBalance;
+  const amount = Math.pow(10, 10) * unshieldAmount.value;
+  const signer = accountStore.account;
+  console.log(
+    `sending ${formatBalance(amount)} from ${
+      signer.address
+    } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
+  );
+  incogniteeStore.api
+    .balanceUnshieldFunds(
+      signer,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      signer.address,
+      recipientAddress.value,
+      amount,
+    )
+    .then((hash) => {
+      txStatus.value =
+        "😀 Triggered unshielding of funds successfully.";
+      console.log(`trustedOperationHash: ${hash}`);
+    });
+};
+
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
@@ -318,6 +405,39 @@ onMounted(() => {
     });
   }
 });
+
+
+const showAssetsInfo = ref(false);
+const openAssetsInfo = () => { showAssetsInfo.value = true; };
+const closeAssetsInfo = () => { showAssetsInfo.value = false; };
+const showShieldOverlay = ref(false);
+const openShieldOverlay = () => { showShieldOverlay.value = true; };
+const closeShieldOverlay = () => { showShieldOverlay.value = false; };
+const showUnshieldOverlay = ref(false);
+const openUnshieldOverlay = () => { showUnshieldOverlay.value = true; };
+const closeUnshieldOverlay = () => { showUnshieldOverlay.value = false; };
+const showReceiveOverlay = ref(false);
+const openReceiveOverlay = () => { showReceiveOverlay.value = true; };
+const closeReceiveOverlay = () => { showReceiveOverlay.value = false; };
+const showSendOverlay = ref(false);
+const openSendOverlay = () => { showSendOverlay.value = true; };
+const closeSendOverlay = () => { showSendOverlay.value = false; };
+
+const showScanOverlay = ref(false);
+const openScanOverlay = () => {
+  scanResult.value = 'No QR code data yet';
+  showScanOverlay.value = true;
+};
+const closeScanOverlay = () => { showScanOverlay.value = false; };
+const showStatusOverlay = ref(false);
+const openStatusOverlay = () => { showStatusOverlay.value = true; };
+const closeStatusOverlay = () => {
+  showStatusOverlay.value = false;
+  showSendOverlay.value = false;
+  showShieldOverlay.value = false;
+  showUnshieldOverlay.value = false;
+};
+
 </script>
 
 <style scoped>
@@ -337,6 +457,15 @@ onMounted(() => {
   font-size: 24px;
   padding: 20px 20px
 }
+
+h1 {
+  font-size: 1em; /* Adjust as needed */
+  font-weight: bold; /* Makes the text bold */
+  color: #999; /* Change color as needed */
+  text-align: center; /* Centers the text */
+  margin-bottom: 20px; /* Adds space below the heading */
+}
+
 .currency-selector {
   display: flex;
   justify-content: space-around;

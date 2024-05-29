@@ -1,5 +1,5 @@
-git
 <script setup lang="ts">
+import DefaultLayout from "./layouts/default.vue";
 import { defineAsyncComponent } from "vue";
 import { useAsyncData } from "#imports";
 import Footer from "@/components/Footer";
@@ -9,21 +9,7 @@ const Header = defineAsyncComponent(() => import("@/components/Header"));
 </script>
 
 <template>
-  <div class="wrapper">
-    <Header />
-    <div class="image-wrap">
-      <div class="container">
-        <img src="/img/global/bg-line.png" class="top-lines" alt="Lines" />
-      </div>
-    </div>
-    <div class="page-wrapper">
-      <NuxtPage />
-    </div>
-    <div class="container">
-      <img src="/img/global/bg-line.png" class="bottom-lines" alt="Lines" />
-    </div>
-    <Footer />
-  </div>
+  <NuxtLayout />
 </template>
 
 <style lang="scss">

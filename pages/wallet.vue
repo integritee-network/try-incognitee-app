@@ -414,13 +414,6 @@ const shield = async () => {
   if (incogniteeStore.vault) {
     const balance = accountStore.paseoBalance;
     const amount = Math.pow(10, 10) * shieldAmount.value;
-    if (balance - amount < existential_deposit_paseo) {
-      alert(
-        "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
-      );
-      txStatus.value = "";
-      return;
-    }
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
@@ -437,13 +430,6 @@ const unshield = () => {
   txStatus.value = "⌛ will unshield to L1";
   const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
-  if (amount < existential_deposit_paseo) {
-    alert(
-      "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
-    );
-    txStatus.value = "";
-    return;
-  }
   const signer = accountStore.account;
   console.log(
     `sending ${formatBalance(amount)} from ${
@@ -468,8 +454,6 @@ const unshield = () => {
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
-
-  const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * sendAmount.value;
   const signer = accountStore.account;
   console.log(

@@ -30,10 +30,10 @@
     </div>
 
     <div class="buttons">
-      <UButton class="btn btn_gradient" @click="do_shield">
+      <UButton class="btn btn_gradient" @click="openShieldOverlay">
         shield
       </UButton>
-      <UButton class="btn btn_gradient" @click="do_unshield">
+      <UButton class="btn btn_gradient" @click="openUnshieldOverlay">
         unshield
       </UButton>
     </div>
@@ -55,7 +55,18 @@
         <button @click="closeAssetsInfo" class="mt-8">Got it</button>
       </div>
     </div>
-
+    <div v-if="showShieldOverlay" class="action-overlay">
+      <div class="action">
+        <h1 class="mb-8">Shield PAS</h1>
+        <button @click="closeShieldOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
+    <div v-if="showUnshieldOverlay" class="action-overlay">
+      <div class="action">
+        <h1 class="mb-8">Unshield PAS</h1>
+        <button @click="closeUnshieldOverlay" class="mt-8">cancel</button>
+      </div>
+    </div>
     <div v-if="showReceiveOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Receive</h1>
@@ -68,8 +79,6 @@
             <code>{{ accountStore.getAddress }}</code><br>
             <button @click="copyOwnAddressToClipboard">⧉</button>
           </span>
-
-
         </div>
         <div class="mt-8">
           <a
@@ -80,7 +89,6 @@
             Get free PAS tokens from faucet
           </a>
         </div>
-
         <button @click="closeReceiveOverlay" class="mt-8">cancel</button>
       </div>
     </div>
@@ -115,8 +123,13 @@
         <button @click="closeScanOverlay" class="mt-8">cancel</button>
       </div>
     </div>
-
-
+    <div v-if="showStatusOverlay" class="status-overlay">
+      <div class="status">
+        <div class="spinner" />
+        <p>Transaction in progress</p>
+        <button @click="closeStatusOverlay" class="mt-8">close</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -152,6 +165,20 @@ const openAssetsInfo = () => {
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
+const showShieldOverlay = ref(false);
+const openShieldOverlay = () => {
+  showShieldOverlay.value = true;
+};
+const closeShieldOverlay = () => {
+  showShieldOverlay.value = false;
+};
+const showUnshieldOverlay = ref(false);
+const openUnshieldOverlay = () => {
+  showUnshieldOverlay.value = true;
+};
+const closeUnshieldOverlay = () => {
+  showUnshieldOverlay.value = false;
+};
 const showReceiveOverlay = ref(false);
 const openReceiveOverlay = () => {
   showReceiveOverlay.value = true;
@@ -170,6 +197,7 @@ const closeSendOverlay = () => {
 };
 const submitSendForm = () => {
   // Handle the form submission here
+  openStatusOverlay()
   console.log("do send: " + address.value);
 };
 const showScanOverlay = ref(false);
@@ -179,6 +207,16 @@ const openScanOverlay = () => {
 };
 const closeScanOverlay = () => {
   showScanOverlay.value = false;
+};
+const showStatusOverlay = ref(false);
+const openStatusOverlay = () => {
+  showStatusOverlay.value = true;
+};
+const closeStatusOverlay = () => {
+  showStatusOverlay.value = false;
+  showSendOverlay.value = false;
+  showShieldOverlay.value = false;
+  showUnshieldOverlay.value = false;
 };
 
 const scanResult = ref('No QR code data yet')
@@ -364,7 +402,24 @@ hr {
   width: 90%;
   border-radius: 10px;
 }
+.status-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.status {
+  background: #269;
+  padding: 20px;
+  width: 90%;
+  border-radius: 10px;
+}
 .qrcode-container {
   display: flex;
   justify-content: center;

@@ -7,10 +7,7 @@
     </div>
 
     <div class="balance">
-      <div
-        v-if="isFetchingIncogniteeBalance"
-        class="spinner"
-      />
+      <div v-if="isFetchingIncogniteeBalance" class="spinner" />
       <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
     </div>
 
@@ -25,7 +22,7 @@
 
     <div class="privacy-separator">
       <p>private</p>
-      <hr>
+      <hr />
       <p>naked</p>
     </div>
 
@@ -39,10 +36,7 @@
     </div>
 
     <div class="balance-naked">
-      <div
-        v-if="isFetchingPaseoBalance"
-        class="spinner"
-      />
+      <div v-if="isFetchingPaseoBalance" class="spinner" />
       <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
     </div>
 
@@ -50,8 +44,15 @@
       <div class="alert">
         <h1 class="mb-8">Other Assets</h1>
 
-        <p>Incognitee is capable of shielding any fungible asset on any substrate-based chain. Stay tuned for dedicated deployments for DOT, KSM, USDC, USDT and others</p>
-        <p class="mt-3">With further extension, Incognitee will be able to shield BTC, ETH and any other token whose protocol supports light clients</p>
+        <p>
+          Incognitee is capable of shielding any fungible asset on any
+          substrate-based chain. Stay tuned for dedicated deployments for DOT,
+          KSM, USDC, USDT and others
+        </p>
+        <p class="mt-3">
+          With further extension, Incognitee will be able to shield BTC, ETH and
+          any other token whose protocol supports light clients
+        </p>
         <button @click="closeAssetsInfo" class="mt-8">Got it</button>
       </div>
     </div>
@@ -61,8 +62,15 @@
         <div class="mt-8">
           <form @submit.prevent="submitShieldForm" class="form-container">
             <label for="shieldAmount" class="mt-8">Amount:</label>
-            <p>available balance {{accountStore.getPaseoHumanBalance}}</p>
-            <input id="shieldAmount" v-model="shieldAmount" type="number" step="0.01" min="0" required>
+            <p>available balance {{ accountStore.getPaseoHumanBalance }}</p>
+            <input
+              id="shieldAmount"
+              v-model="shieldAmount"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+            />
             <p>fee: 0.1%</p>
             <button type="submit" class="btn btn_gradient">shield</button>
           </form>
@@ -76,16 +84,33 @@
         <div class="mt-8">
           <form @submit.prevent="submitUnshieldForm" class="form-container">
             <label for="recipientAddress">Recipient:</label>
-            <input id="recipientAddress" v-model="recipientAddress" type="text" required>
+            <input
+              id="recipientAddress"
+              v-model="recipientAddress"
+              type="text"
+              required
+            />
             <UButton class="btn btn_gradient" @click="openScanOverlay">
               scan QR
             </UButton>
             <label for="unshieldAmount" class="mt-8">Amount:</label>
-            <p>available balance {{accountStore.getIncogniteeHumanBalance}}</p>
-            <p>for optimal k-anonymity, we advise you to unshield exactly 1 PAS at the time.
-              In the future we will provide a score including timing and popular amounts to enhance
-              unlinkability of your actions</p>
-            <input id="unshieldAmount" v-model="unshieldAmount" type="number" step="1.0" min="1" required>
+            <p>
+              available balance {{ accountStore.getIncogniteeHumanBalance }}
+            </p>
+            <p>
+              for optimal k-anonymity, we advise you to unshield exactly 1 PAS
+              at the time. In the future we will provide a score including
+              timing and popular amounts to enhance unlinkability of your
+              actions
+            </p>
+            <input
+              id="unshieldAmount"
+              v-model="unshieldAmount"
+              type="number"
+              step="1.0"
+              min="1"
+              required
+            />
             <p>fee: 0.01 PAS</p>
             <button type="submit" class="btn btn_gradient">unshield</button>
           </form>
@@ -101,9 +126,10 @@
           <qrcode class="qrcode" :value="accountStore.getAddress"></qrcode>
         </div>
         <div class="mt-3">
-          <p>your address: </p>
+          <p>your address:</p>
           <span style="word-break: break-word; overflow-wrap: break-word">
-            <code>{{ accountStore.getAddress }}</code><br>
+            <code>{{ accountStore.getAddress }}</code
+            ><br />
             <button @click="copyOwnAddressToClipboard">⧉</button>
           </span>
         </div>
@@ -125,13 +151,27 @@
         <div class="mt-8">
           <form @submit.prevent="submitSendForm" class="form-container">
             <label for="recipientAddress">Recipient:</label>
-            <input id="recipientAddress" v-model="recipientAddress" type="text" required>
+            <input
+              id="recipientAddress"
+              v-model="recipientAddress"
+              type="text"
+              required
+            />
             <UButton class="btn btn_gradient" @click="openScanOverlay">
               scan QR
             </UButton>
             <label for="sendAmount" class="mt-8">Amount:</label>
-            <p>available balance {{accountStore.getIncogniteeHumanBalance}}</p>
-            <input id="sendAmount" v-model="sendAmount" type="number" step="0.01" min="0" required>
+            <p>
+              available balance {{ accountStore.getIncogniteeHumanBalance }}
+            </p>
+            <input
+              id="sendAmount"
+              v-model="sendAmount"
+              type="number"
+              step="0.01"
+              min="0"
+              required
+            />
             <p>fee: 0.001 PAS</p>
             <button type="submit" class="btn btn_gradient">transfer</button>
           </form>
@@ -146,7 +186,9 @@
         <div class="qrcode-container">
           <qrcode-stream @detect="onDecode"></qrcode-stream>
         </div>
-        <div><p>QRcode result: {{ scanResult }}</p></div>
+        <div>
+          <p>QRcode result: {{ scanResult }}</p>
+        </div>
         <button @click="closeScanOverlay" class="mt-8">cancel</button>
       </div>
     </div>
@@ -155,17 +197,22 @@
         <h1>New Wallet</h1>
         <p>We have created a new wallet for you</p>
         <span style="word-break: break-word; overflow-wrap: break-word">
-          <code>{{ accountStore.getAddress }}</code><br>
+          <code>{{ accountStore.getAddress }}</code
+          ><br />
           <button @click="copyOwnAddressToClipboard">⧉</button>
         </span>
         <p>
-          In order to keep your wallet, please store a bookmark to the current url
-          which includes your secret <b>NOW</b>. (i.e. type Ctrl+D to bookmark this page).
-          If you lose the bookmark, you will lose access to your wallet.
-          If you share your personal url with others, they can spend your funds.
-          The purpose of this demo is not security but optimal user experience for testing purposes.
+          In order to keep your wallet, please store a bookmark to the current
+          url which includes your secret <b>NOW</b>. (i.e. type Ctrl+D to
+          bookmark this page). If you lose the bookmark, you will lose access to
+          your wallet. If you share your personal url with others, they can
+          spend your funds. The purpose of this demo is not security but optimal
+          user experience for testing purposes.
         </p>
-        <p>You will have zero funds. Please tap "receive" and got to Paseo Faucet to get your first PAS tokens</p>
+        <p>
+          You will have zero funds. Please tap "receive" and got to Paseo Faucet
+          to get your first PAS tokens
+        </p>
         <button @click="closeNewWalletOverlay" class="mt-8">close</button>
       </div>
     </div>
@@ -184,17 +231,21 @@ import Polkadot from "@/assets/img/polkadot-logo.svg";
 import Paseo from "@/assets/img/paseo-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import {onMounted, ref, watch} from 'vue';
-import {cryptoWaitReady, mnemonicGenerate, mnemonicToMiniSecret} from "@polkadot/util-crypto";
-import {Keyring} from "@polkadot/keyring";
-import {formatBalance, hexToU8a, u8aToHex} from "@polkadot/util";
-import {useRouter} from "vue-router";
-import {useAccount} from "@/store/account.ts";
-import {useIncognitee} from "@/store/incognitee.ts";
-import {ApiPromise, WsProvider} from "@polkadot/api";
-import {useInterval} from "@vueuse/core";
+import { onMounted, ref, watch } from "vue";
+import {
+  cryptoWaitReady,
+  mnemonicGenerate,
+  mnemonicToMiniSecret,
+} from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { useRouter } from "vue-router";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { useInterval } from "@vueuse/core";
 import Qrcode from "vue-qrcode";
-import {QrcodeStream} from "vue-qrcode-reader";
+import { QrcodeStream } from "vue-qrcode-reader";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -204,38 +255,38 @@ const isFetchingIncogniteeBalance = ref(true);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
-const recipientAddress = ref('');
+const recipientAddress = ref("");
 const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
 const unshieldAmount = ref(1.0);
-const scanResult = ref('No QR code data yet')
+const scanResult = ref("No QR code data yet");
 
 let api: ApiPromise | null = null;
 
 const submitSendForm = () => {
   // Handle the form submission here
-  openStatusOverlay()
-  closeSendOverlay()
-  sendPrivately()
+  openStatusOverlay();
+  closeSendOverlay();
+  sendPrivately();
 };
 const submitShieldForm = () => {
   // Handle the form submission here
-  openStatusOverlay()
-  closeShieldOverlay()
-  shield()
+  openStatusOverlay();
+  closeShieldOverlay();
+  shield();
 };
 const submitUnshieldForm = () => {
   // Handle the form submission here
-  openStatusOverlay()
-  closeUnshieldOverlay()
-  unshield()
+  openStatusOverlay();
+  closeUnshieldOverlay();
+  unshield();
 };
 const onDecode = (decodeResult) => {
-  console.log("QR scan decoded: " + decodeResult[0].rawValue)
-  scanResult.value = decodeResult[0].rawValue
-  recipientAddress.value = decodeResult[0].rawValue
-  closeScanOverlay()
-}
+  console.log("QR scan decoded: " + decodeResult[0].rawValue);
+  scanResult.value = decodeResult[0].rawValue;
+  recipientAddress.value = decodeResult[0].rawValue;
+  closeScanOverlay();
+};
 
 const txResHandlerPaseo = ({ events = [], status, txHash }) => {
   status.isFinalized
@@ -309,8 +360,7 @@ const shield = async () => {
 
 const unshield = () => {
   console.log("will unshield 30% of your private funds to same account on L1");
-  txStatus.value =
-    "⌛ will unshield to L1";
+  txStatus.value = "⌛ will unshield to L1";
   const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
   const signer = accountStore.account;
@@ -329,16 +379,14 @@ const unshield = () => {
       amount,
     )
     .then((hash) => {
-      txStatus.value =
-        "😀 Triggered unshielding of funds successfully.";
+      txStatus.value = "😀 Triggered unshielding of funds successfully.";
       console.log(`trustedOperationHash: ${hash}`);
     });
 };
 
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
-  txStatus.value =
-    "⌛ sending funds privately on incognitee";
+  txStatus.value = "⌛ sending funds privately on incognitee";
 
   const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * sendAmount.value;
@@ -357,8 +405,7 @@ const sendPrivately = () => {
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
-      txStatus.value =
-        "😀 Success";
+      txStatus.value = "😀 Success";
     });
 };
 
@@ -450,46 +497,72 @@ onMounted(() => {
         query: { seed: privateKeyHex },
       });
       accountStore.setAccount(newAccount);
-      openNewWalletOverlay()
+      openNewWalletOverlay();
     });
   }
 });
 
-
 const showAssetsInfo = ref(false);
-const openAssetsInfo = () => { showAssetsInfo.value = true; };
-const closeAssetsInfo = () => { showAssetsInfo.value = false; };
+const openAssetsInfo = () => {
+  showAssetsInfo.value = true;
+};
+const closeAssetsInfo = () => {
+  showAssetsInfo.value = false;
+};
 const showNewWalletOverlay = ref(false);
-const openNewWalletOverlay = () => { showNewWalletOverlay.value = true; };
-const closeNewWalletOverlay = () => { showNewWalletOverlay.value = false; };
+const openNewWalletOverlay = () => {
+  showNewWalletOverlay.value = true;
+};
+const closeNewWalletOverlay = () => {
+  showNewWalletOverlay.value = false;
+};
 const showShieldOverlay = ref(false);
-const openShieldOverlay = () => { showShieldOverlay.value = true; };
-const closeShieldOverlay = () => { showShieldOverlay.value = false; };
+const openShieldOverlay = () => {
+  showShieldOverlay.value = true;
+};
+const closeShieldOverlay = () => {
+  showShieldOverlay.value = false;
+};
 const showUnshieldOverlay = ref(false);
-const openUnshieldOverlay = () => { showUnshieldOverlay.value = true; };
-const closeUnshieldOverlay = () => { showUnshieldOverlay.value = false; };
+const openUnshieldOverlay = () => {
+  showUnshieldOverlay.value = true;
+};
+const closeUnshieldOverlay = () => {
+  showUnshieldOverlay.value = false;
+};
 const showReceiveOverlay = ref(false);
-const openReceiveOverlay = () => { showReceiveOverlay.value = true; };
-const closeReceiveOverlay = () => { showReceiveOverlay.value = false; };
+const openReceiveOverlay = () => {
+  showReceiveOverlay.value = true;
+};
+const closeReceiveOverlay = () => {
+  showReceiveOverlay.value = false;
+};
 const showSendOverlay = ref(false);
-const openSendOverlay = () => { showSendOverlay.value = true; };
-const closeSendOverlay = () => { showSendOverlay.value = false; };
+const openSendOverlay = () => {
+  showSendOverlay.value = true;
+};
+const closeSendOverlay = () => {
+  showSendOverlay.value = false;
+};
 
 const showScanOverlay = ref(false);
 const openScanOverlay = () => {
-  scanResult.value = 'No QR code data yet';
+  scanResult.value = "No QR code data yet";
   showScanOverlay.value = true;
 };
-const closeScanOverlay = () => { showScanOverlay.value = false; };
+const closeScanOverlay = () => {
+  showScanOverlay.value = false;
+};
 const showStatusOverlay = ref(false);
-const openStatusOverlay = () => { showStatusOverlay.value = true; };
+const openStatusOverlay = () => {
+  showStatusOverlay.value = true;
+};
 const closeStatusOverlay = () => {
   showStatusOverlay.value = false;
   showSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
 };
-
 </script>
 
 <style scoped>
@@ -503,11 +576,11 @@ const closeStatusOverlay = () => {
 
 .balance {
   font-size: 48px;
-  padding: 20px 20px
+  padding: 20px 20px;
 }
 .balance-naked {
   font-size: 24px;
-  padding: 20px 20px
+  padding: 20px 20px;
 }
 
 h1 {

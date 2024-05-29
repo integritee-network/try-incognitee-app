@@ -1,4 +1,4 @@
-import Vue from 'vue'
-import { QrcodeStream } from 'vue-qrcode-reader'
+import Vue from "vue";
+import { QrcodeStream } from "vue-qrcode-reader";
 
-Vue.component('qrcode-stream', QrcodeStream)
+Vue.component("qrcode-stream", QrcodeStream);

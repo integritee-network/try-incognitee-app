@@ -9,14 +9,29 @@
             <span class="gradient gradient_one">Test</span> Campaign
           </h1>
           <p class="paragraph paragraph_medium main__description margin_large">
-            Integritee ran a test campaign for Incognitee from May 7th to 21st 2024.
-            The campaign is over and the <NuxtLink to="https://x.com/integri_t_e_e/status/1795431400469835777" class="color_blue">winners have been announced on X</NuxtLink>
+            Integritee ran a test campaign for Incognitee from May 7th to 21st
+            2024. The campaign is over and the
+            <NuxtLink
+              to="https://x.com/integri_t_e_e/status/1795431400469835777"
+              class="color_blue"
+              >winners have been announced on X</NuxtLink
+            >
           </p>
-          <p class="color_blue"><b>please stay tuned while we prepare a full wallet experience for you here on this page</b></p>
+          <p class="color_blue">
+            <b
+              >please stay tuned while we prepare a full wallet experience for
+              you here on this page</b
+            >
+          </p>
 
-          <p class="mt-3"> for your reference, we keep the content of our past campaign available until we launch the wallet beta</p>
+          <p class="mt-3">
+            for your reference, we keep the content of our past campaign
+            available until we launch the wallet beta
+          </p>
 
-          <p class="paragraph paragraph_medium main__description margin_large mt-8">
+          <p
+            class="paragraph paragraph_medium main__description margin_large mt-8"
+          >
             <a href="https://incognitee.io/"> Incognitee</a> is a fast and
             scalable privacy enhancement for
             <a href="https://polkadot.network">Polkadot</a>, and we are

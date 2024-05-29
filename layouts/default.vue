@@ -14,9 +14,21 @@
     <footer class="footer">
       <nav class="footer-content">
         <ul>
-          <li><nuxt-link :to="{ path: '/wallet', query: $route.query }">Wallet</nuxt-link></li>
-          <li><nuxt-link :to="{ path: '/swap', query: $route.query }">Swap</nuxt-link></li>
-          <li><nuxt-link :to="{ path: '/gov', query: $route.query }">Gov</nuxt-link></li>
+          <li>
+            <nuxt-link :to="{ path: '/wallet', query: $route.query }"
+              >Wallet</nuxt-link
+            >
+          </li>
+          <li>
+            <nuxt-link :to="{ path: '/swap', query: $route.query }"
+              >Swap</nuxt-link
+            >
+          </li>
+          <li>
+            <nuxt-link :to="{ path: '/gov', query: $route.query }"
+              >Gov</nuxt-link
+            >
+          </li>
         </ul>
       </nav>
     </footer>
@@ -27,7 +39,6 @@
 import Incognitee from "@/assets/img/incognitee-mask.svg";
 import { useAccount } from "@/store/account.ts";
 const accountStore = useAccount();
-
 </script>
 
 <style scoped>
@@ -37,7 +48,8 @@ const accountStore = useAccount();
   height: 100vh;
 }
 
-.header, .footer {
+.header,
+.footer {
   background: #000;
   width: 100%;
 }

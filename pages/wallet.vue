@@ -20,7 +20,7 @@
       </UButton>
     </div>
 
-    <div class="privacy-separator">
+    <div class="privacy-separator" @click="openPrivacyInfo">
       <p>private</p>
       <hr />
       <p>naked</p>
@@ -56,6 +56,73 @@
         <button @click="closeAssetsInfo" class="mt-8">Got it</button>
       </div>
     </div>
+    <div
+      v-if="showPrivacyInfo"
+      class="alert-overlay"
+      ref="privacyInfo"
+      @click="closeOnOutsideClick"
+    >
+      <div class="alert">
+        <h1 class="mb-8">On Privacy</h1>
+        <p>
+          Incognitee enhances your privacy while dealing with digital assets.
+          But what does privacy mean and how does incognitee improve privacy?
+        </p>
+        <p class="mt-3">
+          First, let's explore why digital assets are generally
+          <b>not</b> private. When dealing with crypto assets, your account is a
+          pseudonym on a public ledger, much like a bank account number. Every
+          single transaction this account does will be stored publicly forever
+          and you have no right for deletion of the trace you left. If, at a
+          certain point in time your pseudonym can be linked to your identity -
+          i.e. because you send tokens to someone else - your entire behavioral
+          history is revealed as is your balance.
+        </p>
+        <p class="mt-3">
+          <NuxtLink to="https://incognitee.io" class="color_blue"
+            >Incognitee</NuxtLink
+          >
+          is a privacy enhancing technology that allows you to shield your
+          assets and transfer them privately. This means that you can send
+          tokens to someone else without revealing your balance or transaction
+          history. The recipient will not be able to see your balance or
+          transaction history either. This is achieved by using a technology
+          called
+          <NuxtLink
+            to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
+            class="color_blue"
+            >trusted execution environments (TEE)</NuxtLink
+          >
+          . The TEEs we use are a hardware feature of server CPU's called
+          <i>Intel SGX</i>. In addition, the
+          <NuxtLink
+            to="https://docs.integritee.network/2-integritee-network"
+            class="color_blue"
+            >Integritee Network</NuxtLink
+          >, a Polkadot parachain, performs independent, decentralized remote
+          attestation of TEEs. Moreover, it gives finality to Incognitee
+          sidechain blocks.
+        </p>
+        <p class="mt-3">
+          Incognitee is a layer 2 solution, maintaining a private ledger secured
+          by TEE. All your transactions are confidential, only known to and the
+          person your transacting with. Sender, recipient and amount are
+          invisible to the public and even to the operators of Incognitee
+          infrastructure.
+        </p>
+        <p class="mt-3">
+          For maximal privacy, we suggest to shield your assets to incognitee
+          and from then on transact them on incognitee only. If you need to
+          unshield back to L1, you can still benefit from k-anonymity: the
+          public just sees that someone out of <i>k</i> individuals is the
+          originator of an unshielding event. If <i>k</i> is large enough, you
+          can plausibly deny it was you. You can influence the size of
+          <i>k</i> by choosing popular amounts and timing.
+        </p>
+        <button @click="closePrivacyInfo" class="mt-8">Got it</button>
+      </div>
+    </div>
+
     <div v-if="showShieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Shield PAS</h1>
@@ -509,6 +576,20 @@ const openAssetsInfo = () => {
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
+const showPrivacyInfo = ref(false);
+const openPrivacyInfo = () => {
+  showPrivacyInfo.value = true;
+};
+const closePrivacyInfo = () => {
+  showPrivacyInfo.value = false;
+};
+const privacyInfo = ref(null);
+const closeOnOutsideClick = (event) => {
+  if (event.target === privacyInfo.value) {
+    showPrivacyInfo.value = false;
+  }
+};
+
 const showNewWalletOverlay = ref(false);
 const openNewWalletOverlay = () => {
   showNewWalletOverlay.value = true;
@@ -636,6 +717,8 @@ hr {
   padding: 20px;
   width: 90%;
   border-radius: 10px;
+  overflow: auto;
+  max-height: 90%;
 }
 
 .action-overlay {
@@ -655,6 +738,8 @@ hr {
   padding: 20px;
   width: 90%;
   border-radius: 10px;
+  overflow: auto;
+  max-height: 90%;
 }
 .status-overlay {
   position: fixed;

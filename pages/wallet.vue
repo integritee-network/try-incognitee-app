@@ -138,7 +138,7 @@
               min="0"
               required
             />
-            <p>fee: 0.1%</p>
+            <p>fee: 16 mPAS for Paseo, 0.175% for Incognitee</p>
             <button type="submit" class="btn btn_gradient">shield</button>
           </form>
         </div>
@@ -178,7 +178,7 @@
               min="1"
               required
             />
-            <p>fee: 0.01 PAS</p>
+            <p>fee: 30m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">unshield</button>
           </form>
         </div>
@@ -239,7 +239,7 @@
               min="0"
               required
             />
-            <p>fee: 0.001 PAS</p>
+            <p>fee: 10m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">transfer</button>
           </form>
         </div>

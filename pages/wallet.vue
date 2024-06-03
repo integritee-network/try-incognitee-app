@@ -1,49 +1,146 @@
 <template>
-  <div class="wallet">
-    <div class="currency-selector">
-      <Polkadot class="currency-logo" @click="openAssetsInfo" />
-      <Paseo class="currency-logo" />
-      <USDC class="currency-logo" @click="openAssetsInfo" />
+  <div class="mt-10">
+    <div
+      class="flex flex-row justify-between w-full text-center gap-4 container"
+    >
+      <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
+        <Polkadot class="w-[30px] h-[30px]" />
+        <p class="text-xs">DOT</p>
+        <span
+          class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
+          >coming soon</span
+        >
+      </div>
+      <div class="currency-box gap-2 p-3 basis-1/2">
+        <Paseo class="w-[30px] h-[30px]" />
+        <p class="text-xs">PASEO</p>
+      </div>
+      <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
+        <USDC class="w-[30px] h-[30px]" />
+        <p class="text-xs">USDC</p>
+        <span
+          class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
+          >coming soon</span
+        >
+      </div>
     </div>
+    <div class="container flex flex-col">
+      <div class="bg-gray-900 flex mt-10">
+        <div class="custom-border-gradient">
+          <div class="inner-box">
+            <div class="flex justify-between text-white mb-6">
+              <div class="text-left">
+                <h3 class="text-xs">Naked Balance</h3>
+                <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+                <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
+              </div>
+              <div class="text-right" @click="openPrivacyInfo">
+                <h3 class="text-xs">Private Balance</h3>
+                <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+                <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
+              </div>
+            </div>
+            <div class="mt-10">
+              <div
+                class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
+              >
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openSendOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+                    />
+                  </svg>
+                  <p class="text-xs">Send</p>
+                </div>
 
-    <div class="balance">
-      <div v-if="isFetchingIncogniteeBalance" class="spinner" />
-      <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openReceiveOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                    />
+                  </svg>
+                  <p class="text-xs">Receive</p>
+                </div>
+
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openShieldOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+                    />
+                  </svg>
+                  <p class="text-xs">Shield</p>
+                </div>
+
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openUnshieldOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                  </svg>
+                  <p class="text-xs">Unshield</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="buttons">
-      <UButton class="btn btn_gradient" @click="openReceiveOverlay">
-        receive
-      </UButton>
-      <UButton class="btn btn_gradient" @click="openSendOverlay">
-        send
-      </UButton>
-    </div>
-
-    <div class="privacy-separator" @click="openPrivacyInfo">
-      <p>private</p>
-      <hr />
-      <p>naked</p>
-    </div>
-
-    <div class="buttons">
-      <UButton class="btn btn_gradient" @click="openShieldOverlay">
-        shield
-      </UButton>
-      <UButton class="btn btn_gradient" @click="openUnshieldOverlay">
-        unshield
-      </UButton>
-    </div>
-
-    <div class="balance-naked">
-      <div v-if="isFetchingPaseoBalance" class="spinner" />
-      <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
-    </div>
-
     <div v-if="showAssetsInfo" class="alert-overlay">
       <div class="alert">
         <h1 class="mb-8">Other Assets</h1>
-
         <p>
           Incognitee is capable of shielding any fungible asset on any
           substrate-based chain. Stay tuned for dedicated deployments for DOT,
@@ -80,8 +177,8 @@
         </p>
         <p class="mt-3">
           <NuxtLink to="https://incognitee.io" class="color_blue"
-            >Incognitee</NuxtLink
-          >
+            >Incognitee
+          </NuxtLink>
           is a privacy enhancing technology that allows you to shield your
           assets and transfer them privately. This means that you can send
           tokens to someone else without revealing your balance or transaction
@@ -91,15 +188,16 @@
           <NuxtLink
             to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
             class="color_blue"
-            >trusted execution environments (TEE)</NuxtLink
-          >
+            >trusted execution environments (TEE)
+          </NuxtLink>
           . The TEEs we use are a hardware feature of server CPU's called
           <i>Intel SGX</i>. In addition, the
           <NuxtLink
             to="https://docs.integritee.network/2-integritee-network"
             class="color_blue"
-            >Integritee Network</NuxtLink
-          >, a Polkadot parachain, performs independent, decentralized remote
+            >Integritee Network
+          </NuxtLink>
+          , a Polkadot parachain, performs independent, decentralized remote
           attestation of TEEs. Moreover, it gives finality to Incognitee
           sidechain blocks.
         </p>
@@ -122,7 +220,6 @@
         <button @click="closePrivacyInfo" class="mt-8">Got it</button>
       </div>
     </div>
-
     <div v-if="showShieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Shield PAS</h1>
@@ -179,7 +276,7 @@
               id="unshieldAmount"
               v-model="unshieldAmount"
               type="number"
-              step="10"
+              step="0.1"
               :min="1.1"
               :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
@@ -188,7 +285,6 @@
             <button type="submit" class="btn btn_gradient">unshield</button>
           </form>
         </div>
-
         <button @click="closeUnshieldOverlay" class="mt-8">cancel</button>
       </div>
     </div>
@@ -205,15 +301,6 @@
             ><br />
             <button @click="copyOwnAddressToClipboard">⧉</button>
           </span>
-        </div>
-        <div class="mt-8">
-          <a
-            href="https://faucet.polkadot.io/paseo"
-            target="_blank"
-            class="btn btn_gradient"
-          >
-            Get free PAS tokens from faucet
-          </a>
         </div>
         <button @click="closeReceiveOverlay" class="mt-8">cancel</button>
       </div>
@@ -266,29 +353,120 @@
         <button @click="closeScanOverlay" class="mt-8">cancel</button>
       </div>
     </div>
-    <div v-if="showNewWalletOverlay" class="alert-overlay">
-      <div class="alert">
-        <h1>New Wallet</h1>
-        <p>We have created a new wallet for you</p>
-        <span style="word-break: break-word; overflow-wrap: break-word">
-          <code>{{ accountStore.getAddress }}</code
-          ><br />
-          <button @click="copyOwnAddressToClipboard">⧉</button>
-        </span>
-        <p>
-          In order to keep your wallet, please store a bookmark to the current
-          url which includes your secret <b>NOW</b>. (i.e. type Ctrl+D to
-          bookmark this page). If you lose the bookmark, you will lose access to
-          your wallet. If you share your personal url with others, they can
-          spend your funds. The purpose of this demo is not security but optimal
-          user experience for testing purposes.
-        </p>
-        <p>
-          You will have zero funds. Please tap "receive" and got to Paseo Faucet
-          to get your first PAS tokens
-        </p>
-        <button @click="closeNewWalletOverlay" class="mt-8">close</button>
-      </div>
+    <div v-if="showNewWalletOverlay">
+      <TransitionRoot as="template" :show="open">
+        <Dialog class="relative z-10" @close="open = false">
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0"
+            enter-to="opacity-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100"
+            leave-to="opacity-0"
+          >
+            <div
+              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+          </TransitionChild>
+
+          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div
+              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            >
+              <TransitionChild
+                as="template"
+                enter="ease-out duration-300"
+                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enter-to="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leave-from="opacity-100 translate-y-0 sm:scale-100"
+                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <DialogPanel
+                  class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                >
+                  <div>
+                    <div
+                      class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+                    >
+                      <CheckIcon
+                        class="h-6 w-6 text-green-600"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div class="mt-3 text-center sm:mt-5">
+                      <DialogTitle
+                        as="h3"
+                        class="text-base font-semibold leading-6 text-gray-900"
+                        >New Wallet!
+                      </DialogTitle>
+                      <div class="mt-2">
+                        <p class="text-sm text-gray-500">
+                          We have created a new wallet for you.
+                        </p>
+                        <div class="bg-slate-200 rounded-lg my-4 p-4">
+                          <span
+                            style="
+                              word-break: break-word;
+                              overflow-wrap: break-word;
+                            "
+                          >
+                            <code>{{ accountStore.getAddress }}</code>
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          @click="copyOwnAddressToClipboard"
+                        >
+                          Copy your address
+                        </button>
+                        <p class="text-sm text-gray-500 mt-4 text-left">
+                          In order to keep your wallet, please store a bookmark
+                          to the current url which includes your secret
+                          <strong>NOW</strong>. (i.e. type Ctrl+D to bookmark
+                          this page). If you lose the bookmark, you will lose
+                          access to your wallet. If you share your personal url
+                          with others, they can spend your funds. The purpose of
+                          this demo is not security but optimal user experience
+                          for testing purposes.
+                        </p>
+                        <p class="text-sm text-gray-500 text-left my-4">
+                          You will have zero funds. Please tap "Get free PAS
+                          tokens from faucet" and go to Paseo Faucet to get your
+                          first PAS tokens.
+                        </p>
+
+                        <a
+                          href="https://faucet.polkadot.io/paseo"
+                          target="_blank"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          >
+                            Get free PAS tokens from faucet
+                          </button>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-5 sm:mt-6">
+                    <button
+                      type="button"
+                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      @click="closeNewWalletOverlay"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </Dialog>
+      </TransitionRoot>
     </div>
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
@@ -305,6 +483,14 @@ import Polkadot from "@/assets/img/polkadot-logo.svg";
 import Paseo from "@/assets/img/paseo-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from "@headlessui/vue";
+import { CheckIcon } from "@heroicons/vue/24/outline";
 import { onMounted, ref, watch } from "vue";
 import {
   cryptoWaitReady,
@@ -567,6 +753,8 @@ onMounted(() => {
   }
 });
 
+const open = ref(true);
+
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {
   showAssetsInfo.value = true;
@@ -574,6 +762,7 @@ const openAssetsInfo = () => {
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
+
 const showPrivacyInfo = ref(false);
 const openPrivacyInfo = () => {
   showPrivacyInfo.value = true;
@@ -658,6 +847,7 @@ const closeStatusOverlay = () => {
   font-size: 48px;
   padding: 20px 20px;
 }
+
 .balance-naked {
   font-size: 24px;
   padding: 20px 20px;
@@ -676,6 +866,7 @@ h1 {
   justify-content: space-around;
   width: 100%;
 }
+
 .currency-logo {
   height: 50px; /* Adjust as needed */
   width: 50px; /* Adjust as needed */
@@ -686,6 +877,7 @@ h1 {
   justify-content: space-around;
   width: 100%;
 }
+
 hr {
   border: none;
   border-top: 1px #222; /* Change color as needed */
@@ -693,6 +885,7 @@ hr {
   background-color: #333; /* Change color as needed */
   height: 1px; /* Adjust as needed */
 }
+
 .privacy-separator {
   width: 90%;
   text-align: center;
@@ -740,6 +933,7 @@ hr {
   overflow: auto;
   max-height: 90%;
 }
+
 .status-overlay {
   position: fixed;
   top: 0;
@@ -758,12 +952,14 @@ hr {
   width: 90%;
   border-radius: 10px;
 }
+
 .qrcode-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
+
 .qrcode {
   width: min(90vw, 80vh);
   height: min(90vw, 80vh);
@@ -780,6 +976,7 @@ hr {
   background-color: #333;
   color: #fff; /* You might want to change the text color to ensure it's readable against the dark background */
 }
+
 .form-container input#amount {
   font-size: 2em; /* Make the font size twice as large */
   text-align: center; /* Center the text */

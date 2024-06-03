@@ -9,7 +9,7 @@ html {
 }
 
 body {
-  background: #111119;
+  background: #11111a;
   color: #fff;
   font-family: "Inter", sans-serif;
   padding: 0;
@@ -72,6 +72,42 @@ a {
   @include xsm {
     padding: 0 12px;
   }
+}
+
+.gradient-border {
+  border-width: 1px; /* Passen Sie die Border-Breite nach Bedarf an */
+  border-style: solid;
+  border-image: linear-gradient(84.58deg, #24ad7c 0%, #1845b9 100%);
+  border-image-slice: 1;
+}
+
+.currency-box {
+  border-radius: 14px;
+  background: rgba(120, 120, 120, 0.24);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.currency-selected-box {
+  position: relative;
+  border-radius: 14px; /* Border-Radius anwenden */
+  padding: 4px; /* Platz für den inneren Container */
+  background: rgba(120, 120, 120, 0.24);
+}
+
+.custom-border-gradient {
+  width: 100%; /* Set the outer box to 100% width */
+  border-radius: 10px;
+  background: linear-gradient(84.58deg, #24ad7c 0%, #1845b9 100%);
+  padding: 2px; /* Adjust the padding to make space for the gradient border */
+}
+.custom-border-gradient > .inner-box {
+  border-radius: 8px; /* Match the inner box radius to the outer box */
+  background: #1a202c; /* The background color of the inner box */
+  padding: 16px; /* Inner padding */
 }
 
 .btn {

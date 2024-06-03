@@ -22,6 +22,7 @@
       executed. It also offers enhanced speed because of subsecond block times
       on Incognitee
     </p>
+    <br /><br /><br /><br /><br /><br /><br />
   </div>
 </template>
 

@@ -34,6 +34,7 @@
       We are currently working on the implementation of private voting. Stay
       tuned for updates.
     </p>
+    <br /><br /><br /><br /><br /><br /><br />
   </div>
 </template>
 

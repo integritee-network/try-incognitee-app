@@ -4,10 +4,9 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-      'incognitee-gray': 'rgba(81, 81, 81, 0.24)',
+        "incognitee-gray": "rgba(81, 81, 81, 0.24)",
+      },
     },
-  
   },
-  },
-  plugins: [require('@tailwindcss/forms'),],
+  plugins: [require("@tailwindcss/forms")],
 };

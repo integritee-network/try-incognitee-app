@@ -223,7 +223,10 @@
     <div v-if="showShieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Shield PAS</h1>
-        <p>shielding is the process of moving naked, publicly visible balance on Paseo to your private wallet on Incognitee</p>
+        <p>
+          shielding is the process of moving naked, publicly visible balance on
+          Paseo to your private wallet on Incognitee
+        </p>
         <div class="mt-8">
           <form @submit.prevent="submitShieldForm" class="form-container">
             <label for="shieldAmount" class="mt-8">Amount:</label>
@@ -251,7 +254,10 @@
     <div v-if="showUnshieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Unshield PAS</h1>
-        <p>unshielding is the process of moving funds from your private balance on Incognitee to publicly visible (naked) Paseo</p>
+        <p>
+          unshielding is the process of moving funds from your private balance
+          on Incognitee to publicly visible (naked) Paseo
+        </p>
         <div class="mt-8">
           <form @submit.prevent="submitUnshieldForm" class="form-container">
             <label for="recipientAddress">Recipient:</label>
@@ -261,7 +267,10 @@
               type="text"
               required
             />
-            <UButton class="btn btn_gradient" @click="setRecipientAddressToSelf">
+            <UButton
+              class="btn btn_gradient"
+              @click="setRecipientAddressToSelf"
+            >
               to myself
             </UButton>
             <UButton class="btn btn_gradient" @click="openScanOverlay">
@@ -352,8 +361,7 @@
         <div class="qrcode-container">
           <qrcode-stream @detect="onDecode"></qrcode-stream>
         </div>
-        <div>
-        </div>
+        <div></div>
         <button @click="closeScanOverlay" class="mt-8">cancel</button>
       </div>
     </div>

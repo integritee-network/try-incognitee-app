@@ -18,7 +18,7 @@
   <div class="custom-border-gradient">
     <div class="inner-box">
 
-     
+
         <div class=" flex justify-around text-white ">
 
           <div class="flex flex-col items-center text-center" @click="openSendOverlay">
@@ -27,7 +27,7 @@
 </svg>
             <p class="text-xs"><nuxt-link :to="{ path: '/wallet', query: $route.query }">Wallet</nuxt-link></p>
           </div>
-         
+
           <div class="flex flex-col items-center text-center" @click="openReceiveOverlay">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mx-auto mb-2">
   <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
@@ -50,21 +50,7 @@
   </div>
 </div>
 </div>
-       
-       
-       <!--
-        <ul>
-          <li>
-            <nuxt-link :to="{ path: '/wallet', query: $route.query }">Wallet</nuxt-link>
-          </li>
-          <li>
-            <nuxt-link :to="{ path: '/swap', query: $route.query }">Swap</nuxt-link>
-          </li>
-          <li>
-            <nuxt-link :to="{ path: '/gov', query: $route.query }">Gov</nuxt-link>
-          </li>
-        </ul>
-      -->
+
 
       </nav>
     </footer>
@@ -72,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import Incognitee from "@/assets/img/incognitee-mask.svg"
-import { useAccount } from "@/store/account.ts"
+import Incognitee from "@/assets/img/incognitee-mask.svg";
+import { useAccount } from "@/store/account.ts";
 const accountStore = useAccount();
 </script>
 

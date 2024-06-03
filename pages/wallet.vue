@@ -14,7 +14,7 @@
   </div>
 
   <div class='currency-box gap-2 p-3 basis-1/2'>
-  
+
     <Paseo class='w-[30px] h-[30px]'/>
     <p class='text-xs'>PASEO</p>
 
@@ -44,13 +44,13 @@
       <div class="flex justify-between text-white mb-6">
         <div class="text-left">
           <h3 class="text-xs">Naked Balance</h3>
-          <div v-if="isFetchingPaseoBalance" class="spinner"></div> 
-      <div v-else>{{ accountStore.getPaseoHumanBalance }} PAS</div>
+          <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+      <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
         </div>
         <div class="text-right">
           <h3 class="text-xs">Private Balance</h3>
-          <div v-if="isFetchingIncogniteeBalance" class="spinner"></div> 
-      <div v-else>{{ accountStore.getIncogniteeHumanBalance }} PAS</div>
+          <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+      <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
         </div>
       </div>
       <div class="mt-10">
@@ -62,7 +62,7 @@
 </svg>
             <p class="text-xs">Send</p>
           </div>
-         
+
           <div class="flex flex-col items-center text-center" @click="openReceiveOverlay">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mx-auto mb-2">
   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
@@ -92,45 +92,6 @@
 </div>
 </div>
 
-<!--
-    <div class="balance">
-      <div v-if="isFetchingIncogniteeBalance" class="spinner"></div> 
-      <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
-    </div>
- 
-    <div class="buttons">
-      <UButton class="btn btn_gradient" @click="openReceiveOverlay">
-        receive
-      </UButton>
-      <UButton class="btn btn_gradient" @click="openSendOverlay">
-        send
-      </UButton>
-    </div>
-
-    <div class="privacy-separator">
-      <p>private</p>
-      <hr />
-      <p>naked</p>
-    </div>
-
-    <div class="buttons">
-      <UButton class="btn btn_gradient" @click="openShieldOverlay">
-        shield
-      </UButton>
-      <UButton class="btn btn_gradient" @click="openUnshieldOverlay">
-        unshield
-      </UButton>
-    </div>
-
-
-    <div class="balance-naked">
-      <div v-if="isFetchingPaseoBalance" class="spinner"></div> 
-      <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
-    </div>
-  -->
-
-  
-
 
     <div v-if="showAssetsInfo" class="alert-overlay">
       <div class="alert">
@@ -148,6 +109,73 @@
         <button @click="closeAssetsInfo" class="mt-8">Got it</button>
       </div>
     </div>
+    <div
+      v-if="showPrivacyInfo"
+      class="alert-overlay"
+      ref="privacyInfo"
+      @click="closeOnOutsideClick"
+    >
+      <div class="alert">
+        <h1 class="mb-8">On Privacy</h1>
+        <p>
+          Incognitee enhances your privacy while dealing with digital assets.
+          But what does privacy mean and how does incognitee improve privacy?
+        </p>
+        <p class="mt-3">
+          First, let's explore why digital assets are generally
+          <b>not</b> private. When dealing with crypto assets, your account is a
+          pseudonym on a public ledger, much like a bank account number. Every
+          single transaction this account does will be stored publicly forever
+          and you have no right for deletion of the trace you left. If, at a
+          certain point in time your pseudonym can be linked to your identity -
+          i.e. because you send tokens to someone else - your entire behavioral
+          history is revealed as is your balance.
+        </p>
+        <p class="mt-3">
+          <NuxtLink to="https://incognitee.io" class="color_blue"
+            >Incognitee</NuxtLink
+          >
+          is a privacy enhancing technology that allows you to shield your
+          assets and transfer them privately. This means that you can send
+          tokens to someone else without revealing your balance or transaction
+          history. The recipient will not be able to see your balance or
+          transaction history either. This is achieved by using a technology
+          called
+          <NuxtLink
+            to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
+            class="color_blue"
+            >trusted execution environments (TEE)</NuxtLink
+          >
+          . The TEEs we use are a hardware feature of server CPU's called
+          <i>Intel SGX</i>. In addition, the
+          <NuxtLink
+            to="https://docs.integritee.network/2-integritee-network"
+            class="color_blue"
+            >Integritee Network</NuxtLink
+          >, a Polkadot parachain, performs independent, decentralized remote
+          attestation of TEEs. Moreover, it gives finality to Incognitee
+          sidechain blocks.
+        </p>
+        <p class="mt-3">
+          Incognitee is a layer 2 solution, maintaining a private ledger secured
+          by TEE. All your transactions are confidential, only known to and the
+          person your transacting with. Sender, recipient and amount are
+          invisible to the public and even to the operators of Incognitee
+          infrastructure.
+        </p>
+        <p class="mt-3">
+          For maximal privacy, we suggest to shield your assets to incognitee
+          and from then on transact them on incognitee only. If you need to
+          unshield back to L1, you can still benefit from k-anonymity: the
+          public just sees that someone out of <i>k</i> individuals is the
+          originator of an unshielding event. If <i>k</i> is large enough, you
+          can plausibly deny it was you. You can influence the size of
+          <i>k</i> by choosing popular amounts and timing.
+        </p>
+        <button @click="closePrivacyInfo" class="mt-8">Got it</button>
+      </div>
+    </div>
+
     <div v-if="showShieldOverlay" class="action-overlay">
       <div class="action">
         <h1 class="mb-8">Shield PAS</h1>
@@ -160,10 +188,15 @@
               v-model="shieldAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="
+                (accountStore.paseoBalance - existential_deposit_paseo) /
+                  Math.pow(10, 10) -
+                0.1
+              "
               required
             />
-            <p>fee: 0.1%</p>
+            <p>fee: 16 mPAS for Paseo, 0.175% for Incognitee</p>
             <button type="submit" class="btn btn_gradient">shield</button>
           </form>
         </div>
@@ -190,7 +223,7 @@
               available balance {{ accountStore.getIncogniteeHumanBalance }}
             </p>
             <p>
-              for optimal k-anonymity, we advise you to unshield exactly 1 PAS
+              for optimal k-anonymity, we advise you to unshield exactly 10 PAS
               at the time. In the future we will provide a score including
               timing and popular amounts to enhance unlinkability of your
               actions
@@ -199,11 +232,12 @@
               id="unshieldAmount"
               v-model="unshieldAmount"
               type="number"
-              step="1.0"
-              min="1"
+              step="10"
+              :min="1.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
-            <p>fee: 0.01 PAS</p>
+            <p>fee: 30m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">unshield</button>
           </form>
         </div>
@@ -225,7 +259,6 @@
             <button @click="copyOwnAddressToClipboard">⧉</button>
           </span>
         </div>
-
         <button @click="closeReceiveOverlay" class="mt-8">cancel</button>
       </div>
     </div>
@@ -253,10 +286,11 @@
               v-model="sendAmount"
               type="number"
               step="0.01"
-              min="0"
+              :min="0.1"
+              :max="accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1"
               required
             />
-            <p>fee: 0.001 PAS</p>
+            <p>fee: 10m PAS for incognitee</p>
             <button type="submit" class="btn btn_gradient">transfer</button>
           </form>
         </div>
@@ -297,14 +331,14 @@
                   <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">New Wallet!</DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">We have created a new wallet for you.
-                    
+
                       <div class='bg-slate-200 rounded-lg my-4 p-4'>
                         <span style="word-break: break-word; overflow-wrap: break-word">
           <code>{{ accountStore.getAddress }}</code>
-        </span> 
+        </span>
 
   </div>
-  <button type="button" class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" @click="copyOwnAddressToClipboard">Copy your address</button> 
+  <button type="button" class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2" @click="copyOwnAddressToClipboard">Copy your address</button>
 
 
                     </p>
@@ -336,38 +370,6 @@
     </Dialog>
   </TransitionRoot>
 </div>
-
-
-
-<!--
-    <div v-if="showNewWalletOverlay" class="alert-overlay">
-      <div class="alert">
-        <h1>New Wallet</h1>
-        <p>We have created a new wallet for you</p>
-        <span style="word-break: break-word; overflow-wrap: break-word">
-          <code>{{ accountStore.getAddress }}</code>
-          
-          <br />
-          <button @click="copyOwnAddressToClipboard">⧉</button>
-        </span>
-        <p>
-          In order to keep your wallet, please store a bookmark to the current
-          url which includes your secret <b>NOW</b>. (i.e. type Ctrl+D to
-          bookmark this page). If you lose the bookmark, you will lose access to
-          your wallet. If you share your personal url with others, they can
-          spend your funds. The purpose of this demo is not security but optimal
-          user experience for testing purposes.
-        </p>
-        <p>
-          You will have zero funds. Please tap "receive" and got to Paseo Faucet
-          to get your first PAS tokens
-        </p>
-        <button @click="closeNewWalletOverlay" class="mt-8">close</button>
-      </div>
-    </div>
-  -->
-
-
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
         <div class="spinner" />
@@ -379,32 +381,29 @@
 </template>
 
 <script setup lang="ts">
+import Polkadot from "@/assets/img/polkadot-logo.svg";
+import Paseo from "@/assets/img/paseo-logo.svg";
+import USDC from "@/assets/img/usdc-logo.svg";
 
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { CheckIcon } from '@heroicons/vue/24/outline'
-import { ref } from 'vue'
 
-const open = ref(true)
 
-import Paseo from "@/assets/img/paseo-logo.svg"
-import Polkadot from "@/assets/img/polkadot-logo.svg"
-import USDC from "@/assets/img/usdc-logo.svg"
-
-import { useAccount } from "@/store/account.ts"
-import { useIncognitee } from "@/store/incognitee.ts"
-import { ApiPromise, WsProvider } from "@polkadot/api"
-import { Keyring } from "@polkadot/keyring"
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util"
+import { onMounted, ref, watch } from "vue";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
-} from "@polkadot/util-crypto"
-import { useInterval } from "@vueuse/core"
-import { onMounted, watch } from "vue"
-import Qrcode from "vue-qrcode"
-import { QrcodeStream } from "vue-qrcode-reader"
-import { useRouter } from "vue-router"
+} from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { useRouter } from "vue-router";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { useInterval } from "@vueuse/core";
+import Qrcode from "vue-qrcode";
+import { QrcodeStream } from "vue-qrcode-reader";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -417,7 +416,7 @@ const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
-const unshieldAmount = ref(1.0);
+const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 
 let api: ApiPromise | null = null;
@@ -499,13 +498,6 @@ const shield = async () => {
   if (incogniteeStore.vault) {
     const balance = accountStore.paseoBalance;
     const amount = Math.pow(10, 10) * shieldAmount.value;
-    if (balance - amount < existential_deposit_paseo) {
-      alert(
-        "Your PAS balance would fall below the existential deposit. Please obtain more PAS from the faucet",
-      );
-      txStatus.value = "";
-      return;
-    }
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
@@ -546,8 +538,6 @@ const unshield = () => {
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
-
-  const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * sendAmount.value;
   const signer = accountStore.account;
   console.log(
@@ -619,9 +609,6 @@ watch(accountStore, async () => {
   );
 });
 
-
-
-
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
     .writeText(accountStore.getAddress)
@@ -664,6 +651,8 @@ onMounted(() => {
   }
 });
 
+const open = ref(true)
+
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {
   showAssetsInfo.value = true;
@@ -671,6 +660,21 @@ const openAssetsInfo = () => {
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
 };
+
+const showPrivacyInfo = ref(false);
+const openPrivacyInfo = () => {
+  showPrivacyInfo.value = true;
+};
+const closePrivacyInfo = () => {
+  showPrivacyInfo.value = false;
+};
+const privacyInfo = ref(null);
+const closeOnOutsideClick = (event) => {
+  if (event.target === privacyInfo.value) {
+    showPrivacyInfo.value = false;
+  }
+};
+
 const showNewWalletOverlay = ref(false);
 const openNewWalletOverlay = () => {
   showNewWalletOverlay.value = true;
@@ -687,6 +691,7 @@ const closeShieldOverlay = () => {
 };
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
+  unshieldAmount.value = 10;
   showUnshieldOverlay.value = true;
 };
 const closeUnshieldOverlay = () => {
@@ -798,6 +803,8 @@ hr {
   padding: 20px;
   width: 90%;
   border-radius: 10px;
+  overflow: auto;
+  max-height: 90%;
 }
 
 .action-overlay {
@@ -817,6 +824,8 @@ hr {
   padding: 20px;
   width: 90%;
   border-radius: 10px;
+  overflow: auto;
+  max-height: 90%;
 }
 .status-overlay {
   position: fixed;

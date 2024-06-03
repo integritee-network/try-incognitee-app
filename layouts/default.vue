@@ -6,9 +6,6 @@
         <p class="address">{{ accountStore.getShortAddress }}</p>
       </div>
     </header>
-    <main class="main">
-      <NuxtPage />
-    </main>
     <footer class="footer">
       <nav class="footer-content">
         <div class="container">
@@ -84,6 +81,9 @@
         </div>
       </nav>
     </footer>
+    <main class="main">
+      <NuxtPage />
+    </main>
   </div>
 </template>
 

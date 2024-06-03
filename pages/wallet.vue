@@ -30,7 +30,7 @@
                 <div v-if="isFetchingPaseoBalance" class="spinner"></div>
                 <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
               </div>
-              <div class="text-right">
+              <div class="text-right" @click="openPrivacyInfo">
                 <h3 class="text-xs">Private Balance</h3>
                 <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
                 <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>

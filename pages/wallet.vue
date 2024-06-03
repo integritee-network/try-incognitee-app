@@ -1,8 +1,8 @@
 <template>
   <div class="mt-10">
     <div class="flex flex-row justify-between w-full text-center gap-4 container">
-      <div class='currency-box p-3 gap-2  basis-1/2 '>
-        <Polkadot class='w-[30px] h-[30px]' @click="openAssetsInfo"/>
+      <div class='currency-box p-3 gap-2  basis-1/2 ' @click="openAssetsInfo">
+        <Polkadot class='w-[30px] h-[30px]'/>
         <p class='text-xs'>DOT</p>
         <span
           class="inline-flex items-center rounded-lg  bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600">coming soon</span></br>
@@ -13,8 +13,8 @@
         <p class='text-xs'>PASEO</p>
 
       </div>
-      <div class='currency-box gap-2 p-3 basis-1/2  '>
-        <USDC class='w-[30px] h-[30px]' @click="openAssetsInfo"/>
+      <div class='currency-box gap-2 p-3 basis-1/2  ' @click="openAssetsInfo">
+        <USDC class='w-[30px] h-[30px]' />
         <p class='text-xs'>USDC</p>
         <span
           class="inline-flex items-center rounded-lg  bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600">coming soon</span></br>

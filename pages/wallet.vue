@@ -1,5 +1,6 @@
 <template>
   <div class="mt-10">
+
     <div
       class="flex flex-row justify-between w-full text-center gap-4 container"
     >
@@ -44,47 +45,7 @@
               <div
                 class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
               >
-                <div
-                  class="flex flex-col items-center text-center"
-                  @click="openSendOverlay"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-                    />
-                  </svg>
-                  <p class="text-xs">Send</p>
-                </div>
-
-                <div
-                  class="flex flex-col items-center text-center"
-                  @click="openReceiveOverlay"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                    />
-                  </svg>
-                  <p class="text-xs">Receive</p>
-                </div>
+               
 
                 <div
                   class="flex flex-col items-center text-center"
@@ -132,6 +93,49 @@
                   </svg>
                   <p class="text-xs">Unshield</p>
                 </div>
+
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openSendOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+                    />
+                  </svg>
+                  <p class="text-xs">P. Send</p>
+                </div>
+
+                <div
+                  class="flex flex-col items-center text-center"
+                  @click="openReceiveOverlay"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6 mx-auto mb-2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                    />
+                  </svg>
+                  <p class="text-xs">P. Receive</p>
+                </div>
+
               </div>
             </div>
           </div>
@@ -593,7 +597,7 @@
 
     <div v-if="showSendOverlay">
   <TransitionRoot as="template" :show="showSendOverlay">
-    <Dialog class="relative z-50" @close="closeSendOverlay">
+    <Dialog class="relative z-10" @close="closeSendOverlay">
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
@@ -707,6 +711,21 @@
       </TransitionRoot>
     </div>
 
+<!-- 
+    <div v-if="showScanOverlay" class="action-overlay z-50">
+      <div class="action">
+        <h1 class="mb-8">Scan QR code</h1>
+        <div class="qrcode-container">
+          <qrcode-stream @detect="onDecode"></qrcode-stream>
+        </div>
+        <div>
+          <p>QRcode result: {{ scanResult }}</p>
+        </div>
+        <button @click="closeScanOverlay" class="">cancel</button>
+      </div>
+    </div>
+  -->
+
     <div v-if="showScanOverlay">
       <TransitionRoot as="template" :show="showScanOverlay">
         <Dialog class="relative z-20" @close="closeScanOverlay">
@@ -724,7 +743,7 @@
             />
           </TransitionChild>
 
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div class="fixed inset-0 z-20 w-screen overflow-y-auto">
             <div
               class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
             >
@@ -744,11 +763,13 @@
                       <DialogTitle
                         as="h3"
                         class="text-base font-semibold leading-6 text-gray-900"
-                        >Receive
+                        >Scan QR code
                       </DialogTitle>
-
-                      <div class="mt-6 qrcode-container">
-                        <qrcode-stream @detect="onDecode"></qrcode-stream>
+                      <div class="qrcode-container">
+          <qrcode-stream @detect="onDecode"></qrcode-stream>
+        </div>
+        <div>
+          <p class='text-sm text-gray-500 mt-4 text-left'>QRcode result: {{ scanResult }}</p>
         </div>
                   </div>
                   <div class="mt-20 sm:mt-6">

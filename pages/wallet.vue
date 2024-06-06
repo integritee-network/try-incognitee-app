@@ -388,7 +388,7 @@
 
     <div v-if="showUnshieldOverlay">
       <TransitionRoot as="template" :show="showUnshieldOverlay">
-        <Dialog class="relative z-10" @close="closeUnshieldOverlay">
+        <Dialog class="relative z-10">
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
@@ -619,7 +619,7 @@
 
     <div v-if="showSendOverlay">
       <TransitionRoot as="template" :show="showSendOverlay">
-        <Dialog class="relative z-10" @close="closeSendOverlay">
+        <Dialog class="relative z-10">
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
@@ -789,7 +789,7 @@
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-gray-900"
-                      >Receive
+                      >Scan recipient's QR code
                     </DialogTitle>
 
                     <div class="mt-6 qrcode-container">
@@ -812,8 +812,6 @@
         </Dialog>
       </TransitionRoot>
     </div>
-
-    <!-- Pop Up UI start -->
     <div v-if="showNewWalletOverlay">
       <TransitionRoot as="template" :show="showNewWalletOverlay">
         <Dialog class="relative z-10" @close="closeNewWalletOverlay">
@@ -931,8 +929,6 @@
         </Dialog>
       </TransitionRoot>
     </div>
-    <!-- Pop Up UI end -->
-
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
         <div class="spinner" />
@@ -990,6 +986,7 @@ let api: ApiPromise | null = null;
 
 const submitSendForm = () => {
   // Handle the form submission here
+  console.log("submitting send form")
   openStatusOverlay();
   closeSendOverlay();
   sendPrivately();
@@ -1281,6 +1278,7 @@ const openSendOverlay = () => {
   showSendOverlay.value = true;
 };
 const closeSendOverlay = () => {
+  console.log("closeSendOverlay")
   showSendOverlay.value = false;
 };
 
@@ -1290,6 +1288,7 @@ const openScanOverlay = () => {
   showScanOverlay.value = true;
 };
 const closeScanOverlay = () => {
+  console.log("closeScanOverlay")
   showScanOverlay.value = false;
 };
 const showStatusOverlay = ref(false);

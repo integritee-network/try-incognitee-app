@@ -139,77 +139,74 @@
       </div>
     </div>
 
-    <div v-if="showAssetsInfo">
-      <TransitionRoot as="template" :show="showAssetsInfo">
-        <Dialog class="relative z-10" @close="closeAssetsInfo">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
+    <TransitionRoot as="template" :show="showAssetsInfo">
+      <Dialog class="relative z-10" @close="closeAssetsInfo">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
 
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              <DialogPanel
+                class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
-                <DialogPanel
-                  class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div>
-                    <div class="mt-3 text-center sm:mt-5">
-                      <DialogTitle
-                        as="h3"
-                        class="text-base font-semibold leading-6 text-gray-900"
-                        >Other Assets
-                      </DialogTitle>
-                      <div class="mt-2">
-                        <p class="text-sm text-gray-500 mt-4 text-left">
-                          Incognitee is capable of shielding any fungible asset
-                          on any substrate-based chain. Stay tuned for dedicated
-                          deployments for DOT, KSM, USDC, USDT and others
-                        </p>
-                        <p class="text-sm text-gray-500 text-left my-4">
-                          With further extension, Incognitee will be able to
-                          shield BTC, ETH and any other token whose protocol
-                          supports light clients
-                        </p>
-                      </div>
+                <div>
+                  <div class="mt-3 text-center sm:mt-5">
+                    <DialogTitle
+                      as="h3"
+                      class="text-base font-semibold leading-6 text-gray-900"
+                      >Other Assets
+                    </DialogTitle>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-500 mt-4 text-left">
+                        Incognitee is capable of shielding any fungible asset on
+                        any substrate-based chain. Stay tuned for dedicated
+                        deployments for DOT, KSM, USDC, USDT and others
+                      </p>
+                      <p class="text-sm text-gray-500 text-left my-4">
+                        With further extension, Incognitee will be able to
+                        shield BTC, ETH and any other token whose protocol
+                        supports light clients
+                      </p>
                     </div>
                   </div>
-                  <div class="mt-5 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeAssetsInfo"
-                    >
-                      Got it!
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+                </div>
+                <div class="mt-5 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeAssetsInfo"
+                  >
+                    Got it!
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
-    <!-- Pop Up UI end -->
+        </div>
+      </Dialog>
+    </TransitionRoot>
 
     <div
       v-if="showPrivacyInfo"
@@ -279,402 +276,182 @@
       </div>
     </div>
 
-    <div v-if="showShieldOverlay">
-      <TransitionRoot as="template" :show="showShieldOverlay">
-        <Dialog class="relative z-20" @close="closeShieldOverlay">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
+    <TransitionRoot as="template" :show="showShieldOverlay">
+      <Dialog class="relative z-20" @close="closeShieldOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
           >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
-                <DialogPanel
-                  class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
-                      >Shield PAS
-                    </DialogTitle>
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Shield PAS
+                  </DialogTitle>
 
-                    <p class="text-sm text-gray-500 text-left my-4">
-                      Shielding is the process of moving naked, publicly visible
-                      balance on Paseo to your private wallet on Incognitee.
-                    </p>
+                  <p class="text-sm text-gray-500 text-left my-4">
+                    Shielding is the process of moving naked, publicly visible
+                    balance on Paseo to your private wallet on Incognitee.
+                  </p>
 
-                    <form @submit.prevent="submitShieldForm">
-                      <div class="mt-10">
-                        <div class="flex justify-between items-center">
-                          <label
-                            for="sendAmount"
-                            class="text-sm font-medium leading-6 text-gray-900"
-                            >Amount</label
-                          >
-
-                          <span class="text-xs text-gray-500"
-                            >Available balance:
-                            {{ accountStore.getPaseoHumanBalance }}</span
-                          >
-                        </div>
-                        <input
-                          id="shieldAmount"
-                          v-model="shieldAmount"
-                          type="number"
-                          step="0.01"
-                          :min="0.1"
-                          :max="
-                            (accountStore.paseoBalance -
-                              existential_deposit_paseo) /
-                              Math.pow(10, 10) -
-                            0.1
-                          "
-                          required
-                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                        />
-                        <div class="text-right">
-                          <span class="text-xs text-gray-500"
-                            >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
-                          >
-                        </div>
-                        <div class="mt-5 sm:mt-6">
-                          <button
-                            type="submit"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                          >
-                            Shield
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="mt-20 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeShieldOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
-          </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
-
-    <div v-if="showUnshieldOverlay">
-      <TransitionRoot as="template" :show="showUnshieldOverlay">
-        <Dialog class="relative z-10">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-            >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              >
-                <DialogPanel
-                  class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
-                      >Unshield PAS
-                    </DialogTitle>
+                  <form @submit.prevent="submitShieldForm">
                     <div class="mt-10">
-                      <p class="text-sm text-gray-500 text-left my-4">
-                        Unshielding is the process of moving funds from your
-                        private balance on Incognitee to publicly visible
-                        (naked) Paseo.
-                      </p>
-                    </div>
-                    <form @submit.prevent="submitUnshieldForm">
-                      <div class="mt-5">
-                        <div class="flex justify-between items-center">
-                          <label
-                            for="recipientAddress"
-                            class="text-sm font-medium leading-6 text-gray-900"
-                            >Recipient</label
-                          >
-                        </div>
-                        <input
-                          id="recipientAddress"
-                          v-model="recipientAddress"
-                          type="text"
-                          required
-                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                        />
-
-                        <div
-                          class="flex justify-between space-x-4 mt-5 sm:mt-6"
+                      <div class="flex justify-between items-center">
+                        <label
+                          for="sendAmount"
+                          class="text-sm font-medium leading-6 text-gray-900"
+                          >Amount</label
                         >
-                          <button
-                            type="submit"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                            @click="setRecipientAddressToSelf"
-                          >
-                            To myself
-                          </button>
 
-                          <button
-                            type="button"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                            @click="openScanOverlay"
-                          >
-                            Scan QR Code
-                          </button>
-                        </div>
-
-                        <p class="text-sm text-gray-500 text-left mt-10">
-                          For optimal k-anonymity, we advise you to unshield
-                          exactly 10 PAS at the time. In the future we will
-                          provide a score including timing and popular amounts
-                          to enhance unlinkability of your actions.
-                        </p>
-                        <div class="flex justify-between items-center mt-5">
-                          <label
-                            for="unshieldAmount"
-                            class="text-sm font-medium leading-6 text-gray-900"
-                            >Amount</label
-                          >
-
-                          <span class="text-xs text-gray-500"
-                            >Available balance:
-                            {{ accountStore.getIncogniteeHumanBalance }}</span
-                          >
-                        </div>
-                        <input
-                          id="unshieldAmount"
-                          v-model="unshieldAmount"
-                          type="number"
-                          step="0.1"
-                          :min="1.1"
-                          :max="
-                            accountStore.incogniteeBalance / Math.pow(10, 10) -
-                            0.1
-                          "
-                          required
-                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                        />
-                        <!-- Fee description -->
-                        <div class="text-right">
-                          <span class="text-xs text-gray-500"
-                            >Fee: 30m PAS for Incognitee</span
-                          >
-                        </div>
-                        <div class="mt-5 sm:mt-6">
-                          <button
-                            type="submit"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                          >
-                            Unshield
-                          </button>
-                        </div>
+                        <span class="text-xs text-gray-500"
+                          >Available balance:
+                          {{ accountStore.getPaseoHumanBalance }}</span
+                        >
                       </div>
-                    </form>
-                  </div>
-                  <div class="mt-20 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeUnshieldOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
-          </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
-
-    <div v-if="showReceiveOverlay">
-      <TransitionRoot as="template" :show="showReceiveOverlay">
-        <Dialog class="relative z-10" @close="closeReceiveOverlay">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-            >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              >
-                <DialogPanel
-                  class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
-                      >Receive
-                    </DialogTitle>
-
-                    <div class="mt-6 qrcode-container">
-                      <qrcode :value="accountStore.getAddress"></qrcode>
-                    </div>
-                    <div
-                      class="mt-5 text-sm font-medium leading-6 text-gray-900 font-semibold"
-                    >
-                      Your address:
-                    </div>
-                    <div class="bg-slate-200 rounded-lg mb-5 p-4 text-black">
-                      <span
-                        style="
-                          word-break: break-word;
-                          overflow-wrap: break-word;
+                      <input
+                        id="shieldAmount"
+                        v-model="shieldAmount"
+                        type="number"
+                        step="0.01"
+                        :min="0.1"
+                        :max="
+                          (accountStore.paseoBalance -
+                            existential_deposit_paseo) /
+                            Math.pow(10, 10) -
+                          0.1
                         "
-                      >
-                        <code>{{ accountStore.getAddress }}</code>
-                      </span>
+                        required
+                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      />
+                      <div class="text-right">
+                        <span class="text-xs text-gray-500"
+                          >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                        >
+                      </div>
+                      <div class="mt-5 sm:mt-6">
+                        <button
+                          type="submit"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        >
+                          Shield
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </form>
+                </div>
+                <div class="mt-20 sm:mt-6">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="copyOwnAddressToClipboard"
+                    @click="closeShieldOverlay"
                   >
-                    Copy your address
+                    Cancel
                   </button>
-                  <div class="mt-20 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeReceiveOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
 
-    <div v-if="showSendOverlay">
-      <TransitionRoot as="template" :show="showSendOverlay">
-        <Dialog class="relative z-10">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
+    <TransitionRoot as="template" :show="showUnshieldOverlay && !showScanOverlay">
+      <Dialog class="relative z-10" @close="closeUnshieldOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
           >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
-                <DialogPanel
-                  class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
-                      >Send
-                    </DialogTitle>
-
-                    <form class="mt-5" @submit.prevent="submitSendForm">
-                      <div class="text-left">
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Unshield PAS
+                  </DialogTitle>
+                  <div class="mt-10">
+                    <p class="text-sm text-gray-500 text-left my-4">
+                      Unshielding is the process of moving funds from your
+                      private balance on Incognitee to publicly visible (naked)
+                      Paseo.
+                    </p>
+                  </div>
+                  <form @submit.prevent="submitUnshieldForm">
+                    <div class="mt-5">
+                      <div class="flex justify-between items-center">
                         <label
                           for="recipientAddress"
                           class="text-sm font-medium leading-6 text-gray-900"
                           >Recipient</label
                         >
-                        <input
-                          id="recipientAddress"
-                          v-model="recipientAddress"
-                          type="text"
-                          required
-                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                          placeholder="Recipient"
-                        />
                       </div>
+                      <input
+                        id="recipientAddress"
+                        v-model="recipientAddress"
+                        type="text"
+                        required
+                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      />
 
-                      <div class="mt-5 sm:mt-6">
+                      <div class="flex justify-between space-x-4 mt-5 sm:mt-6">
+                        <button
+                          type="button"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          @click="setRecipientAddressToSelf"
+                        >
+                          To myself
+                        </button>
+
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -684,251 +461,453 @@
                         </button>
                       </div>
 
-                      <div class="mt-10">
-                        <!-- Label and available balance -->
-                        <div class="flex justify-between items-center">
-                          <label
-                            for="sendAmount"
-                            class="text-sm font-medium leading-6 text-gray-900"
-                            >Amount</label
-                          >
+                      <p class="text-sm text-gray-500 text-left mt-10">
+                        For optimal k-anonymity, we advise you to unshield
+                        exactly 10 PAS at the time. In the future we will
+                        provide a score including timing and popular amounts to
+                        enhance unlinkability of your actions.
+                      </p>
+                      <div class="flex justify-between items-center mt-5">
+                        <label
+                          for="unshieldAmount"
+                          class="text-sm font-medium leading-6 text-gray-900"
+                          >Amount</label
+                        >
 
-                          <span class="text-xs text-gray-500"
-                            >Available balance:
-                            {{ accountStore.getIncogniteeHumanBalance }}</span
-                          >
-                        </div>
-
-                        <!-- Input field -->
-                        <div>
-                          <input
-                            id="sendAmount"
-                            v-model="sendAmount"
-                            type="number"
-                            step="0.01"
-                            :min="0.1"
-                            :max="
-                              accountStore.incogniteeBalance /
-                                Math.pow(10, 10) -
-                              0.1
-                            "
-                            required
-                            class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                            placeholder="Amount"
-                          />
-                        </div>
-
-                        <!-- Fee description -->
-                        <div class="text-right">
-                          <span class="text-xs text-gray-500"
-                            >Fee: 10m PAS for Incognitee</span
-                          >
-                        </div>
+                        <span class="text-xs text-gray-500"
+                          >Available balance:
+                          {{ accountStore.getIncogniteeHumanBalance }}</span
+                        >
+                      </div>
+                      <input
+                        id="unshieldAmount"
+                        v-model="unshieldAmount"
+                        type="number"
+                        step="0.1"
+                        :min="1.1"
+                        :max="
+                          accountStore.incogniteeBalance / Math.pow(10, 10) -
+                          0.1
+                        "
+                        required
+                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      />
+                      <!-- Fee description -->
+                      <div class="text-right">
+                        <span class="text-xs text-gray-500"
+                          >Fee: 30m PAS for Incognitee</span
+                        >
                       </div>
                       <div class="mt-5 sm:mt-6">
                         <button
                           type="submit"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                         >
-                          Transfer
+                          Unshield
                         </button>
                       </div>
-                    </form>
-                  </div>
-                  <div class="mt-20 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeSendOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="mt-20 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeUnshieldOverlay"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
 
-    <div v-if="showScanOverlay">
-      <TransitionRoot as="template" :show="showScanOverlay">
-        <Dialog class="relative z-20" @close="closeScanOverlay">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
+    <TransitionRoot as="template" :show="showReceiveOverlay">
+      <Dialog class="relative z-10" @close="closeReceiveOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
           >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-20 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
-                <DialogPanel
-                  class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Receive
+                  </DialogTitle>
+
+                  <div class="mt-6 qrcode-container">
+                    <qrcode :value="accountStore.getAddress"></qrcode>
+                  </div>
+                  <div
+                    class="mt-5 text-sm font-medium leading-6 text-gray-900 font-semibold"
+                  >
+                    Your address:
+                  </div>
+                  <div class="bg-slate-200 rounded-lg mb-5 p-4 text-black">
+                    <span
+                      style="word-break: break-word; overflow-wrap: break-word"
+                    >
+                      <code>{{ accountStore.getAddress }}</code>
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  @click="copyOwnAddressToClipboard"
                 >
+                  Copy your address
+                </button>
+                <div class="mt-20 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeReceiveOverlay"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot as="template" :show="showSendOverlay && !showScanOverlay">
+      <Dialog class="relative z-10" @close="closeSendOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              >
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Send
+                  </DialogTitle>
+
+                  <form class="mt-5" @submit.prevent="submitSendForm">
+                    <div class="text-left">
+                      <label
+                        for="recipientAddress"
+                        class="text-sm font-medium leading-6 text-gray-900"
+                        >Recipient</label
+                      >
+                      <input
+                        id="recipientAddress"
+                        v-model="recipientAddress"
+                        type="text"
+                        required
+                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        placeholder="Recipient"
+                      />
+                    </div>
+
+                    <div class="mt-5 sm:mt-6">
+                      <button
+                        type="button"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        @click="openScanOverlay"
+                      >
+                        Scan QR Code
+                      </button>
+                    </div>
+
+                    <div class="mt-10">
+                      <!-- Label and available balance -->
+                      <div class="flex justify-between items-center">
+                        <label
+                          for="sendAmount"
+                          class="text-sm font-medium leading-6 text-gray-900"
+                          >Amount</label
+                        >
+
+                        <span class="text-xs text-gray-500"
+                          >Available balance:
+                          {{ accountStore.getIncogniteeHumanBalance }}</span
+                        >
+                      </div>
+
+                      <!-- Input field -->
+                      <div>
+                        <input
+                          id="sendAmount"
+                          v-model="sendAmount"
+                          type="number"
+                          step="0.01"
+                          :min="0.1"
+                          :max="
+                            accountStore.incogniteeBalance / Math.pow(10, 10) -
+                            0.1
+                          "
+                          required
+                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          placeholder="Amount"
+                        />
+                      </div>
+
+                      <!-- Fee description -->
+                      <div class="text-right">
+                        <span class="text-xs text-gray-500"
+                          >Fee: 10m PAS for Incognitee</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mt-5 sm:mt-6">
+                      <button
+                        type="submit"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      >
+                        Transfer
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                <div class="mt-20 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeSendOverlay"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot as="template" :show="showScanOverlay">
+      <Dialog class="relative z-20" @close="closeScanOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-20 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              >
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-gray-900"
+                    >Scan recipient's QR code
+                  </DialogTitle>
+
+                  <div class="mt-6 qrcode-container">
+                    <qrcode-stream @detect="onDecode"></qrcode-stream>
+                  </div>
+                </div>
+                <div class="mt-20 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeScanOverlay"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot as="template" :show="showNewWalletOverlay">
+      <Dialog class="relative z-10" @close="closeNewWalletOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              >
+                <div>
+                  <div
+                    class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+                  >
+                    <CheckIcon
+                      class="h-6 w-6 text-green-600"
+                      aria-hidden="true"
+                    />
+                  </div>
                   <div class="mt-3 text-center sm:mt-5">
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-gray-900"
-                      >Scan recipient's QR code
+                      >New Wallet!
                     </DialogTitle>
-
-                    <div class="mt-6 qrcode-container">
-                      <qrcode-stream @detect="onDecode"></qrcode-stream>
-                    </div>
-                  </div>
-                  <div class="mt-20 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeScanOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
-          </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
-    <div v-if="showNewWalletOverlay">
-      <TransitionRoot as="template" :show="showNewWalletOverlay">
-        <Dialog class="relative z-10" @close="closeNewWalletOverlay">
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0"
-            enter-to="opacity-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100"
-            leave-to="opacity-0"
-          >
-            <div
-              class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-            />
-          </TransitionChild>
-
-          <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div
-              class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-            >
-              <TransitionChild
-                as="template"
-                enter="ease-out duration-300"
-                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                enter-to="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200"
-                leave-from="opacity-100 translate-y-0 sm:scale-100"
-                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              >
-                <DialogPanel
-                  class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-                >
-                  <div>
-                    <div
-                      class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
-                    >
-                      <CheckIcon
-                        class="h-6 w-6 text-green-600"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div class="mt-3 text-center sm:mt-5">
-                      <DialogTitle
-                        as="h3"
-                        class="text-base font-semibold leading-6 text-gray-900"
-                        >New Wallet!
-                      </DialogTitle>
-                      <div class="mt-2">
-                        <p class="text-sm text-gray-500">
-                          We have created a new wallet for you.
-                        </p>
-                        <div
-                          class="bg-slate-200 rounded-lg my-4 p-4 text-black"
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-500">
+                        We have created a new wallet for you.
+                      </p>
+                      <div class="bg-slate-200 rounded-lg my-4 p-4 text-black">
+                        <span
+                          style="
+                            word-break: break-word;
+                            overflow-wrap: break-word;
+                          "
                         >
-                          <span
-                            style="
-                              word-break: break-word;
-                              overflow-wrap: break-word;
-                            "
-                          >
-                            <code>{{ accountStore.getAddress }}</code>
-                          </span>
-                        </div>
+                          <code>{{ accountStore.getAddress }}</code>
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        @click="copyOwnAddressToClipboard"
+                      >
+                        Copy your address
+                      </button>
+                      <p class="text-sm text-gray-500 mt-4 text-left">
+                        In order to keep your wallet, please store a bookmark to
+                        the current url which includes your secret
+                        <strong>NOW</strong>. (i.e. type Ctrl+D to bookmark this
+                        page). If you lose the bookmark, you will lose access to
+                        your wallet. If you share your personal url with others,
+                        they can spend your funds. The purpose of this demo is
+                        not security but optimal user experience for testing
+                        purposes.
+                      </p>
+                      <p class="text-sm text-gray-500 text-left my-4">
+                        You will have zero funds. Please tap "Get free PAS
+                        tokens from faucet" and go to Paseo Faucet to get your
+                        first PAS tokens.
+                      </p>
+
+                      <a
+                        href="https://faucet.polkadot.io/paseo"
+                        target="_blank"
+                      >
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                          @click="copyOwnAddressToClipboard"
                         >
-                          Copy your address
+                          Get free PAS tokens from faucet
                         </button>
-                        <p class="text-sm text-gray-500 mt-4 text-left">
-                          In order to keep your wallet, please store a bookmark
-                          to the current url which includes your secret
-                          <strong>NOW</strong>. (i.e. type Ctrl+D to bookmark
-                          this page). If you lose the bookmark, you will lose
-                          access to your wallet. If you share your personal url
-                          with others, they can spend your funds. The purpose of
-                          this demo is not security but optimal user experience
-                          for testing purposes.
-                        </p>
-                        <p class="text-sm text-gray-500 text-left my-4">
-                          You will have zero funds. Please tap "Get free PAS
-                          tokens from faucet" and go to Paseo Faucet to get your
-                          first PAS tokens.
-                        </p>
-
-                        <a
-                          href="https://faucet.polkadot.io/paseo"
-                          target="_blank"
-                        >
-                          <button
-                            type="button"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                          >
-                            Get free PAS tokens from faucet
-                          </button>
-                        </a>
-                      </div>
+                      </a>
                     </div>
                   </div>
-                  <div class="mt-5 sm:mt-6">
-                    <button
-                      type="button"
-                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                      @click="closeNewWalletOverlay"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </DialogPanel>
-              </TransitionChild>
-            </div>
+                </div>
+                <div class="mt-5 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    @click="closeNewWalletOverlay"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
           </div>
-        </Dialog>
-      </TransitionRoot>
-    </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
         <div class="spinner" />
@@ -986,7 +965,7 @@ let api: ApiPromise | null = null;
 
 const submitSendForm = () => {
   // Handle the form submission here
-  console.log("submitting send form")
+  console.log("submitting send form");
   openStatusOverlay();
   closeSendOverlay();
   sendPrivately();
@@ -1275,10 +1254,11 @@ const closeReceiveOverlay = () => {
 };
 const showSendOverlay = ref(false);
 const openSendOverlay = () => {
+  console.log(`openSendOverlay (scanoverlay=${showScanOverlay.value})`);
   showSendOverlay.value = true;
 };
 const closeSendOverlay = () => {
-  console.log("closeSendOverlay")
+  console.log("closeSendOverlay");
   showSendOverlay.value = false;
 };
 
@@ -1288,7 +1268,7 @@ const openScanOverlay = () => {
   showScanOverlay.value = true;
 };
 const closeScanOverlay = () => {
-  console.log("closeScanOverlay")
+  console.log("closeScanOverlay");
   showScanOverlay.value = false;
 };
 const showStatusOverlay = ref(false);

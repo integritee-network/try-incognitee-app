@@ -381,7 +381,10 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot as="template" :show="showUnshieldOverlay && !showScanOverlay">
+    <TransitionRoot
+      as="template"
+      :show="showUnshieldOverlay && !showScanOverlay"
+    >
       <Dialog class="relative z-10" @close="closeUnshieldOverlay">
         <TransitionChild
           as="template"

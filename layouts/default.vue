@@ -10,7 +10,7 @@
       <nav class="footer-content">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 mx-auto max-w-xl p-4 rounded justify-around"
+            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around"
           >
             <div class="custom-border-gradient">
               <div class="inner-box">
@@ -88,8 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import Incognitee from "@/assets/img/incognitee-mask.svg";
-import { useAccount } from "@/store/account.ts";
+import Incognitee from "@/assets/img/incognitee-mask.svg"
+import { useAccount } from "@/store/account.ts"
 
 const accountStore = useAccount();
 </script>
@@ -103,7 +103,7 @@ const accountStore = useAccount();
 
 .header,
 .footer {
-  background: #000;
+  background: #11111A;
   width: 100%;
 }
 

@@ -151,7 +151,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -169,22 +169,45 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeAssetsInfo"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div>
                   <div class="mt-3 text-center sm:mt-5">
                     <DialogTitle
                       as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
+                      class="text-base font-semibold leading-6 text-white"
                       >Other Assets
                     </DialogTitle>
                     <div class="mt-2">
-                      <p class="text-sm text-gray-500 mt-4 text-left">
+                      <p class="text-sm text-gray-400 mt-4 text-left">
                         Incognitee is capable of shielding any fungible asset on
                         any substrate-based chain. Stay tuned for dedicated
                         deployments for DOT, KSM, USDC, USDT and others
                       </p>
-                      <p class="text-sm text-gray-500 text-left my-4">
+                      <p class="text-sm text-gray-400 text-left my-4">
                         With further extension, Incognitee will be able to
                         shield BTC, ETH and any other token whose protocol
                         supports light clients
@@ -195,7 +218,7 @@
                 <div class="mt-5 sm:mt-6">
                   <button
                     type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                     @click="closeAssetsInfo"
                   >
                     Got it!
@@ -208,73 +231,144 @@
       </Dialog>
     </TransitionRoot>
 
-    <div
-      v-if="showPrivacyInfo"
-      class="alert-overlay"
-      ref="privacyInfo"
-      @click="closeOnOutsideClick"
-    >
-      <div class="alert">
-        <h1 class="mb-8">On Privacy</h1>
-        <p>
-          Incognitee enhances your privacy while dealing with digital assets.
-          But what does privacy mean and how does incognitee improve privacy?
-        </p>
-        <p class="mt-3">
-          First, let's explore why digital assets are generally
-          <b>not</b> private. When dealing with crypto assets, your account is a
-          pseudonym on a public ledger, much like a bank account number. Every
-          single transaction this account does will be stored publicly forever
-          and you have no right for deletion of the trace you left. If, at a
-          certain point in time your pseudonym can be linked to your identity -
-          i.e. because you send tokens to someone else - your entire behavioral
-          history is revealed as is your balance.
-        </p>
-        <p class="mt-3">
-          <NuxtLink to="https://incognitee.io" class="color_blue"
-            >Incognitee
-          </NuxtLink>
-          is a privacy enhancing technology that allows you to shield your
-          assets and transfer them privately. This means that you can send
-          tokens to someone else without revealing your balance or transaction
-          history. The recipient will not be able to see your balance or
-          transaction history either. This is achieved by using a technology
-          called
-          <NuxtLink
-            to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
-            class="color_blue"
-            >trusted execution environments (TEE)
-          </NuxtLink>
-          . The TEEs we use are a hardware feature of server CPU's called
-          <i>Intel SGX</i>. In addition, the
-          <NuxtLink
-            to="https://docs.integritee.network/2-integritee-network"
-            class="color_blue"
-            >Integritee Network
-          </NuxtLink>
-          , a Polkadot parachain, performs independent, decentralized remote
-          attestation of TEEs. Moreover, it gives finality to Incognitee
-          sidechain blocks.
-        </p>
-        <p class="mt-3">
-          Incognitee is a layer 2 solution, maintaining a private ledger secured
-          by TEE. All your transactions are confidential, only known to and the
-          person your transacting with. Sender, recipient and amount are
-          invisible to the public and even to the operators of Incognitee
-          infrastructure.
-        </p>
-        <p class="mt-3">
-          For maximal privacy, we suggest to shield your assets to incognitee
-          and from then on transact them on incognitee only. If you need to
-          unshield back to L1, you can still benefit from k-anonymity: the
-          public just sees that someone out of <i>k</i> individuals is the
-          originator of an unshielding event. If <i>k</i> is large enough, you
-          can plausibly deny it was you. You can influence the size of
-          <i>k</i> by choosing popular amounts and timing.
-        </p>
-        <button @click="closePrivacyInfo" class="mt-8">Got it</button>
-      </div>
-    </div>
+    <TransitionRoot as="template" :show="showPrivacyInfo">
+      <Dialog class="relative z-10" @close="closeOnOutsideClick">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closePrivacyInfo"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-white"
+                    >On Privacy
+                  </DialogTitle>
+
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-400 mt-4 text-justify">
+                      Incognitee enhances your privacy while dealing with
+                      digital assets. But what does privacy mean and how does
+                      incognitee improve privacy?
+                    </p>
+                    <p class="text-sm text-gray-400 text-justify my-4">
+                      First, let's explore why digital assets are generally
+                      <b>not</b> private. When dealing with crypto assets, your
+                      account is a pseudonym on a public ledger, much like a
+                      bank account number. Every single transaction this account
+                      does will be stored publicly forever and you have no right
+                      for deletion of the trace you left. If, at a certain point
+                      in time your pseudonym can be linked to your identity -
+                      i.e. because you send tokens to someone else - your entire
+                      behavioral history is revealed as is your balance.
+                    </p>
+                    <p class="text-sm text-gray-400 text-justify my-4">
+                      <NuxtLink to="https://incognitee.io" class="color_blue"
+                        >Incognitee</NuxtLink
+                      >
+                      is a privacy enhancing technology that allows you to
+                      shield your assets and transfer them privately. This means
+                      that you can send tokens to someone else without revealing
+                      your balance or transaction history. The recipient will
+                      not be able to see your balance or transaction history
+                      either. This is achieved by using a technology called
+                      <NuxtLink
+                        to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
+                        class="color_blue"
+                        >trusted execution environments (TEE)</NuxtLink
+                      >. The TEEs we use are a hardware feature of server CPU's
+                      called <i>Intel SGX</i>. In addition, the
+                      <NuxtLink
+                        to="https://docs.integritee.network/2-integritee-network"
+                        class="color_blue"
+                        >Integritee Network</NuxtLink
+                      >, a Polkadot parachain, performs independent,
+                      decentralized remote attestation of TEEs. Moreover, it
+                      gives finality to Incognitee sidechain blocks.
+                    </p>
+                    <p class="text-sm text-gray-400 mt-4 text-justify">
+                      Incognitee is a layer 2 solution, maintaining a private
+                      ledger secured by TEE. All your transactions are
+                      confidential, only known to and the person your
+                      transacting with. Sender, recipient and amount are
+                      invisible to the public and even to the operators of
+                      Incognitee infrastructure.
+                    </p>
+                    <p class="text-sm text-gray-400 mt-4 text-justify">
+                      For maximal privacy, we suggest to shield your assets to
+                      incognitee and from then on transact them on incognitee
+                      only. If you need to unshield back to L1, you can still
+                      benefit from k-anonymity: the public just sees that
+                      someone out of <i>k</i> individuals is the originator of
+                      an unshielding event. If <i>k</i> is large enough, you can
+                      plausibly deny it was you. You can influence the size of
+                      <i>k</i> by choosing popular amounts and timing.
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-5 sm:mt-6">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                    @click="closePrivacyInfo"
+                  >
+                    Got it!
+                  </button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
 
     <TransitionRoot as="template" :show="showShieldOverlay">
       <Dialog class="relative z-20" @close="closeShieldOverlay">
@@ -288,7 +382,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -306,30 +400,53 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeShieldOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="text-base font-semibold leading-6 text-gray-900"
+                    class="text-base font-semibold leading-6 text-white"
                     >Shield PAS
                   </DialogTitle>
 
-                  <p class="text-sm text-gray-500 text-left my-4">
+                  <p class="text-sm text-gray-400 text-left my-4">
                     Shielding is the process of moving naked, publicly visible
                     balance on Paseo to your private wallet on Incognitee.
                   </p>
 
                   <form @submit.prevent="submitShieldForm">
-                    <div class="mt-10">
+                    <div class="mt-5">
                       <div class="flex justify-between items-center">
                         <label
                           for="sendAmount"
-                          class="text-sm font-medium leading-6 text-gray-900"
+                          class="text-sm font-medium leading-6 text-white"
                           >Amount</label
                         >
 
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Available balance:
                           {{ accountStore.getPaseoHumanBalance }}</span
                         >
@@ -338,6 +455,7 @@
                         id="shieldAmount"
                         v-model="shieldAmount"
                         type="number"
+                        placeholder="Amount"
                         step="0.01"
                         :min="0.1"
                         :max="
@@ -347,32 +465,23 @@
                           0.1
                         "
                         required
-                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                       <div class="text-right">
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
                         >
                       </div>
                       <div class="mt-5 sm:mt-6">
                         <button
                           type="submit"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
                           Shield
                         </button>
                       </div>
                     </div>
                   </form>
-                </div>
-                <div class="mt-20 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeShieldOverlay"
-                  >
-                    Cancel
-                  </button>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -396,7 +505,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -414,16 +523,39 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeUnshieldOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="text-base font-semibold leading-6 text-gray-900"
+                    class="text-base font-semibold leading-6 text-white"
                     >Unshield PAS
                   </DialogTitle>
-                  <div class="mt-10">
-                    <p class="text-sm text-gray-500 text-left my-4">
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
                       Unshielding is the process of moving funds from your
                       private balance on Incognitee to publicly visible (naked)
                       Paseo.
@@ -434,7 +566,7 @@
                       <div class="flex justify-between items-center">
                         <label
                           for="recipientAddress"
-                          class="text-sm font-medium leading-6 text-gray-900"
+                          class="text-sm font-medium leading-6 text-white"
                           >Recipient</label
                         >
                       </div>
@@ -443,13 +575,14 @@
                         v-model="recipientAddress"
                         type="text"
                         required
-                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        palceholder="Recipient"
+                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
 
                       <div class="flex justify-between space-x-4 mt-5 sm:mt-6">
                         <button
                           type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                           @click="setRecipientAddressToSelf"
                         >
                           To myself
@@ -457,14 +590,14 @@
 
                         <button
                           type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                           @click="openScanOverlay"
                         >
                           Scan QR Code
                         </button>
                       </div>
 
-                      <p class="text-sm text-gray-500 text-left mt-10">
+                      <p class="text-sm text-gray-400 text-left mt-10">
                         For optimal k-anonymity, we advise you to unshield
                         exactly 10 PAS at the time. In the future we will
                         provide a score including timing and popular amounts to
@@ -473,11 +606,11 @@
                       <div class="flex justify-between items-center mt-5">
                         <label
                           for="unshieldAmount"
-                          class="text-sm font-medium leading-6 text-gray-900"
+                          class="text-sm font-medium leading-6 text-white"
                           >Amount</label
                         >
 
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Available balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
@@ -493,33 +626,25 @@
                           0.1
                         "
                         required
-                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        placeholder="Amount"
+                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                       />
                       <!-- Fee description -->
                       <div class="text-right">
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Fee: 30m PAS for Incognitee</span
                         >
                       </div>
                       <div class="mt-5 sm:mt-6">
                         <button
                           type="submit"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
                           Unshield
                         </button>
                       </div>
                     </div>
                   </form>
-                </div>
-                <div class="mt-20 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeUnshieldOverlay"
-                  >
-                    Cancel
-                  </button>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -540,7 +665,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -558,12 +683,35 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeReceiveOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="text-base font-semibold leading-6 text-gray-900"
+                    class="text-base font-semibold leading-6 text-white"
                     >Receive
                   </DialogTitle>
 
@@ -571,11 +719,11 @@
                     <qrcode :value="accountStore.getAddress"></qrcode>
                   </div>
                   <div
-                    class="mt-5 text-sm font-medium leading-6 text-gray-900 font-semibold"
+                    class="mt-5 text-sm font-medium leading-6 text-white font-semibold"
                   >
                     Your address:
                   </div>
-                  <div class="bg-slate-200 rounded-lg mb-5 p-4 text-black">
+                  <div class="bg-gray-700 rounded-lg mb-5 p-4 text-white">
                     <span
                       style="word-break: break-word; overflow-wrap: break-word"
                     >
@@ -585,20 +733,11 @@
                 </div>
                 <button
                   type="button"
-                  class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                  class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                   @click="copyOwnAddressToClipboard"
                 >
                   Copy your address
                 </button>
-                <div class="mt-20 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeReceiveOverlay"
-                  >
-                    Cancel
-                  </button>
-                </div>
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -618,7 +757,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -636,12 +775,35 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeSendOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="text-base font-semibold leading-6 text-gray-900"
+                    class="text-base font-semibold leading-6 text-white"
                     >Send
                   </DialogTitle>
 
@@ -649,7 +811,7 @@
                     <div class="text-left">
                       <label
                         for="recipientAddress"
-                        class="text-sm font-medium leading-6 text-gray-900"
+                        class="text-sm font-medium leading-6 text-white"
                         >Recipient</label
                       >
                       <input
@@ -657,7 +819,7 @@
                         v-model="recipientAddress"
                         type="text"
                         required
-                        class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                         placeholder="Recipient"
                       />
                     </div>
@@ -665,7 +827,7 @@
                     <div class="mt-5 sm:mt-6">
                       <button
                         type="button"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         @click="openScanOverlay"
                       >
                         Scan QR Code
@@ -677,11 +839,11 @@
                       <div class="flex justify-between items-center">
                         <label
                           for="sendAmount"
-                          class="text-sm font-medium leading-6 text-gray-900"
+                          class="text-sm font-medium leading-6 text-white"
                           >Amount</label
                         >
 
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Available balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
@@ -700,14 +862,14 @@
                             0.1
                           "
                           required
-                          class="w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
                           placeholder="Amount"
                         />
                       </div>
 
                       <!-- Fee description -->
                       <div class="text-right">
-                        <span class="text-xs text-gray-500"
+                        <span class="text-xs text-gray-400"
                           >Fee: 10m PAS for Incognitee</span
                         >
                       </div>
@@ -715,21 +877,12 @@
                     <div class="mt-5 sm:mt-6">
                       <button
                         type="submit"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                       >
                         Transfer
                       </button>
                     </div>
                   </form>
-                </div>
-                <div class="mt-20 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeSendOverlay"
-                  >
-                    Cancel
-                  </button>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -750,7 +903,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -768,27 +921,41 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeScanOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
-                    class="text-base font-semibold leading-6 text-gray-900"
+                    class="text-base font-semibold leading-6 text-white"
                     >Scan recipient's QR code
                   </DialogTitle>
 
                   <div class="mt-6 qrcode-container">
                     <qrcode-stream @detect="onDecode"></qrcode-stream>
                   </div>
-                </div>
-                <div class="mt-20 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeScanOverlay"
-                  >
-                    Cancel
-                  </button>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -809,7 +976,7 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
           />
         </TransitionChild>
 
@@ -827,8 +994,31 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeNewWalletOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
                 <div>
                   <div
                     class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
@@ -838,17 +1028,18 @@
                       aria-hidden="true"
                     />
                   </div>
+
                   <div class="mt-3 text-center sm:mt-5">
                     <DialogTitle
                       as="h3"
-                      class="text-base font-semibold leading-6 text-gray-900"
+                      class="text-base font-semibold leading-6 text-white"
                       >New Wallet!
                     </DialogTitle>
                     <div class="mt-2">
-                      <p class="text-sm text-gray-500">
+                      <p class="text-sm text-gray-400">
                         We have created a new wallet for you.
                       </p>
-                      <div class="bg-slate-200 rounded-lg my-4 p-4 text-black">
+                      <div class="bg-gray-700 rounded-lg my-4 p-4 text-white">
                         <span
                           style="
                             word-break: break-word;
@@ -860,12 +1051,12 @@
                       </div>
                       <button
                         type="button"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         @click="copyOwnAddressToClipboard"
                       >
                         Copy your address
                       </button>
-                      <p class="text-sm text-gray-500 mt-4 text-left">
+                      <p class="text-sm text-gray-400 mt-4 text-left">
                         In order to keep your wallet, please store a bookmark to
                         the current url which includes your secret
                         <strong>NOW</strong>. (i.e. type Ctrl+D to bookmark this
@@ -875,7 +1066,7 @@
                         not security but optimal user experience for testing
                         purposes.
                       </p>
-                      <p class="text-sm text-gray-500 text-left my-4">
+                      <p class="text-sm text-gray-400 text-left my-4">
                         You will have zero funds. Please tap "Get free PAS
                         tokens from faucet" and go to Paseo Faucet to get your
                         first PAS tokens.
@@ -887,22 +1078,13 @@
                       >
                         <button
                           type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
                           Get free PAS tokens from faucet
                         </button>
                       </a>
                     </div>
                   </div>
-                </div>
-                <div class="mt-5 sm:mt-6">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                    @click="closeNewWalletOverlay"
-                  >
-                    Cancel
-                  </button>
                 </div>
               </DialogPanel>
             </TransitionChild>

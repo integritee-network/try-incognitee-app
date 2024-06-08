@@ -37,6 +37,8 @@
         We are currently working on the implementation of private voting. Stay
         tuned for updates.
       </p>
+      <!-- this is necessary to avoid the footer overlapping the text -->
+      <br /><br /><br /><br /><br /><br /><br />
     </div>
   </div>
 </template>

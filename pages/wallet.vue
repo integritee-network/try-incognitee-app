@@ -1264,12 +1264,10 @@
 </template>
 
 <script setup lang="ts">
-import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
+import Paseo from "@/assets/img/paseo-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1278,19 +1276,21 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { onMounted, ref, watch } from "vue";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { useRouter } from "vue-router";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
+import { ApiPromise, WsProvider } from "@polkadot/api";
 import { useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
-import { useRouter } from "vue-router";
 
 const router = useRouter();
 const accountStore = useAccount();

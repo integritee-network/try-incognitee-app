@@ -26,6 +26,8 @@
         they are executed. It also offers enhanced speed because of subsecond
         block times on Incognitee
       </p>
+      <!-- this is necessary to avoid the footer overlapping the text -->
+      <br /><br /><br /><br /><br /><br /><br />
     </div>
   </div>
 </template>

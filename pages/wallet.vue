@@ -146,7 +146,7 @@
                 >
                   <div
                     class="flex flex-col items-center text-center"
-                    @click="openSendOverlay"
+                    @click="openPrivateSendOverlay"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -820,7 +820,11 @@
                     class="text-base font-semibold leading-6 text-white"
                     >Receive
                   </DialogTitle>
-
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      Share your address with the sender. You can either have them scan this QR code or send them a message. Let them know if you wish a private or a public send.
+                    </p>
+                  </div>
                   <div class="mt-6 qrcode-container">
                     <qrcode :value="accountStore.getAddress"></qrcode>
                   </div>
@@ -871,8 +875,8 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot as="template" :show="showSendOverlay && !showScanOverlay">
-      <Dialog class="relative z-10" @close="closeSendOverlay">
+    <TransitionRoot as="template" :show="showPrivateSendOverlay && !showScanOverlay">
+      <Dialog class="relative z-10" @close="closePrivateSendOverlay">
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -907,7 +911,7 @@
                   <button
                     type="button"
                     class="text-gray-400 hover:text-gray-500"
-                    @click="closeSendOverlay"
+                    @click="closePrivateSendOverlay"
                   >
                     <span class="sr-only">Close</span>
                     <svg
@@ -930,9 +934,13 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Send
+                    >Send Privately
                   </DialogTitle>
-
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      Sending privately means that only you and the recipient know who sent how much to whom.
+                    </p>
+                  </div>
                   <form class="mt-5" @submit.prevent="submitSendForm">
                     <div class="flex flex-col">
                       <label
@@ -1323,7 +1331,7 @@ const submitSendForm = () => {
   // Handle the form submission here
   console.log("submitting send form");
   openStatusOverlay();
-  closeSendOverlay();
+  closePrivateSendOverlay();
   sendPrivately();
 };
 const submitShieldForm = () => {
@@ -1608,14 +1616,14 @@ const openReceiveOverlay = () => {
 const closeReceiveOverlay = () => {
   showReceiveOverlay.value = false;
 };
-const showSendOverlay = ref(false);
-const openSendOverlay = () => {
+const showPrivateSendOverlay = ref(false);
+const openPrivateSendOverlay = () => {
   console.log(`openSendOverlay (scanoverlay=${showScanOverlay.value})`);
-  showSendOverlay.value = true;
+  showPrivateSendOverlay.value = true;
 };
-const closeSendOverlay = () => {
-  console.log("closeSendOverlay");
-  showSendOverlay.value = false;
+const closePrivateSendOverlay = () => {
+  console.log("closePrivateSendOverlay");
+  showPrivateSendOverlay.value = false;
 };
 
 const showScanOverlay = ref(false);
@@ -1633,7 +1641,7 @@ const openStatusOverlay = () => {
 };
 const closeStatusOverlay = () => {
   showStatusOverlay.value = false;
-  showSendOverlay.value = false;
+  showPrivateSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
 };

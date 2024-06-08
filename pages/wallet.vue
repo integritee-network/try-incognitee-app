@@ -823,7 +823,7 @@
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
                       Share your address with the sender. You can either have
-                      them scan this QR code or send them a message.
+                      them scan this QR code or send them a private message.
                     </p>
                   </div>
                   <div class="mt-6 qrcode-container">

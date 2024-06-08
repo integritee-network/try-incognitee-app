@@ -185,7 +185,6 @@
                     </svg>
                     <p class="text-xs">Unshield</p>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -823,7 +822,8 @@
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
-                      Share your address with the sender. You can either have them scan this QR code or send them a message.
+                      Share your address with the sender. You can either have
+                      them scan this QR code or send them a message.
                     </p>
                   </div>
                   <div class="mt-6 qrcode-container">
@@ -876,7 +876,10 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot as="template" :show="showPrivateSendOverlay && !showScanOverlay">
+    <TransitionRoot
+      as="template"
+      :show="showPrivateSendOverlay && !showScanOverlay"
+    >
       <Dialog class="relative z-10" @close="closePrivateSendOverlay">
         <TransitionChild
           as="template"
@@ -939,7 +942,8 @@
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
-                      Sending privately means that only you and the recipient know who sent how much to whom.
+                      Sending privately means that only you and the recipient
+                      know who sent how much to whom.
                     </p>
                   </div>
                   <form class="mt-5" @submit.prevent="submitSendForm">

@@ -4,7 +4,7 @@ import { formatBalance } from "@polkadot/util";
 
 formatBalance.setDefaults({
   decimals: 10,
-  unit: "PAS",
+  unit: "",
 });
 export const useAccount = defineStore("account", {
   state: () => ({

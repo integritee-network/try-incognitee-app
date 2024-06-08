@@ -46,7 +46,12 @@ a {
     color: $ltBlue;
   }
 }
-
+.border-gradient {
+  border-width: 1px;
+  border-style: solid;
+  border-image: linear-gradient(90deg, #24ad7c, #1845b9) 1;
+  border-radius: 10px;
+}
 .container {
   max-width: 1240px;
   margin: 0 auto;

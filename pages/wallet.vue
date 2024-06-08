@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-10">
+  <div class="mt-10 incognitee-border-gradient">
     <div
-      class="flex flex-row justify-between w-full text-center gap-4 container"
+      class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
         <Polkadot class="w-[30px] h-[30px]" />
@@ -11,7 +11,9 @@
           >coming soon</span
         >
       </div>
-      <div class="currency-box gap-2 p-3 basis-1/2">
+      <div
+        class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
+      >
         <Paseo class="w-[30px] h-[30px]" />
         <p class="text-xs">PASEO</p>
       </div>
@@ -24,113 +26,165 @@
         >
       </div>
     </div>
-    <div class="container flex flex-col">
-      <div class="bg-gray-900 flex mt-10">
+
+    <div class="container">
+      <div class="w-full bg-incognitee-blue mt-10">
+        <div
+          class="border bg-incognitee-blue border-incognitee-green rounded-lg p-1"
+        >
+          <nav class="flex space-x-4" aria-label="Tabs">
+            <button
+              @click="selectTab('public')"
+              :class="[
+                currentTab === 'public'
+                  ? 'bg-gray-800 text-white'
+                  : 'text-gray-500 hover:text-gray-700',
+                'flex-1 py-2 text-sm font-medium   rounded-lg',
+              ]"
+            >
+              Public Balance
+            </button>
+            <button
+              @click="selectTab('private')"
+              :class="[
+                currentTab === 'private'
+                  ? 'bg-gray-800 text-white'
+                  : 'text-gray-500 hover:text-gray-700',
+                'flex-1 py-2 text-sm font-medium rounded-lg',
+              ]"
+            >
+              Private Balance
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 flex mt-2">
         <div class="custom-border-gradient">
           <div class="inner-box">
-            <div class="flex justify-between text-white mb-6">
-              <div class="text-left">
-                <h3 class="text-xs">Naked Balance</h3>
-                <div v-if="isFetchingPaseoBalance" class="spinner"></div>
-                <div v-else>{{ accountStore.getPaseoHumanBalance }}</div>
+            <div v-if="currentTab === 'public'">
+              <!-- Public Balance Content -->
+
+              <div class="text-white mb-6 text-center">
+                <div class="">
+                  <h3 class="text-sm mb-3">Public Balance</h3>
+                  <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+                  <div class="text-4xl font-semibold" v-else>
+                    {{ accountStore.getPaseoHumanBalance }}
+                    <span class="text-sm font-semibold">PAS</span>
+                  </div>
+                </div>
               </div>
-              <div class="text-right" @click="openPrivacyInfo">
-                <h3 class="text-xs">Private Balance</h3>
-                <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
-                <div v-else>{{ accountStore.getIncogniteeHumanBalance }}</div>
+              <div class="mt-10">
+                <div
+                  class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
+                >
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openShieldOverlay"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+                      />
+                    </svg>
+                    <p class="text-xs">Shield</p>
+                  </div>
+
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openUnshieldOverlay"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
+                    <p class="text-xs">Unshield</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="mt-10">
-              <div
-                class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
-              >
-                <div
-                  class="flex flex-col items-center text-center"
-                  @click="openShieldOverlay"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
-                    />
-                  </svg>
-                  <p class="text-xs">Shield</p>
+            <div v-else>
+              <!-- Private Balance Content -->
+              <div class="text-white mb-6 text-center">
+                <h3 class="text-sm mb-3" @click="openPrivacyInfo">
+                  Private Balance
+                </h3>
+                <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+                <div class="text-4xl font-semibold" v-else>
+                  {{ accountStore.getIncogniteeHumanBalance }}
+                  <span class="text-sm font-semibold">PAS</span>
                 </div>
-
+              </div>
+              <div class="mt-10">
                 <div
-                  class="flex flex-col items-center text-center"
-                  @click="openUnshieldOverlay"
+                  class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openSendOverlay"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                  </svg>
-                  <p class="text-xs">Unshield</p>
-                </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+                      />
+                    </svg>
+                    <p class="text-xs">Send</p>
+                  </div>
 
-                <div
-                  class="flex flex-col items-center text-center"
-                  @click="openSendOverlay"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openReceiveOverlay"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-                    />
-                  </svg>
-                  <p class="text-xs">P. Send</p>
-                </div>
-
-                <div
-                  class="flex flex-col items-center text-center"
-                  @click="openReceiveOverlay"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-6 mx-auto mb-2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                    />
-                  </svg>
-                  <p class="text-xs">P. Receive</p>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                      />
+                    </svg>
+                    <p class="text-xs">Receive</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -151,13 +205,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -243,13 +297,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -382,13 +436,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -447,7 +501,7 @@
                         >
 
                         <span class="text-xs text-gray-400"
-                          >Available balance:
+                          >Available public balance:
                           {{ accountStore.getPaseoHumanBalance }}</span
                         >
                       </div>
@@ -455,7 +509,6 @@
                         id="shieldAmount"
                         v-model="shieldAmount"
                         type="number"
-                        placeholder="Amount"
                         step="0.01"
                         :min="0.1"
                         :max="
@@ -465,7 +518,8 @@
                           0.1
                         "
                         required
-                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                        style="border-color: #24ad7c"
                       />
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
@@ -505,13 +559,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -561,48 +615,100 @@
                       Paseo.
                     </p>
                   </div>
+
                   <form @submit.prevent="submitUnshieldForm">
                     <div class="mt-5">
-                      <div class="flex justify-between items-center">
-                        <label
-                          for="recipientAddress"
-                          class="text-sm font-medium leading-6 text-white"
-                          >Recipient</label
-                        >
-                      </div>
-                      <input
-                        id="recipientAddress"
-                        v-model="recipientAddress"
-                        type="text"
-                        required
-                        palceholder="Recipient"
-                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                      />
-
-                      <div class="flex justify-between space-x-4 mt-5 sm:mt-6">
-                        <button
-                          type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                          @click="setRecipientAddressToSelf"
-                        >
-                          To myself
-                        </button>
-
-                        <button
-                          type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                          @click="openScanOverlay"
-                        >
-                          Scan QR Code
-                        </button>
-                      </div>
-
-                      <p class="text-sm text-gray-400 text-left mt-10">
+                      <form @submit.prevent="submitUnshieldForm">
+                        <div class="mt-5">
+                          <div class="flex flex-col">
+                            <label
+                              for="recipientAddress"
+                              class="text-sm font-medium leading-6 text-white text-left"
+                              >Recipient</label
+                            >
+                            <div class="relative flex items-center rounded-lg">
+                              <div class="absolute left-3 flex items-center">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="h-6 w-6 text-white"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M11.9889 0L0.0222883 5.99115L0 18.0089L12.0111 24L23.9778 18.0089L24 5.99115L11.9889 0ZM11.9055 2.93685L15.012 4.49375V7.60754L11.9055 9.16444L8.79902 7.60754V4.49375L11.9055 2.93685ZM5.66099 6.0491L8.76754 7.606V10.7198L5.66099 12.2767L8.76749 13.8336V16.9489L5.66093 18.5058L2.55438 16.9489V13.8336L5.66087 12.2767L2.55438 10.7198V7.606L5.66087 6.0491H5.66099ZM18.1278 6.0491L21.2343 7.606V10.7198L18.1279 12.2767L21.2344 13.8336V16.9489L18.1279 18.5058L15.0214 16.9489V13.8336L18.1279 12.2767L15.0214 10.7198V7.606L18.1278 6.0491ZM11.9055 9.16928L15.012 10.7262V13.84L11.913 15.3937L15.012 16.9457V20.0611L11.9055 21.618L8.79902 20.0611V16.9457L11.898 15.3937L8.79902 13.84V10.7262L11.9055 9.16928H11.9055Z"
+                                    fill="white"
+                                  />
+                                </svg>
+                              </div>
+                              <input
+                                id="recipientAddress"
+                                v-model="recipientAddress"
+                                type="text"
+                                required
+                                placeholder="Recipient"
+                                class="w-full text-sm rounded-lg flex-grow pl-12 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                                style="border-color: #24ad7c"
+                              />
+                              <div class="absolute right-3 flex space-x-2">
+                                <div
+                                  @click="setRecipientAddressToSelf"
+                                  class="cursor-pointer"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="h-6 w-6 text-white"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                                    />
+                                  </svg>
+                                </div>
+                                <div
+                                  @click="openScanOverlay"
+                                  class="cursor-pointer"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    class="h-6 w-6 text-white"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                                    />
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                      <p class="text-sm text-gray-400 text-left mt-5">
                         For optimal k-anonymity, we advise you to unshield
                         exactly 10 PAS at the time. In the future we will
                         provide a score including timing and popular amounts to
                         enhance unlinkability of your actions.
                       </p>
+
                       <div class="flex justify-between items-center mt-5">
                         <label
                           for="unshieldAmount"
@@ -611,7 +717,7 @@
                         >
 
                         <span class="text-xs text-gray-400"
-                          >Available balance:
+                          >Available private balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
                       </div>
@@ -626,8 +732,8 @@
                           0.1
                         "
                         required
-                        placeholder="Amount"
-                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                        style="border-color: #24ad7c"
                       />
                       <!-- Fee description -->
                       <div class="text-right">
@@ -665,13 +771,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed mb-5 p-4 inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -718,26 +824,46 @@
                   <div class="mt-6 qrcode-container">
                     <qrcode :value="accountStore.getAddress"></qrcode>
                   </div>
-                  <div
-                    class="mt-5 text-sm font-medium leading-6 text-white font-semibold"
-                  >
-                    Your address:
-                  </div>
-                  <div class="bg-gray-700 rounded-lg mb-5 p-4 text-white">
-                    <span
-                      style="word-break: break-word; overflow-wrap: break-word"
+
+                  <div class="flex flex-col mt-5">
+                    <div
+                      class="w-full mt-5 mb-2 text-sm font-medium leading-6 text-white font-semibold"
                     >
-                      <code>{{ accountStore.getAddress }}</code>
-                    </span>
+                      Your address:
+                    </div>
+                    <div class="relative flex items-center rounded-lg">
+                      <input
+                        id="accountAddress"
+                        type="text"
+                        :value="accountStore.getAddress"
+                        readonly
+                        class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+                        style="border-color: #24ad7c"
+                      />
+                      <div class="absolute right-3 flex space-x-2">
+                        <div
+                          @click="copyOwnAddressToClipboard"
+                          class="cursor-pointer"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                  @click="copyOwnAddressToClipboard"
-                >
-                  Copy your address
-                </button>
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -757,13 +883,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -808,32 +934,47 @@
                   </DialogTitle>
 
                   <form class="mt-5" @submit.prevent="submitSendForm">
-                    <div class="text-left">
+                    <div class="flex flex-col">
                       <label
                         for="recipientAddress"
-                        class="text-sm font-medium leading-6 text-white"
+                        class="text-sm font-medium leading-6 text-white text-left"
                         >Recipient</label
                       >
-                      <input
-                        id="recipientAddress"
-                        v-model="recipientAddress"
-                        type="text"
-                        required
-                        class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                        placeholder="Recipient"
-                      />
+                      <div class="relative flex items-center rounded-lg">
+                        <input
+                          id="recipientAddress"
+                          v-model="recipientAddress"
+                          type="text"
+                          required
+                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                          style="border-color: #24ad7c"
+                          placeholder="Recipient"
+                        />
+                        <div class="absolute right-3 flex space-x-2">
+                          <div @click="openScanOverlay" class="cursor-pointer">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="h-6 w-6 text-white"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                              />
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-
-                    <div class="mt-5 sm:mt-6">
-                      <button
-                        type="button"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                        @click="openScanOverlay"
-                      >
-                        Scan QR Code
-                      </button>
-                    </div>
-
                     <div class="mt-10">
                       <!-- Label and available balance -->
                       <div class="flex justify-between items-center">
@@ -844,7 +985,7 @@
                         >
 
                         <span class="text-xs text-gray-400"
-                          >Available balance:
+                          >Available private balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
                       </div>
@@ -862,7 +1003,8 @@
                             0.1
                           "
                           required
-                          class="w-full rounded-md border-0 py-1.5 text-black shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                          style="border-color: #24ad7c"
                           placeholder="Amount"
                         />
                       </div>
@@ -903,13 +1045,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-20 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -976,13 +1118,13 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-gray-800 bg-opacity-75 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -1039,23 +1181,53 @@
                       <p class="text-sm text-gray-400">
                         We have created a new wallet for you.
                       </p>
-                      <div class="bg-gray-700 rounded-lg my-4 p-4 text-white">
-                        <span
-                          style="
-                            word-break: break-word;
-                            overflow-wrap: break-word;
-                          "
-                        >
-                          <code>{{ accountStore.getAddress }}</code>
-                        </span>
+
+                      <div class="flex flex-col mt-5">
+                        <div class="relative flex items-center rounded-lg">
+                          <input
+                            id="accountAddress"
+                            type="text"
+                            :value="accountStore.getAddress"
+                            readonly
+                            class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+                            style="border-color: #24ad7c"
+                          />
+                          <div class="absolute right-3 flex space-x-2">
+                            <div
+                              @click="copyOwnAddressToClipboard"
+                              class="cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <button
-                        type="button"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                        @click="copyOwnAddressToClipboard"
-                      >
-                        Copy your address
-                      </button>
+                      <div class="mt-5">
+                        <a
+                          href="https://faucet.polkadot.io/paseo"
+                          target="_blank"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                          >
+                            Get free PAS tokens from faucet
+                          </button>
+                        </a>
+                      </div>
                       <p class="text-sm text-gray-400 mt-4 text-left">
                         In order to keep your wallet, please store a bookmark to
                         the current url which includes your secret
@@ -1071,18 +1243,6 @@
                         tokens from faucet" and go to Paseo Faucet to get your
                         first PAS tokens.
                       </p>
-
-                      <a
-                        href="https://faucet.polkadot.io/paseo"
-                        target="_blank"
-                      >
-                        <button
-                          type="button"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                        >
-                          Get free PAS tokens from faucet
-                        </button>
-                      </a>
                     </div>
                   </div>
                 </div>
@@ -1104,12 +1264,10 @@
 </template>
 
 <script setup lang="ts">
-import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
+import Paseo from "@/assets/img/paseo-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1118,19 +1276,21 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { onMounted, ref, watch } from "vue";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { useRouter } from "vue-router";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
+import { ApiPromise, WsProvider } from "@polkadot/api";
 import { useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
-import { useRouter } from "vue-router";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1147,6 +1307,17 @@ const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 
 let api: ApiPromise | null = null;
+
+const tabs = [
+  { name: "Public Balance", href: "#", current: true },
+  { name: "Private Balance", href: "#", current: false },
+];
+
+const currentTab = ref("public");
+
+const selectTab = (tab) => {
+  currentTab.value = tab;
+};
 
 const submitSendForm = () => {
   // Handle the form submission here
@@ -1469,12 +1640,27 @@ const closeStatusOverlay = () => {
 </script>
 
 <style scoped>
+.border-green-500 {
+  border-color: #24ad7c;
+}
+.bg-gray-800 {
+  background-color: #1f2937;
+}
+.text-white {
+  color: #ffffff;
+}
+
 .wallet {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   flex-grow: 1;
+}
+.truncate-input {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .balance {
@@ -1616,7 +1802,12 @@ hr {
   text-align: center; /* Center the text */
   width: 50%; /* Reduce the width by 50% */
 }
-
+.incognitee-border-gradient {
+  width: 100%;
+  height: 100%;
+  background: url("/img/global/bg-line.svg") no-repeat center center;
+  background-size: cover;
+}
 .spinner {
   border: 2px solid #f3f3f3; /* Light grey */
   border-top: 2px solid #3498db; /* Blue */

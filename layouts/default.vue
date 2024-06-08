@@ -88,8 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import Incognitee from "@/assets/img/incognitee-mask.svg"
-import { useAccount } from "@/store/account.ts"
+import Incognitee from "@/assets/img/incognitee-mask.svg";
+import { useAccount } from "@/store/account.ts";
 
 const accountStore = useAccount();
 </script>
@@ -103,7 +103,7 @@ const accountStore = useAccount();
 
 .header,
 .footer {
-  background: #11111A;
+  background: #11111a;
   width: 100%;
 }
 

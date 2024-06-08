@@ -200,7 +200,7 @@
 </template>
 
 <script setup lang="ts">
-import Socials from "@/components/Socials/index.vue"
+import Socials from "@/components/Socials/index.vue";
 import {
   COIN_GECKO_LINK,
   COIN_MARKET_LINK,
@@ -220,7 +220,7 @@ import {
   TRADING_LINK,
   WATERCOOLER_LINK,
   YOUTUBE_LINK,
-} from "@/configs/app.config"
+} from "@/configs/app.config";
 </script>
 
 <style lang="scss" scoped>

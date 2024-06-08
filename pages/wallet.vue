@@ -99,6 +99,26 @@
                     </svg>
                     <p class="text-xs">Shield</p>
                   </div>
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openFaucetOverlay"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                      />
+                    </svg>
+                    <p class="text-xs">Faucet</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -366,8 +386,8 @@
                     </p>
                     <p class="text-sm text-gray-400 text-justify my-4">
                       <NuxtLink to="https://incognitee.io" class="color_blue"
-                        >Incognitee</NuxtLink
-                      >
+                        >Incognitee
+                      </NuxtLink>
                       is a privacy enhancing technology that allows you to
                       shield your assets and transfer them privately. This means
                       that you can send tokens to someone else without revealing
@@ -377,14 +397,16 @@
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
                         class="color_blue"
-                        >trusted execution environments (TEE)</NuxtLink
-                      >. The TEEs we use are a hardware feature of server CPU's
+                        >trusted execution environments (TEE)
+                      </NuxtLink>
+                      . The TEEs we use are a hardware feature of server CPU's
                       called <i>Intel SGX</i>. In addition, the
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network"
                         class="color_blue"
-                        >Integritee Network</NuxtLink
-                      >, a Polkadot parachain, performs independent,
+                        >Integritee Network
+                      </NuxtLink>
+                      , a Polkadot parachain, performs independent,
                       decentralized remote attestation of TEEs. Moreover, it
                       gives finality to Incognitee sidechain blocks.
                     </p>
@@ -536,6 +558,131 @@
                       </div>
                     </div>
                   </form>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
+    <TransitionRoot as="template" :show="showFaucetOverlay">
+      <Dialog class="relative z-10" @close="closeFaucetOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+          <div
+            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+          >
+            <TransitionChild
+              as="template"
+              enter="ease-out duration-300"
+              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enter-to="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leave-from="opacity-100 translate-y-0 sm:scale-100"
+              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <DialogPanel
+                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              >
+                <div class="absolute right-0 top-0 pr-4 pt-4">
+                  <button
+                    type="button"
+                    class="text-gray-400 hover:text-gray-500"
+                    @click="closeFaucetOverlay"
+                  >
+                    <span class="sr-only">Close</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div>
+                  <div class="mt-3 text-center sm:mt-5">
+                    <DialogTitle
+                      as="h3"
+                      class="text-base font-semibold leading-6 text-white"
+                      >Drip Faucet
+                    </DialogTitle>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-400">
+                        The Paseo Faucet grants you PAS tokens every day. Just
+                        copy-paste your address and solve a CAPTCHA to get free
+                        PAS tokens
+                      </p>
+
+                      <div class="flex flex-col mt-5">
+                        <div class="relative flex items-center rounded-lg">
+                          <input
+                            id="accountAddress"
+                            type="text"
+                            :value="accountStore.getAddress"
+                            readonly
+                            class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+                            style="border-color: #24ad7c"
+                          />
+                          <div class="absolute right-3 flex space-x-2">
+                            <div
+                              @click="copyOwnAddressToClipboard"
+                              class="cursor-pointer"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="mt-5">
+                        <a
+                          href="https://faucet.polkadot.io/paseo"
+                          target="_blank"
+                        >
+                          <button
+                            type="button"
+                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                          >
+                            Get free PAS tokens from faucet
+                          </button>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </DialogPanel>
             </TransitionChild>
@@ -1606,6 +1753,15 @@ const openShieldOverlay = () => {
 const closeShieldOverlay = () => {
   showShieldOverlay.value = false;
 };
+
+const showFaucetOverlay = ref(false);
+const openFaucetOverlay = () => {
+  showFaucetOverlay.value = true;
+};
+const closeFaucetOverlay = () => {
+  showFaucetOverlay.value = false;
+};
+
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
   unshieldAmount.value = 10;
@@ -1656,9 +1812,11 @@ const closeStatusOverlay = () => {
 .border-green-500 {
   border-color: #24ad7c;
 }
+
 .bg-gray-800 {
   background-color: #1f2937;
 }
+
 .text-white {
   color: #ffffff;
 }
@@ -1670,6 +1828,7 @@ const closeStatusOverlay = () => {
   justify-content: space-between;
   flex-grow: 1;
 }
+
 .truncate-input {
   white-space: nowrap;
   overflow: hidden;
@@ -1815,12 +1974,14 @@ hr {
   text-align: center; /* Center the text */
   width: 50%; /* Reduce the width by 50% */
 }
+
 .incognitee-border-gradient {
   width: 100%;
   height: 100%;
   background: url("/img/global/bg-line.svg") no-repeat center center;
   background-size: cover;
 }
+
 .spinner {
   border: 2px solid #f3f3f3; /* Light grey */
   border-top: 2px solid #3498db; /* Blue */

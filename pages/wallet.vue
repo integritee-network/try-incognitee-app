@@ -99,32 +99,6 @@
                     </svg>
                     <p class="text-xs">Shield</p>
                   </div>
-
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openUnshieldOverlay"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                      />
-                    </svg>
-                    <p class="text-xs">Unshield</p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -146,7 +120,7 @@
                 >
                   <div
                     class="flex flex-col items-center text-center"
-                    @click="openSendOverlay"
+                    @click="openPrivateSendOverlay"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -184,6 +158,32 @@
                       />
                     </svg>
                     <p class="text-xs">Receive</p>
+                  </div>
+
+                  <div
+                    class="flex flex-col items-center text-center"
+                    @click="openUnshieldOverlay"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6 mx-auto mb-2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                      />
+                    </svg>
+                    <p class="text-xs">Unshield</p>
                   </div>
                 </div>
               </div>
@@ -820,7 +820,12 @@
                     class="text-base font-semibold leading-6 text-white"
                     >Receive
                   </DialogTitle>
-
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      Share your address with the sender. You can either have
+                      them scan this QR code or send them a private message.
+                    </p>
+                  </div>
                   <div class="mt-6 qrcode-container">
                     <qrcode :value="accountStore.getAddress"></qrcode>
                   </div>
@@ -871,8 +876,11 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot as="template" :show="showSendOverlay && !showScanOverlay">
-      <Dialog class="relative z-10" @close="closeSendOverlay">
+    <TransitionRoot
+      as="template"
+      :show="showPrivateSendOverlay && !showScanOverlay"
+    >
+      <Dialog class="relative z-10" @close="closePrivateSendOverlay">
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -907,7 +915,7 @@
                   <button
                     type="button"
                     class="text-gray-400 hover:text-gray-500"
-                    @click="closeSendOverlay"
+                    @click="closePrivateSendOverlay"
                   >
                     <span class="sr-only">Close</span>
                     <svg
@@ -930,9 +938,14 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Send
+                    >Send Privately
                   </DialogTitle>
-
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      Sending privately means that only you and the recipient
+                      know who sent how much to whom.
+                    </p>
+                  </div>
                   <form class="mt-5" @submit.prevent="submitSendForm">
                     <div class="flex flex-col">
                       <label
@@ -1323,7 +1336,7 @@ const submitSendForm = () => {
   // Handle the form submission here
   console.log("submitting send form");
   openStatusOverlay();
-  closeSendOverlay();
+  closePrivateSendOverlay();
   sendPrivately();
 };
 const submitShieldForm = () => {
@@ -1608,14 +1621,14 @@ const openReceiveOverlay = () => {
 const closeReceiveOverlay = () => {
   showReceiveOverlay.value = false;
 };
-const showSendOverlay = ref(false);
-const openSendOverlay = () => {
+const showPrivateSendOverlay = ref(false);
+const openPrivateSendOverlay = () => {
   console.log(`openSendOverlay (scanoverlay=${showScanOverlay.value})`);
-  showSendOverlay.value = true;
+  showPrivateSendOverlay.value = true;
 };
-const closeSendOverlay = () => {
-  console.log("closeSendOverlay");
-  showSendOverlay.value = false;
+const closePrivateSendOverlay = () => {
+  console.log("closePrivateSendOverlay");
+  showPrivateSendOverlay.value = false;
 };
 
 const showScanOverlay = ref(false);
@@ -1633,7 +1646,7 @@ const openStatusOverlay = () => {
 };
 const closeStatusOverlay = () => {
   showStatusOverlay.value = false;
-  showSendOverlay.value = false;
+  showPrivateSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
 };

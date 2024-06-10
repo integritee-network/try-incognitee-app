@@ -5,7 +5,7 @@
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
         <Polkadot class="w-[30px] h-[30px]" />
-        <p class="text-xs">DOT</p>
+        <p class="text-xs">Polkadot</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
           >coming soon</span
@@ -19,7 +19,7 @@
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
         <USDC class="w-[30px] h-[30px]" />
-        <p class="text-xs">USDC</p>
+        <p class="text-xs">Kusama</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
           >coming soon</span
@@ -231,7 +231,7 @@
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+            class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
           >
             <TransitionChild
               as="template"
@@ -243,7 +243,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full h-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
                 <div class="absolute right-0 top-0 pr-4 pt-4">
                   <button
@@ -289,7 +289,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="mt-5 sm:mt-6">
+                <div class="absolute bottom-0 left-0 w-full p-4 bg-gray-800">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -462,112 +462,114 @@
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+        <div
+          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <TransitionChild
-              as="template"
-              enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            <DialogPanel
+              class="w-full h-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
-              <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-              >
-                <div class="absolute right-0 top-0 pr-4 pt-4">
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500"
-                    @click="closeShieldOverlay"
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closeShieldOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
                   >
-                    <span class="sr-only">Close</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div class="mt-3 text-center sm:mt-5">
-                  <DialogTitle
-                    as="h3"
-                    class="text-base font-semibold leading-6 text-white"
-                    >Shield PAS
-                  </DialogTitle>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="mt-3 text-center sm:mt-5 flex-grow">
+                <DialogTitle
+                  as="h3"
+                  class="text-base font-semibold leading-6 text-white"
+                  >Shield PAS
+                </DialogTitle>
 
-                  <p class="text-sm text-gray-400 text-left my-4">
-                    Shielding is the process of moving naked, publicly visible
-                    balance on Paseo to your private wallet on Incognitee.
-                  </p>
+                <p class="text-sm text-gray-400 text-left my-4">
+                  Shielding is the process of moving naked, publicly visible
+                  balance on Paseo to your private wallet on Incognitee.
+                </p>
 
-                  <form @submit.prevent="submitShieldForm">
-                    <div class="mt-5">
-                      <div class="flex justify-between items-center">
-                        <label
-                          for="sendAmount"
-                          class="text-sm font-medium leading-6 text-white"
-                          >Amount</label
-                        >
+                <form
+                  @submit.prevent="submitShieldForm"
+                  class="flex-grow flex flex-col justify-between"
+                >
+                  <div>
+                    <div class="flex justify-between items-center">
+                      <label
+                        for="sendAmount"
+                        class="text-sm font-medium leading-6 text-white"
+                        >Amount</label
+                      >
 
-                        <span class="text-xs text-gray-400"
-                          >Available public balance:
-                          {{ accountStore.getPaseoHumanBalance }}</span
-                        >
-                      </div>
-                      <input
-                        id="shieldAmount"
-                        v-model="shieldAmount"
-                        type="number"
-                        step="0.01"
-                        :min="0.1"
-                        :max="
-                          (accountStore.paseoBalance -
-                            existential_deposit_paseo) /
-                            Math.pow(10, 10) -
-                          0.1
-                        "
-                        required
-                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
-                        style="border-color: #24ad7c"
-                      />
-                      <div class="text-right">
-                        <span class="text-xs text-gray-400"
-                          >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
-                        >
-                      </div>
-                      <div class="mt-5 sm:mt-6">
-                        <button
-                          type="submit"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                        >
-                          Shield
-                        </button>
-                      </div>
+                      <span class="text-xs text-gray-400"
+                        >Available public balance:
+                        {{ accountStore.getPaseoHumanBalance }}</span
+                      >
                     </div>
-                  </form>
-                </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
+                    <input
+                      id="shieldAmount"
+                      v-model="shieldAmount"
+                      type="number"
+                      step="0.01"
+                      :min="0.1"
+                      :max="
+                        (accountStore.paseoBalance -
+                          existential_deposit_paseo) /
+                          Math.pow(10, 10) -
+                        0.1
+                      "
+                      required
+                      class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
+                      style="border-color: #24ad7c"
+                    />
+                    <div class="text-right">
+                      <span class="text-xs text-gray-400"
+                        >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                      >
+                    </div>
+                  </div>
+                  <div class="absolute bottom-0 left-0 w-full p-4 bg-gray-800">
+                    <button
+                      type="submit"
+                      class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                      @click="submitShieldForm"
+                    >
+                      Shield
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </TransitionRoot>
 
     <TransitionRoot as="template" :show="showFaucetOverlay">
-      <Dialog class="relative z-10" @close="closeFaucetOverlay">
+      <Dialog class="relative z-20" @close="closeFaucetOverlay">
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -582,111 +584,106 @@
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+        <div
+          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <TransitionChild
-              as="template"
-              enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            <DialogPanel
+              class="w-full h-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
-              <DialogPanel
-                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-              >
-                <div class="absolute right-0 top-0 pr-4 pt-4">
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500"
-                    @click="closeFaucetOverlay"
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closeFaucetOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
                   >
-                    <span class="sr-only">Close</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div>
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-white"
-                      >Drip Faucet
-                    </DialogTitle>
-                    <div class="mt-2">
-                      <p class="text-sm text-gray-400">
-                        The Paseo Faucet grants you PAS tokens every day. Just
-                        copy-paste your address and solve a CAPTCHA to get free
-                        PAS tokens
-                      </p>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-white"
+                    >Drip Faucet
+                  </DialogTitle>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-400">
+                      The Paseo Faucet grants you PAS tokens every day. Just
+                      copy-paste your address and solve a CAPTCHA to get free
+                      PAS tokens
+                    </p>
 
-                      <div class="flex flex-col mt-5">
-                        <div class="relative flex items-center rounded-lg">
-                          <input
-                            id="accountAddress"
-                            type="text"
-                            :value="accountStore.getAddress"
-                            readonly
-                            class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-                            style="border-color: #24ad7c"
-                          />
-                          <div class="absolute right-3 flex space-x-2">
-                            <div
-                              @click="copyOwnAddressToClipboard"
-                              class="cursor-pointer"
+                    <div class="flex flex-col mt-5">
+                      <div class="relative flex items-center rounded-lg">
+                        <input
+                          id="accountAddress"
+                          type="text"
+                          :value="accountStore.getAddress"
+                          readonly
+                          class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+                          style="border-color: #24ad7c"
+                        />
+                        <div class="absolute right-3 flex space-x-2">
+                          <div
+                            @click="copyOwnAddressToClipboard"
+                            class="cursor-pointer"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="size-6"
                             >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-6"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                                />
-                              </svg>
-                            </div>
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                              />
+                            </svg>
                           </div>
                         </div>
-                      </div>
-                      <div class="mt-5">
-                        <a
-                          href="https://faucet.polkadot.io/paseo"
-                          target="_blank"
-                        >
-                          <button
-                            type="button"
-                            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                          >
-                            Get free PAS tokens from faucet
-                          </button>
-                        </a>
                       </div>
                     </div>
                   </div>
                 </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
+              </div>
+              <div class="mt-5 sm:mt-6">
+                <a href="https://faucet.polkadot.io/paseo" target="_blank">
+                  <button
+                    type="button"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                  >
+                    Get free PAS tokens from faucet
+                  </button>
+                </a>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </TransitionRoot>
@@ -695,7 +692,10 @@
       as="template"
       :show="showUnshieldOverlay && !showScanOverlay"
     >
-      <Dialog class="relative z-10" @close="closeUnshieldOverlay">
+      <Dialog
+        class="fixed inset-0 z-20 flex items-center justify-center"
+        @close="closeUnshieldOverlay"
+      >
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -712,7 +712,7 @@
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+            class="fixed inset-0 z-10 w-full h-full flex items-start justify-center p-4"
           >
             <TransitionChild
               as="template"
@@ -724,7 +724,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="relative w-full h-full max-w-sm mx-auto bg-gray-800 rounded-lg shadow-xl flex flex-col px-4 pb-4 pt-5 text-left transition-all sm:my-8 sm:max-w-sm sm:p-6"
               >
                 <div class="absolute right-0 top-0 pr-4 pt-4">
                   <button
@@ -797,7 +797,7 @@
                                 type="text"
                                 required
                                 placeholder="Recipient"
-                                class="w-full text-sm rounded-lg flex-grow pl-12 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                                class="w-full text-sm rounded-lg flex-grow pl-12 py-2 pr-20 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
                                 style="border-color: #24ad7c"
                               />
                               <div class="absolute right-3 flex space-x-2">
@@ -879,7 +879,7 @@
                           0.1
                         "
                         required
-                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
                         style="border-color: #24ad7c"
                       />
                       <!-- Fee description -->
@@ -888,7 +888,10 @@
                           >Fee: 30m PAS for Incognitee</span
                         >
                       </div>
-                      <div class="mt-5 sm:mt-6">
+
+                      <div
+                        class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                      >
                         <button
                           type="submit"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -907,7 +910,10 @@
     </TransitionRoot>
 
     <TransitionRoot as="template" :show="showReceiveOverlay">
-      <Dialog class="relative z-10" @close="closeReceiveOverlay">
+      <Dialog
+        class="fixed inset-0 z-20 flex items-center justify-center"
+        @close="closeReceiveOverlay"
+      >
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -918,54 +924,57 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed mb-5 p-4 inset-0 bg-black bg-opacity-80 transition-opacity"
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+        <div
+          class="fixed inset-0 z-10 w-full h-full flex items-start justify-center p-4"
+        >
+          <!-- Anpassung hier -->
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <TransitionChild
-              as="template"
-              enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            <DialogPanel
+              class="relative w-full h-full max-w-sm mx-auto bg-gray-800 rounded-lg shadow-xl flex flex-col px-4 pb-4 pt-5 text-left transition-all sm:my-8 sm:max-w-sm sm:p-6"
             >
-              <DialogPanel
-                class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-              >
-                <div class="absolute right-0 top-0 pr-4 pt-4">
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500"
-                    @click="closeReceiveOverlay"
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closeReceiveOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
                   >
-                    <span class="sr-only">Close</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-grow flex flex-col justify-start">
+                <!-- Anpassung hier -->
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Receive
+                  >
+                    Receive
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
@@ -973,7 +982,7 @@
                       them scan this QR code or send them a private message.
                     </p>
                   </div>
-                  <div class="mt-6 qrcode-container">
+                  <div class="mt-5 qrcode-container">
                     <qrcode :value="accountStore.getAddress"></qrcode>
                   </div>
 
@@ -1016,9 +1025,9 @@
                     </div>
                   </div>
                 </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </TransitionRoot>
@@ -1027,7 +1036,7 @@
       as="template"
       :show="showPrivateSendOverlay && !showScanOverlay"
     >
-      <Dialog class="relative z-10" @close="closePrivateSendOverlay">
+      <Dialog class="relative z-20" @close="closePrivateSendOverlay">
         <TransitionChild
           as="template"
           enter="ease-out duration-300"
@@ -1038,49 +1047,49 @@
           leave-to="opacity-0"
         >
           <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
+            class="fixed mb-5 p-4 inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+        <div
+          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <TransitionChild
-              as="template"
-              enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            <DialogPanel
+              class="w-full h-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
-              <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-              >
-                <div class="absolute right-0 top-0 pr-4 pt-4">
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500"
-                    @click="closePrivateSendOverlay"
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closePrivateSendOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
                   >
-                    <span class="sr-only">Close</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-grow">
                 <div class="mt-3 text-center sm:mt-5">
                   <DialogTitle
                     as="h3"
@@ -1106,7 +1115,7 @@
                           v-model="recipientAddress"
                           type="text"
                           required
-                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
                           style="border-color: #24ad7c"
                           placeholder="Recipient"
                         />
@@ -1163,7 +1172,7 @@
                             0.1
                           "
                           required
-                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
                           style="border-color: #24ad7c"
                           placeholder="Amount"
                         />
@@ -1176,7 +1185,10 @@
                         >
                       </div>
                     </div>
-                    <div class="mt-5 sm:mt-6">
+
+                    <div
+                      class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                    >
                       <button
                         type="submit"
                         class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -1186,9 +1198,9 @@
                     </div>
                   </form>
                 </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </TransitionRoot>
@@ -1424,10 +1436,12 @@
 </template>
 
 <script setup lang="ts">
-import Polkadot from "@/assets/img/polkadot-logo.svg";
 import Paseo from "@/assets/img/paseo-logo.svg";
+import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1436,21 +1450,19 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
-import { onMounted, ref, watch } from "vue";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
-import { useRouter } from "vue-router";
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
-import { ApiPromise, WsProvider } from "@polkadot/api";
 import { useInterval } from "@vueuse/core";
+import { onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const accountStore = useAccount();

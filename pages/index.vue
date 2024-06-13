@@ -5,7 +5,7 @@
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
         <Polkadot class="w-[30px] h-[30px]" />
-        <p class="text-xs">Polkadot</p>
+        <p class="text-xs">DOT</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
           >coming soon</span

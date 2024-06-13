@@ -18,8 +18,8 @@
         <p class="text-xs">PASEO</p>
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
-        <Kusama class="w-[30px] h-[30px]" />
-        <p class="text-xs">Kusama</p>
+        <USDC class="w-[30px] h-[30px]" />
+        <p class="text-xs">USDC</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
           >coming soon</span
@@ -1433,38 +1433,36 @@
       </div>
     </div>
   </div>
-
-
 </template>
 
 <script setup lang="ts">
-import Kusama from "@/assets/img/kusama-ksm-logo.svg"
-import Paseo from "@/assets/img/paseo-logo.svg"
-import Polkadot from "@/assets/img/polkadot-logo.svg"
+import Paseo from "@/assets/img/paseo-logo.svg";
+import Polkadot from "@/assets/img/polkadot-logo.svg";
+import USDC from "@/assets/img/usdc-logo.svg";
 
-import { useAccount } from "@/store/account.ts"
-import { useIncognitee } from "@/store/incognitee.ts"
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
   DialogTitle,
   TransitionChild,
   TransitionRoot,
-} from "@headlessui/vue"
-import { CheckIcon } from "@heroicons/vue/24/outline"
-import { ApiPromise, WsProvider } from "@polkadot/api"
-import { Keyring } from "@polkadot/keyring"
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util"
+} from "@headlessui/vue";
+import { CheckIcon } from "@heroicons/vue/24/outline";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { Keyring } from "@polkadot/keyring";
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
-} from "@polkadot/util-crypto"
-import { useInterval } from "@vueuse/core"
-import { onMounted, ref, watch } from "vue"
-import Qrcode from "vue-qrcode"
-import { QrcodeStream } from "vue-qrcode-reader"
-import { useRouter } from "vue-router"
+} from "@polkadot/util-crypto";
+import { useInterval } from "@vueuse/core";
+import { onMounted, ref, watch } from "vue";
+import Qrcode from "vue-qrcode";
+import { QrcodeStream } from "vue-qrcode-reader";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 const accountStore = useAccount();

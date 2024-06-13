@@ -5,7 +5,7 @@
     </span>
 
     <div class="mt-2">
-      <p class="text-sm text-gray-400 text-justify">COMING SOON(TM)</p>
+      <p class="text-sm text-gray-400 text-justify">COMING SOON<sup>TM</sup></p>
       <p class="text-sm text-gray-400 text-justify">
         Whenever you use a centralized exchange (CEX), you trust them to operate
         a fair market and protect your data. Even worse, you hand over custody

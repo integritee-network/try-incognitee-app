@@ -1534,7 +1534,7 @@ const onDecode = (decodeResult) => {
 
 const txResHandlerPaseo = ({ events = [], status, txHash }) => {
   status.isFinalized
-    ? (txStatus.value = `😀 Finalized. You should see your Incognitee balance increase in seconds. Please proceed to the next tab and invite a friend`)
+    ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
     : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
 
   // Loop through Vec<EventRecord> to display all events
@@ -1571,7 +1571,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
       }
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
-      txStatus.value`❤️️ Transaction successful! please proceed to the next tab and invite a friend`;
+      txStatus.value`❤️️ Transaction successful!`;
     }
   });
 };

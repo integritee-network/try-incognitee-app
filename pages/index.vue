@@ -464,6 +464,10 @@
 
         <div
           class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+          style="
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-top: env(safe-area-inset-top);
+          "
         >
           <TransitionChild
             as="template"
@@ -551,7 +555,10 @@
                       >
                     </div>
                   </div>
-                  <div class="absolute bottom-0 left-0 w-full p-4 bg-gray-800">
+                  <div
+                    class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                    style="padding-bottom: env(safe-area-inset-bottom)"
+                  >
                     <button
                       type="submit"
                       class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -1415,17 +1422,53 @@
       </Dialog>
     </TransitionRoot>
 
-    <div v-if="showStatusOverlay" class="status-overlay">
-      <div class="status">
-        <div class="spinner" />
-        <div>{{ txStatus }}</div>
-        <button @click="closeStatusOverlay" class="mt-8">close</button>
+    <div
+      aria-live="assertive"
+      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+    >
+      <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+        <transition
+          enter-active-class="transform ease-out duration-300 transition"
+          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+          leave-active-class="transition ease-in duration-100"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div
+            v-if="showStatusOverlay"
+            class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+          >
+            <div class="p-4">
+              <div class="flex items-center">
+                <div class="flex w-0 flex-1 justify-between">
+                  <p class="w-0 flex-1 text-sm font-medium text-gray-900">
+                    {{ txStatus }}
+                  </p>
+                </div>
+                <div class="ml-4 flex flex-shrink-0">
+                  <button
+                    type="button"
+                    @click="showStatusOverlay = false"
+                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    <span class="sr-only">Close</span>
+                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { XMarkIcon } from "@heroicons/vue/20/solid";
+
 import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";

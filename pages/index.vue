@@ -15,11 +15,11 @@
         class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
       >
         <Paseo class="w-[30px] h-[30px]"/>
-        <p class="text-xs">PASEO</p>
+        <p class="text-xs">PAS<br/>PASEO</p>
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
         <USDC class="w-[30px] h-[30px]"/>
-        <p class="text-xs">Kusama</p>
+        <p class="text-xs">USDC</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
         >coming soon</span
@@ -521,7 +521,7 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                      >Amount</label
+                      >PAS Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
@@ -855,7 +855,7 @@
                       <label
                         for="unshieldAmount"
                         class="text-sm font-medium leading-6 text-white"
-                      >Amount</label
+                      >PAS Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
@@ -1144,7 +1144,7 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                        >Amount</label
+                        >PAS Amount</label
                         >
 
                         <span class="text-xs text-gray-400"

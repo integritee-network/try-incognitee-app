@@ -1,11 +1,4 @@
 <script setup lang="ts">
-import DefaultLayout from "./layouts/default.vue";
-import { defineAsyncComponent } from "vue";
-import { useAsyncData } from "#imports";
-import Footer from "@/components/Footer";
-
-const exports = {};
-const Header = defineAsyncComponent(() => import("@/components/Header"));
 </script>
 
 <template>

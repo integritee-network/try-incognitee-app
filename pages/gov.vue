@@ -5,7 +5,7 @@
     </span>
 
     <div class="mt-2">
-      <p class="text-sm text-gray-400 text-justify">COMING SOON(TM)</p>
+      <p class="text-sm text-gray-400 text-justify">COMING SOON<sup>TM</sup></p>
       <p class="text-sm text-gray-400 text-justify">
         If you participate in OpenGov on Polkadot and Kusama or onchain
         governance on any of their parachains, you inevitably expose your voting

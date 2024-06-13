@@ -4,25 +4,25 @@
       class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
-        <Polkadot class="w-[30px] h-[30px]" />
+        <Polkadot class="w-[30px] h-[30px]"/>
         <p class="text-xs">Polkadot</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
+        >coming soon</span
         >
       </div>
       <div
         class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
       >
-        <Paseo class="w-[30px] h-[30px]" />
+        <Paseo class="w-[30px] h-[30px]"/>
         <p class="text-xs">PASEO</p>
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
-        <USDC class="w-[30px] h-[30px]" />
+        <USDC class="w-[30px] h-[30px]"/>
         <p class="text-xs">Kusama</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
+        >coming soon</span
         >
       </div>
     </div>
@@ -273,7 +273,7 @@
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-white"
-                      >Other Assets
+                    >Other Assets
                     </DialogTitle>
                     <div class="mt-2">
                       <p class="text-sm text-gray-400 mt-4 text-left">
@@ -364,7 +364,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >On Privacy
+                  >On Privacy
                   </DialogTitle>
 
                   <div class="mt-2">
@@ -386,7 +386,7 @@
                     </p>
                     <p class="text-sm text-gray-400 text-justify my-4">
                       <NuxtLink to="https://incognitee.io" class="color_blue"
-                        >Incognitee
+                      >Incognitee
                       </NuxtLink>
                       is a privacy enhancing technology that allows you to
                       shield your assets and transfer them privately. This means
@@ -397,14 +397,14 @@
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
                         class="color_blue"
-                        >trusted execution environments (TEE)
+                      >trusted execution environments (TEE)
                       </NuxtLink>
                       . The TEEs we use are a hardware feature of server CPU's
                       called <i>Intel SGX</i>. In addition, the
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network"
                         class="color_blue"
-                        >Integritee Network
+                      >Integritee Network
                       </NuxtLink>
                       , a Polkadot parachain, performs independent,
                       decentralized remote attestation of TEEs. Moreover, it
@@ -504,7 +504,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Shield PAS
+                >Shield PAS
                 </DialogTitle>
 
                 <p class="text-sm text-gray-400 text-left my-4">
@@ -521,11 +521,11 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                        >Amount</label
+                      >Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
-                        >Available public balance:
+                      >Available public balance:
                         {{ accountStore.getPaseoHumanBalance }}</span
                       >
                     </div>
@@ -547,7 +547,7 @@
                     />
                     <div class="text-right">
                       <span class="text-xs text-gray-400"
-                        >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                      >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
                       >
                     </div>
                   </div>
@@ -627,7 +627,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Drip Faucet
+                  >Drip Faucet
                   </DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-400">
@@ -753,7 +753,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Unshield PAS
+                  >Unshield PAS
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
@@ -762,143 +762,137 @@
                       Paseo.
                     </p>
                   </div>
-
-                  <form @submit.prevent="submitUnshieldForm">
-                    <div class="mt-5">
-                      <form @submit.prevent="submitUnshieldForm">
-                        <div class="mt-5">
-                          <div class="flex flex-col">
-                            <label
-                              for="recipientAddress"
-                              class="text-sm font-medium leading-6 text-white text-left"
-                              >Recipient</label
+                  <form class="mt-5" @submit.prevent="submitUnshieldForm">
+                    <div class="flex flex-col">
+                      <label
+                        for="recipientAddress"
+                        class="text-sm font-medium leading-6 text-white text-left"
+                      >Recipient</label
+                      >
+                      <div class="relative flex items-center rounded-lg">
+                        <div class="absolute left-3 flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="h-6 w-6 text-white"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M11.9889 0L0.0222883 5.99115L0 18.0089L12.0111 24L23.9778 18.0089L24 5.99115L11.9889 0ZM11.9055 2.93685L15.012 4.49375V7.60754L11.9055 9.16444L8.79902 7.60754V4.49375L11.9055 2.93685ZM5.66099 6.0491L8.76754 7.606V10.7198L5.66099 12.2767L8.76749 13.8336V16.9489L5.66093 18.5058L2.55438 16.9489V13.8336L5.66087 12.2767L2.55438 10.7198V7.606L5.66087 6.0491H5.66099ZM18.1278 6.0491L21.2343 7.606V10.7198L18.1279 12.2767L21.2344 13.8336V16.9489L18.1279 18.5058L15.0214 16.9489V13.8336L18.1279 12.2767L15.0214 10.7198V7.606L18.1278 6.0491ZM11.9055 9.16928L15.012 10.7262V13.84L11.913 15.3937L15.012 16.9457V20.0611L11.9055 21.618L8.79902 20.0611V16.9457L11.898 15.3937L8.79902 13.84V10.7262L11.9055 9.16928H11.9055Z"
+                              fill="white"
+                            />
+                          </svg>
+                        </div>
+                        <input
+                          id="recipientAddress"
+                          v-model="recipientAddress"
+                          type="text"
+                          required
+                          placeholder="Recipient"
+                          class="w-full text-sm rounded-lg flex-grow pl-12 py-2 pr-20 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+                          style="border-color: #24ad7c"
+                        />
+                        <div class="absolute right-3 flex space-x-2">
+                          <div
+                            @click="setRecipientAddressToSelf"
+                            class="cursor-pointer"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="h-6 w-6 text-white"
                             >
-                            <div class="relative flex items-center rounded-lg">
-                              <div class="absolute left-3 flex items-center">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke-width="1.5"
-                                  stroke="currentColor"
-                                  class="h-6 w-6 text-white"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M11.9889 0L0.0222883 5.99115L0 18.0089L12.0111 24L23.9778 18.0089L24 5.99115L11.9889 0ZM11.9055 2.93685L15.012 4.49375V7.60754L11.9055 9.16444L8.79902 7.60754V4.49375L11.9055 2.93685ZM5.66099 6.0491L8.76754 7.606V10.7198L5.66099 12.2767L8.76749 13.8336V16.9489L5.66093 18.5058L2.55438 16.9489V13.8336L5.66087 12.2767L2.55438 10.7198V7.606L5.66087 6.0491H5.66099ZM18.1278 6.0491L21.2343 7.606V10.7198L18.1279 12.2767L21.2344 13.8336V16.9489L18.1279 18.5058L15.0214 16.9489V13.8336L18.1279 12.2767L15.0214 10.7198V7.606L18.1278 6.0491ZM11.9055 9.16928L15.012 10.7262V13.84L11.913 15.3937L15.012 16.9457V20.0611L11.9055 21.618L8.79902 20.0611V16.9457L11.898 15.3937L8.79902 13.84V10.7262L11.9055 9.16928H11.9055Z"
-                                    fill="white"
-                                  />
-                                </svg>
-                              </div>
-                              <input
-                                id="recipientAddress"
-                                v-model="recipientAddress"
-                                type="text"
-                                required
-                                placeholder="Recipient"
-                                class="w-full text-sm rounded-lg flex-grow pl-12 py-2 pr-20 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-                                style="border-color: #24ad7c"
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
                               />
-                              <div class="absolute right-3 flex space-x-2">
-                                <div
-                                  @click="setRecipientAddressToSelf"
-                                  class="cursor-pointer"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    class="h-6 w-6 text-white"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                                    />
-                                  </svg>
-                                </div>
-                                <div
-                                  @click="openScanOverlay"
-                                  class="cursor-pointer"
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    class="h-6 w-6 text-white"
-                                  >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
-                                    />
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
-                                    />
-                                  </svg>
-                                </div>
-                              </div>
-                            </div>
+                            </svg>
+                          </div>
+                          <div
+                            @click="openScanOverlay"
+                            class="cursor-pointer"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              class="h-6 w-6 text-white"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                              />
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                              />
+                            </svg>
                           </div>
                         </div>
-                      </form>
-                      <p class="text-sm text-gray-400 text-left mt-5">
-                        For optimal k-anonymity, we advise you to unshield
-                        exactly 10 PAS at the time. In the future we will
-                        provide a score including timing and popular amounts to
-                        enhance unlinkability of your actions.
-                      </p>
-
-                      <div class="flex justify-between items-center mt-5">
-                        <label
-                          for="unshieldAmount"
-                          class="text-sm font-medium leading-6 text-white"
-                          >Amount</label
-                        >
-
-                        <span class="text-xs text-gray-400"
-                          >Available private balance:
-                          {{ accountStore.getIncogniteeHumanBalance }}</span
-                        >
                       </div>
-                      <input
-                        id="unshieldAmount"
-                        v-model="unshieldAmount"
-                        type="number"
-                        step="0.1"
-                        :min="1.1"
-                        :max="
+                    </div>
+
+                    <p class="text-sm text-gray-400 text-left mt-5">
+                      For optimal k-anonymity, we advise you to unshield
+                      exactly 10 PAS at the time. In the future we will
+                      provide a score including timing and popular amounts to
+                      enhance unlinkability of your actions.
+                    </p>
+
+                    <div class="flex justify-between items-center mt-5">
+                      <label
+                        for="unshieldAmount"
+                        class="text-sm font-medium leading-6 text-white"
+                      >Amount</label
+                      >
+
+                      <span class="text-xs text-gray-400"
+                      >Available private balance:
+                          {{ accountStore.getIncogniteeHumanBalance }}</span
+                      >
+                    </div>
+                    <input
+                      id="unshieldAmount"
+                      v-model="unshieldAmount"
+                      type="number"
+                      step="0.1"
+                      :min="1.1"
+                      :max="
                           accountStore.incogniteeBalance / Math.pow(10, 10) -
                           0.1
                         "
-                        required
-                        class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
-                        style="border-color: #24ad7c"
-                      />
-                      <!-- Fee description -->
-                      <div class="text-right">
+                      required
+                      class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
+                      style="border-color: #24ad7c"
+                    />
+                    <!-- Fee description -->
+                    <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 30m PAS for Incognitee</span
+                        >Fee: 30m PAS for Incognitee</span
                         >
-                      </div>
+                    </div>
 
-                      <div
-                        class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                    <div
+                      class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                       >
-                        <button
-                          type="submit"
-                          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                        >
-                          Unshield
-                        </button>
-                      </div>
+                        Unshield
+                      </button>
                     </div>
                   </form>
                 </div>
@@ -1094,7 +1088,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Send Privately
+                  >Send Privately
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
@@ -1107,7 +1101,7 @@
                       <label
                         for="recipientAddress"
                         class="text-sm font-medium leading-6 text-white text-left"
-                        >Recipient</label
+                      >Recipient</label
                       >
                       <div class="relative flex items-center rounded-lg">
                         <input
@@ -1150,11 +1144,11 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                          >Amount</label
+                        >Amount</label
                         >
 
                         <span class="text-xs text-gray-400"
-                          >Available private balance:
+                        >Available private balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
                       </div>
@@ -1181,7 +1175,7 @@
                       <!-- Fee description -->
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 10m PAS for Incognitee</span
+                        >Fee: 10m PAS for Incognitee</span
                         >
                       </div>
                     </div>
@@ -1264,7 +1258,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Scan recipient's QR code
+                  >Scan recipient's QR code
                   </DialogTitle>
 
                   <div class="mt-6 qrcode-container">
@@ -1347,7 +1341,7 @@
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-white"
-                      >New Wallet!
+                    >New Wallet!
                     </DialogTitle>
                     <div class="mt-2">
                       <p class="text-sm text-gray-400">
@@ -1427,7 +1421,7 @@
 
     <div v-if="showStatusOverlay" class="status-overlay">
       <div class="status">
-        <div class="spinner" />
+        <div class="spinner"/>
         <div>{{ txStatus }}</div>
         <button @click="closeStatusOverlay" class="mt-8">close</button>
       </div>
@@ -1440,8 +1434,8 @@ import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
+import {useAccount} from "@/store/account.ts";
+import {useIncognitee} from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1449,20 +1443,20 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import {CheckIcon} from "@heroicons/vue/24/outline";
+import {ApiPromise, WsProvider} from "@polkadot/api";
+import {Keyring} from "@polkadot/keyring";
+import {formatBalance, hexToU8a, u8aToHex} from "@polkadot/util";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
-import { useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
+import {useInterval} from "@vueuse/core";
+import {onMounted, ref, watch} from "vue";
 import Qrcode from "vue-qrcode";
-import { QrcodeStream } from "vue-qrcode-reader";
-import { useRouter } from "vue-router";
+import {QrcodeStream} from "vue-qrcode-reader";
+import {useRouter} from "vue-router";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1481,8 +1475,8 @@ const scanResult = ref("No QR code data yet");
 let api: ApiPromise | null = null;
 
 const tabs = [
-  { name: "Public Balance", href: "#", current: true },
-  { name: "Private Balance", href: "#", current: false },
+  {name: "Public Balance", href: "#", current: true},
+  {name: "Private Balance", href: "#", current: false},
 ];
 
 const currentTab = ref("public");
@@ -1522,13 +1516,13 @@ const onDecode = (decodeResult) => {
   closeScanOverlay();
 };
 
-const txResHandlerPaseo = ({ events = [], status, txHash }) => {
+const txResHandlerPaseo = ({events = [], status, txHash}) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. You should see your Incognitee balance increase in seconds. Please proceed to the next tab and invite a friend`)
     : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
 
   // Loop through Vec<EventRecord> to display all events
-  events.forEach(({ _, event: { data, method, section } }) => {
+  events.forEach(({_, event: {data, method, section}}) => {
     if (section + ":" + method === "system:ExtrinsicFailed") {
       // extract the data for this event
       const [dispatchError, dispatchInfo] = data;
@@ -1576,7 +1570,7 @@ const shield = async () => {
     const amount = Math.pow(10, 10) * shieldAmount.value;
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({provider: wsProvider});
     console.log("api initialized for shielding");
     await api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
@@ -1670,10 +1664,10 @@ watch(accountStore, async () => {
 
   console.log("trying to init api");
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
-  api = await ApiPromise.create({ provider: wsProvider });
+  api = await ApiPromise.create({provider: wsProvider});
   api.query.system.account(
     accountStore.account.address,
-    ({ data: { free: currentFree } }) => {
+    ({data: {free: currentFree}}) => {
       console.log("paseo balance:" + currentFree);
       accountStore.paseoBalance = Number(currentFree);
       isFetchingPaseoBalance.value = false;
@@ -1702,7 +1696,7 @@ onMounted(() => {
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
-      const localKeyring = new Keyring({ type: "sr25519" });
+      const localKeyring = new Keyring({type: "sr25519"});
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
@@ -1710,7 +1704,7 @@ onMounted(() => {
     console.log("no seed found in url. will automatically create fresh wallet");
     cryptoWaitReady().then(() => {
       const generatedMnemonic = mnemonicGenerate();
-      const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+      const localKeyring = new Keyring({type: "sr25519", ss58Format: 42});
       const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
         name: "fresh",
       });
@@ -1719,7 +1713,7 @@ onMounted(() => {
       console.log(`Private Key in Hex: ${privateKeyHex}`);
       // change url to contain new seed to allow bookmarking
       router.push({
-        query: { seed: privateKeyHex },
+        query: {seed: privateKeyHex},
       });
       accountStore.setAccount(newAccount);
       openNewWalletOverlay();

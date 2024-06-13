@@ -231,7 +231,7 @@
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+            class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
           >
             <TransitionChild
               as="template"
@@ -243,7 +243,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="w-full h-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                class="w-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
               >
                 <div class="absolute right-0 top-0 pr-4 pt-4">
                   <button
@@ -289,7 +289,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="absolute bottom-0 left-0 w-full p-4 bg-gray-800">
+                <div class="w-full mt-8 bg-gray-800">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -323,7 +323,7 @@
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+            class="flex items-start justify-center p-4 text-center sm:items-center sm:p-0"
           >
             <TransitionChild
               as="template"
@@ -463,11 +463,7 @@
         </TransitionChild>
 
         <div
-          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
-          style="
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-top: env(safe-area-inset-top);
-          "
+          class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
         >
           <TransitionChild
             as="template"
@@ -479,7 +475,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="w-full h-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              class="w-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div class="absolute right-0 top-0 pr-4 pt-4">
                 <button
@@ -521,7 +517,7 @@
                   class="flex-grow flex flex-col justify-between"
                 >
                   <div>
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center mt-4">
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
@@ -556,9 +552,8 @@
                     </div>
                   </div>
                   <div
-                    class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
-                    style="padding-bottom: env(safe-area-inset-bottom)"
-                  >
+                    class="bottom-0 left-0 w-full mt-8 bg-gray-800"
+                    >
                     <button
                       type="submit"
                       class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -592,7 +587,7 @@
         </TransitionChild>
 
         <div
-          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+          class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
         >
           <TransitionChild
             as="template"
@@ -604,7 +599,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="w-full h-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              class="w-full  relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div class="absolute right-0 top-0 pr-4 pt-4">
                 <button
@@ -683,7 +678,7 @@
                 <a href="https://faucet.polkadot.io/paseo" target="_blank">
                   <button
                     type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
                   >
                     Get free PAS tokens from faucet
                   </button>
@@ -700,7 +695,7 @@
       :show="showUnshieldOverlay && !showScanOverlay"
     >
       <Dialog
-        class="fixed inset-0 z-20 flex items-center justify-center"
+        class="relative z-10"
         @close="closeUnshieldOverlay"
       >
         <TransitionChild
@@ -717,10 +712,8 @@
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="fixed inset-0 z-10 w-full h-full flex items-start justify-center p-4"
-          >
+        <div class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4">
+         
             <TransitionChild
               as="template"
               enter="ease-out duration-300"
@@ -731,7 +724,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <DialogPanel
-                class="relative w-full h-full max-w-sm mx-auto bg-gray-800 rounded-lg shadow-xl flex flex-col px-4 pb-4 pt-5 text-left transition-all sm:my-8 sm:max-w-sm sm:p-6"
+                class="relative w-full  max-w-sm mx-auto bg-gray-800 rounded-lg shadow-xl flex flex-col px-4 pb-4 pt-5 text-left transition-all sm:my-8 sm:max-w-sm sm:p-6"
               >
                 <div class="absolute right-0 top-0 pr-4 pt-4">
                   <button
@@ -888,11 +881,11 @@
                     </div>
 
                     <div
-                      class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                      class="mt-8 w-full bg-gray-800"
                     >
                       <button
                         type="submit"
-                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md  text-sm font-semibold text-white shadow-sm"
                       >
                         Unshield
                       </button>
@@ -902,7 +895,7 @@
               </DialogPanel>
             </TransitionChild>
           </div>
-        </div>
+      
       </Dialog>
     </TransitionRoot>
 
@@ -920,15 +913,14 @@
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div
+        <div
             class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div
-          class="fixed inset-0 z-10 w-full h-full flex items-start justify-center p-4"
+          class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
         >
-          <!-- Anpassung hier -->
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
@@ -939,7 +931,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="relative w-full h-full max-w-sm mx-auto bg-gray-800 rounded-lg shadow-xl flex flex-col px-4 pb-4 pt-5 text-left transition-all sm:my-8 sm:max-w-sm sm:p-6"
+              class="w-full  relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div class="absolute right-0 top-0 pr-4 pt-4">
                 <button
@@ -1043,13 +1035,13 @@
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div
-            class="fixed mb-5 p-4 inset-0 bg-black bg-opacity-80 transition-opacity"
+        <div
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
           />
         </TransitionChild>
 
         <div
-          class="fixed inset-0 z-10 w-screen min-h-screen flex items-center justify-center p-4"
+          class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
         >
           <TransitionChild
             as="template"
@@ -1061,7 +1053,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <DialogPanel
-              class="w-full h-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+              class="w-full  relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
             >
               <div class="absolute right-0 top-0 pr-4 pt-4">
                 <button
@@ -1184,7 +1176,7 @@
                     </div>
 
                     <div
-                      class="absolute bottom-0 left-0 w-full p-4 bg-gray-800"
+                      class="mt-8 bottom-0 left-0 w-full bg-gray-800"
                     >
                       <button
                         type="submit"
@@ -1218,10 +1210,8 @@
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-20 w-screen overflow-y-auto">
-          <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
-          >
+        <div class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4">
+        
             <TransitionChild
               as="template"
               enter="ease-out duration-300"
@@ -1271,7 +1261,7 @@
               </DialogPanel>
             </TransitionChild>
           </div>
-        </div>
+        
       </Dialog>
     </TransitionRoot>
 
@@ -1291,10 +1281,9 @@
           />
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
-          >
+        <div
+          class="fixed inset-0 z-10 w-screen  flex items-center justify-center p-4"
+        >
             <TransitionChild
               as="template"
               enter="ease-out duration-300"
@@ -1418,7 +1407,7 @@
               </DialogPanel>
             </TransitionChild>
           </div>
-        </div>
+        
       </Dialog>
     </TransitionRoot>
 
@@ -1467,35 +1456,35 @@
 </template>
 
 <script setup lang="ts">
-import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { XMarkIcon } from "@heroicons/vue/20/solid"
 
-import Paseo from "@/assets/img/paseo-logo.svg";
-import Polkadot from "@/assets/img/polkadot-logo.svg";
-import USDC from "@/assets/img/usdc-logo.svg";
+import Paseo from "@/assets/img/paseo-logo.svg"
+import Polkadot from "@/assets/img/polkadot-logo.svg"
+import USDC from "@/assets/img/usdc-logo.svg"
 
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
+import { useAccount } from "@/store/account.ts"
+import { useIncognitee } from "@/store/incognitee.ts"
 import {
   Dialog,
   DialogPanel,
   DialogTitle,
   TransitionChild,
   TransitionRoot,
-} from "@headlessui/vue";
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+} from "@headlessui/vue"
+import { CheckIcon } from "@heroicons/vue/24/outline"
+import { ApiPromise, WsProvider } from "@polkadot/api"
+import { Keyring } from "@polkadot/keyring"
+import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util"
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
-} from "@polkadot/util-crypto";
-import { useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
-import Qrcode from "vue-qrcode";
-import { QrcodeStream } from "vue-qrcode-reader";
-import { useRouter } from "vue-router";
+} from "@polkadot/util-crypto"
+import { useInterval } from "@vueuse/core"
+import { onMounted, ref, watch } from "vue"
+import Qrcode from "vue-qrcode"
+import { QrcodeStream } from "vue-qrcode-reader"
+import { useRouter } from "vue-router"
 
 const router = useRouter();
 const accountStore = useAccount();

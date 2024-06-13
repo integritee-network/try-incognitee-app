@@ -126,7 +126,7 @@
               <!-- Private Balance Content -->
               <div class="text-white mb-6 text-center">
                 <h3 class="text-sm mb-3" @click="openPrivacyInfo">
-                  Private Balance
+                  Private Balance ⓘ
                 </h3>
                 <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
                 <div class="text-4xl font-semibold" v-else>

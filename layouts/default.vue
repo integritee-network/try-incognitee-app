@@ -16,7 +16,7 @@
               <div class="inner-box">
                 <div class="flex justify-around text-white">
                   <div class="flex flex-col items-center text-center">
-                    <nuxt-link :to="{ path: '/wallet', query: $route.query }">
+                    <nuxt-link :to="{ path: '/', query: $route.query }">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

@@ -673,7 +673,7 @@
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <a href="https://faucet.polkadot.io/paseo" target="_blank">
+                <a href="https://faucet.polkadot.io/" target="_blank">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
@@ -1365,7 +1365,7 @@
                     </div>
                     <div class="mt-5">
                       <a
-                        href="https://faucet.polkadot.io/paseo"
+                        href="https://faucet.polkadot.io/"
                         target="_blank"
                       >
                         <button

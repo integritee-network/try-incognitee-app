@@ -35,7 +35,14 @@
               frozen: {{ accountStore.getHumanFrozen }}
               <span class="text-sm font-semibold">TEER</span>
             </div>
-
+            <div>
+              current bond: {{ currentBond }}
+              <span class="text-sm font-semibold">TEER</span>
+            </div>
+            <div>
+              pending unlock: {{ pendingUnlockAmount }}
+              <span class="text-sm font-semibold">TEER</span>
+            </div>
             <div>
               accumulated TEERdays: {{ accumulatedTeerDays }}
               <span class="text-sm font-semibold">TEERdays</span>
@@ -66,6 +73,8 @@ const accountStore = useAccount();
 
 const accounts = ref([]);
 const selectedAccount = ref(null);
+const currentBond = ref(0);
+const pendingUnlockAmount = ref(0);
 const accumulatedTeerDays = ref(0);
 
 watch(selectedAccount, (newAccount) => {
@@ -115,19 +124,31 @@ watch(accountStore, async () => {
   await api.query.teerDays.teerDayBonds(
     accountStore.address,
     ({value: bond}) => {
-      console.log("TEERday bond:" + bond.value + " last updated:" + bond.lastUpdated + " accumulated tokentime:" + bond.accumulatedTokentime);
-      const now = Date.now();
-      const elapsed = now - bond.lastUpdated;
-      console.log("elapsed:" + elapsed);
-      const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10,12) / 86400 / 1000;
-      console.log("TEERdays accumulated:" + teerDays);
-      accumulatedTeerDays.value = teerDays;
+      if (bond.value) {
+        console.log("TEERday bond:" + bond.value + " last updated:" + bond.lastUpdated + " accumulated tokentime:" + bond.accumulatedTokentime);
+        const now = Date.now();
+        const elapsed = now - bond.lastUpdated;
+        console.log("elapsed:" + elapsed);
+        const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10,12) / 86400 / 1000;
+        console.log("TEERdays accumulated:" + teerDays);
+        accumulatedTeerDays.value = teerDays;
+        currentBond.value = bond.value / Math.pow(10,12);
+      } else {
+        console.log("TEERday bond not found");
+        accumulatedTeerDays.value = 0;
+        currentBond.value = 0;
+      }
     },
   );
   await api.query.teerDays.pendingUnlock(
     accountStore.address,
-    (timestamp_amount) => {
+    ({value: timestamp_amount}) => {
       console.log("TEER pending unlock:" + timestamp_amount);
+      if (timestamp_amount) {
+        pendingUnlockAmount.value = timestamp_amount[1] / Math.pow(10,12);
+      } else {
+        pendingUnlockAmount.value = 0;
+      }
     }
   );
 });
@@ -139,14 +160,25 @@ const bondAmount = () => {
   const amount = amountToBond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    api.tx.teerDays.bond(amount ).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
-      console.log(`Current status is ${result.status}`);
-      if (result.status.isInBlock) {
-        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
-      } else if (result.status.isFinalized) {
-        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
-      }
-    });
+    if (currentBond.value > 0) {
+      api.tx.teerDays.bondExtra(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
+        console.log(`Current status is ${result.status}`);
+        if (result.status.isInBlock) {
+          console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+        } else if (result.status.isFinalized) {
+          console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+        }
+      });
+    } else {
+      api.tx.teerDays.bond(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
+        console.log(`Current status is ${result.status}`);
+        if (result.status.isInBlock) {
+          console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+        } else if (result.status.isFinalized) {
+          console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+        }
+      });
+    }
   });
 };
 

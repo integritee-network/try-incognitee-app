@@ -55,6 +55,17 @@
               <button type="submit">Bond!</button>
             </form>
           </div>
+          <div class="form-container mt-8" v-if="currentBond > 0">
+            unbond TEER:
+            <form @submit.prevent="unbondAmount">
+              <input type="number" v-model="amountToUnbond" placeholder="Enter amount to unbond" required> TEER<br>
+              <button type="submit">Unbond!</button>
+            </form>
+          </div>
+          <div class="form-container mt-8" v-if="pendingUnlockAmount > 0">
+            withdraw unbonded TEER:
+            <button @click=withdrawUnbonded>Withdraw!</button>
+          </div>
         </div>
       </div>
       <!-- this is necessary to avoid the footer overlapping the text -->
@@ -69,6 +80,7 @@ import {ApiPromise, WsProvider} from "@polkadot/api";
 import {onMounted, ref, watch} from "vue";
 import {useAccount} from "@/store/teerAccount.ts";
 import BN from 'bn.js';
+
 const accountStore = useAccount();
 
 const accounts = ref([]);
@@ -129,10 +141,10 @@ watch(accountStore, async () => {
         const now = Date.now();
         const elapsed = now - bond.lastUpdated;
         console.log("elapsed:" + elapsed);
-        const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10,12) / 86400 / 1000;
+        const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10, 12) / 86400 / 1000;
         console.log("TEERdays accumulated:" + teerDays);
         accumulatedTeerDays.value = teerDays;
-        currentBond.value = bond.value / Math.pow(10,12);
+        currentBond.value = bond.value / Math.pow(10, 12);
       } else {
         console.log("TEERday bond not found");
         accumulatedTeerDays.value = 0;
@@ -145,7 +157,7 @@ watch(accountStore, async () => {
     ({value: timestamp_amount}) => {
       console.log("TEER pending unlock:" + timestamp_amount);
       if (timestamp_amount) {
-        pendingUnlockAmount.value = timestamp_amount[1] / Math.pow(10,12);
+        pendingUnlockAmount.value = timestamp_amount[1] / Math.pow(10, 12);
       } else {
         pendingUnlockAmount.value = 0;
       }
@@ -181,7 +193,37 @@ const bondAmount = () => {
     }
   });
 };
+const amountToUnbond = ref(0);
+const unbondAmount = () => {
+  // Handle the bonding process here
+  const amount = amountToBond.value * Math.pow(10, 12);
+  console.log(`Bonding ${amount}`);
+  web3FromAddress(accountStore.getAddress).then((injector) => {
+    api.tx.teerDays.unbond(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
+      console.log(`Current status is ${result.status}`);
+      if (result.status.isInBlock) {
+        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+      } else if (result.status.isFinalized) {
+        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+      }
+    });
+  });
+};
 
+const withdrawUnbonded = () => {
+  // Handle the bonding process here
+  console.log(`Withdrawing`);
+  web3FromAddress(accountStore.getAddress).then((injector) => {
+    api.tx.teerDays.withdrawUnbonded().signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
+      console.log(`Current status is ${result.status}`);
+      if (result.status.isInBlock) {
+        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+      } else if (result.status.isFinalized) {
+        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+      }
+    });
+  });
+};
 </script>
 
 <style scoped>
@@ -208,6 +250,7 @@ select {
   background-color: black;
   color: white;
 }
+
 input {
   background-color: black;
   color: white;

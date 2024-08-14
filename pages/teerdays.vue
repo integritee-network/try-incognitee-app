@@ -15,7 +15,22 @@
 </template>
 
 <script setup lang="ts">
-// Import your components and add your setup logic here
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { onMounted, ref, watch } from "vue";
+
+onMounted(() => {
+  web3Enable('Integritee Dapp')
+    .then((extensions) => {
+      console.log(extensions);
+      return web3Accounts();
+    })
+    .then((accounts) => {
+      console.log(accounts);
+    })
+    .catch((error) => {
+      console.error('Error in web3Enable or web3Accounts:', error);
+    });
+});
 </script>
 
 <style scoped>

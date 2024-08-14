@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3 text-center sm:mt-5">
     <span as="h3" class="text-base font-semibold leading-6 text-white"
-      >TEERdays
+    >TEERdays
     </span>
 
     <div class="mt-2">
@@ -9,7 +9,7 @@
         blabla
       </p>
       <div class="mt-2">
-         <button @click="connect">Connect!</button>
+        <button @click="connect">Connect!</button>
       </div>
       <div v-if="accounts.length" class="mt-2">
         <select v-model="selectedAccount">
@@ -18,9 +18,9 @@
           </option>
         </select>
         <div>
-          <p>Selected account: {{accountStore.getAddress}}</p>
+          <p>Selected account: {{ accountStore.getAddress }}</p>
         </div>
-        <div>
+        <div v-if="selectedAccount">
           <div v-if="isFetchingTeerBalance" class="spinner"></div>
           <div class="text-4xl font-semibold" v-else>
             <div>
@@ -35,24 +35,38 @@
               frozen: {{ accountStore.getHumanFrozen }}
               <span class="text-sm font-semibold">TEER</span>
             </div>
+
+            <div>
+              accumulated TEERdays: {{ accumulatedTeerDays }}
+              <span class="text-sm font-semibold">TEERdays</span>
+            </div>
+          </div>
+          <div class="form-container mt-8">
+            bond TEER to accumulate TEERdays:
+            <form @submit.prevent="bondAmount">
+              <input type="number" v-model="amountToBond" placeholder="Enter amount to bond" required> TEER<br>
+              <button type="submit">Bond!</button>
+            </form>
           </div>
         </div>
       </div>
       <!-- this is necessary to avoid the footer overlapping the text -->
-      <br /><br /><br /><br /><br /><br /><br />
+      <br/><br/><br/><br/><br/><br/><br/>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { onMounted, ref, watch } from "vue";
-import { useAccount } from "@/store/teerAccount.ts";
+import {web3Accounts, web3Enable, web3FromAddress} from '@polkadot/extension-dapp';
+import {ApiPromise, WsProvider} from "@polkadot/api";
+import {onMounted, ref, watch} from "vue";
+import {useAccount} from "@/store/teerAccount.ts";
+import BN from 'bn.js';
 const accountStore = useAccount();
 
 const accounts = ref([]);
 const selectedAccount = ref(null);
+const accumulatedTeerDays = ref(0);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
@@ -87,18 +101,55 @@ watch(accountStore, async () => {
   }
   console.log("trying to init api");
   const wsProvider = new WsProvider("wss://paseo.api.integritee.network");
-  api = await ApiPromise.create({ provider: wsProvider });
-  api.query.system.account(
+  api = await ApiPromise.create({provider: wsProvider});
+  await api.query.system.account(
     accountStore.address,
-    ({ data: { free: currentFree, reserved: currentReserved, frozen: currentFrozen } }) => {
-      console.log("paseo balance:" + currentFree);
+    ({data: {free: currentFree, reserved: currentReserved, frozen: currentFrozen}}) => {
+      console.log("TEER balance:" + currentFree);
       accountStore.free = Number(currentFree);
       accountStore.reserved = Number(currentReserved);
       accountStore.frozen = Number(currentFrozen);
       isFetchingTeerBalance.value = false;
     },
   );
+  await api.query.teerDays.teerDayBonds(
+    accountStore.address,
+    ({value: bond}) => {
+      console.log("TEERday bond:" + bond.value + " last updated:" + bond.lastUpdated + " accumulated tokentime:" + bond.accumulatedTokentime);
+      const now = Date.now();
+      const elapsed = now - bond.lastUpdated;
+      console.log("elapsed:" + elapsed);
+      const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10,12) / 86400 / 1000;
+      console.log("TEERdays accumulated:" + teerDays);
+      accumulatedTeerDays.value = teerDays;
+    },
+  );
+  await api.query.teerDays.pendingUnlock(
+    accountStore.address,
+    (timestamp_amount) => {
+      console.log("TEER pending unlock:" + timestamp_amount);
+    }
+  );
 });
+
+
+const amountToBond = ref(0);
+const bondAmount = () => {
+  // Handle the bonding process here
+  const amount = amountToBond.value * Math.pow(10, 12);
+  console.log(`Bonding ${amount}`);
+  web3FromAddress(accountStore.getAddress).then((injector) => {
+    api.tx.teerDays.bond(amount ).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
+      console.log(`Current status is ${result.status}`);
+      if (result.status.isInBlock) {
+        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+      } else if (result.status.isFinalized) {
+        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+      }
+    });
+  });
+};
+
 </script>
 
 <style scoped>
@@ -116,10 +167,16 @@ p {
   color: #fff; /* Change color as needed */
   text-align: justify;
 }
+
 a {
   color: #99f; /* Change color as needed */
 }
+
 select {
+  background-color: black;
+  color: white;
+}
+input {
   background-color: black;
   color: white;
 }

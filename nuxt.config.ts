@@ -59,6 +59,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/": { ssr: false },
+    "/teerdays": { ssr: false },
   },
   imports: {
     autoImport: false,

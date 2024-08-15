@@ -13,16 +13,16 @@ export const useAccount = defineStore("teerAccount", {
       return address ? address.slice(0, 8) + "..." : "none";
     },
     getAddress({ address }): string {
-      return address ? address : "none"
+      return address ? address : "none";
     },
     getHumanFree({ free }): number {
-      return formatBalance(free, { decimals: 12, withUnit: ''}, 12);
+      return formatBalance(free, { decimals: 12, withUnit: "" }, 12);
     },
     getHumanReserved({ reserved }): number {
-      return formatBalance(reserved,{ decimals: 12, withUnit: ''}, 12);
+      return formatBalance(reserved, { decimals: 12, withUnit: "" }, 12);
     },
     getHumanFrozen({ frozen }): number {
-      return formatBalance(frozen, { decimals: 12, withUnit: ''}, 12);
+      return formatBalance(frozen, { decimals: 12, withUnit: "" }, 12);
     },
   },
   actions: {

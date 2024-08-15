@@ -1,19 +1,21 @@
 <template>
   <div class="mt-3 text-center sm:mt-5">
     <span as="h3" class="text-base font-semibold leading-6 text-white"
-    >TEERdays
+      >TEERdays
     </span>
 
     <div class="mt-2">
-      <p class="text-sm text-gray-400 text-justify">
-        blabla
-      </p>
+      <p class="text-sm text-gray-400 text-justify">blabla</p>
       <div class="mt-2">
         <button @click="connect">Connect!</button>
       </div>
       <div v-if="accounts.length" class="mt-2">
         <select v-model="selectedAccount">
-          <option v-for="account in accounts" :key="account.address" :value="account.address">
+          <option
+            v-for="account in accounts"
+            :key="account.address"
+            :value="account.address"
+          >
             {{ account.meta.name }}
           </option>
         </select>
@@ -43,8 +45,11 @@
               pending unlock: {{ pendingUnlock?.getTeerToUnlock() }}
               <span class="text-sm font-semibold">TEER</span>
               unlocked on {{ pendingUnlock?.getDueDateStr() }}
-              <div class="form-container mt-2" v-if="pendingUnlock?.canWithdraw()">
-                <button @click=withdrawUnbonded>Withdraw!</button>
+              <div
+                class="form-container mt-2"
+                v-if="pendingUnlock?.canWithdraw()"
+              >
+                <button @click="withdrawUnbonded">Withdraw!</button>
               </div>
             </div>
             <div>
@@ -55,7 +60,13 @@
           <div class="form-container mt-8">
             bond TEER to accumulate TEERdays:
             <form @submit.prevent="bondAmount">
-              <input type="number" v-model="amountToBond" placeholder="Enter amount to bond" required> TEER<br>
+              <input
+                type="number"
+                v-model="amountToBond"
+                placeholder="Enter amount to bond"
+                required
+              />
+              TEER<br />
               <button type="submit">Bond!</button>
             </form>
           </div>
@@ -67,27 +78,36 @@
             <div v-else>
               <p>unbonded TEER will be locked for 7 days</p>
               <form @submit.prevent="unbondAmount">
-                <input type="number" v-model="amountToUnbond" placeholder="Enter amount to unbond" required> TEER<br>
+                <input
+                  type="number"
+                  v-model="amountToUnbond"
+                  placeholder="Enter amount to unbond"
+                  required
+                />
+                TEER<br />
                 <button type="submit">Unbond!</button>
               </form>
             </div>
           </div>
-
         </div>
       </div>
       <!-- this is necessary to avoid the footer overlapping the text -->
-      <br/><br/><br/><br/><br/><br/><br/>
+      <br /><br /><br /><br /><br /><br /><br />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {web3Accounts, web3Enable, web3FromAddress} from '@polkadot/extension-dapp';
-import {ApiPromise, WsProvider} from "@polkadot/api";
-import {onMounted, ref, watch} from "vue";
-import {useAccount} from "@/store/teerAccount.ts";
-import BN from 'bn.js';
-import {useInterval} from "@vueuse/core";
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+} from "@polkadot/extension-dapp";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { onMounted, ref, watch } from "vue";
+import { useAccount } from "@/store/teerAccount.ts";
+import BN from "bn.js";
+import { useInterval } from "@vueuse/core";
 
 const accountStore = useAccount();
 
@@ -98,12 +118,12 @@ const pendingUnlock = ref(null);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
-    console.log('user selected account:', newAccount);
+    console.log("user selected account:", newAccount);
     accountStore.setAddress(newAccount);
   }
 });
 const connect = () => {
-  web3Enable('Integritee Dapp')
+  web3Enable("Integritee Dapp")
     .then((extensions) => {
       console.log(extensions);
       return web3Accounts();
@@ -113,7 +133,7 @@ const connect = () => {
       console.log(accounts);
     })
     .catch((error) => {
-      console.error('Error in web3Enable or web3Accounts:', error);
+      console.error("Error in web3Enable or web3Accounts:", error);
     });
 };
 
@@ -129,10 +149,16 @@ watch(accountStore, async () => {
   }
   console.log("trying to init api");
   const wsProvider = new WsProvider("wss://paseo.api.integritee.network");
-  api = await ApiPromise.create({provider: wsProvider});
+  api = await ApiPromise.create({ provider: wsProvider });
   await api.query.system.account(
     accountStore.address,
-    ({data: {free: currentFree, reserved: currentReserved, frozen: currentFrozen}}) => {
+    ({
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
       console.log("TEER balance:" + currentFree);
       accountStore.free = Number(currentFree);
       accountStore.reserved = Number(currentReserved);
@@ -142,12 +168,23 @@ watch(accountStore, async () => {
   );
   await api.query.teerDays.teerDayBonds(
     accountStore.address,
-    ({value: bond}) => {
+    ({ value: bond }) => {
       if (bond.value) {
-        console.log("TEERday bond:" + bond.value + " last updated:" + bond.lastUpdated + " accumulated tokentime:" + bond.accumulatedTokentime);
+        console.log(
+          "TEERday bond:" +
+            bond.value +
+            " last updated:" +
+            bond.lastUpdated +
+            " accumulated tokentime:" +
+            bond.accumulatedTokentime,
+        );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
-        currentBond.value = new Bond(bond.value / Math.pow(10, 12), lastUpdated, bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000);
+        currentBond.value = new Bond(
+          bond.value / Math.pow(10, 12),
+          lastUpdated,
+          bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
+        );
         currentBond.value.updateTeerDays();
       } else {
         console.log("TEERday bond not found");
@@ -157,21 +194,23 @@ watch(accountStore, async () => {
   );
   await api.query.teerDays.pendingUnlock(
     accountStore.address,
-    ({value: timestamp_amount}) => {
+    ({ value: timestamp_amount }) => {
       console.log("TEER pending unlock:" + timestamp_amount);
       if (timestamp_amount) {
         let unlockDate = new Date(0);
         const unlockEpoch = timestamp_amount[0].toNumber();
-        unlockDate.setUTCMilliseconds(unlockEpoch)
+        unlockDate.setUTCMilliseconds(unlockEpoch);
         console.log("unlock date:" + unlockDate + "epoch:" + unlockEpoch);
-        pendingUnlock.value = new PendingUnlock(timestamp_amount[1] / Math.pow(10, 12), unlockDate);
+        pendingUnlock.value = new PendingUnlock(
+          timestamp_amount[1] / Math.pow(10, 12),
+          unlockDate,
+        );
       } else {
         pendingUnlock.value = null;
       }
-    }
+    },
   );
 });
-
 
 const amountToBond = ref(0);
 const bondAmount = () => {
@@ -180,23 +219,43 @@ const bondAmount = () => {
   console.log(`Bonding ${amount}`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
     if (currentBond.value > 0) {
-      api.tx.teerDays.bondExtra(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
-        console.log(`Current status is ${result.status}`);
-        if (result.status.isInBlock) {
-          console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
-        } else if (result.status.isFinalized) {
-          console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
-        }
-      });
+      api.tx.teerDays
+        .bondExtra(amount)
+        .signAndSend(
+          accountStore.getAddress,
+          { signer: injector.signer },
+          (result) => {
+            console.log(`Current status is ${result.status}`);
+            if (result.status.isInBlock) {
+              console.log(
+                `Transaction included at blockHash ${result.status.asInBlock}`,
+              );
+            } else if (result.status.isFinalized) {
+              console.log(
+                `Transaction finalized at blockHash ${result.status.asFinalized}`,
+              );
+            }
+          },
+        );
     } else {
-      api.tx.teerDays.bond(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
-        console.log(`Current status is ${result.status}`);
-        if (result.status.isInBlock) {
-          console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
-        } else if (result.status.isFinalized) {
-          console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
-        }
-      });
+      api.tx.teerDays
+        .bond(amount)
+        .signAndSend(
+          accountStore.getAddress,
+          { signer: injector.signer },
+          (result) => {
+            console.log(`Current status is ${result.status}`);
+            if (result.status.isInBlock) {
+              console.log(
+                `Transaction included at blockHash ${result.status.asInBlock}`,
+              );
+            } else if (result.status.isFinalized) {
+              console.log(
+                `Transaction finalized at blockHash ${result.status.asFinalized}`,
+              );
+            }
+          },
+        );
     }
   });
 };
@@ -206,14 +265,24 @@ const unbondAmount = () => {
   const amount = amountToBond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    api.tx.teerDays.unbond(amount).signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
-      console.log(`Current status is ${result.status}`);
-      if (result.status.isInBlock) {
-        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
-      } else if (result.status.isFinalized) {
-        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
-      }
-    });
+    api.tx.teerDays
+      .unbond(amount)
+      .signAndSend(
+        accountStore.getAddress,
+        { signer: injector.signer },
+        (result) => {
+          console.log(`Current status is ${result.status}`);
+          if (result.status.isInBlock) {
+            console.log(
+              `Transaction included at blockHash ${result.status.asInBlock}`,
+            );
+          } else if (result.status.isFinalized) {
+            console.log(
+              `Transaction finalized at blockHash ${result.status.asFinalized}`,
+            );
+          }
+        },
+      );
   });
 };
 
@@ -221,14 +290,24 @@ const withdrawUnbonded = () => {
   // Handle the bonding process here
   console.log(`Withdrawing`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    api.tx.teerDays.withdrawUnbonded().signAndSend(accountStore.getAddress, {signer: injector.signer}, (result) => {
-      console.log(`Current status is ${result.status}`);
-      if (result.status.isInBlock) {
-        console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
-      } else if (result.status.isFinalized) {
-        console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
-      }
-    });
+    api.tx.teerDays
+      .withdrawUnbonded()
+      .signAndSend(
+        accountStore.getAddress,
+        { signer: injector.signer },
+        (result) => {
+          console.log(`Current status is ${result.status}`);
+          if (result.status.isInBlock) {
+            console.log(
+              `Transaction included at blockHash ${result.status.asInBlock}`,
+            );
+          } else if (result.status.isFinalized) {
+            console.log(
+              `Transaction finalized at blockHash ${result.status.asFinalized}`,
+            );
+          }
+        },
+      );
   });
 };
 
@@ -244,7 +323,11 @@ class Bond {
   lastUpdated: Date;
   accumulatedTeerDays: number;
 
-  constructor(teerBonded: number = 0, lastUpdated: Date = new Date(), accumulatedTeerDays: number = 0) {
+  constructor(
+    teerBonded: number = 0,
+    lastUpdated: Date = new Date(),
+    accumulatedTeerDays: number = 0,
+  ) {
     this.teerBonded = teerBonded;
     this.lastUpdated = lastUpdated;
     this.accumulatedTeerDays = accumulatedTeerDays;
@@ -253,7 +336,7 @@ class Bond {
   updateTeerDays() {
     const now = new Date();
     const elapsed = now.getTime() - this.lastUpdated.getTime(); //milliseconds
-    this.accumulatedTeerDays += this.teerBonded * elapsed / 86400 / 1000;
+    this.accumulatedTeerDays += (this.teerBonded * elapsed) / 86400 / 1000;
     this.lastUpdated = now;
   }
 
@@ -262,7 +345,7 @@ class Bond {
   }
 
   getTeerBonded() {
-    return this.teerBonded.toFixed(4)
+    return this.teerBonded.toFixed(4);
   }
 }
 
@@ -287,7 +370,6 @@ class PendingUnlock {
     return this.due < new Date();
   }
 }
-
 </script>
 
 <style scoped>

@@ -1364,10 +1364,7 @@
                       </div>
                     </div>
                     <div class="mt-5">
-                      <a
-                        href="https://faucet.polkadot.io/"
-                        target="_blank"
-                      >
+                      <a href="https://faucet.polkadot.io/" target="_blank">
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"

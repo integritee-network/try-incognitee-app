@@ -22,7 +22,7 @@
         </div>
         <div v-if="selectedAccount">
           <div v-if="isFetchingTeerBalance" class="spinner"></div>
-          <div class="text-4xl font-semibold" v-else>
+          <div class="text-2xl font-semibold" v-else>
             <div>
               free: {{ accountStore.getHumanFree }}
               <span class="text-sm font-semibold">TEER</span>
@@ -36,15 +36,19 @@
               <span class="text-sm font-semibold">TEER</span>
             </div>
             <div>
-              current bond: {{ currentBond }}
+              current bond: {{ currentBond?.getTeerBonded() }}
               <span class="text-sm font-semibold">TEER</span>
             </div>
-            <div>
-              pending unlock: {{ pendingUnlockAmount }}
+            <div v-if="pendingUnlock">
+              pending unlock: {{ pendingUnlock?.getTeerToUnlock() }}
               <span class="text-sm font-semibold">TEER</span>
+              unlocked on {{ pendingUnlock?.getDueDateStr() }}
+              <div class="form-container mt-2" v-if="pendingUnlock?.canWithdraw()">
+                <button @click=withdrawUnbonded>Withdraw!</button>
+              </div>
             </div>
             <div>
-              accumulated TEERdays: {{ accumulatedTeerDays }}
+              accumulated TEERdays: {{ currentBond?.getTeerDays() }}
               <span class="text-sm font-semibold">TEERdays</span>
             </div>
           </div>
@@ -55,17 +59,20 @@
               <button type="submit">Bond!</button>
             </form>
           </div>
-          <div class="form-container mt-8" v-if="currentBond > 0">
+          <div class="form-container mt-8" v-if="currentBond">
             unbond TEER:
-            <form @submit.prevent="unbondAmount">
-              <input type="number" v-model="amountToUnbond" placeholder="Enter amount to unbond" required> TEER<br>
-              <button type="submit">Unbond!</button>
-            </form>
+            <div v-if="pendingUnlock">
+              not possible until pending unlock expired and withdrawn
+            </div>
+            <div v-else>
+              <p>unbonded TEER will be locked for 7 days</p>
+              <form @submit.prevent="unbondAmount">
+                <input type="number" v-model="amountToUnbond" placeholder="Enter amount to unbond" required> TEER<br>
+                <button type="submit">Unbond!</button>
+              </form>
+            </div>
           </div>
-          <div class="form-container mt-8" v-if="pendingUnlockAmount > 0">
-            withdraw unbonded TEER:
-            <button @click=withdrawUnbonded>Withdraw!</button>
-          </div>
+
         </div>
       </div>
       <!-- this is necessary to avoid the footer overlapping the text -->
@@ -80,14 +87,14 @@ import {ApiPromise, WsProvider} from "@polkadot/api";
 import {onMounted, ref, watch} from "vue";
 import {useAccount} from "@/store/teerAccount.ts";
 import BN from 'bn.js';
+import {useInterval} from "@vueuse/core";
 
 const accountStore = useAccount();
 
 const accounts = ref([]);
 const selectedAccount = ref(null);
-const currentBond = ref(0);
-const pendingUnlockAmount = ref(0);
-const accumulatedTeerDays = ref(0);
+const currentBond = ref(null);
+const pendingUnlock = ref(null);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
@@ -138,17 +145,13 @@ watch(accountStore, async () => {
     ({value: bond}) => {
       if (bond.value) {
         console.log("TEERday bond:" + bond.value + " last updated:" + bond.lastUpdated + " accumulated tokentime:" + bond.accumulatedTokentime);
-        const now = Date.now();
-        const elapsed = now - bond.lastUpdated;
-        console.log("elapsed:" + elapsed);
-        const teerDays = bond.accumulatedTokentime.add(bond.value.mul(new BN(elapsed))) / Math.pow(10, 12) / 86400 / 1000;
-        console.log("TEERdays accumulated:" + teerDays);
-        accumulatedTeerDays.value = teerDays;
-        currentBond.value = bond.value / Math.pow(10, 12);
+        let lastUpdated = new Date(0);
+        lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
+        currentBond.value = new Bond(bond.value / Math.pow(10, 12), lastUpdated, bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000);
+        currentBond.value.updateTeerDays();
       } else {
         console.log("TEERday bond not found");
-        accumulatedTeerDays.value = 0;
-        currentBond.value = 0;
+        currentBond.value = null;
       }
     },
   );
@@ -157,9 +160,13 @@ watch(accountStore, async () => {
     ({value: timestamp_amount}) => {
       console.log("TEER pending unlock:" + timestamp_amount);
       if (timestamp_amount) {
-        pendingUnlockAmount.value = timestamp_amount[1] / Math.pow(10, 12);
+        let unlockDate = new Date(0);
+        const unlockEpoch = timestamp_amount[0].toNumber();
+        unlockDate.setUTCMilliseconds(unlockEpoch)
+        console.log("unlock date:" + unlockDate + "epoch:" + unlockEpoch);
+        pendingUnlock.value = new PendingUnlock(timestamp_amount[1] / Math.pow(10, 12), unlockDate);
       } else {
-        pendingUnlockAmount.value = 0;
+        pendingUnlock.value = null;
       }
     }
   );
@@ -224,6 +231,63 @@ const withdrawUnbonded = () => {
     });
   });
 };
+
+const refreshCounter = useInterval(1000);
+
+watch(refreshCounter, async () => {
+  //console.log("ping: " + refreshCounter.value);
+  currentBond.value?.updateTeerDays();
+});
+
+class Bond {
+  teerBonded: number;
+  lastUpdated: Date;
+  accumulatedTeerDays: number;
+
+  constructor(teerBonded: number = 0, lastUpdated: Date = new Date(), accumulatedTeerDays: number = 0) {
+    this.teerBonded = teerBonded;
+    this.lastUpdated = lastUpdated;
+    this.accumulatedTeerDays = accumulatedTeerDays;
+  }
+
+  updateTeerDays() {
+    const now = new Date();
+    const elapsed = now.getTime() - this.lastUpdated.getTime(); //milliseconds
+    this.accumulatedTeerDays += this.teerBonded * elapsed / 86400 / 1000;
+    this.lastUpdated = now;
+  }
+
+  getTeerDays() {
+    return this.accumulatedTeerDays.toFixed(4);
+  }
+
+  getTeerBonded() {
+    return this.teerBonded.toFixed(4)
+  }
+}
+
+class PendingUnlock {
+  teerToUnlock: number;
+  due: Date;
+
+  constructor(teerToUnlock: number = 0, due: Date = new Date()) {
+    this.teerToUnlock = teerToUnlock;
+    this.due = due;
+  }
+
+  getDueDateStr() {
+    return this.due.toISOString();
+  }
+
+  getTeerToUnlock() {
+    return this.teerToUnlock > 0 ? this.teerToUnlock.toFixed(4) : null;
+  }
+
+  canWithdraw() {
+    return this.due < new Date();
+  }
+}
+
 </script>
 
 <style scoped>

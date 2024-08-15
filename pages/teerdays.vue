@@ -6,8 +6,28 @@
 
     <div class="mt-2">
       <p class="text-sm text-gray-400 text-justify">blabla</p>
-      <div class="mt-2">
-        <button @click="connect">Connect!</button>
+      <div class="mt-2" v-if="accounts.length < 1">
+        <button @click="connect">Connect!</button><br />
+
+        You need some signer extension to use this page. Please make sure to
+        enable your extension and reload the page in case the connect button
+        doesn't work.
+
+        <br />
+        These are some options:
+        <li>
+          <a href="https://polkadot.js.org/extension/">polkadot.js extension</a>
+        </li>
+        <li>
+          <a href="https://talisman.xyz/download">talisman</a>
+        </li>
+        <li>
+          <a href="https://novawallet.io/">nova wallet</a>
+        </li>
+        <li>
+          <a href="https://www.subwallet.app/">subwallet</a>
+        </li>
+        others may work too.
       </div>
       <div v-if="accounts.length" class="mt-2">
         <select v-model="selectedAccount">
@@ -38,11 +58,12 @@
               <span class="text-sm font-semibold">TEER</span>
             </div>
             <div>
-              current bond: {{ currentBond?.getTeerBonded() }}
+              current bond: {{ currentBond ? currentBond.getTeerBonded() : 0 }}
               <span class="text-sm font-semibold">TEER</span>
             </div>
             <div v-if="pendingUnlock">
-              pending unlock: {{ pendingUnlock?.getTeerToUnlock() }}
+              pending unlock:
+              {{ pendingUnlock ? pendingUnlock.getTeerToUnlock() : 0 }}
               <span class="text-sm font-semibold">TEER</span>
               unlocked on {{ pendingUnlock?.getDueDateStr() }}
               <div
@@ -53,12 +74,19 @@
               </div>
             </div>
             <div>
-              accumulated TEERdays: {{ currentBond?.getTeerDays() }}
+              accumulated TEERdays:
+              {{ currentBond ? currentBond.getTeerDays() : 0 }}
               <span class="text-sm font-semibold">TEERdays</span>
             </div>
           </div>
           <div class="form-container mt-8">
             bond TEER to accumulate TEERdays:
+            <div v-if="accountStore.getTransferrable < Math.pow(10, 9)">
+              not enough transferrable TEER. Please get free test TEER at our
+              <a href="https://substratefaucet.xyz/integritee" target="_blank"
+                >testnet faucet</a
+              >
+            </div>
             <form @submit.prevent="bondAmount">
               <input
                 type="number"
@@ -196,7 +224,7 @@ watch(accountStore, async () => {
     accountStore.address,
     ({ value: timestamp_amount }) => {
       console.log("TEER pending unlock:" + timestamp_amount);
-      if (timestamp_amount) {
+      if (timestamp_amount[1]) {
         let unlockDate = new Date(0);
         const unlockEpoch = timestamp_amount[0].toNumber();
         unlockDate.setUTCMilliseconds(unlockEpoch);

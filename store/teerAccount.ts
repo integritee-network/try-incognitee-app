@@ -15,14 +15,17 @@ export const useAccount = defineStore("teerAccount", {
     getAddress({ address }): string {
       return address ? address : "none";
     },
-    getHumanFree({ free }): number {
+    getHumanFree({ free }): string {
       return formatBalance(free, { decimals: 12, withUnit: "" }, 12);
     },
-    getHumanReserved({ reserved }): number {
+    getHumanReserved({ reserved }): string {
       return formatBalance(reserved, { decimals: 12, withUnit: "" }, 12);
     },
-    getHumanFrozen({ frozen }): number {
+    getHumanFrozen({ frozen }): string {
       return formatBalance(frozen, { decimals: 12, withUnit: "" }, 12);
+    },
+    getTransferrable({ free, frozen }): number {
+      return free - frozen;
     },
   },
   actions: {

@@ -83,7 +83,12 @@
             bond TEER to accumulate TEERdays:
             <div v-if="accountStore.getTransferrable < Math.pow(10, 9)">
               not enough transferrable TEER. Please get free test TEER at our
-              <a href="https://substratefaucet.xyz/integritee" target="_blank"
+              <a
+                :href="
+                  'https://substratefaucet.xyz/integritee/' +
+                  accountStore.getAddress
+                "
+                target="_blank"
                 >testnet faucet</a
               >
             </div>

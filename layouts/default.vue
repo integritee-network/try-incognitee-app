@@ -3,15 +3,15 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-        <p class="address">{{ accountStore.getShortAddress }}</p>
+     <p class="address">{{ accountStore.getShortAddress }}</p>
       </div>
     </header>
-    <footer class="footer">
+ <!--
+   <footer class="footer">
       <nav class="footer-content">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around"
-          >
+            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around">
             <div class="custom-border-gradient">
               <div class="inner-box">
                 <div class="flex justify-around text-white">
@@ -73,14 +73,43 @@
                       </svg>
                       <p class="text-xs cursor-pointer">Gov</p>
                     </nuxt-link>
+
+                    
                   </div>
+                  <div class="flex flex-col items-center text-center">
+  <nuxt-link :to="{ path: '/gov', query: $route.query }">
+    <!-- Dein benutzerdefiniertes SVG-Icon -->
+   <!--  <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 330 270"
+      fill="currentColor"
+      class="w-6 h-6 mx-auto mb-2"
+    >
+      <path
+        fill="white"
+        d="M329.15,132.01c-24.44-42.79-48.76-85.64-73.02-128.53-1.41-2.5-3.01-3.39-5.87-3.39C176.74.14,103.23.11,29.73,0c-2.73,0-4.16.85-5.4,3.2-3.54,6.73-7.34,13.33-11.01,19.99-4.36,7.91-8.69,15.83-13.32,24.26,1.62.09,2.4.18,3.18.17,24.28-.08,48.56-.2,72.84-.25,47.56-.1,95.13-.1,142.69-.33,5.04-.02,8.03,1.32,10.6,5.98,14.38,26.05,29.14,51.88,43.86,77.74,1.56,2.74,1.63,4.93.07,7.77-14.69,26.8-29.29,53.65-43.72,80.59-1.66,3.1-3.47,4.16-6.9,4.13-20.29-.14-40.58,0-60.87-.15-3.26-.03-5.08.96-6.65,3.81-7.4,13.47-15.03,26.82-22.55,40.24-.41.74-.48,1.67-.68,2.4,3.15,0,5.97,0,8.78,0,32.93.05,65.87-.4,98.78.43,10.66.27,16.24-2.74,21.48-12.26,21.89-39.82,44.87-79.05,67.47-118.49,1.34-2.34,2.44-4.28.76-7.23Z"
+      />
+      <path
+        fill="white"
+        d="M220.74,79.77c-.68-1.27-3.19-2.25-4.85-2.25-48.22-.12-96.44-.13-144.66.04-1.82,0-4.35,1.51-5.33,3.07-3.77,6.02-7.05,12.33-10.48,18.56-4.12,7.47-8.21,14.96-12.51,22.78h199.73c-7.43-14.43-14.53-28.38-21.9-42.19Z"
+      />
+      <path
+        fill="white"
+        d="M169.28,144.12c-1.33-.16-1.94-.29-2.55-.29-15.96.03-31.93.25-47.89,0-4.23-.06-6.43,1.2-8.4,4.94-20.66,39.17-41.52,78.23-62.3,117.34-.57,1.07-.9,2.27-1.45,3.67,16.36,0,32.16-.2,47.94.12,5.06.1,7.65-1.73,9.96-6.07,19.22-35.98,38.68-71.84,58.08-107.74,2.09-3.87,4.25-7.72,6.6-11.98Z"
+      />
+    </svg>
+    <p class="text-xs cursor-pointer">TEERdays</p>
+  </nuxt-link>
+</div>
+
                 </div>
               </div>
             </div>
           </div>
         </div>
       </nav>
-    </footer>
+    </footer> -->
+    
     <main class="main">
       <NuxtPage />
     </main>

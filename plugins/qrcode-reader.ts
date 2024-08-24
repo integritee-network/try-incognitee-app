@@ -1,9 +1,6 @@
-import Vue from "vue";
-import { QrcodeStream } from "vue-qrcode-reader";
+import { defineNuxtPlugin } from '#app'
+import { QrcodeStream } from 'vue-qrcode-reader'
 
-Vue.component("qrcode-stream", QrcodeStream);
-
-export default defineNuxtPlugin(() => {
-  
-  })
-  
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.component('qrcode-stream', QrcodeStream)
+})

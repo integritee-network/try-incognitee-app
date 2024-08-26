@@ -620,26 +620,26 @@
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-800">
-                  <tr v-for="leaderboard in leaderboard">
+                  <tr v-for="(entry, index) in allBonds">
                     <td
                       class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-white sm:pl-0"
                     >
-                      {{ leaderboard.rank }}
+                      {{ index + 1 }}
                     </td>
                     <td
                       class="whitespace-nowrap px-3 py-4 text-sm text-gray-300"
                     >
-                      {{ leaderboard.teerdays }}
+                      {{ entry[2].toFixed(2) }}
                     </td>
                     <td
                       class="whitespace-nowrap px-3 py-4 text-sm text-gray-300"
                     >
-                      {{ leaderboard.wallet }}
+                      {{ entry[0] }}
                     </td>
                     <td
                       class="whitespace-nowrap px-3 py-4 text-sm text-gray-300"
                     >
-                      {{ leaderboard.teerbonded }}
+                      {{ entry[1].toFixed(2) }}
                     </td>
                   </tr>
                 </tbody>
@@ -708,6 +708,7 @@ import {
   web3FromAddress,
 } from "@polkadot/extension-dapp";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, ref, watch } from "vue";
 import { useAccount } from "@/store/teerAccount.ts";
 import { useInterval } from "@vueuse/core";
@@ -718,6 +719,7 @@ const accounts = ref([]);
 const selectedAccount = ref(null);
 const currentBond = ref(null);
 const pendingUnlock = ref(null);
+const allBonds = ref([]);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
@@ -742,6 +744,37 @@ const connect = () => {
 
 let api: ApiPromise | null = null;
 
+onMounted(async () => {
+  console.log("trying to init api");
+  const wsProvider = new WsProvider("wss://paseo.api.integritee.network");
+  api = await ApiPromise.create({ provider: wsProvider });
+  console.log("api initialized");
+  allBonds.value = [];
+  cryptoWaitReady().then(() => {
+    api.query.teerDays.teerDayBonds.entries().then(
+      (entries) => {
+        entries.forEach(([key, maybeBond]) => {
+          console.log(key.args + " " + maybeBond);
+          let account = key.args[0];
+          let lastUpdated = new Date(0);
+          let bond = maybeBond.unwrap()
+          lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
+          let mybond = new Bond(
+            bond.value / Math.pow(10, 12),
+            lastUpdated,
+            bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
+          );
+          mybond.updateTeerDays();
+          console.log(mybond);
+          allBonds.value.push([account, mybond.teerBonded, mybond.accumulatedTeerDays, 42]);
+        });
+        // sort descending by value
+        allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
+        console.log(allBonds.value);
+    });
+  });
+});
+
 const isFetchingTeerBalance = ref(true);
 
 watch(accountStore, async () => {
@@ -750,9 +783,6 @@ watch(accountStore, async () => {
     console.log("skipping api init. no address");
     return;
   }
-  console.log("trying to init api");
-  const wsProvider = new WsProvider("wss://paseo.api.integritee.network");
-  api = await ApiPromise.create({ provider: wsProvider });
   await api.query.system.account(
     accountStore.address,
     ({

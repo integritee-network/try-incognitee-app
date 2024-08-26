@@ -5172,6 +5172,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"clsx@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "clsx@npm:2.1.1"
+  checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
+  languageName: node
+  linkType: hard
+
 "cluster-key-slot@npm:^1.1.0":
   version: 1.1.2
   resolution: "cluster-key-slot@npm:1.1.2"
@@ -7057,6 +7064,26 @@ __metadata:
   version: 4.3.7
   resolution: "fraction.js@npm:4.3.7"
   checksum: 10c0/df291391beea9ab4c263487ffd9d17fed162dbb736982dee1379b2a8cc94e4e24e46ed508c6d278aded9080ba51872f1bc5f3a5fd8d7c74e5f105b508ac28711
+  languageName: node
+  linkType: hard
+
+"framer-motion@npm:^11.3.30":
+  version: 11.3.30
+  resolution: "framer-motion@npm:11.3.30"
+  dependencies:
+    tslib: "npm:^2.4.0"
+  peerDependencies:
+    "@emotion/is-prop-valid": "*"
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  peerDependenciesMeta:
+    "@emotion/is-prop-valid":
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 10c0/58355809d13f65bbd7a903de755cf1b78d9d3d5039de9b2ae0e25a6ab77748e3429c93e8056ad6fab378e4d0f1cf256133c11cd51f07b9b4d64550feea675b54
   languageName: node
   linkType: hard
 
@@ -10367,11 +10394,13 @@ __metadata:
     "@vuelidate/validators": "npm:^2.0.4"
     "@vueuse/core": "npm:^10.9.0"
     autoprefixer: "npm:^10.4.17"
+    clsx: "npm:^2.1.1"
     date-fns: "npm:^3.6.0"
     esbuild: "npm:^0.20.2"
     eslint: "npm:^9.2.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-prettier: "npm:^5.1.3"
+    framer-motion: "npm:^11.3.30"
     install: "npm:^0.13.0"
     joi: "npm:^17.9.2"
     lodash: "npm:^4.17.21"
@@ -10383,6 +10412,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     qrcode: "npm:^1.5.3"
     sass: "npm:^1.75.0"
+    tailwind-merge: "npm:^2.5.2"
     tailwindcss: "npm:^3.4.3"
     typescript: "npm:^5.4.5"
     vite: "npm:^5.2.10"
@@ -10392,6 +10422,7 @@ __metadata:
     vue-qrcode-reader: "npm:^5.5.4"
     vue-router: "npm:^4.3.2"
     vue3-form-wizard: "npm:^0.2.3"
+    vuetify: "npm:^3.7.0"
   languageName: unknown
   linkType: soft
 
@@ -13094,6 +13125,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwind-merge@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "tailwind-merge@npm:2.5.2"
+  checksum: 10c0/e43a9a468f7ba4ed5b4a399558d96d6270a3d8131dca111cccc803e71cc23885060d18d721f312a24fff0a75c567dbb30b2a87c18aba25eb4255df197d8170ab
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:^3.4.3, tailwindcss@npm:~3.4.3":
   version: 3.4.3
   resolution: "tailwindcss@npm:3.4.3"
@@ -14306,6 +14344,28 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/73349e05cf554891d5e0076be10083150c92831c1cffdeee1e25c2222a8a4d8291630825a897049add753c4925e1c916c3614fe8d9c0392d9ff0186e553fe24b
+  languageName: node
+  linkType: hard
+
+"vuetify@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "vuetify@npm:3.7.0"
+  peerDependencies:
+    typescript: ">=4.7"
+    vite-plugin-vuetify: ">=1.0.0"
+    vue: ^3.3.0
+    vue-i18n: ^9.0.0
+    webpack-plugin-vuetify: ">=2.0.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+    vite-plugin-vuetify:
+      optional: true
+    vue-i18n:
+      optional: true
+    webpack-plugin-vuetify:
+      optional: true
+  checksum: 10c0/c591a36fc12d4631778f8a5a57b6cfdeb4753e4c025e3ac79beb0752027f451266a09d5c1bd9da2ae42829124768ee20b108046dfb84f50bc6271a82756f7203
   languageName: node
   linkType: hard
 

@@ -408,9 +408,7 @@
           <dl
             class="mt-10 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-3"
           >
-            <div
-              class="flex flex-col bg-white/5 p-8"
-            >
+            <div class="flex flex-col bg-white/5 p-8">
               <dt class="text-sm font-semibold leading-6 text-gray-300">
                 TEERday holder
               </dt>
@@ -420,9 +418,7 @@
                 {{ summaryHolders }}
               </dd>
             </div>
-            <div
-              class="flex flex-col bg-white/5 p-8"
-            >
+            <div class="flex flex-col bg-white/5 p-8">
               <dt class="text-sm font-semibold leading-6 text-gray-300">
                 Total TEER bonded
               </dt>
@@ -432,9 +428,7 @@
                 {{ summaryTeerBonded.toFixed(2) }}
               </dd>
             </div>
-            <div
-              class="flex flex-col bg-white/5 p-8"
-            >
+            <div class="flex flex-col bg-white/5 p-8">
               <dt class="text-sm font-semibold leading-6 text-gray-300">
                 Total TEERdays active
               </dt>
@@ -776,30 +770,40 @@ onMounted(async () => {
   console.log("api initialized");
   allBonds.value = [];
   cryptoWaitReady().then(() => {
-    api.query.teerDays.teerDayBonds.entries().then(
-      (entries) => {
-        entries.forEach(([key, maybeBond]) => {
-          console.log(key.args + " " + maybeBond);
-          let account = key.args[0];
-          let lastUpdated = new Date(0);
-          let bond = maybeBond.unwrap()
-          lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
-          let mybond = new Bond(
-            bond.value / Math.pow(10, 12),
-            lastUpdated,
-            bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
-          );
-          mybond.updateTeerDays();
-          console.log(mybond);
-          allBonds.value.push([account, mybond.teerBonded, mybond.accumulatedTeerDays, 42]);
-        });
-        // sort descending by value
-        allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
-        console.log(allBonds.value);
-        summaryTeerBonded.value = allBonds.value.reduce((acc, val) => acc + val[1], 0);
-        summaryTeerDays.value = allBonds.value.reduce((acc, val) => acc + val[2], 0);
-        summaryHolders.value = allBonds.value.length;
-        console.log(summaryHolders.value);
+    api.query.teerDays.teerDayBonds.entries().then((entries) => {
+      entries.forEach(([key, maybeBond]) => {
+        console.log(key.args + " " + maybeBond);
+        let account = key.args[0];
+        let lastUpdated = new Date(0);
+        let bond = maybeBond.unwrap();
+        lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
+        let mybond = new Bond(
+          bond.value / Math.pow(10, 12),
+          lastUpdated,
+          bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
+        );
+        mybond.updateTeerDays();
+        console.log(mybond);
+        allBonds.value.push([
+          account,
+          mybond.teerBonded,
+          mybond.accumulatedTeerDays,
+          42,
+        ]);
+      });
+      // sort descending by value
+      allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
+      console.log(allBonds.value);
+      summaryTeerBonded.value = allBonds.value.reduce(
+        (acc, val) => acc + val[1],
+        0,
+      );
+      summaryTeerDays.value = allBonds.value.reduce(
+        (acc, val) => acc + val[2],
+        0,
+      );
+      summaryHolders.value = allBonds.value.length;
+      console.log(summaryHolders.value);
     });
   });
 });
@@ -1032,8 +1036,6 @@ class PendingUnlock {
     return this.due < new Date();
   }
 }
-
-
 
 import { ref } from "vue";
 

@@ -3,10 +3,10 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-     <p class="address">{{ accountStore.getShortAddress }}</p>
+        <p class="address">{{ accountStore.getShortAddress }}</p>
       </div>
     </header>
- <!--
+    <!--
    <footer class="footer">
       <nav class="footer-content">
         <div class="container">
@@ -79,7 +79,7 @@
                   <div class="flex flex-col items-center text-center">
   <nuxt-link :to="{ path: '/gov', query: $route.query }">
     <!-- Dein benutzerdefiniertes SVG-Icon -->
-   <!--  <svg
+    <!--  <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 330 270"
       fill="currentColor"
@@ -109,7 +109,7 @@
         </div>
       </nav>
     </footer> -->
-    
+
     <main class="main">
       <NuxtPage />
     </main>

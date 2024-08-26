@@ -208,20 +208,26 @@
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
-                            Reserved
+                            Transferrable
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanReserved }} TEER</time
+                              >{{
+                                accountStore.getHumanTransferrable
+                              }}
+                              TEER</time
                             >
                           </dd>
                         </div>
 
-                        <div class="flex w-full flex-none gap-x-4 px-6">
+                        <div
+                          v-if="accountStore.frozen > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
-                            Frozen
+                            Locked
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
@@ -230,15 +236,18 @@
                           </dd>
                         </div>
 
-                        <div class="flex w-full flex-none gap-x-4 px-6">
+                        <div
+                          v-if="accountStore.reserved > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
-                            Free
+                            Reserved
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanFree }} TEER</time
+                              >{{ accountStore.getHumanReserved }} TEER</time
                             >
                           </dd>
                         </div>
@@ -317,24 +326,31 @@
                           >testnet faucet</a
                         >.
                       </div>
-
-                      <form @submit.prevent="bondAmount" class="space-y-2">
-                        <div class="flex flex-col sm:flex-row sm:space-x-2">
-                          <input
-                            type="number"
-                            v-model="amountToBond"
-                            placeholder="Enter amount to bond"
-                            required
-                            class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                          />
-                          <button
-                            type="submit"
-                            class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
-                          >
-                            Bond!
-                          </button>
-                        </div>
-                      </form>
+                      <div
+                        v-else-if="pendingUnlock"
+                        class="text-sm text-red-500"
+                      >
+                        Can't bond more during unbonding period
+                      </div>
+                      <div v-else>
+                        <form @submit.prevent="bondAmount" class="space-y-2">
+                          <div class="flex flex-col sm:flex-row sm:space-x-2">
+                            <input
+                              type="number"
+                              v-model="amountToBond"
+                              placeholder="Enter amount to bond"
+                              required
+                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                            />
+                            <button
+                              type="submit"
+                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                            >
+                              Bond!
+                            </button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
 
                     <div class="form-container mt-8" v-if="currentBond">
@@ -805,7 +821,7 @@ const bondAmount = () => {
   const amount = amountToBond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    if (currentBond.value > 0) {
+    if (currentBond.value?.getTeerBonded() > 0) {
       api.tx.teerDays
         .bondExtra(amount)
         .signAndSend(
@@ -849,7 +865,7 @@ const bondAmount = () => {
 const amountToUnbond = ref(0);
 const unbondAmount = () => {
   // Handle the bonding process here
-  const amount = amountToBond.value * Math.pow(10, 12);
+  const amount = amountToUnbond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
   web3FromAddress(accountStore.getAddress).then((injector) => {
     api.tx.teerDays

@@ -212,13 +212,18 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                            >{{ accountStore.getHumanTransferrable }} TEER</time
+                              >{{
+                                accountStore.getHumanTransferrable
+                              }}
+                              TEER</time
                             >
-
                           </dd>
                         </div>
 
-                        <div v-if="accountStore.frozen > 0" class="flex w-full flex-none gap-x-4 px-6">
+                        <div
+                          v-if="accountStore.frozen > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
@@ -231,7 +236,10 @@
                           </dd>
                         </div>
 
-                        <div v-if="accountStore.reserved > 0" class="flex w-full flex-none gap-x-4 px-6">
+                        <div
+                          v-if="accountStore.reserved > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
@@ -239,7 +247,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                            >{{ accountStore.getHumanReserved }} TEER</time
+                              >{{ accountStore.getHumanReserved }} TEER</time
                             >
                           </dd>
                         </div>
@@ -318,7 +326,10 @@
                           >testnet faucet</a
                         >.
                       </div>
-                      <div v-else-if="pendingUnlock"  class="text-sm text-red-500">
+                      <div
+                        v-else-if="pendingUnlock"
+                        class="text-sm text-red-500"
+                      >
                         Can't bond more during unbonding period
                       </div>
                       <div v-else>

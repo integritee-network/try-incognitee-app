@@ -196,9 +196,7 @@
                             <dd
                               class="mt-1 text-base font-semibold leading-6 text-white"
                             >
-                              {{
-                                currentBond ? currentBond.getTeerDays() : 0
-                              }}
+                              {{ currentBond ? currentBond.getTeerDays() : 0 }}
                               TEERdays
                             </dd>
                           </div>

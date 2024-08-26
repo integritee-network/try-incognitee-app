@@ -24,6 +24,9 @@ export const useAccount = defineStore("teerAccount", {
     getHumanFrozen({ frozen }): string {
       return formatBalance(frozen, { decimals: 12, withUnit: "" }, 12);
     },
+    getHumanTransferrable({ free, frozen }): number {
+      return formatBalance(free - frozen, { decimals: 12, withUnit: "" }, 12);
+    },
     getTransferrable({ free, frozen }): number {
       return free - frozen;
     },

@@ -409,17 +409,39 @@
             class="mt-10 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-3"
           >
             <div
-              v-for="stat in stats"
-              :key="stat.id"
               class="flex flex-col bg-white/5 p-8"
             >
               <dt class="text-sm font-semibold leading-6 text-gray-300">
-                {{ stat.name }}
+                TEERday holder
               </dt>
               <dd
                 class="order-first text-3xl font-semibold tracking-tight text-white"
               >
-                {{ stat.value }}
+                {{ summaryHolders }}
+              </dd>
+            </div>
+            <div
+              class="flex flex-col bg-white/5 p-8"
+            >
+              <dt class="text-sm font-semibold leading-6 text-gray-300">
+                Total TEER bonded
+              </dt>
+              <dd
+                class="order-first text-3xl font-semibold tracking-tight text-white"
+              >
+                {{ summaryTeerBonded.toFixed(2) }}
+              </dd>
+            </div>
+            <div
+              class="flex flex-col bg-white/5 p-8"
+            >
+              <dt class="text-sm font-semibold leading-6 text-gray-300">
+                Total TEERdays active
+              </dt>
+              <dd
+                class="order-first text-3xl font-semibold tracking-tight text-white"
+              >
+                {{ summaryTeerDays.toFixed(2) }}
               </dd>
             </div>
           </dl>
@@ -720,6 +742,9 @@ const selectedAccount = ref(null);
 const currentBond = ref(null);
 const pendingUnlock = ref(null);
 const allBonds = ref([]);
+const summaryHolders = ref(0);
+const summaryTeerBonded = ref(0);
+const summaryTeerDays = ref(0);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
@@ -771,6 +796,10 @@ onMounted(async () => {
         // sort descending by value
         allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
         console.log(allBonds.value);
+        summaryTeerBonded.value = allBonds.value.reduce((acc, val) => acc + val[1], 0);
+        summaryTeerDays.value = allBonds.value.reduce((acc, val) => acc + val[2], 0);
+        summaryHolders.value = allBonds.value.length;
+        console.log(summaryHolders.value);
     });
   });
 });
@@ -1004,64 +1033,9 @@ class PendingUnlock {
   }
 }
 
-const stats = [
-  { id: 1, name: "TEERday holder", value: "400" },
-  { id: 2, name: "Total TEER bonded​", value: "1000" },
-  { id: 4, name: "Total TEERdays ​active​", value: "100 000" },
-];
+
 
 import { ref } from "vue";
-const leaderboard = [
-  {
-    rank: "1",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "2",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "3",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "4",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "5",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "6",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "7",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  {
-    rank: "8",
-    teerdays: "12345",
-    wallet: "x0sdkgfskdfhskjdflshdfkjsdkf",
-    teerbonded: "12345",
-  },
-  // More people...
-];
 
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";

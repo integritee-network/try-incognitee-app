@@ -448,6 +448,13 @@
                               type="number"
                               v-model="amountToBond"
                               placeholder="Enter amount to bond"
+                              step="0.1"
+                              :min="0.1"
+                              :max="
+                                accountStore.getTransferrable /
+                                  Math.pow(10, 12) -
+                                0.1
+                              "
                               required
                               class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
                             />
@@ -478,6 +485,9 @@
                               type="number"
                               v-model="amountToUnbond"
                               placeholder="Enter amount to unbond"
+                              step="0.1"
+                              :min="0.1"
+                              :max="currentBond.teerBonded"
                               required
                               class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
                             />
@@ -952,6 +962,47 @@
         </p>
       </div>
     </div>
+    <div
+      aria-live="assertive"
+      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+    >
+      <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+        <transition
+          enter-active-class="transform ease-out duration-300 transition"
+          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+          leave-active-class="transition ease-in duration-100"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <div
+            v-if="showStatusOverlay"
+            class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+          >
+            <div class="p-4">
+              <div class="flex items-center">
+                <div class="flex w-0 flex-1 justify-between">
+                  <p class="w-0 flex-1 text-sm font-medium text-gray-900">
+                    {{ txStatus }}
+                  </p>
+                </div>
+                <div class="ml-4 flex flex-shrink-0">
+                  <button
+                    type="button"
+                    @click="showStatusOverlay = false"
+                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    <span class="sr-only">Close</span>
+                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </div>
   </footer>
 </template>
 
@@ -966,6 +1017,7 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, ref, watch } from "vue";
 import { useAccount } from "@/store/teerAccount.ts";
 import { useInterval } from "@vueuse/core";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 const accountStore = useAccount();
 
@@ -1121,6 +1173,8 @@ const bondAmount = () => {
   // Handle the bonding process here
   const amount = amountToBond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
+  txStatus.value = "⌛ bonding. please sign the transaction in your wallet.";
+  openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     if (currentBond.value?.getTeerBonded() > 0) {
       api.tx.teerDays
@@ -1128,38 +1182,18 @@ const bondAmount = () => {
         .signAndSend(
           accountStore.getAddress,
           { signer: injector.signer },
-          (result) => {
-            console.log(`Current status is ${result.status}`);
-            if (result.status.isInBlock) {
-              console.log(
-                `Transaction included at blockHash ${result.status.asInBlock}`,
-              );
-            } else if (result.status.isFinalized) {
-              console.log(
-                `Transaction finalized at blockHash ${result.status.asFinalized}`,
-              );
-            }
-          },
-        );
+          txResHandlerIntegritee,
+        )
+        .catch(txErrHandlerIntegritee);
     } else {
       api.tx.teerDays
         .bond(amount)
         .signAndSend(
           accountStore.getAddress,
           { signer: injector.signer },
-          (result) => {
-            console.log(`Current status is ${result.status}`);
-            if (result.status.isInBlock) {
-              console.log(
-                `Transaction included at blockHash ${result.status.asInBlock}`,
-              );
-            } else if (result.status.isFinalized) {
-              console.log(
-                `Transaction finalized at blockHash ${result.status.asFinalized}`,
-              );
-            }
-          },
-        );
+          txResHandlerIntegritee,
+        )
+        .catch(txErrHandlerIntegritee);
     }
   });
 };
@@ -1167,51 +1201,36 @@ const amountToUnbond = ref(0);
 const unbondAmount = () => {
   // Handle the bonding process here
   const amount = amountToUnbond.value * Math.pow(10, 12);
-  console.log(`Bonding ${amount}`);
+  console.log(`Unbonding ${amount}`);
+  txStatus.value = "⌛ unbonding. please sign the transaction in your wallet.";
+  openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     api.tx.teerDays
       .unbond(amount)
       .signAndSend(
         accountStore.getAddress,
         { signer: injector.signer },
-        (result) => {
-          console.log(`Current status is ${result.status}`);
-          if (result.status.isInBlock) {
-            console.log(
-              `Transaction included at blockHash ${result.status.asInBlock}`,
-            );
-          } else if (result.status.isFinalized) {
-            console.log(
-              `Transaction finalized at blockHash ${result.status.asFinalized}`,
-            );
-          }
-        },
-      );
+        txResHandlerIntegritee,
+      )
+      .catch(txErrHandlerIntegritee);
   });
 };
 
 const withdrawUnbonded = () => {
   // Handle the bonding process here
   console.log(`Withdrawing`);
+  txStatus.value =
+    "⌛ withdrawing. please sign the transaction in your wallet.";
+  openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     api.tx.teerDays
       .withdrawUnbonded()
       .signAndSend(
         accountStore.getAddress,
         { signer: injector.signer },
-        (result) => {
-          console.log(`Current status is ${result.status}`);
-          if (result.status.isInBlock) {
-            console.log(
-              `Transaction included at blockHash ${result.status.asInBlock}`,
-            );
-          } else if (result.status.isFinalized) {
-            console.log(
-              `Transaction finalized at blockHash ${result.status.asFinalized}`,
-            );
-          }
-        },
-      );
+        txResHandlerIntegritee,
+      )
+      .catch(txErrHandlerIntegritee);
   });
 };
 
@@ -1275,11 +1294,57 @@ class PendingUnlock {
   }
 }
 
-import { ref } from "vue";
+const txStatus = ref("");
+const showStatusOverlay = ref(false);
+const openStatusOverlay = () => {
+  showStatusOverlay.value = true;
+};
+const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
+  status.isFinalized
+    ? (txStatus.value = `😀 Finalized. Finalized.`)
+    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds.`);
 
-import { XMarkIcon } from "@heroicons/vue/20/solid";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import { ChevronDownIcon } from "@heroicons/vue/20/solid";
+  // Loop through Vec<EventRecord> to display all events
+  events.forEach(({ _, event: { data, method, section } }) => {
+    if (section + ":" + method === "system:ExtrinsicFailed") {
+      // extract the data for this event
+      const [dispatchError, dispatchInfo] = data;
+      console.log(`dispatchinfo: ${dispatchInfo}`);
+      let errorInfo;
+
+      // decode the error
+      if (dispatchError.isModule) {
+        // for module errors, we have the section indexed, lookup
+        // (For specific known errors, we can also do a check against the
+        // api.errors.<module>.<ErrorName>.is(dispatchError.asModule) guard)
+        const mod = dispatchError.asModule;
+        const error = api.registry.findMetaError(
+          new Uint8Array([
+            mod.index.toNumber(),
+            bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
+          ]),
+        );
+        const message = `${error.section}.${error.name}${
+          Array.isArray(error.docs)
+            ? `(${error.docs.join("")})`
+            : error.docs || ""
+        }`;
+
+        errorInfo = `${message}`;
+        console.log(`Error-info::${JSON.stringify(error)}`);
+      } else {
+        // Other, CannotLookup, BadOrigin, no extra info
+        errorInfo = dispatchError.toString();
+      }
+      txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
+    } else if (section + ":" + method === "system:ExtrinsicSuccess") {
+      txStatus.value`❤️️ Transaction successful!`;
+    }
+  });
+};
+
+const txErrHandlerIntegritee = (err) =>
+  (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 </script>
 
 <style scoped>

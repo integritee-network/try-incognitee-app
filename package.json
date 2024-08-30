@@ -57,7 +57,9 @@
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^10.9.0",
+    "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "framer-motion": "^11.3.30",
     "joi": "^17.9.2",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.4",
@@ -65,8 +67,10 @@
     "pinia": "^2.1.7",
     "qrcode": "^1.5.3",
     "sass": "^1.75.0",
+    "tailwind-merge": "^2.5.2",
     "vue-qrcode": "^2.2.2",
     "vue-qrcode-reader": "^5.5.4",
-    "vue3-form-wizard": "^0.2.3"
+    "vue3-form-wizard": "^0.2.3",
+    "vuetify": "^3.7.0"
   }
 }

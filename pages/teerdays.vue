@@ -46,9 +46,13 @@
       />
     </div>
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
+<<<<<<< Updated upstream
       <div
         class="grid grid-cols-2 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
       >
+=======
+      <div class="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2">
+>>>>>>> Stashed changes
         <div class="mx-auto w-full max-w-xl lg:mx-0">
           <h2
             class="title text-4xl font-bold tracking-tight text-white sm:text-6xl"
@@ -66,6 +70,7 @@
             Go-Live.
           </p>
           <div
+<<<<<<< Updated upstream
             class="mx-auto mt-10 grid max-w-lg grid-cols-4 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
           >
             <a href="https://talisman.xyz/download"
@@ -98,29 +103,57 @@
               @click="connect"
               class="incognitee-bg rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
             >
+=======
+            class="mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4">
+            <a href="https://talisman.xyz/download"><img class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/talisman-logo.svg" alt="talisman" /></a>
+            <a href="https://novawallet.io/"><img class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                src="/img/index/nova-wallet-logo.svg" alt="nova wallet" /></a>
+            <a href="https://www.subwallet.app/"><img class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/sub-wallet-logo.svg" alt="sub wallet" /></a>
+            <a href="https://polkadot.js.org/extension/"><img
+                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1" src="/img/index/polkadotjs-logo.svg"
+                alt="polkajs" /></a>
+          </div>
+          <div v-if="accounts.length < 1" class="mt-10 flex">
+          <button @click="connect"
+              class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
+>>>>>>> Stashed changes
               Connect Wallet
             </button>
           </div>
         </div>
+<<<<<<< Updated upstream
         <div class="sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
           <img
             class="col-span-1 w-80 w-full object-contain lg:col-span-1"
             src="/img/index/incognitee-wallet.png"
             alt="polkajs"
           />
+=======
+        <div class="hidden sm:block sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
+          <img class="col-span-1 w-80 w-full object-contain lg:col-span-1" src="/img/index/incognitee-wallet.png"
+            alt="polkajs" />
+>>>>>>> Stashed changes
         </div>
+
       </div>
     </div>
 
+<<<<<<< Updated upstream
     <hr
       class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
     />
+=======
+    <hr class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent">
+
+>>>>>>> Stashed changes
 
     <div class="my-28">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
-          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="relative overflow-hidden">
+          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 ">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -142,14 +175,19 @@
                   TEERday holder
                 </p>
               </dt>
+<<<<<<< Updated upstream
               <dd class="ml-16 flex items-baseline">
                 <p class="text-4xl font-semibold text-white">
                   {{ summaryHolders }}
                 </p>
+=======
+              <dd class="ml-16 flex items-baseline ">
+                <p class="text-4xl font-semibold text-white">{{ summaryHolders }}</p>
+>>>>>>> Stashed changes
               </dd>
             </div>
 
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -171,14 +209,19 @@
                   Total TEER bonded
                 </p>
               </dt>
+<<<<<<< Updated upstream
               <dd class="ml-16 flex items-baseline">
                 <p class="text-4xl font-semibold text-white">
                   {{ summaryTeerBonded.toFixed(2) }}
                 </p>
+=======
+              <dd class="ml-16 flex items-baseline ">
+                <p class="text-4xl font-semibold text-white">{{ summaryTeerBonded.toFixed(2) }}</p>
+>>>>>>> Stashed changes
               </dd>
             </div>
 
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -200,16 +243,22 @@
                   Total TEERdays active
                 </p>
               </dt>
+<<<<<<< Updated upstream
               <dd class="ml-16 flex items-baseline">
                 <p class="text-4xl font-semibold text-white">
                   {{ summaryTeerDays.toFixed(2) }}
                 </p>
+=======
+              <dd class="ml-16 flex items-baseline ">
+                <p class="text-4xl font-semibold text-white">{{ summaryTeerDays.toFixed(2) }}</p>
+>>>>>>> Stashed changes
               </dd>
             </div>
           </dl>
         </div>
       </div>
     </div>
+
 
     <div v-if="accounts.length" class="py-12 sm:py-16">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -258,7 +307,7 @@
                 <div class="mt-2">
                   <span class="text-sm text-gray-300">{{
                     accountStore.getAddress
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
             </div>
@@ -320,12 +369,19 @@
                             Transferrable
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
+<<<<<<< Updated upstream
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.getHumanTransferrable
                               }}
                               TEER</time
                             >
+=======
+                            <time datetime="2023-01-31">{{
+                              accountStore.getHumanTransferrable
+                            }}
+                              TEER</time>
+>>>>>>> Stashed changes
                           </dd>
                         </div>
 
@@ -393,7 +449,7 @@
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
                                   pendingUnlock?.getDueDateStr()
-                                }}</time>
+                                  }}</time>
                               </dd>
                             </div>
                           </div>
@@ -518,8 +574,34 @@
 
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
       <div
+<<<<<<< Updated upstream
         class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20"
       >
+=======
+        class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <h1 class="title text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              TEERdays Intro​
+            </h1>
+            <p class="mt-4 text-gray-300">
+              By bonding your TEER now, you can accumulate TEERdays for the
+              launch of Incognitee. TEERdays are calculated by the amount of
+              TEER * with the number of days bonded. You can unbond your TEER
+              anytime within 7 days, but you will lose 90%-100% of the
+              accumulated TEERdays as a penalty. During the unlock period,
+              you're not accumulating TEERdays. TEERdays are non-transferable.
+              Start now to get the best position for the Incognitee launch. ​
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+      <div
+        class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20">
+
+>>>>>>> Stashed changes
         <div class="flex items-center">
           <div class="flex-1">
             <h1
@@ -541,8 +623,12 @@
       </div>
 
       <div
+<<<<<<< Updated upstream
         class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20"
       >
+=======
+        class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20">
+>>>>>>> Stashed changes
         <div class="flex items-center">
           <div class="flex-1">
             <h1
@@ -590,8 +676,12 @@
       </div>
 
       <div
+<<<<<<< Updated upstream
         class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20"
       >
+=======
+        class="sm:col-span-3 rounded-xl p-6 border border-incognitee-green bg-cover bg-no-repeat shadow-2xl shadow-blue-500/20">
+>>>>>>> Stashed changes
         <div class="flex items-center">
           <div class="flex-1">
             <h1
@@ -625,6 +715,7 @@
     <div class="mt-20 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
+<<<<<<< Updated upstream
           <h1
             class="title text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
@@ -684,10 +775,62 @@
               </tbody>
             </table>
           </div>
+=======
+
+
+
+          <div class="mt-10">
+            <h1 class="title text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Leaderboard​​
+            </h1>
+            <div class="mt-10">
+              <table class="rounded-table min-w-full">
+                <thead>
+                  <tr>
+                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                      Rank
+                    </th>
+                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                      TEERdays
+                    </th>
+                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                      Wallet
+                    </th>
+                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                      TEER bonded
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="text-left">
+                  <tr v-for="(entry, index) in allBonds" :key="index" :class="{
+                    'bg-gray-700': index % 2 === 0,  // Jede zweite Zeile grau
+                    'bg-gray-800': index % 2 !== 0,  // Jede andere Zeile dunkelgrau
+                  }" class="rounded-lg shadow text-left">
+                    <td class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left">
+                      {{ index + 1 }}
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                      {{ entry[2].toFixed(2) }}
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                      {{ entry[0] }}
+                    </td>
+                    <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                      {{ entry[1].toFixed(2) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+
+>>>>>>> Stashed changes
         </div>
       </div>
     </div>
   </div>
+<<<<<<< Updated upstream
   <hr
     class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
   />
@@ -1004,9 +1147,168 @@
       </div>
     </div>
   </footer>
+=======
+  <hr class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent">
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__row">
+        <div class="footer__column footer__column_about">
+          <NuxtLink to="/" class="footer__logo">
+            <Logo />
+          </NuxtLink>
+          <p class="footer__description">
+            The fastest, most scalable and secure Web3 network bringing the
+            vision of a trustless, decentralized future for all.
+          </p>
+          <Socials />
+        </div>
+        <div class="footer__columns-row">
+          <div class="footer__column">
+            <div class="footer__column-title">TEER Token</div>
+            <div class="footer__column-list">
+              <a :href="KRAKEN_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Kraken
+              </a>
+              <a :href="GATE_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Gate.io
+              </a>
+              <a :href="BASILISK_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Basilisk
+              </a>
+              <a :href="COIN_MARKET_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                CoinMarketCap
+              </a>
+              <a :href="COIN_GECKO_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                CoinGecko
+              </a>
+              <a :href="TRADING_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                TradingView
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Network</div>
+            <div class="footer__column-list">
+              <a :href="GOVERNANCE_FOOTER_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                Governance
+              </a>
+              <a :href="SUBSCAN_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Integritee Subscan
+              </a>
+              <a :href="INTEGRITEE_NETWORK_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                Integritee Network
+              </a>
+              <a :href="BUGBOUNTY_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Bug Bounty
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Resources</div>
+            <div class="footer__column-list">
+              <a :href="TOKENOMICS_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                Tokenomics
+              </a>
+              <a :href="DOCS_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Documentation
+              </a>
+              <a :href="LIGHTPAPER_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                Lightpaper
+              </a>
+              <a :href="HELP_CENTER_LINK" target="_blank" rel="noopener noreferrer"
+                class="footer__column-link text-link">
+                Help Center
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Community</div>
+            <div class="footer__column-list">
+              <a :href="TELEGRAM_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Telegram
+              </a>
+              <a :href="TWITTER_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Twitter
+              </a>
+              <a :href="DISCORD_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Discord
+              </a>
+              <a :href="YOUTUBE_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                YouTube
+              </a>
+              <a :href="MEDIUM_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Medium
+              </a>
+              <a :href="REDDIT_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                Reddit
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Company</div>
+            <div class="footer__column-list">
+              <NuxtLink to="/about#join" class="footer__column-link text-link">
+                Jobs
+              </NuxtLink>
+              <NuxtLink to="/about#roadmap" class="footer__column-link text-link">
+                Roadmap
+              </NuxtLink>
+              <a :href="LINKEDIN_LINK" target="_blank" rel="noopener noreferrer" class="footer__column-link text-link">
+                LinkedIn
+              </a>
+              <!--              <a href="/" target="_blank" class="footer__column-link text-link">-->
+              <!--                Contacts-->
+              <!--              </a>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="paragraph_medium">©{{ new Date().getFullYear() }} Integritee, Inc.</span>
+        <span>
+          <NuxtLink to="/privacy-policy" class="blue paragraph_medium">Imprint and Privacy Policy</NuxtLink>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+
+>>>>>>> Stashed changes
 </template>
 
 <script setup lang="ts">
+import Logo from '@/components/Logo/index.vue'
+import Socials from '@/components/Socials/index.vue'
+import {
+  BASILISK_LINK,
+  BUGBOUNTY_LINK,
+  COIN_GECKO_LINK,
+  COIN_MARKET_LINK,
+  DISCORD_LINK,
+  DOCS_LINK,
+  GATE_LINK,
+  GOVERNANCE_FOOTER_LINK,
+  HELP_CENTER_LINK,
+  INTEGRITEE_NETWORK_LINK,
+  KRAKEN_LINK,
+  LIGHTPAPER_LINK,
+  LINKEDIN_LINK,
+  MEDIUM_LINK,
+  REDDIT_LINK,
+  SUBSCAN_LINK,
+  TELEGRAM_LINK,
+  TOKENOMICS_LINK,
+  TRADING_LINK,
+  TWITTER_LINK,
+  YOUTUBE_LINK,
+} from '@/configs/app.config'
 import {
   web3Accounts,
   web3Enable,
@@ -1347,7 +1649,69 @@ const txErrHandlerIntegritee = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 </script>
 
+
+
+
 <style scoped>
+.rounded-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: separate;
+  /* Necessary for rounded corners */
+  border-spacing: 0 10px;
+  /* Space between rows */
+}
+
+.rounded-table thead th {
+  /* Header background color */
+  padding: 15px;
+  text-align: left;
+  color: #ffffff;
+  /* Lighter text for header */
+  font-weight: bold;
+}
+
+.rounded-table tbody tr {
+  background-color: #1B1D26;
+  /* Row background */
+}
+
+.rounded-table tbody td {
+  padding: 15px;
+  background-color: #1B1D26;
+  /* Matches row background */
+}
+
+.rounded-table tbody tr td.rounded-left {
+  border-top-left-radius: 10px;
+  /* Top-left corner */
+  border-bottom-left-radius: 10px;
+  /* Bottom-left corner */
+}
+
+.rounded-table tbody tr td.rounded-right {
+  border-top-right-radius: 10px;
+  /* Top-right corner */
+  border-bottom-right-radius: 10px;
+  /* Bottom-right corner */
+}
+
+.rounded-table tbody tr td:nth-child(3),
+.rounded-table tbody tr td:nth-child(4) {
+  text-align: left;
+  /* Align text to the right for points and prize */
+}
+
+.rounded-table tbody tr td .icon {
+  margin-right: 10px;
+  /* Space between icon and text */
+  color: #8C8E9C;
+  /* Icon color */
+}
+
+
+
 .incognitee-bg {
   background: linear-gradient(84.58deg, #24ad7c, #1845b9);
 }
@@ -1377,4 +1741,226 @@ input[type="number"] {
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+<<<<<<< Updated upstream
+=======
+
+.footer {
+  &__logo {
+    display: block;
+    width: 191px;
+    height: 40px;
+    margin-bottom: 19px;
+
+    @include slg {
+      width: 117px;
+      height: 24px;
+      margin-bottom: 26px;
+    }
+
+    @include md {
+      margin-bottom: 0;
+      width: 144px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    @include sm {
+      margin-bottom: 24px;
+      width: 117px;
+      height: 24px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__row {
+    display: flex;
+    gap: 48px;
+
+    @include md {
+      display: block;
+    }
+  }
+
+  &__column {
+    @media screen and (max-width: 660px) {
+      margin-bottom: 24px;
+      width: 50%;
+
+      &:first-child {
+        width: 100%;
+
+        .footer__column-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .footer__column-link {
+          width: 50%;
+        }
+      }
+
+      &:nth-last-child(1),
+      &:nth-last-child(2) {
+        margin-bottom: 0;
+      }
+    }
+
+    @include xsm {
+      &:first-child {
+        width: 100% !important;
+
+        .footer__column-link {
+          width: 125px;
+        }
+
+        .footer__column-list {
+          justify-content: space-between;
+        }
+      }
+
+      width: 125px !important;
+    }
+
+    &_about {
+      flex-shrink: 0;
+      max-width: 255px;
+      font-size: 1.125em;
+
+      @include slg {
+        font-size: 0.875em;
+      }
+
+      @include md {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 100%;
+        width: 100%;
+        gap: 24px;
+        margin-bottom: 35px;
+        font-size: 0.75em;
+      }
+
+      @include sm {
+        display: block;
+        margin-bottom: 24px !important;
+        font-size: 0.875em;
+      }
+    }
+
+    &:last-child {
+      width: auto;
+
+      @media screen and (max-width: 660px) {
+        width: 50%;
+      }
+    }
+  }
+
+  &__column-link {
+    display: block;
+    line-height: 150%;
+    margin-bottom: 14px;
+    font-size: 1.125em;
+
+    @include slg {
+      font-size: 1em;
+    }
+
+    @include sm {
+      font-size: 0.875em;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__columns-row {
+    display: flex;
+    gap: 82px;
+
+    @include lg {
+      gap: 52px;
+    }
+
+    @include slg {
+      gap: 32px;
+    }
+
+    @include md {
+      justify-content: space-between;
+    }
+
+    @media screen and (max-width: 660px) {
+      gap: 0;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__description {
+    line-height: 150%;
+    margin-bottom: 19px;
+
+    @include slg {
+      margin-bottom: 26px;
+    }
+
+    @include md {
+      margin-bottom: 0;
+      max-width: 415px;
+      margin-right: auto;
+    }
+
+    @include sm {
+      margin-bottom: 24px;
+      max-width: 100%;
+    }
+  }
+
+  &__column-title {
+    color: $gray;
+    margin-bottom: 32px;
+    line-height: 150%;
+    font-size: 1.125em;
+
+    @include slg {
+      margin-bottom: 24px;
+    }
+
+    @include md {
+      margin-bottom: 16px;
+    }
+
+    @include sm {
+      font-size: 0.875em;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 36px 0;
+    margin-top: 36px;
+    border-top: 2px solid $alphaGray;
+
+    @include md {
+      padding: 24px 0;
+      margin-top: 24px;
+    }
+
+    a {
+      transition: 0.3s ease;
+
+      &:hover {
+        color: #7ca8ff;
+      }
+    }
+  }
+}
+>>>>>>> Stashed changes
 </style>

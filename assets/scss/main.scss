@@ -116,13 +116,6 @@ a {
 }
 
 .btn {
-  position: relative;
-  display: inline-block;
-  font-size: $pDef;
-  padding: 14px 22px;
-  font-weight: 500;
-  border-radius: 12px;
-  line-height: 150%;
   transition: 0.3s ease;
   cursor: pointer;
   backdrop-filter: blur(30px);

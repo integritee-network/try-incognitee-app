@@ -39,6 +39,8 @@ export const TEERACLE_LINK =
 export const ATTESTEER_LINK =
   "https://docs.integritee.network/3-our-technology/3.2-attesteer";
 
+export const INCOGNITEE_LINK = "https://incognitee.io";
+
 export const SECURE_TEE_INFRASTRUCTURE_LINK =
   "https://docs.integritee.network/5-nodes-and-infrastructure/5.3-how-to-deploy/5.3.3-securitee-offering";
 
@@ -117,10 +119,14 @@ export const KRAKEN_LINK =
 
 export const GATE_LINK = "https://www.gate.io/de/trade/TEER_USDT";
 
+export const BASILISK_LINK =
+  "https://app.basilisk.cloud/trade?assetIn=1&assetOut=17";
+
 export const COIN_MARKET_LINK =
   "https://coinmarketcap.com/currencies/integritee-network/";
 
-export const COIN_GECKO_LINK = "https://www.coingecko.com/de/munze/integritee";
+export const COIN_GECKO_LINK =
+  "https://coinmarketcap.com/currencies/integritee-network/";
 
 export const TRADING_LINK =
   "https://www.tradingview.com/chart/?symbol=GATEIO%3ATEERUSDT";
@@ -134,11 +140,6 @@ export const INTEGRITEE_NETWORK_LINK =
 
 export const HELP_CENTER_LINK = "https://helpdesk.integritee.network/docs/";
 
-export const WATERCOOLER_LINK =
-  "https://app.element.io/#/room/#integritee-watercooler:matrix.org";
-
-export const SUBSOCIAL_LINK = "https://app.subsocial.network/4638";
-
 export const YOUTUBE_LINK =
   "https://www.youtube.com/channel/UCOgztU-FYDdG8ptLKaItBow/featured";
 
@@ -151,3 +152,6 @@ export const LINKEDIN_LINK = "https://www.linkedin.com/company/integritee/";
 export const LIGHTPAPER_LINK = "/docs/Integritee_ Lightpaper_2021.pdf";
 
 export const TOKENOMICS_LINK = "/docs/Integritee_Tokenomics_2021.pdf";
+
+export const BUGBOUNTY_LINK =
+  "https://immunefi.com/bug-bounty/integriteenetwork/";

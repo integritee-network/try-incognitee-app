@@ -79,7 +79,7 @@ export default defineNuxtConfig({
   ],
   svgo: {
     defaultImport: "component",
-    global: false,
+    global: true,
   },
   vite: {
     css: {

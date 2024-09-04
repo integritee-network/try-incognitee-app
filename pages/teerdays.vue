@@ -47,11 +47,11 @@
     </div>
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
       <div
-        class="grid grid-cols-2 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
+        class="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
       >
         <div class="mx-auto w-full max-w-xl lg:mx-0">
           <h2
-            class="title text-4xl font-bold tracking-tight text-white sm:text-6xl"
+            class="title text-4xl font-bold tracking-tight text-white mt-16 sm:mt-15 lg:mt-7 sm:text-6xl"
           >
             Secure. <br />
             Anonymous. <br />
@@ -66,7 +66,7 @@
             Go-Live.
           </p>
           <div
-            class="mx-auto mt-10 grid max-w-lg grid-cols-4 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
+            class="mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
           >
             <a href="https://talisman.xyz/download"
               ><img
@@ -96,13 +96,13 @@
           <div v-if="accounts.length < 1" class="mt-10 flex">
             <button
               @click="connect"
-              class="incognitee-bg rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
             >
               Connect Wallet
             </button>
           </div>
         </div>
-        <div class="sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
+        <div class="hidden sm:block sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
           <img
             class="col-span-1 w-80 w-full object-contain lg:col-span-1"
             src="/img/index/incognitee-wallet.png"
@@ -120,7 +120,7 @@
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
           <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -149,7 +149,7 @@
               </dd>
             </div>
 
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -178,7 +178,7 @@
               </dd>
             </div>
 
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden w-full sm:w-auto">
               <dt>
                 <div class="absolute rounded-md bg-gray-800 p-3">
                   <svg
@@ -217,7 +217,7 @@
           <h1
             class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
           >
-            Wallet Details
+            My Wallet
           </h1>
 
           <div class="mt-5">
@@ -625,64 +625,77 @@
     <div class="mt-20 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
-          <h1
-            class="title text-3xl font-bold tracking-tight text-white sm:text-4xl"
-          >
-            Leaderboard​​
-          </h1>
-          <!-- Wrapper-Div für 10px Padding links und rechts -->
           <div class="mt-10">
-            <!-- px-2 entspricht 10px Padding -->
-            <table
-              class="min-w-full divide-y divide-gray-700 border border-gray-800 rounded-lg"
+            <h1
+              class="title text-3xl font-bold tracking-tight text-white sm:text-4xl"
             >
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    class="px-4 py-4 text-left text-sm font-semibold text-white"
+              Leaderboard​​
+            </h1>
+            <!-- Verwende kleinere obere Randabstände auf mobilen Geräten -->
+            <div class="mt-4 sm:mt-10 overflow-x-auto">
+              <table class="rounded-table min-w-full">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      Rank
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      TEERdays
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      Wallet
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      TEER bonded
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="text-left">
+                  <tr
+                    v-for="(entry, index) in allBonds"
+                    :key="index"
+                    :class="{
+                      'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
+                      'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
+                    }"
+                    class="rounded-lg shadow text-left"
                   >
-                    Rank
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-3.5 text-left text-sm font-semibold text-white"
-                  >
-                    TEERdays
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-3.5 text-left text-sm font-semibold text-white"
-                  >
-                    Wallet
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-3.5 text-left text-sm font-semibold text-white"
-                  >
-                    TEER bonded
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-800">
-                <tr v-for="(entry, index) in allBonds" :key="index">
-                  <td
-                    class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white"
-                  >
-                    {{ index + 1 }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300">
-                    {{ entry[2].toFixed(2) }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300">
-                    {{ entry[0] }}
-                  </td>
-                  <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300">
-                    {{ entry[1].toFixed(2) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
+                    >
+                      {{ index + 1 }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[2].toFixed(2) }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[0] }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[1].toFixed(2) }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -692,321 +705,307 @@
     class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
   />
 
-  <footer class="w-full" aria-labelledby="footer-heading">
-    <h2 id="footer-heading" class="sr-only">Footer</h2>
-    <div class="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
-      <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-        <img
-          class="h-7"
-          src="/img/index/incognitee-mask.svg"
-          alt="Incognitee"
-        />
-
-        <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-          <div class="md:grid md:grid-cols-2 md:gap-8">
-            <div>
-              <h3 class="text-sm font-semibold leading-6 text-white">
-                Solutions
-              </h3>
-              <ul role="list" class="mt-6 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Marketing</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Analytics</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Commerce</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Insights</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div class="mt-10 md:mt-0">
-              <h3 class="text-sm font-semibold leading-6 text-white">
-                Support
-              </h3>
-              <ul role="list" class="mt-6 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Pricing</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Documentation</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Guides</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >API Status</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="md:grid md:grid-cols-2 md:gap-8">
-            <div>
-              <h3 class="text-sm font-semibold leading-6 text-white">
-                Company
-              </h3>
-              <ul role="list" class="mt-6 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >About</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Blog</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Jobs</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Press</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Partners</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div class="mt-10 md:mt-0">
-              <h3 class="text-sm font-semibold leading-6 text-white">Legal</h3>
-              <ul role="list" class="mt-6 space-y-4">
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Claim</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Privacy</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="text-sm leading-6 text-gray-300 hover:text-white"
-                    >Terms</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24 lg:flex lg:items-center lg:justify-between"
-      >
-        <div>
-          <h3 class="text-sm font-semibold leading-6 text-white">
-            Subscribe to our newsletter
-          </h3>
-          <p class="mt-2 text-sm leading-6 text-gray-300">
-            The latest news, articles, and resources, sent to your inbox weekly.
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__row">
+        <div class="footer__column footer__column_about">
+          <NuxtLink to="/" class="footer__logo">
+            <Logo />
+          </NuxtLink>
+          <p class="footer__description">
+            The fastest, most scalable and secure Web3 network bringing the
+            vision of a trustless, decentralized future for all.
           </p>
+          <Socials />
         </div>
-        <form class="mt-6 sm:flex sm:max-w-md lg:mt-0">
-          <label for="email-address" class="sr-only">Email address</label>
-          <input
-            type="email"
-            name="email-address"
-            id="email-address"
-            autocomplete="email"
-            required
-            class="w-full min-w-0 appearance-none rounded-md border-0 bg-white/5 px-3 py-1.5 text-base text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:w-56 sm:text-sm sm:leading-6"
-            placeholder="Enter your email"
-          />
-          <div class="mt-4 sm:ml-4 sm:mt-0 sm:flex-shrink-0">
-            <button
-              type="submit"
-              class="flex w-full items-center justify-center rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-            >
-              Subscribe
-            </button>
-          </div>
-        </form>
-      </div>
-      <div
-        class="mt-8 border-t border-white/10 pt-8 md:flex md:items-center md:justify-between"
-      >
-        <div class="flex space-x-6 md:order-2">
-          <a href="#" class="text-gray-500 hover:text-gray-400">
-            <span class="sr-only">Facebook</span>
-            <svg
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-500 hover:text-gray-400">
-            <span class="sr-only">Instagram</span>
-            <svg
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-500 hover:text-gray-400">
-            <span class="sr-only">X</span>
-            <svg
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z"
-              />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-500 hover:text-gray-400">
-            <span class="sr-only">GitHub</span>
-            <svg
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </a>
-          <a href="#" class="text-gray-500 hover:text-gray-400">
-            <span class="sr-only">YouTube</span>
-            <svg
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </a>
-        </div>
-        <p class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">
-          &copy; 2020 Your Company, Inc. All rights reserved.
-        </p>
-      </div>
-    </div>
-    <div
-      aria-live="assertive"
-      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
-    >
-      <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-        <transition
-          enter-active-class="transform ease-out duration-300 transition"
-          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-          leave-active-class="transition ease-in duration-100"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <div
-            v-if="showStatusOverlay"
-            class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-          >
-            <div class="p-4">
-              <div class="flex items-center">
-                <div class="flex w-0 flex-1 justify-between">
-                  <p class="w-0 flex-1 text-sm font-medium text-gray-900">
-                    {{ txStatus }}
-                  </p>
-                </div>
-                <div class="ml-4 flex flex-shrink-0">
-                  <button
-                    type="button"
-                    @click="showStatusOverlay = false"
-                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <span class="sr-only">Close</span>
-                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
+        <div class="footer__columns-row">
+          <div class="footer__column">
+            <div class="footer__column-title">TEER Token</div>
+            <div class="footer__column-list">
+              <a
+                :href="KRAKEN_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Kraken
+              </a>
+              <a
+                :href="GATE_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Gate.io
+              </a>
+              <a
+                :href="BASILISK_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Basilisk
+              </a>
+              <a
+                :href="COIN_MARKET_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                CoinMarketCap
+              </a>
+              <a
+                :href="COIN_GECKO_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                CoinGecko
+              </a>
+              <a
+                :href="TRADING_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                TradingView
+              </a>
             </div>
           </div>
-        </transition>
+          <div class="footer__column">
+            <div class="footer__column-title">Network</div>
+            <div class="footer__column-list">
+              <a
+                :href="GOVERNANCE_FOOTER_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Governance
+              </a>
+              <a
+                :href="SUBSCAN_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Integritee Subscan
+              </a>
+              <a
+                :href="INTEGRITEE_NETWORK_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Integritee Network
+              </a>
+              <a
+                :href="BUGBOUNTY_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Bug Bounty
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Resources</div>
+            <div class="footer__column-list">
+              <a
+                :href="TOKENOMICS_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Tokenomics
+              </a>
+              <a
+                :href="DOCS_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Documentation
+              </a>
+              <a
+                :href="LIGHTPAPER_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Lightpaper
+              </a>
+              <a
+                :href="HELP_CENTER_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Help Center
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Community</div>
+            <div class="footer__column-list">
+              <a
+                :href="TELEGRAM_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Telegram
+              </a>
+              <a
+                :href="TWITTER_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Twitter
+              </a>
+              <a
+                :href="DISCORD_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Discord
+              </a>
+              <a
+                :href="YOUTUBE_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                YouTube
+              </a>
+              <a
+                :href="MEDIUM_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Medium
+              </a>
+              <a
+                :href="REDDIT_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                Reddit
+              </a>
+            </div>
+          </div>
+          <div class="footer__column">
+            <div class="footer__column-title">Company</div>
+            <div class="footer__column-list">
+              <NuxtLink to="/about#join" class="footer__column-link text-link">
+                Jobs
+              </NuxtLink>
+              <NuxtLink
+                to="/about#roadmap"
+                class="footer__column-link text-link"
+              >
+                Roadmap
+              </NuxtLink>
+              <a
+                :href="LINKEDIN_LINK"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="footer__column-link text-link"
+              >
+                LinkedIn
+              </a>
+              <!--              <a href="/" target="_blank" class="footer__column-link text-link">-->
+              <!--                Contacts-->
+              <!--              </a>-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="paragraph_medium"
+          >©{{ new Date().getFullYear() }} Integritee, Inc.</span
+        >
+        <span>
+          <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
+            >Imprint and Privacy Policy</NuxtLink
+          >
+        </span>
       </div>
     </div>
   </footer>
+
+  <div
+    aria-live="assertive"
+    class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+  >
+    <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+      <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
+        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showStatusOverlay"
+          class="bg-cover bg-no-repeat shadow-blue-500/20 pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-gray-800 border-incognitee-green shadow-lg ring-1 ring-incognitee-green"
+        >
+          <div class="p-4">
+            <div class="flex items-start">
+              <div class="ml-3 w-0 flex-1 pt-0.5">
+                <p class="mt-1 text-sm text-gray-300">{{ txStatus }}</p>
+              </div>
+              <div class="ml-4 flex flex-shrink-0">
+                <button
+                  type="button"
+                  @click="showStatusOverlay = false"
+                  class="inline-flex rounded-md bg-gray-800 text-gray-400 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  <span class="sr-only">Close</span>
+                  <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import Logo from "@/components/Logo/index.vue";
+import Socials from "@/components/Socials/index.vue";
+import {
+  BASILISK_LINK,
+  BUGBOUNTY_LINK,
+  COIN_GECKO_LINK,
+  COIN_MARKET_LINK,
+  DISCORD_LINK,
+  DOCS_LINK,
+  GATE_LINK,
+  GOVERNANCE_FOOTER_LINK,
+  HELP_CENTER_LINK,
+  INTEGRITEE_NETWORK_LINK,
+  KRAKEN_LINK,
+  LIGHTPAPER_LINK,
+  LINKEDIN_LINK,
+  MEDIUM_LINK,
+  REDDIT_LINK,
+  SUBSCAN_LINK,
+  TELEGRAM_LINK,
+  TOKENOMICS_LINK,
+  TRADING_LINK,
+  TWITTER_LINK,
+  YOUTUBE_LINK,
+} from "@/configs/app.config";
 import {
   web3Accounts,
   web3Enable,
@@ -1018,6 +1017,7 @@ import { onMounted, ref, watch } from "vue";
 import { useAccount } from "@/store/teerAccount.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
+import { CheckCircleIcon } from "@heroicons/vue/24/outline";
 
 const accountStore = useAccount();
 
@@ -1156,7 +1156,7 @@ watch(accountStore, async () => {
         let unlockDate = new Date(0);
         const unlockEpoch = timestamp_amount[0].toNumber();
         unlockDate.setUTCMilliseconds(unlockEpoch);
-        console.log("unlock date:" + unlockDate + "epoch:" + unlockEpoch);
+        console.log("Unlock date:" + unlockDate + "epoch:" + unlockEpoch);
         pendingUnlock.value = new PendingUnlock(
           timestamp_amount[1] / Math.pow(10, 12),
           unlockDate,
@@ -1173,7 +1173,7 @@ const bondAmount = () => {
   // Handle the bonding process here
   const amount = amountToBond.value * Math.pow(10, 12);
   console.log(`Bonding ${amount}`);
-  txStatus.value = "⌛ bonding. please sign the transaction in your wallet.";
+  txStatus.value = "⌛ Bonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     if (currentBond.value?.getTeerBonded() > 0) {
@@ -1202,7 +1202,7 @@ const unbondAmount = () => {
   // Handle the bonding process here
   const amount = amountToUnbond.value * Math.pow(10, 12);
   console.log(`Unbonding ${amount}`);
-  txStatus.value = "⌛ unbonding. please sign the transaction in your wallet.";
+  txStatus.value = "⌛ Unbonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     api.tx.teerDays
@@ -1220,7 +1220,7 @@ const withdrawUnbonded = () => {
   // Handle the bonding process here
   console.log(`Withdrawing`);
   txStatus.value =
-    "⌛ withdrawing. please sign the transaction in your wallet.";
+    "⌛ Withdrawing. Please sign the transaction in your wallet.";
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     api.tx.teerDays
@@ -1301,8 +1301,8 @@ const openStatusOverlay = () => {
 };
 const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
   status.isFinalized
-    ? (txStatus.value = `😀 Finalized. Finalized.`)
-    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds.`);
+    ? (txStatus.value = `😀 Finalized!`)
+    : (txStatus.value = `⌛ Current transaction status: ${status.type}. Please be patient a few more seconds.`);
 
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({ _, event: { data, method, section } }) => {
@@ -1348,6 +1348,63 @@ const txErrHandlerIntegritee = (err) =>
 </script>
 
 <style scoped>
+.rounded-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: separate;
+  /* Necessary for rounded corners */
+  border-spacing: 0 10px;
+  /* Space between rows */
+}
+
+.rounded-table thead th {
+  /* Header background color */
+  padding: 15px;
+  text-align: left;
+  color: #ffffff;
+  /* Lighter text for header */
+  font-weight: bold;
+}
+
+.rounded-table tbody tr {
+  background-color: #1b1d26;
+  /* Row background */
+}
+
+.rounded-table tbody td {
+  padding: 15px;
+  background-color: #1b1d26;
+  /* Matches row background */
+}
+
+.rounded-table tbody tr td.rounded-left {
+  border-top-left-radius: 10px;
+  /* Top-left corner */
+  border-bottom-left-radius: 10px;
+  /* Bottom-left corner */
+}
+
+.rounded-table tbody tr td.rounded-right {
+  border-top-right-radius: 10px;
+  /* Top-right corner */
+  border-bottom-right-radius: 10px;
+  /* Bottom-right corner */
+}
+
+.rounded-table tbody tr td:nth-child(3),
+.rounded-table tbody tr td:nth-child(4) {
+  text-align: left;
+  /* Align text to the right for points and prize */
+}
+
+.rounded-table tbody tr td .icon {
+  margin-right: 10px;
+  /* Space between icon and text */
+  color: #8c8e9c;
+  /* Icon color */
+}
+
 .incognitee-bg {
   background: linear-gradient(84.58deg, #24ad7c, #1845b9);
 }
@@ -1376,5 +1433,223 @@ input[type="number"] {
   background-color: #1c1c26;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+  &__logo {
+    display: block;
+    width: 191px;
+    height: 40px;
+    margin-bottom: 19px;
+
+    @include slg {
+      width: 117px;
+      height: 24px;
+      margin-bottom: 26px;
+    }
+
+    @include md {
+      margin-bottom: 0;
+      width: 144px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    @include sm {
+      margin-bottom: 24px;
+      width: 117px;
+      height: 24px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  &__row {
+    gap: 48px;
+
+    @include md {
+      display: block;
+    }
+  }
+
+  &__column {
+    @media screen and (max-width: 660px) {
+      margin-bottom: 24px;
+      width: 50%;
+
+      &:first-child {
+        width: 100%;
+
+        .footer__column-list {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .footer__column-link {
+          width: 50%;
+        }
+      }
+
+      &:nth-last-child(1),
+      &:nth-last-child(2) {
+        margin-bottom: 0;
+      }
+    }
+
+    @include xsm {
+      &:first-child {
+        width: 100% !important;
+
+        .footer__column-link {
+          width: 125px;
+        }
+
+        .footer__column-list {
+          justify-content: space-between;
+        }
+      }
+
+      width: 125px !important;
+    }
+
+    &_about {
+      flex-shrink: 0;
+      max-width: 255px;
+      font-size: 1.125em;
+
+      @include slg {
+        font-size: 0.875em;
+      }
+
+      @include md {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 100%;
+        width: 100%;
+        gap: 24px;
+        margin-bottom: 35px;
+        font-size: 0.75em;
+      }
+
+      @include sm {
+        display: block;
+        margin-bottom: 24px !important;
+        font-size: 0.875em;
+      }
+    }
+
+    &:last-child {
+      width: auto;
+
+      @media screen and (max-width: 660px) {
+        width: 50%;
+      }
+    }
+  }
+
+  &__column-link {
+    display: block;
+    line-height: 150%;
+    margin-bottom: 14px;
+    font-size: 1.125em;
+
+    @include slg {
+      font-size: 1em;
+    }
+
+    @include sm {
+      font-size: 0.875em;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__columns-row {
+    display: flex;
+    gap: 82px;
+
+    @include lg {
+      gap: 52px;
+    }
+
+    @include slg {
+      gap: 32px;
+    }
+
+    @include md {
+      justify-content: space-between;
+    }
+
+    @media screen and (max-width: 660px) {
+      gap: 0;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__description {
+    line-height: 150%;
+    margin-bottom: 19px;
+
+    @include slg {
+      margin-bottom: 26px;
+    }
+
+    @include md {
+      margin-bottom: 0;
+      max-width: 415px;
+      margin-right: auto;
+    }
+
+    @include sm {
+      margin-bottom: 24px;
+      max-width: 100%;
+    }
+  }
+
+  &__column-title {
+    color: $gray;
+    margin-bottom: 32px;
+    line-height: 150%;
+    font-size: 1.125em;
+
+    @include slg {
+      margin-bottom: 24px;
+    }
+
+    @include md {
+      margin-bottom: 16px;
+    }
+
+    @include sm {
+      font-size: 0.875em;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 36px 0;
+    margin-top: 36px;
+    border-top: 2px solid $alphaGray;
+
+    @include md {
+      padding: 24px 0;
+      margin-top: 24px;
+    }
+
+    a {
+      transition: 0.3s ease;
+
+      &:hover {
+        color: #7ca8ff;
+      }
+    }
+  }
 }
 </style>

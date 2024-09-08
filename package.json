@@ -68,6 +68,7 @@
     "qrcode": "^1.5.3",
     "sass": "^1.75.0",
     "tailwind-merge": "^2.5.2",
+    "vue-pagination-2": "^3.1.0",
     "vue-qrcode": "^2.2.2",
     "vue-qrcode-reader": "^5.5.4",
     "vue3-form-wizard": "^0.2.3",

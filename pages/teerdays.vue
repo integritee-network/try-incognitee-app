@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center py-4 lg:px-4">
+  <div class="text-center mb-17 sm:mb-20 lg:mb-20 py-4 lg:px-4">
     <div
       class="p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
       role="alert"
@@ -116,15 +116,13 @@
       class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
     />
 
-    <div class="my-28">
-      <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl lg:max-w-none">
-          <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="relative overflow-hidden w-full sm:w-auto">
-              <dt>
-                <div class="absolute rounded-md bg-gray-800 p-3">
+
+
+    <div class="mb-20">
+  <dl class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0">
+    <div class="px-4 py-5 sm:p-6">
                   <svg
-                    class="h-6 w-6 text-white"
+                    class="h-6 w-6 mb-3 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
@@ -136,24 +134,17 @@
                       stroke-linejoin="round"
                       d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
                     />
-                  </svg>
-                </div>
-                <p class="ml-16 truncate text-xs font-medium text-gray-400">
-                  TEERday holder
-                </p>
-              </dt>
-              <dd class="ml-16 flex items-baseline">
-                <p class="text-4xl font-semibold text-white">
-                  {{ summaryHolders }}
-                </p>
-              </dd>
-            </div>
-
-            <div class="relative overflow-hidden w-full sm:w-auto">
-              <dt>
-                <div class="absolute rounded-md bg-gray-800 p-3">
-                  <svg
-                    class="h-6 w-6 text-white"
+                  </svg>      
+      <dt class="text-base font-normal text-gray-300">TEERday holder</dt>
+      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+          {{ summaryHolders }}
+        </div>
+      </dd>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <svg
+                    class="h-6 w-6 mb-3 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
@@ -166,23 +157,16 @@
                       d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
                     />
                   </svg>
-                </div>
-                <p class="ml-16 truncate text-xs font-medium text-gray-400">
-                  Total TEER bonded
-                </p>
-              </dt>
-              <dd class="ml-16 flex items-baseline">
-                <p class="text-4xl font-semibold text-white">
-                  {{ summaryTeerBonded.toFixed(2) }}
-                </p>
-              </dd>
-            </div>
-
-            <div class="relative overflow-hidden w-full sm:w-auto">
-              <dt>
-                <div class="absolute rounded-md bg-gray-800 p-3">
-                  <svg
-                    class="h-6 w-6 text-white"
+      <dt class="text-base font-normal text-gray-300">Total TEER bonded</dt>
+      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+          {{ summaryTeerBonded.toFixed(2) }}
+        </div>
+      </dd>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <svg
+                    class="h-6 w-6 mb-3 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
@@ -195,23 +179,17 @@
                       d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
                     />
                   </svg>
-                </div>
-                <p class="ml-16 truncate text-xs font-medium text-gray-400">
-                  Total TEERdays active
-                </p>
-              </dt>
-              <dd class="ml-16 flex items-baseline">
-                <p class="text-4xl font-semibold text-white">
-                  {{ summaryTeerDays.toFixed(2) }}
-                </p>
-              </dd>
-            </div>
-          </dl>
+      <dt class="text-base font-normal text-gray-300">Total TEERdays active</dt>
+      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+          {{ summaryTeerDays.toFixed(2) }}
         </div>
-      </div>
+      </dd>
     </div>
+  </dl>
+</div>
 
-    <div v-if="accounts.length" class="py-12 sm:py-16">
+    <div v-if="accounts.length > 0" ref="walletSection" id="wallet" class="py-12 sm:py-16">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
           <h1
@@ -1036,20 +1014,60 @@ watch(selectedAccount, (newAccount) => {
     accountStore.setAddress(newAccount);
   }
 });
+import { nextTick } from 'vue';
+
 const connect = () => {
   web3Enable("Integritee Dapp")
     .then((extensions) => {
-      console.log(extensions);
+      console.log("Enabled extensions:", extensions);
+
+      // Check if any extensions are found
+      if (extensions.length === 0) {
+        console.error("No wallet extensions found. Please install or enable a wallet.");
+        alert("No wallet extensions found. Please install or enable a wallet.");
+        return; // Stop execution if no extensions are found
+      }
+
       return web3Accounts();
     })
     .then((accountsList) => {
+      // If web3Accounts() didn't return a list, exit gracefully
+      if (!accountsList) {
+        console.error("No accounts found. Please unlock your wallet.");
+        alert("No accounts found. Please unlock your wallet.");
+        return;
+      }
+
+      // If accounts are found, store them
       accounts.value = accountsList;
-      console.log(accounts);
+      console.log("Found accounts:", accountsList);
+
+      if (accountsList.length > 0) {
+        // Wallet accounts found, scroll to the wallet section
+        nextTick(() => {
+          const walletSection = document.getElementById("wallet");
+          if (walletSection) {
+            // Scroll with smooth behavior
+            walletSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else {
+            console.error("Wallet section not found.");
+          }
+        });
+      } else {
+        console.error("No accounts detected. Please unlock your wallet or create an account.");
+        alert("No accounts detected. Please unlock your wallet or create an account.");
+      }
     })
     .catch((error) => {
-      console.error("Error in web3Enable or web3Accounts:", error);
+      // Handle any errors during the connection process
+      console.error("Error during wallet connection:", error);
+      alert("Error during wallet connection. Please try again.");
     });
 };
+
+
+
+
 
 let api: ApiPromise | null = null;
 
@@ -1296,33 +1314,45 @@ class PendingUnlock {
 
 const txStatus = ref("");
 const showStatusOverlay = ref(false);
+
+// Open the status overlay (notification)
 const openStatusOverlay = () => {
   showStatusOverlay.value = true;
 };
+
+// Close the status overlay after a delay (e.g., 5 seconds)
+const closeStatusOverlay = () => {
+  setTimeout(() => {
+    showStatusOverlay.value = false;
+  }, 5000); // 5 seconds delay
+};
+
 const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
-  status.isFinalized
-    ? (txStatus.value = `😀 Finalized!`)
-    : (txStatus.value = `⌛ Current transaction status: ${status.type}. Please be patient a few more seconds.`);
+  if (status.isFinalized) {
+    txStatus.value = `😀 Finalized!`;
+
+    // Close the overlay automatically after 5 seconds
+    closeStatusOverlay();
+  } else {
+    txStatus.value = `⌛ Current transaction status: ${status.type}. Please be patient a few more seconds.`;
+  }
 
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({ _, event: { data, method, section } }) => {
     if (section + ":" + method === "system:ExtrinsicFailed") {
-      // extract the data for this event
+      // Extract the data for this event
       const [dispatchError, dispatchInfo] = data;
       console.log(`dispatchinfo: ${dispatchInfo}`);
       let errorInfo;
 
-      // decode the error
+      // Decode the error
       if (dispatchError.isModule) {
-        // for module errors, we have the section indexed, lookup
-        // (For specific known errors, we can also do a check against the
-        // api.errors.<module>.<ErrorName>.is(dispatchError.asModule) guard)
         const mod = dispatchError.asModule;
         const error = api.registry.findMetaError(
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
-          ]),
+          ])
         );
         const message = `${error.section}.${error.name}${
           Array.isArray(error.docs)
@@ -1338,13 +1368,16 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
       }
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
-      txStatus.value`❤️️ Transaction successful!`;
+      txStatus.value = `❤️️ Transaction successful!`;
+      // Close the overlay automatically after 5 seconds if successful
+      closeStatusOverlay();
     }
   });
 };
 
-const txErrHandlerIntegritee = (err) =>
-  (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
+const txErrHandlerIntegritee = (err) => {
+  txStatus.value = `😞 Transaction Failed: ${err.toString()}`;
+};
 </script>
 
 <style scoped>
@@ -1468,12 +1501,16 @@ input[type="number"] {
   }
 
   &__row {
-    gap: 48px;
+  display: block; /* Default for mobile */
 
-    @include md {
-      display: block;
-    }
+  /* Media Query for Desktop */
+  @media (min-width: 768px) { /* Adjust the pixel value according to your breakpoint */
+    display: flex;
+    gap: 48px;
   }
+}
+
+
 
   &__column {
     @media screen and (max-width: 660px) {

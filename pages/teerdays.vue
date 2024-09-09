@@ -59,7 +59,7 @@
           </h2>
           <p class="mt-6 text-gray-300">
             A new era of digital currency transfer is about to come. Our
-            Incognitee Web3 wallet empowers you to make secure, private, and
+            Incognitee Web3 solution empowers you to make secure, private, and
             anonymous transactions without compromising control over your
             assets. <br /><br />
             Collect TEERdays now and save the pole position for the Incognitee
@@ -203,7 +203,7 @@
       id="wallet"
       class="py-12 sm:py-16"
     >
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
           <h1
             class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
@@ -247,7 +247,7 @@
                   >Selected Address</label
                 >
                 <div class="mt-2">
-                  <span class="text-sm text-gray-300">{{
+                  <span class="wallet-address text-sm text-gray-300">{{
                     accountStore.getAddress
                   }}</span>
                 </div>
@@ -519,12 +519,13 @@
               TEERdays Intro​
             </h1>
             <p class="mt-4 text-gray-300">
-              By bonding your TEER now, you can already accumulate TEERdays prior to the
-              launch of Incognitee. TEERdays are calculated as the amount of
-              TEER times the number of days bonded. You can unbond your TEER
-              anytime within 7 days, but you will lose a fraction of the
-              accumulated TEERdays if you do. TEERdays are non-transferable.
-              Start now to get the best position for the Incognitee launch. ​
+              By bonding your TEER now, you can already accumulate TEERdays
+              prior to the launch of Incognitee. TEERdays are calculated by
+              multiplying the amount of TEER by the number of days bonded. You
+              can unbond your TEER anytime within 7 days, but you will lose a
+              fraction of the accumulated TEERdays if you do. TEERdays are
+              non-transferable. Start now to get the best position for the
+              Incognitee launch. ​
             </p>
           </div>
         </div>
@@ -544,7 +545,7 @@
               TEERdays can be used to increase your revenue share for the launch
               of Incognitee on Polkadot/Kusama and will also increase your
               governance voting power for future decisions related to
-              Incognitee. ​
+              Incognitee.
             </p>
           </div>
         </div>
@@ -561,19 +562,25 @@
               How to participate?​​
             </h1>
             <p class="mt-6 text-gray-300">
-              1. First you need to possess some TEER. Grab them at one of the
-              avenues like Kraken, Gate or Basilisk. ​<br />
+              1. First, you need to possess some TEER. Grab them at one of the
+              avenues like
+              <a
+                href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+                >Kraken</a
+              >, <a href="https://www.gate.io/de/trade/TEER_USDT">Gate</a> or
+              <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+                >Basilisk</a
+              >. ​<br />
 
-              2. Download the Polkadot JS browser Extension and connect your
-              wallet. ​​<br />
+              2. Get one of the supported wallets and connect your wallet. ​​<br />
 
               3. Transfer TEER to your wallet. ​​<br />
 
-              4. Bond your TEER here ( link to wallet)​​<br />
+              4. Bond your TEER using this current page<br />
 
-              5. Start automatically collecting TEERdays​​<br />
+              5. Start automatically collecting TEERdays.​​<br />
 
-              6. Refer a friend ​
+              6. Refer a friend (coming soon).​
             </p>
           </div>
         </div>
@@ -593,18 +600,20 @@
               <li>You can bond as many TEER as you like​</li>
               <li>You can unbond any time with a 7-day unbonding period​</li>
               <li>
-                You will not accumulate any TEERdays during the unbonding
-                period​
+                You will not accumulate any TEERdays during the unbonding period
+              </li>
+              <li>
+                You can’t bond any additional TEER during the unbonding period
               </li>
               <li>
                 You will lose a % of your TEERdays if you unbond your TEER pro
                 rata of the unbonded amount​
               </li>
-              <li>TEERdays are non-transferable​</li>
+              <li>TEERdays are non-transferable</li>
               <li>
-                TEERdays are calculated as follows:​<br />
-                Amount of TEER * with the number of days bonded = TEERdays​<br />
-                Example: 20 TEER * 7 days = 140 TEERdays​
+                TEERdays are calculated as follows:<br />
+                Amount of TEER times the number of days bonded = TEERdays<br />
+                Example: 20 TEER * 7 days = 140 TEERdays
               </li>
             </ul>
           </div>
@@ -673,7 +682,7 @@
                       {{ entry[2].toFixed(2) }}
                     </td>
                     <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                      class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
                     >
                       {{ entry[0] }}
                     </td>
@@ -1398,6 +1407,27 @@ const txErrHandlerIntegritee = (err) => {
 </script>
 
 <style scoped>
+.wallet-address {
+  display: block;
+  white-space: nowrap; /* Verhindert Zeilenumbruch */
+  overflow: hidden; /* Versteckt überlaufenden Text */
+  text-overflow: ellipsis; /* Zeigt '...' bei zu langem Text an */
+}
+
+/* Für mobile Bildschirme (max-width: 640px) */
+@media (max-width: 640px) {
+  .wallet-address {
+    max-width: 10ch; /* Zeigt nur die ersten 5 Zeichen */
+  }
+}
+
+/* Für größere Bildschirme (ab 641px) */
+@media (min-width: 641px) {
+  .wallet-address {
+    max-width: none; /* Zeigt die komplette Adresse an */
+  }
+}
+
 .rounded-table {
   width: 100%;
   max-width: 800px;

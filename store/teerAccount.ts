@@ -4,9 +4,9 @@ import { formatBalance } from "@polkadot/util";
 export const useAccount = defineStore("teerAccount", {
   state: () => ({
     address: <string | null>null,
-    free: 0,
-    reserved: 0,
-    frozen: 0,
+    free: BigInt(0),
+    reserved: BigInt(0),
+    frozen: BigInt(0),
   }),
   getters: {
     getShortAddress({ address }): string {

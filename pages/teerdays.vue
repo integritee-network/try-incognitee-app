@@ -411,7 +411,10 @@
                         Bond TEER to accumulate TEERdays
                       </div>
                       <div
-                        v-if="accountStore.getTransferrable < Math.pow(10, 9)"
+                        v-if="
+                          accountStore.getTransferrable <
+                          BigInt(Math.pow(10, 9))
+                        "
                         class="text-sm text-red-500"
                       >
                         Not enough transferrable TEER. Please get free test TEER
@@ -442,9 +445,10 @@
                               step="0.1"
                               :min="0.1"
                               :max="
-                                accountStore.getTransferrable /
-                                  Math.pow(10, 12) -
-                                0.1
+                                Number(
+                                  accountStore.getTransferrable /
+                                    BigInt(Math.pow(10, 12)),
+                                ) - 0.1
                               "
                               required
                               class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
@@ -1160,9 +1164,9 @@ watch(accountStore, async () => {
       },
     }) => {
       console.log("TEER balance:" + currentFree);
-      accountStore.free = Number(currentFree);
-      accountStore.reserved = Number(currentReserved);
-      accountStore.frozen = Number(currentFrozen);
+      accountStore.free = BigInt(currentFree);
+      accountStore.reserved = BigInt(currentReserved);
+      accountStore.frozen = BigInt(currentFrozen);
       isFetchingTeerBalance.value = false;
     },
   );

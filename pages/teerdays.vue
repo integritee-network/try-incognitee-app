@@ -655,7 +655,7 @@
                 </thead>
                 <tbody class="text-left">
                   <tr
-                    v-for="(entry, index) in allBonds"
+                    v-for="(entry, index) in allBonds.slice(0, 10)"
                     :key="index"
                     :class="{
                       'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau

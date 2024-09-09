@@ -58,8 +58,12 @@
             Decentralized.
           </h2>
           <p class="mt-6 text-gray-300">
-            A new era of digital currency transfer is about to come. Our Incognitee Web3 solution empowers you to make secure, private, and anonymous transactions without compromising control over your assets. <br /><br />
-            Collect TEERdays now and save the pole position for the Incognitee Go-Live.
+            A new era of digital currency transfer is about to come. Our
+            Incognitee Web3 solution empowers you to make secure, private, and
+            anonymous transactions without compromising control over your
+            assets. <br /><br />
+            Collect TEERdays now and save the pole position for the Incognitee
+            Go-Live.
           </p>
           <div
             class="mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
@@ -105,7 +109,6 @@
             alt="polkajs"
           />
         </div>
-
       </div>
     </div>
 
@@ -194,7 +197,12 @@
       </dl>
     </div>
 
-    <div v-if="accounts.length > 0" ref="walletSection" id="wallet" class="py-12 sm:py-16">
+    <div
+      v-if="accounts.length > 0"
+      ref="walletSection"
+      id="wallet"
+      class="py-12 sm:py-16"
+    >
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
           <h1
@@ -241,7 +249,7 @@
                 <div class="mt-2">
                   <span class="wallet-address text-sm text-gray-300">{{
                     accountStore.getAddress
-                    }}</span>
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -376,7 +384,7 @@
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
                                   pendingUnlock?.getDueDateStr()
-                                  }}</time>
+                                }}</time>
                               </dd>
                             </div>
                           </div>
@@ -511,7 +519,13 @@
               TEERdays Intro​
             </h1>
             <p class="mt-4 text-gray-300">
-              By bonding your TEER now, you can already accumulate TEERdays prior to the launch of Incognitee. TEERdays are calculated by multiplying the amount of TEER by the number of days bonded. You can unbond your TEER anytime within 7 days, but you will lose a fraction of the accumulated TEERdays if you do. TEERdays are non-transferable. Start now to get the best position for the Incognitee launch.  ​
+              By bonding your TEER now, you can already accumulate TEERdays
+              prior to the launch of Incognitee. TEERdays are calculated by
+              multiplying the amount of TEER by the number of days bonded. You
+              can unbond your TEER anytime within 7 days, but you will lose a
+              fraction of the accumulated TEERdays if you do. TEERdays are
+              non-transferable. Start now to get the best position for the
+              Incognitee launch. ​
             </p>
           </div>
         </div>
@@ -528,7 +542,10 @@
               Why collect TEERdays?​
             </h1>
             <p class="mt-4 text-gray-300">
-              TEERdays can be used to increase your revenue share for the launch of Incognitee on Polkadot/Kusama and will also increase your governance voting power for future decisions related to Incognitee. 
+              TEERdays can be used to increase your revenue share for the launch
+              of Incognitee on Polkadot/Kusama and will also increase your
+              governance voting power for future decisions related to
+              Incognitee.
             </p>
           </div>
         </div>
@@ -545,13 +562,22 @@
               How to participate?​​
             </h1>
             <p class="mt-6 text-gray-300">
-              1. First, you need to possess some TEER. Grab them at one of the avenues like <a href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h">Kraken</a>, <a href="https://www.gate.io/de/trade/TEER_USDT">Gate</a> or <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17">Basilisk</a>.  ​<br />
+              1. First, you need to possess some TEER. Grab them at one of the
+              avenues like
+              <a
+                href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+                >Kraken</a
+              >, <a href="https://www.gate.io/de/trade/TEER_USDT">Gate</a> or
+              <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+                >Basilisk</a
+              >. ​<br />
 
-              2. Get one of the supported wallets and connect your wallet.  ​​<br />
+              2. Get one of the supported wallets and connect your wallet. ​​<br />
 
-              3. Transfer TEER to your wallet.  ​​<br />
+              3. Transfer TEER to your wallet. ​​<br />
 
-              4. Bond your TEER <a href="https://try.incognitee.io/teerdays/">here</a>.​​<br />
+              4. Bond your TEER
+              <a href="https://try.incognitee.io/teerdays/">here</a>.​​<br />
 
               5. Start automatically collecting TEERdays.​​<br />
 
@@ -580,22 +606,21 @@
               <li>
                 You can’t bond any additional TEER during the unbonding period
               </li>
-              <li>You will lose a % of your TEERdays if you unbond your TEER pro rata of the unbonded amount​</li>
               <li>
-                TEERdays are non-transferable
+                You will lose a % of your TEERdays if you unbond your TEER pro
+                rata of the unbonded amount​
               </li>
+              <li>TEERdays are non-transferable</li>
               <li>
-               TEERdays are calculated as follows:<br>
-Amount of TEER * with the number of days bonded = TEERdays<br>
-Example: 20 TEER * 7 days = 140 TEERdays
-
+                TEERdays are calculated as follows:<br />
+                Amount of TEER * with the number of days bonded = TEERdays<br />
+                Example: 20 TEER * 7 days = 140 TEERdays
               </li>
             </ul>
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="mt-20 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
@@ -1399,14 +1424,11 @@ const txErrHandlerIntegritee = (err) => {
 };
 </script>
 
-
-
-
 <style scoped>
 .wallet-address {
   display: block;
-  white-space: nowrap;   /* Verhindert Zeilenumbruch */
-  overflow: hidden;      /* Versteckt überlaufenden Text */
+  white-space: nowrap; /* Verhindert Zeilenumbruch */
+  overflow: hidden; /* Versteckt überlaufenden Text */
   text-overflow: ellipsis; /* Zeigt '...' bei zu langem Text an */
 }
 
@@ -1423,7 +1445,6 @@ const txErrHandlerIntegritee = (err) => {
     max-width: none; /* Zeigt die komplette Adresse an */
   }
 }
-
 
 .rounded-table {
   width: 100%;

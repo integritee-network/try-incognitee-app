@@ -568,11 +568,11 @@
             <p class="mt-6 text-gray-300">
               1. First, you need to possess some TEER. Grab them at one of the
               avenues like
-              <a
+              <a class="text-incognitee-green"
                 href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
                 >Kraken</a
-              >, <a href="https://www.gate.io/de/trade/TEER_USDT">Gate</a> or
-              <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+              >, <a class="text-incognitee-green" href="https://www.gate.io/de/trade/TEER_USDT">Gate</a> or
+              <a class="text-incognitee-green" href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
                 >Basilisk</a
               >. ​<br />
 
@@ -1700,7 +1700,7 @@ input[type="number"] {
   }
 
   &__column-title {
-    color: $gray;
+    color: #88888c;
     margin-bottom: 32px;
     line-height: 150%;
     font-size: 1.125em;

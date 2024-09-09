@@ -576,8 +576,7 @@
 
               3. Transfer TEER to your wallet. ​​<br />
 
-              4. Bond your TEER
-              <a href="https://try.incognitee.io/teerdays/">here</a>.​​<br />
+              4. Bond your TEER using this current page<br />
 
               5. Start automatically collecting TEERdays.​​<br />
 
@@ -613,7 +612,7 @@
               <li>TEERdays are non-transferable</li>
               <li>
                 TEERdays are calculated as follows:<br />
-                Amount of TEER * with the number of days bonded = TEERdays<br />
+                Amount of TEER times the number of days bonded = TEERdays<br />
                 Example: 20 TEER * 7 days = 140 TEERdays
               </li>
             </ul>
@@ -664,7 +663,7 @@
                 </thead>
                 <tbody class="text-left">
                   <tr
-                    v-for="(entry, index) in allBonds"
+                    v-for="(entry, index) in allBonds.slice(0, 10)"
                     :key="index"
                     :class="{
                       'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
@@ -1178,11 +1177,6 @@ watch(accountStore, async () => {
             bond.lastUpdated +
             " accumulated tokentime:" +
             bond.accumulatedTokentime,
-            bond.value +
-            " last updated:" +
-            bond.lastUpdated +
-            " accumulated tokentime:" +
-            bond.accumulatedTokentime,
         );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
@@ -1235,18 +1229,12 @@ const bondAmount = () => {
           txResHandlerIntegritee,
         )
         .catch(txErrHandlerIntegritee);
-          txResHandlerIntegritee,
-        )
-        .catch(txErrHandlerIntegritee);
     } else {
       api.tx.teerDays
         .bond(amount)
         .signAndSend(
           accountStore.getAddress,
           { signer: injector.signer },
-          txResHandlerIntegritee,
-        )
-        .catch(txErrHandlerIntegritee);
           txResHandlerIntegritee,
         )
         .catch(txErrHandlerIntegritee);
@@ -1269,9 +1257,6 @@ const unbondAmount = () => {
         txResHandlerIntegritee,
       )
       .catch(txErrHandlerIntegritee);
-        txResHandlerIntegritee,
-      )
-      .catch(txErrHandlerIntegritee);
   });
 };
 
@@ -1287,9 +1272,6 @@ const withdrawUnbonded = () => {
       .signAndSend(
         accountStore.getAddress,
         { signer: injector.signer },
-        txResHandlerIntegritee,
-      )
-      .catch(txErrHandlerIntegritee);
         txResHandlerIntegritee,
       )
       .catch(txErrHandlerIntegritee);

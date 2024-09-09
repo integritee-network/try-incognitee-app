@@ -105,6 +105,7 @@
             alt="polkajs"
           />
         </div>
+
       </div>
     </div>
 
@@ -240,7 +241,7 @@
                 <div class="mt-2">
                   <span class="wallet-address text-sm text-gray-300">{{
                     accountStore.getAddress
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
             </div>
@@ -375,7 +376,7 @@
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
                                   pendingUnlock?.getDueDateStr()
-                                }}</time>
+                                  }}</time>
                               </dd>
                             </div>
                           </div>
@@ -594,6 +595,7 @@ Example: 20 TEER * 7 days = 140 TEERdays
         </div>
       </div>
     </div>
+
 
     <div class="mt-20 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
@@ -1151,6 +1153,11 @@ watch(accountStore, async () => {
             bond.lastUpdated +
             " accumulated tokentime:" +
             bond.accumulatedTokentime,
+            bond.value +
+            " last updated:" +
+            bond.lastUpdated +
+            " accumulated tokentime:" +
+            bond.accumulatedTokentime,
         );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
@@ -1203,12 +1210,18 @@ const bondAmount = () => {
           txResHandlerIntegritee,
         )
         .catch(txErrHandlerIntegritee);
+          txResHandlerIntegritee,
+        )
+        .catch(txErrHandlerIntegritee);
     } else {
       api.tx.teerDays
         .bond(amount)
         .signAndSend(
           accountStore.getAddress,
           { signer: injector.signer },
+          txResHandlerIntegritee,
+        )
+        .catch(txErrHandlerIntegritee);
           txResHandlerIntegritee,
         )
         .catch(txErrHandlerIntegritee);
@@ -1231,6 +1244,9 @@ const unbondAmount = () => {
         txResHandlerIntegritee,
       )
       .catch(txErrHandlerIntegritee);
+        txResHandlerIntegritee,
+      )
+      .catch(txErrHandlerIntegritee);
   });
 };
 
@@ -1246,6 +1262,9 @@ const withdrawUnbonded = () => {
       .signAndSend(
         accountStore.getAddress,
         { signer: injector.signer },
+        txResHandlerIntegritee,
+      )
+      .catch(txErrHandlerIntegritee);
         txResHandlerIntegritee,
       )
       .catch(txErrHandlerIntegritee);
@@ -1379,6 +1398,9 @@ const txErrHandlerIntegritee = (err) => {
   txStatus.value = `😞 Transaction Failed: ${err.toString()}`;
 };
 </script>
+
+
+
 
 <style scoped>
 .wallet-address {

@@ -519,12 +519,11 @@
               TEERdays Intro​
             </h1>
             <p class="mt-4 text-gray-300">
-              By bonding your TEER now, you can accumulate TEERdays for the
-              launch of Incognitee. TEERdays are calculated by the amount of
-              TEER * with the number of days bonded. You can unbond your TEER
-              anytime within 7 days, but you will lose 90%-100% of the
-              accumulated TEERdays as a penalty. During the unlock period,
-              you're not accumulating TEERdays. TEERdays are non-transferable.
+              By bonding your TEER now, you can already accumulate TEERdays prior to the
+              launch of Incognitee. TEERdays are calculated as the amount of
+              TEER times the number of days bonded. You can unbond your TEER
+              anytime within 7 days, but you will lose a fraction of the
+              accumulated TEERdays if you do. TEERdays are non-transferable.
               Start now to get the best position for the Incognitee launch. ​
             </p>
           </div>

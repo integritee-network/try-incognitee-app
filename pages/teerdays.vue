@@ -116,80 +116,93 @@
       class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
     />
 
-
-
     <div class="mb-20">
-  <dl class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0">
-    <div class="px-4 py-5 sm:p-6">
-                  <svg
-                    class="h-6 w-6 mb-3 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-                    />
-                  </svg>      
-      <dt class="text-base font-normal text-gray-300">TEERday holder</dt>
-      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
-          {{ summaryHolders }}
+      <dl
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0"
+      >
+        <div class="px-4 py-5 sm:p-6">
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+            />
+          </svg>
+          <dt class="text-base font-normal text-gray-300">TEERday holder</dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
+              {{ summaryHolders }}
+            </div>
+          </dd>
         </div>
-      </dd>
-    </div>
-    <div class="px-4 py-5 sm:p-6">
-      <svg
-                    class="h-6 w-6 mb-3 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
-                    />
-                  </svg>
-      <dt class="text-base font-normal text-gray-300">Total TEER bonded</dt>
-      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
-          {{ summaryTeerBonded.toFixed(2) }}
+        <div class="px-4 py-5 sm:p-6">
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+            />
+          </svg>
+          <dt class="text-base font-normal text-gray-300">Total TEER bonded</dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
+              {{ summaryTeerBonded.toFixed(2) }}
+            </div>
+          </dd>
         </div>
-      </dd>
-    </div>
-    <div class="px-4 py-5 sm:p-6">
-      <svg
-                    class="h-6 w-6 mb-3 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-                    />
-                  </svg>
-      <dt class="text-base font-normal text-gray-300">Total TEERdays active</dt>
-      <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-        <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
-          {{ summaryTeerDays.toFixed(2) }}
+        <div class="px-4 py-5 sm:p-6">
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
+            />
+          </svg>
+          <dt class="text-base font-normal text-gray-300">
+            Total TEERdays active
+          </dt>
+          <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
+              {{ summaryTeerDays.toFixed(2) }}
+            </div>
+          </dd>
         </div>
-      </dd>
+      </dl>
     </div>
-  </dl>
-</div>
 
-    <div v-if="accounts.length > 0" ref="walletSection" id="wallet" class="py-12 sm:py-16">
+    <div
+      v-if="accounts.length > 0"
+      ref="walletSection"
+      id="wallet"
+      class="py-12 sm:py-16"
+    >
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
           <h1
@@ -1014,7 +1027,7 @@ watch(selectedAccount, (newAccount) => {
     accountStore.setAddress(newAccount);
   }
 });
-import { nextTick } from 'vue';
+import { nextTick } from "vue";
 
 const connect = () => {
   web3Enable("Integritee Dapp")
@@ -1023,7 +1036,9 @@ const connect = () => {
 
       // Check if any extensions are found
       if (extensions.length === 0) {
-        console.error("No wallet extensions found. Please install or enable a wallet.");
+        console.error(
+          "No wallet extensions found. Please install or enable a wallet.",
+        );
         alert("No wallet extensions found. Please install or enable a wallet.");
         return; // Stop execution if no extensions are found
       }
@@ -1048,14 +1063,21 @@ const connect = () => {
           const walletSection = document.getElementById("wallet");
           if (walletSection) {
             // Scroll with smooth behavior
-            walletSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            walletSection.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
           } else {
             console.error("Wallet section not found.");
           }
         });
       } else {
-        console.error("No accounts detected. Please unlock your wallet or create an account.");
-        alert("No accounts detected. Please unlock your wallet or create an account.");
+        console.error(
+          "No accounts detected. Please unlock your wallet or create an account.",
+        );
+        alert(
+          "No accounts detected. Please unlock your wallet or create an account.",
+        );
       }
     })
     .catch((error) => {
@@ -1064,10 +1086,6 @@ const connect = () => {
       alert("Error during wallet connection. Please try again.");
     });
 };
-
-
-
-
 
 let api: ApiPromise | null = null;
 
@@ -1352,7 +1370,7 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
-          ])
+          ]),
         );
         const message = `${error.section}.${error.name}${
           Array.isArray(error.docs)
@@ -1501,16 +1519,15 @@ input[type="number"] {
   }
 
   &__row {
-  display: block; /* Default for mobile */
+    display: block; /* Default for mobile */
 
-  /* Media Query for Desktop */
-  @media (min-width: 768px) { /* Adjust the pixel value according to your breakpoint */
-    display: flex;
-    gap: 48px;
+    /* Media Query for Desktop */
+    @media (min-width: 768px) {
+      /* Adjust the pixel value according to your breakpoint */
+      display: flex;
+      gap: 48px;
+    }
   }
-}
-
-
 
   &__column {
     @media screen and (max-width: 660px) {

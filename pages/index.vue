@@ -1597,20 +1597,22 @@ const unshield = () => {
   txStatus.value = "⌛ will unshield to L1";
   const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
-  const signer = accountStore.account;
+  const account = accountStore.account;
   console.log(
     `sending ${formatBalance(amount)} from ${
-      signer.address
+      accountStore.getAddress
     } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
   );
   incogniteeStore.api
     .balanceUnshieldFunds(
-      signer,
+      account,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
-      signer.address,
+      accountStore.getAddress,
       recipientAddress.value,
       amount,
+      {},
+      accountStore.injected?.signer
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";
@@ -1622,18 +1624,20 @@ const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = Math.pow(10, 10) * sendAmount.value;
-  const signer = accountStore.account;
+  const account = accountStore.account;
   console.log(
-    `sending ${formatBalance(amount)} from ${signer.address} privately to ${recipientAddress.value}`,
+    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
   );
   incogniteeStore.api
     .trustedBalanceTransfer(
-      signer,
+      account,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
-      signer.address,
+      accountStore.getAddress,
       recipientAddress.value,
       amount,
+      {},
+      accountStore.injected?.signer,
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -1644,9 +1648,16 @@ const sendPrivately = () => {
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
+
+  console.log(`fetching incognitee balance: is injected ${accountStore.isInjected}`);
+
+  const injector = accountStore.isInjected ? accountStore.injected : null
+  console.log(`fetching incognitee balance: injector ${JSON.stringify(injector)}}`);
+
   incogniteeStore.api
-    .getBalance(accountStore.account, incogniteeStore.shard)
-    .then((balance) => {
+    .getBalanceGetter(accountStore.account, incogniteeStore.shard, injector?.signer)
+      .then((submittable) => submittable.send())
+      .then((balance) => {
       console.log(
         `current account balance L2: ${balance} on shard ${incogniteeStore.shard}`,
       );
@@ -1679,10 +1690,10 @@ watch(accountStore, async () => {
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
   api = await ApiPromise.create({ provider: wsProvider });
   api.query.system.account(
-    accountStore.account.address,
+    accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
       console.log("paseo balance:" + currentFree);
-      accountStore.paseoBalance = Number(currentFree);
+      accountStore.setPaseoBalance(Number(currentFree));
       isFetchingPaseoBalance.value = false;
     },
   );
@@ -1720,7 +1731,20 @@ onMounted(async () => {
       accountStore.setAccount(account);
     });
   } else if (injectedAddress) {
+    // returns an array of all the injected sources
+    // (this needs to be called first, before other requests)
+    allInjected = await web3Enable('Incognitee Campaign Page');
+    console.log(`AllInjected: ${JSON.stringify(allInjected)}`);
+
+    // returns an array of { address, meta: { name, source } }
+    // meta.source contains the name of the extension that provides this account
+    allAccounts = await web3Accounts();
+    console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
+
     accountStore.setAccount(injectedAddress.toString());
+    const injected = await web3FromAddress(accountStore.getAddress)
+    console.log(`setting injected: ${JSON.stringify(injected)}`)
+    accountStore.setInjected(injected);
   } else {
     console.log("no seed found in url. Will try to inject from extensions");
     // returns an array of all the injected sources
@@ -1731,10 +1755,17 @@ onMounted(async () => {
     // returns an array of { address, meta: { name, source } }
     // meta.source contains the name of the extension that provides this account
     allAccounts = await web3Accounts();
+    console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
 
     const firstAddress = allAccounts[0].address;
+    console.log(`first address: ${firstAddress}`)
 
     accountStore.setAccount(firstAddress);
+
+    const injected = await web3FromAddress(accountStore.getAddress)
+    console.log(`setting injected: ${injected}`)
+
+    accountStore.setInjected(injected);
 
     cryptoWaitReady().then(() => {
       console.log(`First injected address: ${firstAddress}`);

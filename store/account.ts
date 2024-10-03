@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import type { KeyringPair } from "@polkadot/keyring/types";
 import { formatBalance } from "@polkadot/util";
+import type {AddressOrPair} from "@polkadot/api-base/types";
+import { asString, isKeyringPair } from "@encointer/util"
 
 formatBalance.setDefaults({
   decimals: 10,
@@ -8,16 +9,19 @@ formatBalance.setDefaults({
 });
 export const useAccount = defineStore("account", {
   state: () => ({
-    account: <KeyringPair | null>null,
+    account: <AddressOrPair | null>null,
     paseoBalance: 0,
     incogniteeBalance: 0,
   }),
   getters: {
     getShortAddress({ account }): string {
-      return account ? account.address.slice(0, 8) + "..." : "none";
+      return account ? asString(account as AddressOrPair).slice(0, 8) + "..." : "none";
     },
     getAddress({ account }): string {
-      return account ? account.address : "none";
+      return account ? asString(account as AddressOrPair) : "none";
+    },
+    isInjected({ account }): boolean {
+      return account ? isKeyringPair(account as AddressOrPair) : false;
     },
     getIncogniteeHumanBalance({ incogniteeBalance }): number {
       return formatBalance(incogniteeBalance);
@@ -27,7 +31,7 @@ export const useAccount = defineStore("account", {
     },
   },
   actions: {
-    setAccount(account: KeyringPair) {
+    setAccount(account: AddressOrPair) {
       this.account = account;
     },
     setIncogniteeBalance(balance: number) {

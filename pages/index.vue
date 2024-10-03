@@ -1701,11 +1701,17 @@ const copyOwnAddressToClipboard = () => {
       ),
     );
 };
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 
-onMounted(() => {
+let allInjected;
+let allAccounts;
+
+onMounted(async () => {
   incogniteeStore.initializeApi();
 
   const seedHex = router.currentRoute.value.query.seed;
+  const injectedAddress = router.currentRoute.value.query.address;
+
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
@@ -1713,24 +1719,50 @@ onMounted(() => {
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
+  } else if (injectedAddress) {
+    accountStore.setAccount(injectedAddress.toString());
   } else {
-    console.log("no seed found in url. will automatically create fresh wallet");
+    console.log("no seed found in url. Will try to inject from extensions");
+    // returns an array of all the injected sources
+    // (this needs to be called first, before other requests)
+    allInjected = await web3Enable('Incognitee Campaign Page');
+    console.log(`AllInjected: ${JSON.stringify(allInjected)}`);
+
+    // returns an array of { address, meta: { name, source } }
+    // meta.source contains the name of the extension that provides this account
+    allAccounts = await web3Accounts();
+
+    const firstAddress = allAccounts[0].address;
+
+    accountStore.setAccount(firstAddress);
+
     cryptoWaitReady().then(() => {
-      const generatedMnemonic = mnemonicGenerate();
-      const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
-      const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
-        name: "fresh",
-      });
-      const seed = mnemonicToMiniSecret(generatedMnemonic);
-      const privateKeyHex = u8aToHex(seed);
-      console.log(`Private Key in Hex: ${privateKeyHex}`);
-      // change url to contain new seed to allow bookmarking
+      console.log(`First injected address: ${firstAddress}`);
+      // change url to contain address to allow bookmarking
       router.push({
-        query: { seed: privateKeyHex },
+        query: { address: firstAddress },
       });
-      accountStore.setAccount(newAccount);
+      accountStore.setAccount(firstAddress);
       openNewWalletOverlay();
     });
+
+    // console.log("no seed found in url. will automatically create fresh wallet");
+    // cryptoWaitReady().then(() => {
+    //   const generatedMnemonic = mnemonicGenerate();
+    //   const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+    //   const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
+    //     name: "fresh",
+    //   });
+    //   const seed = mnemonicToMiniSecret(generatedMnemonic);
+    //   const privateKeyHex = u8aToHex(seed);
+    //   console.log(`Private Key in Hex: ${privateKeyHex}`);
+    //   // change url to contain new seed to allow bookmarking
+    //   router.push({
+    //     query: { seed: privateKeyHex },
+    //   });
+    //   accountStore.setAccount(newAccount);
+    //   openNewWalletOverlay();
+    // });
   }
 });
 

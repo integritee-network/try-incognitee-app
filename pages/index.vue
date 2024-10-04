@@ -1653,6 +1653,7 @@ const fetchIncogniteeBalance = async () => {
 
   const injector = accountStore.isInjected ? accountStore.injected : null
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector)}}`);
+  console.log(`fetching incognitee balance: injector ${JSON.stringify(injector?.signer)}}`);
 
   incogniteeStore.api
     .getBalanceGetter(accountStore.account, incogniteeStore.shard, injector?.signer)
@@ -1712,7 +1713,7 @@ const copyOwnAddressToClipboard = () => {
       ),
     );
 };
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import {web3Accounts, web3Enable, web3FromAddress, web3FromSource} from '@polkadot/extension-dapp';
 
 let allInjected;
 let allAccounts;
@@ -1744,6 +1745,7 @@ onMounted(async () => {
     accountStore.setAccount(injectedAddress.toString());
     const injected = await web3FromAddress(accountStore.getAddress)
     console.log(`setting injected: ${JSON.stringify(injected)}`)
+    console.log(`setting injected: ${JSON.stringify(injected.signer)}`)
     accountStore.setInjected(injected);
   } else {
     console.log("no seed found in url. Will try to inject from extensions");
@@ -1757,15 +1759,16 @@ onMounted(async () => {
     allAccounts = await web3Accounts();
     console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
 
-    const firstAddress = allAccounts[0].address;
+    const firstAddress = allAccounts[1].address;
     console.log(`first address: ${firstAddress}`)
 
     accountStore.setAccount(firstAddress);
 
-    const injected = await web3FromAddress(accountStore.getAddress)
-    console.log(`setting injected: ${injected}`)
+    const injector = await web3FromSource(allAccounts[1].meta.source);
+    console.log(`setting injected: ${JSON.stringify(injector)}`)
+    console.log(`setting injected: ${JSON.stringify(injector.signer)}`)
 
-    accountStore.setInjected(injected);
+    accountStore.setInjected(injector);
 
     cryptoWaitReady().then(() => {
       console.log(`First injected address: ${firstAddress}`);

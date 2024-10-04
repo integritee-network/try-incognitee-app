@@ -1598,7 +1598,6 @@ const shield = async () => {
 const unshield = () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ will unshield to L1";
-  const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
   const account = accountStore.account;
   console.log(
@@ -1617,7 +1616,7 @@ const unshield = () => {
       incogniteeStore.fingerprint,
       accountStore.getAddress,
       recipientAddress.value,
-      10,
+      amount,
       {
         signer: accountStore.injector?.signer,
         // was used to test because the getters don't work yet.

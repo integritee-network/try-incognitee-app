@@ -1673,9 +1673,17 @@ const fetchIncogniteeBalance = async () => {
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector)}}`);
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector?.signer)}}`);
 
-  if (getter === undefined) {
-    getter = await incogniteeStore.api.getBalanceGetter(accountStore.account, incogniteeStore.shard, { signer: injector?.signer });
+  try {
+    if (getter === undefined) {
+      getter = await incogniteeStore.api.getBalanceGetter(accountStore.account, incogniteeStore.shard, { signer: injector?.signer });
+    }
+  } catch (e) {
+    // this will be the case if we click on cancel in the extension popup.
+    console.error(e);
+    isUpdatingIncogniteeBalance.value = false;
+    return;
   }
+
 
   await getter
     .send()

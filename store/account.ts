@@ -11,7 +11,7 @@ formatBalance.setDefaults({
 export const useAccount = defineStore("account", {
   state: () => ({
     account: <AddressOrPair | null>null,
-    injected: <InjectedExtension |null>null,
+    injector: <InjectedExtension |null>null,
     paseoBalance: 0,
     incogniteeBalance: 0,
   }),
@@ -22,9 +22,8 @@ export const useAccount = defineStore("account", {
     getAddress({ account }): string {
       return account ? asString(account as AddressOrPair) : "none";
     },
-    isInjected({ injected }): boolean {
-      // if the account is not a pair we assume that it is injected
-      return injected != null;
+    hasInjector({ injector }): boolean {
+      return injector != null;
     },
     getIncogniteeHumanBalance({ incogniteeBalance }): number {
       return formatBalance(incogniteeBalance);
@@ -37,8 +36,8 @@ export const useAccount = defineStore("account", {
     setAccount(account: AddressOrPair) {
       this.account = account;
     },
-    setInjected(injected: InjectedExtension) {
-      this.injected = injected;
+    setInjector(injector: InjectedExtension) {
+      this.injector = injector;
     },
     setPaseoBalance(balance: number) {
       this.paseoBalance = balance;

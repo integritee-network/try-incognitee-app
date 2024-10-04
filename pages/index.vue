@@ -1637,7 +1637,7 @@ const sendPrivately = () => {
       recipientAddress.value,
       amount,
       {},
-      accountStore.injected?.signer,
+      accountStore.injector?.signer,
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -1649,9 +1649,9 @@ const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
 
-  console.log(`fetching incognitee balance: is injected ${accountStore.isInjected}`);
+  console.log(`fetching incognitee balance: is injected ${accountStore.hasInjector}`);
 
-  const injector = accountStore.isInjected ? accountStore.injected : null
+  const injector = accountStore.hasInjector ? accountStore.injector : null
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector)}}`);
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector?.signer)}}`);
 
@@ -1715,9 +1715,6 @@ const copyOwnAddressToClipboard = () => {
 };
 import {web3Accounts, web3Enable, web3FromAddress, web3FromSource} from '@polkadot/extension-dapp';
 
-let allInjected;
-let allAccounts;
-
 onMounted(async () => {
   incogniteeStore.initializeApi();
 
@@ -1734,29 +1731,29 @@ onMounted(async () => {
   } else if (injectedAddress) {
     // returns an array of all the injected sources
     // (this needs to be called first, before other requests)
-    allInjected = await web3Enable('Incognitee Campaign Page');
+    const allInjected = await web3Enable('Incognitee Campaign Page');
     console.log(`AllInjected: ${JSON.stringify(allInjected)}`);
 
     // returns an array of { address, meta: { name, source } }
     // meta.source contains the name of the extension that provides this account
-    allAccounts = await web3Accounts();
+    const allAccounts = await web3Accounts();
     console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
 
     accountStore.setAccount(injectedAddress.toString());
-    const injected = await web3FromAddress(accountStore.getAddress)
-    console.log(`setting injected: ${JSON.stringify(injected)}`)
-    console.log(`setting injected: ${JSON.stringify(injected.signer)}`)
-    accountStore.setInjected(injected);
+    const injector = await web3FromAddress(accountStore.getAddress)
+    console.log(`setting injector: ${JSON.stringify(injector)}`)
+    console.log(`setting injector: ${JSON.stringify(injector.signer)}`)
+    accountStore.setInjector(injector);
   } else {
     console.log("no seed found in url. Will try to inject from extensions");
     // returns an array of all the injected sources
     // (this needs to be called first, before other requests)
-    allInjected = await web3Enable('Incognitee Campaign Page');
+    const allInjected = await web3Enable('Incognitee Campaign Page');
     console.log(`AllInjected: ${JSON.stringify(allInjected)}`);
 
     // returns an array of { address, meta: { name, source } }
     // meta.source contains the name of the extension that provides this account
-    allAccounts = await web3Accounts();
+    const allAccounts = await web3Accounts();
     console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
 
     const firstAddress = allAccounts[1].address;
@@ -1765,10 +1762,10 @@ onMounted(async () => {
     accountStore.setAccount(firstAddress);
 
     const injector = await web3FromSource(allAccounts[1].meta.source);
-    console.log(`setting injected: ${JSON.stringify(injector)}`)
-    console.log(`setting injected: ${JSON.stringify(injector.signer)}`)
+    console.log(`setting injector: ${JSON.stringify(injector)}`)
+    console.log(`setting injector: ${JSON.stringify(injector.signer)}`)
 
-    accountStore.setInjected(injector);
+    accountStore.setInjector(injector);
 
     cryptoWaitReady().then(() => {
       console.log(`First injected address: ${firstAddress}`);

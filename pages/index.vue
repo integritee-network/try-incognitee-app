@@ -1476,6 +1476,7 @@ const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
+const isUpdatingIncogniteeBalance = ref(false);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
@@ -1585,10 +1586,12 @@ const shield = async () => {
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
     console.log("api initialized for shielding");
-    await api.tx.balances
-      .transferKeepAlive(incogniteeStore.vault, amount)
-      .signAndSend(accountStore.account, txResHandlerPaseo)
-      .catch(txErrHandlerPaseo);
+
+    api.tx.balances
+        .transferKeepAlive(incogniteeStore.vault, amount)
+        .signAsync(accountStore.account, {signer: accountStore.injector?.signer})
+        .then((tx) => tx.send(txResHandlerPaseo))
+        .catch(txErrHandlerPaseo);
   }
 };
 
@@ -1611,8 +1614,7 @@ const unshield = () => {
       accountStore.getAddress,
       recipientAddress.value,
       amount,
-      {},
-      accountStore.injected?.signer
+      { signer: accountStore.injected?.signer }
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";
@@ -1628,26 +1630,35 @@ const sendPrivately = () => {
   console.log(
     `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
   );
-  incogniteeStore.api
-    .trustedBalanceTransfer(
-      account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      accountStore.getAddress,
-      recipientAddress.value,
-      amount,
-      {},
-      accountStore.injector?.signer,
-    )
-    .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}`);
-      txStatus.value = "😀 Success";
-    });
+
+    incogniteeStore.api
+        .trustedBalanceTransfer(
+            account,
+            incogniteeStore.shard,
+            incogniteeStore.fingerprint,
+            accountStore.getAddress,
+            recipientAddress.value,
+            amount,
+            { signer: accountStore.injector?.signer }
+        )
+        .then((hash) => {
+          console.log(`trustedOperationHash: ${hash}`);
+          txStatus.value = "😀 Success";
+        });
 };
+
+let getter;
 
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
+
+  if (isUpdatingIncogniteeBalance.value == true) {
+    console.log("[fetchIncogniteeBalance] already updating returning...")
+    return;
+  }
+
+  isUpdatingIncogniteeBalance.value = true;
 
   console.log(`fetching incognitee balance: is injected ${accountStore.hasInjector}`);
 
@@ -1655,22 +1666,28 @@ const fetchIncogniteeBalance = async () => {
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector)}}`);
   console.log(`fetching incognitee balance: injector ${JSON.stringify(injector?.signer)}}`);
 
-  incogniteeStore.api
-    .getBalanceGetter(accountStore.account, incogniteeStore.shard, injector?.signer)
-      .then((submittable) => submittable.send())
-      .then((balance) => {
+  if (getter === undefined) {
+    getter = await incogniteeStore.api.getBalanceGetter(accountStore.account, incogniteeStore.shard, { signer: injector?.signer });
+  }
+
+  await getter
+    .send()
+    .then((balance) => {
       console.log(
-        `current account balance L2: ${balance} on shard ${incogniteeStore.shard}`,
+          `current account balance L2: ${balance} on shard ${incogniteeStore.shard}`,
       );
       accountStore.setIncogniteeBalance(balance);
       isFetchingIncogniteeBalance.value = false;
     });
+
+  isUpdatingIncogniteeBalance.value = false;
 };
 
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
   console.log("ping: " + pollCounter.value);
+
   await fetchIncogniteeBalance();
 });
 

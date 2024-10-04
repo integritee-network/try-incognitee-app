@@ -1606,6 +1606,10 @@ const unshield = () => {
       accountStore.getAddress
     } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
   );
+
+  // console.log(`[unshield] mrenclave: ${incogniteeStore.fingerprint}`);
+  // console.log(`[unshield] shard: ${incogniteeStore.shard}`);
+
   incogniteeStore.api
     .balanceUnshieldFunds(
       account,
@@ -1613,8 +1617,12 @@ const unshield = () => {
       incogniteeStore.fingerprint,
       accountStore.getAddress,
       recipientAddress.value,
-      amount,
-      { signer: accountStore.injected?.signer }
+      10,
+      {
+        signer: accountStore.injector?.signer,
+        // was used to test because the getters don't work yet.
+        // nonce: incogniteeStore.api.createType('u32', 1)
+      }
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";

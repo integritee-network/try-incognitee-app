@@ -1678,9 +1678,13 @@ const fetchIncogniteeBalance = async () => {
       );
       accountStore.setIncogniteeBalance(balance);
       isFetchingIncogniteeBalance.value = false;
+      isUpdatingIncogniteeBalance.value = false;
+    })
+    .catch((err) => {
+      console.error(`[fetchIncogniteeBalance] error ${err}`);
+      isUpdatingIncogniteeBalance.value = false;
     });
 
-  isUpdatingIncogniteeBalance.value = false;
 };
 
 const pollCounter = useInterval(2000);

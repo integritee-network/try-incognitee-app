@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { formatBalance } from "@polkadot/util";
-import type {AddressOrPair} from "@polkadot/api-base/types";
-import { asString } from "@encointer/util"
-import type {InjectedExtension} from "@polkadot/extension-inject/types";
+import type { AddressOrPair } from "@polkadot/api-base/types";
+import { asString } from "@encointer/util";
+import type { InjectedExtension } from "@polkadot/extension-inject/types";
 
 formatBalance.setDefaults({
   decimals: 10,
@@ -11,13 +11,15 @@ formatBalance.setDefaults({
 export const useAccount = defineStore("account", {
   state: () => ({
     account: <AddressOrPair | null>null,
-    injector: <InjectedExtension |null>null,
+    injector: <InjectedExtension | null>null,
     paseoBalance: 0,
     incogniteeBalance: 0,
   }),
   getters: {
     getShortAddress({ account }): string {
-      return account ? asString(account as AddressOrPair).slice(0, 8) + "..." : "none";
+      return account
+        ? asString(account as AddressOrPair).slice(0, 8) + "..."
+        : "none";
     },
     getAddress({ account }): string {
       return account ? asString(account as AddressOrPair) : "none";

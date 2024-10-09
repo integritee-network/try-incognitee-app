@@ -26,7 +26,7 @@ export const useIncognitee = defineStore("incognitee", {
       });
       // todo! hard-coded for now. soon to be fetched
       this.shard = "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
-      this.fingerprint = "8weGnjvG3nh6UzoYjqaTjpWjX1ouNPioA1K5134DJc5j";
+      this.fingerprint = "DfA6i67tKRZS82Uv5W9zhsFdouZizUioB7zLbiSktRDK";
       console.log("Incognitee Api connected to sidechain");
       this.apiReady = true;
     },

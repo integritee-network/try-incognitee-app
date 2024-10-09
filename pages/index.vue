@@ -1467,15 +1467,24 @@
                     >Access Your Wallet!
                   </DialogTitle>
                   <div class="mt-2">
+                    <p class="text-sm text-gray-400">
+                      How would you like to connect?
+                    </p>
+                    <div class="mt-4">
+                      <button
+                        @click="createTestingAccount"
+                        class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                      >
+                        Create a New Account for Testing
+                      </button>
+                    </div>
+                    <p class="mt-4">or</p>
                     <div
                       v-if="extensionAccounts.length < 1"
-                      class="mt-10 flex flex-col"
+                      class="mt-4 flex flex-col"
                     >
-                      <p class="text-sm text-gray-400">
-                        How would you like to connect?
-                      </p>
                       <div
-                        class="mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
+                        class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
                       >
                         <a href="https://talisman.xyz/download"
                           ><img
@@ -1508,15 +1517,6 @@
                           class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                         >
                           Connect Signer Extension
-                        </button>
-                      </div>
-                      <p>or</p>
-                      <div class="mt-4">
-                        <button
-                          @click="createTestingAccount"
-                          class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-                        >
-                          Create a New Account for Testing
                         </button>
                       </div>
                     </div>
@@ -1977,16 +1977,7 @@ onMounted(async () => {
       accountStore.setAccount(account);
     });
   } else if (injectedAddress) {
-    // returns an array of all the injected sources
-    // (this needs to be called first, before other requests)
-    const allInjected = await web3Enable("Incognitee Campaign Page");
-    console.log(`AllInjected: ${JSON.stringify(allInjected)}`);
-
-    // returns an array of { address, meta: { name, source } }
-    // meta.source contains the name of the extension that provides this account
-    const allAccounts = await web3Accounts();
-    console.log(`All webAccounts: ${JSON.stringify(allAccounts)}`);
-
+    connectExtension();
     try {
       accountStore.setAccount(injectedAddress.toString());
       const injector = await web3FromAddress(accountStore.getAddress);
@@ -2018,7 +2009,7 @@ const dropSubscriptions = () => {
 
 const createTestingAccount = () => {
   cryptoWaitReady().then(() => {
-    if (api.isReady) {
+    if (api?.isReady) {
       dropSubscriptions();
     }
 

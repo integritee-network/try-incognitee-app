@@ -1633,10 +1633,11 @@ import {
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
 import { useInterval } from "@vueuse/core";
-import { nextTick, onMounted, ref, watch } from "vue";
+import { onUnmounted, onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
+import { eventBus } from "@/helpers/eventBus";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1644,6 +1645,7 @@ const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
+const isChoosingAccount = ref(false);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
@@ -1658,6 +1660,7 @@ const selectedExtensionAccount = ref(null);
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
     console.log("user selected extension account:", selectedAddress);
+    dropSubscriptions();
     router.push({
       query: { address: selectedAddress },
     });
@@ -1666,6 +1669,7 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
     console.log(`setting injector: ${JSON.stringify(injector)}`);
     console.log(`setting injector: ${JSON.stringify(injector.signer)}`);
     accountStore.setInjector(injector);
+    isUpdatingIncogniteeBalance.value = false;
   }
 });
 
@@ -1839,7 +1843,7 @@ const sendPrivately = () => {
     });
 };
 
-let getter;
+const getterMap: { [address: string]: any } = {};
 
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
@@ -1849,7 +1853,11 @@ const fetchIncogniteeBalance = async () => {
     console.log("[fetchIncogniteeBalance] already updating returning...");
     return;
   }
-
+  /*  if (isChoosingAccount.value == true) {
+    console.log("[fetchIncogniteeBalance] waiting for user to select an account...");
+    return;
+  }
+*/
   isUpdatingIncogniteeBalance.value = true;
 
   console.log(
@@ -1865,14 +1873,17 @@ const fetchIncogniteeBalance = async () => {
   );
 
   try {
-    if (getter === undefined) {
-      getter = await incogniteeStore.api.getBalanceGetter(
-        accountStore.account,
-        incogniteeStore.shard,
-        { signer: injector?.signer },
-      );
+    if (!getterMap[accountStore.account]) {
+      getterMap[accountStore.account] =
+        await incogniteeStore.api.getBalanceGetter(
+          accountStore.account,
+          incogniteeStore.shard,
+          { signer: injector?.signer },
+        );
     } else {
-      closeChooseWalletOverlay();
+      if (isChoosingAccount.value == false) {
+        closeChooseWalletOverlay();
+      }
     }
   } catch (e) {
     // this will be the case if we click on cancel in the extension popup.
@@ -1881,7 +1892,7 @@ const fetchIncogniteeBalance = async () => {
     return;
   }
 
-  await getter
+  await getterMap[accountStore.account]
     .send()
     .then((balance) => {
       console.log(
@@ -1890,6 +1901,7 @@ const fetchIncogniteeBalance = async () => {
       accountStore.setIncogniteeBalance(balance);
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
+      isChoosingAccount.value = false;
     })
     .catch((err) => {
       console.error(`[fetchIncogniteeBalance] error ${err}`);
@@ -1953,7 +1965,7 @@ import {
 
 onMounted(async () => {
   incogniteeStore.initializeApi();
-
+  eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;
 
@@ -1992,8 +2004,24 @@ onMounted(async () => {
   }
 });
 
+onUnmounted(() => {
+  eventBus.off("addressClicked", openChooseWalletOverlay);
+});
+
+const dropSubscriptions = () => {
+  console.log("dropping subscriptions");
+  api?.disconnect();
+  api = null;
+  isFetchingIncogniteeBalance.value = true;
+  accountStore.setInjector(null);
+};
+
 const createTestingAccount = () => {
   cryptoWaitReady().then(() => {
+    if (api.isReady) {
+      dropSubscriptions();
+    }
+
     const generatedMnemonic = mnemonicGenerate();
     const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
     const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
@@ -2008,7 +2036,8 @@ const createTestingAccount = () => {
     });
     accountStore.setAccount(newAccount);
     openNewWalletOverlay();
-    closeChooseWalletOverlay();
+    isChoosingAccount.value = false;
+    isUpdatingIncogniteeBalance.value = false;
   });
 };
 
@@ -2090,9 +2119,13 @@ const closeNewWalletOverlay = () => {
 
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
+  selectedExtensionAccount.value = null;
+  isChoosingAccount.value = true;
+  isUpdatingIncogniteeBalance.value = true;
   showChooseWalletOverlay.value = true;
 };
 const closeChooseWalletOverlay = () => {
+  isChoosingAccount.value == false;
   showChooseWalletOverlay.value = false;
 };
 

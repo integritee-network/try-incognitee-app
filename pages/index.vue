@@ -4,25 +4,25 @@
       class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
-        <Polkadot class="w-[30px] h-[30px]" />
+        <Polkadot class="w-[30px] h-[30px]"/>
         <p class="text-xs">DOT</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
+        >coming soon</span
         >
       </div>
       <div
         class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
       >
-        <Paseo class="w-[30px] h-[30px]" />
-        <p class="text-xs">PAS<br />PASEO</p>
+        <Paseo class="w-[30px] h-[30px]"/>
+        <p class="text-xs">PAS<br/>PASEO</p>
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
-        <USDC class="w-[30px] h-[30px]" />
+        <USDC class="w-[30px] h-[30px]"/>
         <p class="text-xs">USDC</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
+        >coming soon</span
         >
       </div>
     </div>
@@ -129,6 +129,7 @@
                   Private Balance ⓘ
                 </h3>
                 <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+                <div v-if="disableGetter">getter disabled. please reconnect your account</div>
                 <div class="text-4xl font-semibold" v-else>
                   {{ accountStore.getIncogniteeHumanBalance }}
                   <span class="text-sm font-semibold">PAS</span>
@@ -273,7 +274,7 @@
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-white"
-                      >Other Assets
+                    >Other Assets
                     </DialogTitle>
                     <div class="mt-2">
                       <p class="text-sm text-gray-400 mt-4 text-left">
@@ -364,7 +365,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >On Privacy
+                  >On Privacy
                   </DialogTitle>
 
                   <div class="mt-2">
@@ -386,7 +387,7 @@
                     </p>
                     <p class="text-sm text-gray-400 text-justify my-4">
                       <NuxtLink to="https://incognitee.io" class="color_blue"
-                        >Incognitee
+                      >Incognitee
                       </NuxtLink>
                       is a privacy enhancing technology that allows you to
                       shield your assets and transfer them privately. This means
@@ -397,14 +398,14 @@
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
                         class="color_blue"
-                        >trusted execution environments (TEE)
+                      >trusted execution environments (TEE)
                       </NuxtLink>
                       . The TEEs we use are a hardware feature of server CPU's
                       called <i>Intel SGX</i>. In addition, the
                       <NuxtLink
                         to="https://docs.integritee.network/2-integritee-network"
                         class="color_blue"
-                        >Integritee Network
+                      >Integritee Network
                       </NuxtLink>
                       , a Polkadot parachain, performs independent,
                       decentralized remote attestation of TEEs. Moreover, it
@@ -504,7 +505,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Shield PAS
+                >Shield PAS
                 </DialogTitle>
 
                 <p class="text-sm text-gray-400 text-left my-4">
@@ -521,11 +522,11 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                        >PAS Amount</label
+                      >PAS Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
-                        >Available public balance:
+                      >Available public balance:
                         {{ accountStore.getPaseoHumanBalance }}</span
                       >
                     </div>
@@ -547,7 +548,7 @@
                     />
                     <div class="text-right">
                       <span class="text-xs text-gray-400"
-                        >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                      >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
                       >
                     </div>
                   </div>
@@ -627,7 +628,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Drip Faucet
+                  >Drip Faucet
                   </DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-400">
@@ -749,7 +750,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Unshield PAS
+                >Unshield PAS
                 </DialogTitle>
                 <div class="mt-5">
                   <p class="text-sm text-gray-400 text-left my-4">
@@ -762,7 +763,7 @@
                     <label
                       for="recipientAddress"
                       class="text-sm font-medium leading-6 text-white text-left"
-                      >Recipient</label
+                    >Recipient</label
                     >
                     <div class="relative flex items-center rounded-lg">
                       <div class="absolute left-3 flex items-center">
@@ -847,11 +848,11 @@
                     <label
                       for="unshieldAmount"
                       class="text-sm font-medium leading-6 text-white"
-                      >PAS Amount</label
+                    >PAS Amount</label
                     >
 
                     <span class="text-xs text-gray-400"
-                      >Available private balance:
+                    >Available private balance:
                       {{ accountStore.getIncogniteeHumanBalance }}</span
                     >
                   </div>
@@ -871,7 +872,7 @@
                   <!-- Fee description -->
                   <div class="text-right">
                     <span class="text-xs text-gray-400"
-                      >Fee: 30m PAS for Incognitee</span
+                    >Fee: 30m PAS for Incognitee</span
                     >
                   </div>
 
@@ -1075,7 +1076,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Send Privately
+                  >Send Privately
                   </DialogTitle>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
@@ -1088,7 +1089,7 @@
                       <label
                         for="recipientAddress"
                         class="text-sm font-medium leading-6 text-white text-left"
-                        >Recipient</label
+                      >Recipient</label
                       >
                       <div class="relative flex items-center rounded-lg">
                         <input
@@ -1131,11 +1132,11 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                          >PAS Amount</label
+                        >PAS Amount</label
                         >
 
                         <span class="text-xs text-gray-400"
-                          >Available private balance:
+                        >Available private balance:
                           {{ accountStore.getIncogniteeHumanBalance }}</span
                         >
                       </div>
@@ -1162,7 +1163,7 @@
                       <!-- Fee description -->
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 10m PAS for Incognitee</span
+                        >Fee: 10m PAS for Incognitee</span
                         >
                       </div>
                     </div>
@@ -1242,7 +1243,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Scan recipient's QR code
+                >Scan recipient's QR code
                 </DialogTitle>
 
                 <div class="mt-6 qrcode-container">
@@ -1323,7 +1324,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >New Wallet!
+                  >New Wallet!
                   </DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-400">
@@ -1464,7 +1465,7 @@
                   <DialogTitle
                     as="h3"
                     class="text-base font-semibold leading-6 text-white"
-                    >Access Your Wallet!
+                  >Access Your Wallet!
                   </DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-400">
@@ -1487,28 +1488,28 @@
                         class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
                       >
                         <a href="https://talisman.xyz/download"
-                          ><img
-                            class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-                            src="/img/index/talisman-logo.svg"
-                            alt="talisman"
+                        ><img
+                          class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                          src="/img/index/talisman-logo.svg"
+                          alt="talisman"
                         /></a>
                         <a href="https://novawallet.io/"
-                          ><img
-                            class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-                            src="/img/index/nova-wallet-logo.svg"
-                            alt="nova wallet"
+                        ><img
+                          class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                          src="/img/index/nova-wallet-logo.svg"
+                          alt="nova wallet"
                         /></a>
                         <a href="https://www.subwallet.app/"
-                          ><img
-                            class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-                            src="/img/index/sub-wallet-logo.svg"
-                            alt="sub wallet"
+                        ><img
+                          class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                          src="/img/index/sub-wallet-logo.svg"
+                          alt="sub wallet"
                         /></a>
                         <a href="https://polkadot.js.org/extension/"
-                          ><img
-                            class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-                            src="/img/index/polkadotjs-logo.svg"
-                            alt="polkajs"
+                        ><img
+                          class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                          src="/img/index/polkadotjs-logo.svg"
+                          alt="polkajs"
                         /></a>
                       </div>
                       <div class="mt-10">
@@ -1595,7 +1596,7 @@
                     class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     <span class="sr-only">Close</span>
-                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+                    <XMarkIcon class="h-5 w-5" aria-hidden="true"/>
                   </button>
                 </div>
               </div>
@@ -1608,14 +1609,14 @@
 </template>
 
 <script setup lang="ts">
-import { XMarkIcon } from "@heroicons/vue/20/solid";
+import {XMarkIcon} from "@heroicons/vue/20/solid";
 
 import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { useAccount } from "@/store/account.ts";
-import { useIncognitee } from "@/store/incognitee.ts";
+import {useAccount} from "@/store/account.ts";
+import {useIncognitee} from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1623,21 +1624,21 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { CheckIcon } from "@heroicons/vue/24/outline";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import {CheckIcon} from "@heroicons/vue/24/outline";
+import {ApiPromise, WsProvider} from "@polkadot/api";
+import {Keyring} from "@polkadot/keyring";
+import {formatBalance, hexToU8a, u8aToHex} from "@polkadot/util";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
-import { useInterval } from "@vueuse/core";
-import { onUnmounted, onMounted, ref, watch } from "vue";
+import {useInterval} from "@vueuse/core";
+import {onUnmounted, onMounted, ref, watch} from "vue";
 import Qrcode from "vue-qrcode";
-import { QrcodeStream } from "vue-qrcode-reader";
-import { useRouter } from "vue-router";
-import { eventBus } from "@/helpers/eventBus";
+import {QrcodeStream} from "vue-qrcode-reader";
+import {useRouter} from "vue-router";
+import {eventBus} from "@/helpers/eventBus";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1646,6 +1647,7 @@ const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
+const disableGetter = ref(false);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
@@ -1662,7 +1664,7 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
     console.log("user selected extension account:", selectedAddress);
     dropSubscriptions();
     router.push({
-      query: { address: selectedAddress },
+      query: {address: selectedAddress},
     });
     accountStore.setAccount(selectedAddress.toString());
     const injector = await web3FromAddress(accountStore.getAddress);
@@ -1676,8 +1678,8 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
 let api: ApiPromise | null = null;
 
 const tabs = [
-  { name: "Public Balance", href: "#", current: true },
-  { name: "Private Balance", href: "#", current: false },
+  {name: "Public Balance", href: "#", current: true},
+  {name: "Private Balance", href: "#", current: false},
 ];
 
 const currentTab = ref("public");
@@ -1717,13 +1719,13 @@ const onDecode = (decodeResult) => {
   closeScanOverlay();
 };
 
-const txResHandlerPaseo = ({ events = [], status, txHash }) => {
+const txResHandlerPaseo = ({events = [], status, txHash}) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
     : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
 
   // Loop through Vec<EventRecord> to display all events
-  events.forEach(({ _, event: { data, method, section } }) => {
+  events.forEach(({_, event: {data, method, section}}) => {
     if (section + ":" + method === "system:ExtrinsicFailed") {
       // extract the data for this event
       const [dispatchError, dispatchInfo] = data;
@@ -1771,7 +1773,7 @@ const shield = async () => {
     const amount = Math.pow(10, 10) * shieldAmount.value;
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
-    const api = await ApiPromise.create({ provider: wsProvider });
+    const api = await ApiPromise.create({provider: wsProvider});
     console.log("api initialized for shielding");
 
     api.tx.balances
@@ -1835,7 +1837,7 @@ const sendPrivately = () => {
       accountStore.getAddress,
       recipientAddress.value,
       amount,
-      { signer: accountStore.injector?.signer },
+      {signer: accountStore.injector?.signer},
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -1850,37 +1852,35 @@ const fetchIncogniteeBalance = async () => {
   if (!accountStore.account) return;
 
   if (isUpdatingIncogniteeBalance.value == true) {
-    console.log("[fetchIncogniteeBalance] already updating returning...");
+    console.log("[fetchIncogniteeBalance] already updating. waiting...");
     return;
   }
-  /*  if (isChoosingAccount.value == true) {
-    console.log("[fetchIncogniteeBalance] waiting for user to select an account...");
+
+  if (disableGetter.value == true) {
+    console.log("[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again...");
     return;
   }
-*/
+
   isUpdatingIncogniteeBalance.value = true;
 
-  console.log(
-    `fetching incognitee balance: is injected ${accountStore.hasInjector}`,
-  );
-
   const injector = accountStore.hasInjector ? accountStore.injector : null;
-  console.log(
-    `fetching incognitee balance: injector ${JSON.stringify(injector)}}`,
-  );
-  console.log(
-    `fetching incognitee balance: injector ${JSON.stringify(injector?.signer)}}`,
-  );
-
   try {
     if (!getterMap[accountStore.account]) {
+      if (injector) {
+        console.log(
+          `fetching incognitee balance needs signing in extension: ${injector.name}`,
+        );
+      }
       getterMap[accountStore.account] =
         await incogniteeStore.api.getBalanceGetter(
           accountStore.account,
           incogniteeStore.shard,
-          { signer: injector?.signer },
+          {signer: injector?.signer},
         );
     } else {
+      console.log(
+        `fetching incognitee balance using cached getter`,
+      );
       if (isChoosingAccount.value == false) {
         closeChooseWalletOverlay();
       }
@@ -1889,15 +1889,14 @@ const fetchIncogniteeBalance = async () => {
     // this will be the case if we click on cancel in the extension popup.
     console.error(e);
     isUpdatingIncogniteeBalance.value = false;
+    disableGetter.value = true;
     return;
   }
 
   await getterMap[accountStore.account]
     .send()
     .then((balance) => {
-      console.log(
-        `current account balance L2: ${balance} on shard ${incogniteeStore.shard}`,
-      );
+      //console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`);
       accountStore.setIncogniteeBalance(balance);
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
@@ -1912,8 +1911,7 @@ const fetchIncogniteeBalance = async () => {
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
-  console.log("ping: " + pollCounter.value);
-
+  //console.log("ping: " + pollCounter.value);
   await fetchIncogniteeBalance();
 });
 
@@ -1924,18 +1922,16 @@ watch(accountStore, async () => {
     return;
   }
   if (api?.isReady) {
-    console.log(
-      "skipping api init. It seems the Paseo api is already subscribed to balance changes",
-    );
+    //console.log("skipping api init. It seems the Paseo api is already subscribed to balance changes");
     return;
   }
 
   console.log("trying to init api");
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
-  api = await ApiPromise.create({ provider: wsProvider });
+  api = await ApiPromise.create({provider: wsProvider});
   api.query.system.account(
     accountStore.getAddress,
-    ({ data: { free: currentFree } }) => {
+    ({data: {free: currentFree}}) => {
       console.log("paseo balance:" + currentFree);
       accountStore.setPaseoBalance(Number(currentFree));
       isFetchingPaseoBalance.value = false;
@@ -1972,7 +1968,7 @@ onMounted(async () => {
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
-      const localKeyring = new Keyring({ type: "sr25519" });
+      const localKeyring = new Keyring({type: "sr25519"});
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
@@ -2004,17 +2000,15 @@ const dropSubscriptions = () => {
   api?.disconnect();
   api = null;
   isFetchingIncogniteeBalance.value = true;
+  disableGetter.value = false;
   accountStore.setInjector(null);
 };
 
 const createTestingAccount = () => {
   cryptoWaitReady().then(() => {
-    if (api?.isReady) {
-      dropSubscriptions();
-    }
-
+    dropSubscriptions();
     const generatedMnemonic = mnemonicGenerate();
-    const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+    const localKeyring = new Keyring({type: "sr25519", ss58Format: 42});
     const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
       name: "fresh",
     });
@@ -2023,12 +2017,14 @@ const createTestingAccount = () => {
     console.log(`Private Key in Hex: ${privateKeyHex}`);
     // change url to contain new seed to allow bookmarking
     router.push({
-      query: { seed: privateKeyHex },
+      query: {seed: privateKeyHex},
     });
     accountStore.setAccount(newAccount);
     openNewWalletOverlay();
+    closeChooseWalletOverlay();
     isChoosingAccount.value = false;
     isUpdatingIncogniteeBalance.value = false;
+    isFetchingIncogniteeBalance.value = true;
   });
 };
 

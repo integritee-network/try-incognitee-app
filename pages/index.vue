@@ -1650,6 +1650,7 @@ const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
+const isSignerBusy = ref(false);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
@@ -1725,7 +1726,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
     : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
-
+  isSignerBusy.value = false;
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({ _, event: { data, method, section } }) => {
     if (section + ":" + method === "system:ExtrinsicFailed") {
@@ -1760,7 +1761,9 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
       }
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
-      txStatus.value`❤️️ Transaction successful!`;
+      console.log(
+        `✅ Transaction successful with status: ${status} hash: ${txHash}`,
+      );
     }
   });
 };
@@ -1769,7 +1772,13 @@ const txErrHandlerPaseo = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 const shield = async () => {
   console.log("shielding .....");
-  txStatus.value = "⌛ connecting to Paseo....please be patient";
+  if (isSignerBusy.value) {
+    // fixme! this is a hack. don't know why extension pops up twice without this
+    console.log("signer busy. aborting repeated attempt...");
+    return;
+  }
+  isSignerBusy.value = true;
+  txStatus.value = "⌛ awaiting signature and connection";
   if (incogniteeStore.vault) {
     const balance = accountStore.paseoBalance;
     const amount = Math.pow(10, 10) * shieldAmount.value;

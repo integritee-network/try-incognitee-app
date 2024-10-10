@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
-import type { KeyringPair } from "@polkadot/keyring/types";
 import { formatBalance } from "@polkadot/util";
+import type { AddressOrPair } from "@polkadot/api-base/types";
+import { asString } from "@encointer/util";
+import type { InjectedExtension } from "@polkadot/extension-inject/types";
 
 formatBalance.setDefaults({
   decimals: 10,
@@ -8,16 +10,22 @@ formatBalance.setDefaults({
 });
 export const useAccount = defineStore("account", {
   state: () => ({
-    account: <KeyringPair | null>null,
+    account: <AddressOrPair | null>null,
+    injector: <InjectedExtension | null>null,
     paseoBalance: 0,
     incogniteeBalance: 0,
   }),
   getters: {
     getShortAddress({ account }): string {
-      return account ? account.address.slice(0, 8) + "..." : "none";
+      return account
+        ? asString(account as AddressOrPair).slice(0, 8) + "..."
+        : "none";
     },
     getAddress({ account }): string {
-      return account ? account.address : "none";
+      return account ? asString(account as AddressOrPair) : "none";
+    },
+    hasInjector({ injector }): boolean {
+      return injector != null;
     },
     getIncogniteeHumanBalance({ incogniteeBalance }): number {
       return formatBalance(incogniteeBalance);
@@ -27,8 +35,14 @@ export const useAccount = defineStore("account", {
     },
   },
   actions: {
-    setAccount(account: KeyringPair) {
+    setAccount(account: AddressOrPair) {
       this.account = account;
+    },
+    setInjector(injector: InjectedExtension) {
+      this.injector = injector;
+    },
+    setPaseoBalance(balance: number) {
+      this.paseoBalance = balance;
     },
     setIncogniteeBalance(balance: number) {
       this.incogniteeBalance = balance;

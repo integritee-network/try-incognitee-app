@@ -3,7 +3,9 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-        <p class="address">{{ accountStore.getShortAddress }}</p>
+        <p class="address" @click="emitAddressClicked">
+          {{ accountStore.getShortAddress }}
+        </p>
       </div>
     </header>
     <footer class="footer">
@@ -90,8 +92,11 @@
 <script setup lang="ts">
 import Incognitee from "@/assets/img/incognitee-mask.svg";
 import { useAccount } from "@/store/account.ts";
-
+import { eventBus } from "@/helpers/eventBus";
 const accountStore = useAccount();
+const emitAddressClicked = () => {
+  eventBus.emit("addressClicked");
+};
 </script>
 
 <style scoped>

@@ -129,6 +129,9 @@
                   Private Balance ⓘ
                 </h3>
                 <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+                <div v-if="disableGetter">
+                  getter disabled. please reconnect your account
+                </div>
                 <div class="text-4xl font-semibold" v-else>
                   {{ accountStore.getIncogniteeHumanBalance }}
                   <span class="text-sm font-semibold">PAS</span>
@@ -1396,6 +1399,173 @@
       </Dialog>
     </TransitionRoot>
 
+    <TransitionRoot as="template" :show="showChooseWalletOverlay">
+      <Dialog class="relative z-10" @close="closeChooseWalletOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div
+          class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <DialogPanel
+              class="relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+            >
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closeChooseWalletOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div>
+                <div
+                  class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100"
+                >
+                  <CheckIcon
+                    class="h-6 w-6 text-green-600"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-white"
+                    >Access Your Wallet!
+                  </DialogTitle>
+                  <div class="mt-2">
+                    <p class="text-sm text-gray-400">
+                      How would you like to connect?
+                    </p>
+                    <div class="mt-4">
+                      <button
+                        @click="createTestingAccount"
+                        class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                      >
+                        Create a New Account for Testing
+                      </button>
+                    </div>
+                    <p class="mt-4">or</p>
+                    <div
+                      v-if="extensionAccounts.length < 1"
+                      class="mt-4 flex flex-col"
+                    >
+                      <div
+                        class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
+                      >
+                        <a href="https://talisman.xyz/download"
+                          ><img
+                            class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                            src="/img/index/talisman-logo.svg"
+                            alt="talisman"
+                        /></a>
+                        <a href="https://novawallet.io/"
+                          ><img
+                            class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                            src="/img/index/nova-wallet-logo.svg"
+                            alt="nova wallet"
+                        /></a>
+                        <a href="https://www.subwallet.app/"
+                          ><img
+                            class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                            src="/img/index/sub-wallet-logo.svg"
+                            alt="sub wallet"
+                        /></a>
+                        <a href="https://polkadot.js.org/extension/"
+                          ><img
+                            class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                            src="/img/index/polkadotjs-logo.svg"
+                            alt="polkajs"
+                        /></a>
+                      </div>
+                      <div class="mt-10">
+                        <button
+                          @click="connectExtension"
+                          class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                        >
+                          Connect Signer Extension
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      v-if="extensionAccounts.length > 0"
+                      ref="walletSection"
+                      id="wallet"
+                      class="py-12 sm:py-16"
+                    >
+                      <p class="text-sm text-gray-400">
+                        Choose one of your extension accounts
+                      </p>
+                      <select
+                        v-model="selectedExtensionAccount"
+                        id="account.address"
+                        name="account.address"
+                        placeholder="account.address"
+                        class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                      >
+                        <option
+                          v-for="account in extensionAccounts"
+                          :key="account.address"
+                          :value="account.address"
+                        >
+                          {{ account.meta.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div v-if="accountStore.hasInjector" class="mt-10">
+                      <p>
+                        please allow this app to read your balance by signing
+                        the upcoming request in your extension
+                      </p>
+                      <p>
+                        this window will close once a balance could be fetched
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
     <div
       aria-live="assertive"
       class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
@@ -1466,16 +1636,20 @@ import {
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
 import { useInterval } from "@vueuse/core";
-import { onMounted, ref, watch } from "vue";
+import { onUnmounted, onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
+import { eventBus } from "@/helpers/eventBus";
 
 const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const isFetchingPaseoBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
+const isUpdatingIncogniteeBalance = ref(false);
+const isChoosingAccount = ref(false);
+const disableGetter = ref(false);
 
 const existential_deposit_paseo = 10000000000;
 const txStatus = ref("");
@@ -1484,6 +1658,24 @@ const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
 const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
+const extensionAccounts = ref([]);
+const selectedExtensionAccount = ref(null);
+
+watch(selectedExtensionAccount, async (selectedAddress) => {
+  if (selectedAddress) {
+    console.log("user selected extension account:", selectedAddress);
+    dropSubscriptions();
+    router.push({
+      query: { address: selectedAddress },
+    });
+    accountStore.setAccount(selectedAddress.toString());
+    const injector = await web3FromAddress(accountStore.getAddress);
+    console.log(`setting injector: ${JSON.stringify(injector)}`);
+    console.log(`setting injector: ${JSON.stringify(injector.signer)}`);
+    accountStore.setInjector(injector);
+    isUpdatingIncogniteeBalance.value = false;
+  }
+});
 
 let api: ApiPromise | null = null;
 
@@ -1585,9 +1777,13 @@ const shield = async () => {
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
     console.log("api initialized for shielding");
-    await api.tx.balances
+
+    api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
-      .signAndSend(accountStore.account, txResHandlerPaseo)
+      .signAsync(accountStore.account, {
+        signer: accountStore.injector?.signer,
+      })
+      .then((tx) => tx.send(txResHandlerPaseo))
       .catch(txErrHandlerPaseo);
   }
 };
@@ -1595,22 +1791,30 @@ const shield = async () => {
 const unshield = () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ will unshield to L1";
-  const balance = accountStore.incogniteeBalance;
   const amount = Math.pow(10, 10) * unshieldAmount.value;
-  const signer = accountStore.account;
+  const account = accountStore.account;
   console.log(
     `sending ${formatBalance(amount)} from ${
-      signer.address
+      accountStore.getAddress
     } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
   );
+
+  // console.log(`[unshield] mrenclave: ${incogniteeStore.fingerprint}`);
+  // console.log(`[unshield] shard: ${incogniteeStore.shard}`);
+
   incogniteeStore.api
     .balanceUnshieldFunds(
-      signer,
+      account,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
-      signer.address,
+      accountStore.getAddress,
       recipientAddress.value,
       amount,
+      {
+        signer: accountStore.injector?.signer,
+        // was used to test because the getters don't work yet.
+        // nonce: incogniteeStore.api.createType('u32', 1)
+      },
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";
@@ -1622,18 +1826,20 @@ const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = Math.pow(10, 10) * sendAmount.value;
-  const signer = accountStore.account;
+  const account = accountStore.account;
   console.log(
-    `sending ${formatBalance(amount)} from ${signer.address} privately to ${recipientAddress.value}`,
+    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
   );
+
   incogniteeStore.api
     .trustedBalanceTransfer(
-      signer,
+      account,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
-      signer.address,
+      accountStore.getAddress,
       recipientAddress.value,
       amount,
+      { signer: accountStore.injector?.signer },
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -1641,24 +1847,73 @@ const sendPrivately = () => {
     });
 };
 
+const getterMap: { [address: string]: any } = {};
+
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
-  incogniteeStore.api
-    .getBalance(accountStore.account, incogniteeStore.shard)
+
+  if (isUpdatingIncogniteeBalance.value == true) {
+    console.log("[fetchIncogniteeBalance] already updating. waiting...");
+    return;
+  }
+
+  if (disableGetter.value == true) {
+    console.log(
+      "[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again...",
+    );
+    return;
+  }
+
+  isUpdatingIncogniteeBalance.value = true;
+
+  const injector = accountStore.hasInjector ? accountStore.injector : null;
+  try {
+    if (!getterMap[accountStore.account]) {
+      if (injector) {
+        console.log(
+          `fetching incognitee balance needs signing in extension: ${injector.name}`,
+        );
+      }
+      getterMap[accountStore.account] =
+        await incogniteeStore.api.getBalanceGetter(
+          accountStore.account,
+          incogniteeStore.shard,
+          { signer: injector?.signer },
+        );
+    } else {
+      console.log(`fetching incognitee balance using cached getter`);
+      if (isChoosingAccount.value == false) {
+        closeChooseWalletOverlay();
+      }
+    }
+  } catch (e) {
+    // this will be the case if we click on cancel in the extension popup.
+    console.error(e);
+    isUpdatingIncogniteeBalance.value = false;
+    disableGetter.value = true;
+    return;
+  }
+
+  await getterMap[accountStore.account]
+    .send()
     .then((balance) => {
-      console.log(
-        `current account balance L2: ${balance} on shard ${incogniteeStore.shard}`,
-      );
+      //console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`);
       accountStore.setIncogniteeBalance(balance);
       isFetchingIncogniteeBalance.value = false;
+      isUpdatingIncogniteeBalance.value = false;
+      isChoosingAccount.value = false;
+    })
+    .catch((err) => {
+      console.error(`[fetchIncogniteeBalance] error ${err}`);
+      isUpdatingIncogniteeBalance.value = false;
     });
 };
 
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
-  console.log("ping: " + pollCounter.value);
+  //console.log("ping: " + pollCounter.value);
   await fetchIncogniteeBalance();
 });
 
@@ -1669,9 +1924,7 @@ watch(accountStore, async () => {
     return;
   }
   if (api?.isReady) {
-    console.log(
-      "skipping api init. It seems the Paseo api is already subscribed to balance changes",
-    );
+    //console.log("skipping api init. It seems the Paseo api is already subscribed to balance changes");
     return;
   }
 
@@ -1679,10 +1932,10 @@ watch(accountStore, async () => {
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
   api = await ApiPromise.create({ provider: wsProvider });
   api.query.system.account(
-    accountStore.account.address,
+    accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
       console.log("paseo balance:" + currentFree);
-      accountStore.paseoBalance = Number(currentFree);
+      accountStore.setPaseoBalance(Number(currentFree));
       isFetchingPaseoBalance.value = false;
     },
   );
@@ -1701,11 +1954,19 @@ const copyOwnAddressToClipboard = () => {
       ),
     );
 };
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+  web3FromSource,
+} from "@polkadot/extension-dapp";
 
-onMounted(() => {
+onMounted(async () => {
   incogniteeStore.initializeApi();
-
+  eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
+  const injectedAddress = router.currentRoute.value.query.address;
+
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
@@ -1713,26 +1974,105 @@ onMounted(() => {
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
+  } else if (injectedAddress) {
+    connectExtension();
+    try {
+      accountStore.setAccount(injectedAddress.toString());
+      const injector = await web3FromAddress(accountStore.getAddress);
+      console.log(`setting injector: ${JSON.stringify(injector)}`);
+      console.log(`setting injector: ${JSON.stringify(injector.signer)}`);
+      accountStore.setInjector(injector);
+    } catch (e) {
+      console.log("could not load injected account" + e);
+      alert(
+        "could not find selected address in extensions. Have you enabled your extensions?",
+      );
+    }
   } else {
-    console.log("no seed found in url. will automatically create fresh wallet");
-    cryptoWaitReady().then(() => {
-      const generatedMnemonic = mnemonicGenerate();
-      const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
-      const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
-        name: "fresh",
-      });
-      const seed = mnemonicToMiniSecret(generatedMnemonic);
-      const privateKeyHex = u8aToHex(seed);
-      console.log(`Private Key in Hex: ${privateKeyHex}`);
-      // change url to contain new seed to allow bookmarking
-      router.push({
-        query: { seed: privateKeyHex },
-      });
-      accountStore.setAccount(newAccount);
-      openNewWalletOverlay();
-    });
+    openChooseWalletOverlay();
   }
 });
+
+onUnmounted(() => {
+  eventBus.off("addressClicked", openChooseWalletOverlay);
+});
+
+const dropSubscriptions = () => {
+  console.log("dropping subscriptions");
+  api?.disconnect();
+  api = null;
+  isFetchingIncogniteeBalance.value = true;
+  disableGetter.value = false;
+  accountStore.setInjector(null);
+};
+
+const createTestingAccount = () => {
+  cryptoWaitReady().then(() => {
+    dropSubscriptions();
+    const generatedMnemonic = mnemonicGenerate();
+    const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+    const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
+      name: "fresh",
+    });
+    const seed = mnemonicToMiniSecret(generatedMnemonic);
+    const privateKeyHex = u8aToHex(seed);
+    console.log(`Private Key in Hex: ${privateKeyHex}`);
+    // change url to contain new seed to allow bookmarking
+    router.push({
+      query: { seed: privateKeyHex },
+    });
+    accountStore.setAccount(newAccount);
+    openNewWalletOverlay();
+    closeChooseWalletOverlay();
+    isChoosingAccount.value = false;
+    isUpdatingIncogniteeBalance.value = false;
+    isFetchingIncogniteeBalance.value = true;
+  });
+};
+
+const connectExtension = () => {
+  web3Enable("Integritee Dapp")
+    .then((extensions) => {
+      console.log("Enabled extensions:", extensions);
+
+      // Check if any extensions are found
+      if (extensions.length === 0) {
+        console.error(
+          "No wallet extensions found. Please install or enable a wallet.",
+        );
+        alert("No wallet extensions found. Please install or enable a wallet.");
+        return; // Stop execution if no extensions are found
+      }
+
+      return web3Accounts();
+    })
+    .then((accountsList) => {
+      // If web3Accounts() didn't return a list, exit gracefully
+      if (!accountsList) {
+        console.error("No accounts found. Please unlock your wallet.");
+        alert("No accounts found. Please unlock your wallet.");
+        return;
+      }
+
+      // If accounts are found, store them
+      extensionAccounts.value = accountsList;
+      console.log("Found accounts:", accountsList);
+
+      if (accountsList.length < 1) {
+        console.error(
+          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
+        );
+        alert(
+          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
+        );
+      }
+    })
+    .catch((error) => {
+      // Handle any errors during the connection process
+      console.error("Error during wallet connection:", error);
+      alert("Error during wallet connection. Please try again.");
+    });
+};
 
 const open = ref(true);
 
@@ -1765,6 +2105,19 @@ const openNewWalletOverlay = () => {
 const closeNewWalletOverlay = () => {
   showNewWalletOverlay.value = false;
 };
+
+const showChooseWalletOverlay = ref(false);
+const openChooseWalletOverlay = () => {
+  selectedExtensionAccount.value = null;
+  isChoosingAccount.value = true;
+  isUpdatingIncogniteeBalance.value = true;
+  showChooseWalletOverlay.value = true;
+};
+const closeChooseWalletOverlay = () => {
+  isChoosingAccount.value == false;
+  showChooseWalletOverlay.value = false;
+};
+
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => {
   showShieldOverlay.value = true;

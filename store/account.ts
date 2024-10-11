@@ -14,6 +14,7 @@ export const useAccount = defineStore("account", {
     injector: <InjectedExtension | null>null,
     paseoBalance: 0,
     incogniteeBalance: 0,
+    incogniteeNonce: 0,
   }),
   getters: {
     getShortAddress({ account }): string {
@@ -46,6 +47,9 @@ export const useAccount = defineStore("account", {
     },
     setIncogniteeBalance(balance: number) {
       this.incogniteeBalance = balance;
+    },
+    setIncogniteeNonce(nonce: number) {
+      this.incogniteeNonce = nonce;
     },
   },
 });

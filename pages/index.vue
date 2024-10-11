@@ -1808,9 +1808,6 @@ const unshield = () => {
     } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
   );
 
-  // console.log(`[unshield] mrenclave: ${incogniteeStore.fingerprint}`);
-  // console.log(`[unshield] shard: ${incogniteeStore.shard}`);
-
   incogniteeStore.api
     .balanceUnshieldFunds(
       account,
@@ -1821,14 +1818,14 @@ const unshield = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        // was used to test because the getters don't work yet.
-        // nonce: incogniteeStore.api.createType('u32', 1)
+        nonce: accountStore.incogniteeNonce,
       },
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";
       console.log(`trustedOperationHash: ${hash}`);
     });
+  //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
 const sendPrivately = () => {
@@ -1848,12 +1845,16 @@ const sendPrivately = () => {
       accountStore.getAddress,
       recipientAddress.value,
       amount,
-      { signer: accountStore.injector?.signer },
+      {
+        signer: accountStore.injector?.signer,
+        nonce: accountStore.incogniteeNonce,
+      },
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
       txStatus.value = "😀 Success";
     });
+  //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
 const getterMap: { [address: string]: any } = {};
@@ -1881,17 +1882,17 @@ const fetchIncogniteeBalance = async () => {
     if (!getterMap[accountStore.account]) {
       if (injector) {
         console.log(
-          `fetching incognitee balance needs signing in extension: ${injector.name}`,
+          `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.getBalanceGetter(
+        await incogniteeStore.api.getAccountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
         );
     } else {
-      console.log(`fetching incognitee balance using cached getter`);
+      console.log(`fetching incognitee balance&nonce using cached getter`);
       if (isChoosingAccount.value == false) {
         closeChooseWalletOverlay();
       }
@@ -1906,9 +1907,12 @@ const fetchIncogniteeBalance = async () => {
 
   await getterMap[accountStore.account]
     .send()
-    .then((balance) => {
-      //console.log(`current account balance L2: ${balance} on shard ${incogniteeStore.shard}`);
-      accountStore.setIncogniteeBalance(balance);
+    .then((accountInfo) => {
+      console.log(
+        `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
+      );
+      accountStore.setIncogniteeBalance(accountInfo.data.free);
+      accountStore.setIncogniteeNonce(accountInfo.nonce);
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;

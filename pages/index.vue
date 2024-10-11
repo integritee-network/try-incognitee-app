@@ -214,6 +214,17 @@
           </div>
         </div>
       </div>
+
+      <div class="bg-gray-900 flex mt-2">
+        <div class="custom-border-gradient">
+          <div class="mt-4 ml-4 mr-4 mb-4" @click="openGuessTheNumberOverlay">
+            <p>
+              giveaway campaign: play our Guess-The-Number game and win a weekly
+              giveaway
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <TransitionRoot as="template" :show="showAssetsInfo">
@@ -1187,6 +1198,140 @@
       </Dialog>
     </TransitionRoot>
 
+    <TransitionRoot as="template" :show="showGuessTheNumberOverlay">
+      <Dialog class="relative z-20" @close="closeGuessTheNumberOverlay">
+        <TransitionChild
+          as="template"
+          enter="ease-out duration-300"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="ease-in duration-200"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div
+            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
+          />
+        </TransitionChild>
+
+        <div
+          class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
+        >
+          <TransitionChild
+            as="template"
+            enter="ease-out duration-300"
+            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            enter-to="opacity-100 translate-y-0 sm:scale-100"
+            leave="ease-in duration-200"
+            leave-from="opacity-100 translate-y-0 sm:scale-100"
+            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          >
+            <DialogPanel
+              class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+            >
+              <div class="absolute right-0 top-0 pr-4 pt-4">
+                <button
+                  type="button"
+                  class="text-gray-400 hover:text-gray-500"
+                  @click="closeGuessTheNumberOverlay"
+                >
+                  <span class="sr-only">Close</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div class="flex-grow">
+                <div class="mt-3 text-center sm:mt-5">
+                  <DialogTitle
+                    as="h3"
+                    class="text-base font-semibold leading-6 text-white"
+                    >Guess The Number
+                  </DialogTitle>
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      Guess a number and win a weekly giveaway! You can place up
+                      to 10 guesses per round.
+                    </p>
+                  </div>
+                  <div class="mt-5">
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      winnings: {{ guessTheNumberInfo?.winnings }} PAS
+                    </p>
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      round ends:
+                      {{
+                        formatTimestamp(
+                          guessTheNumberInfo?.next_round_timestamp,
+                        )
+                      }}
+                    </p>
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      last round, the lucky number was
+                      {{ guessTheNumberInfo?.maybe_last_lucky_number }} won by
+                      {{ guessTheNumberInfo?.last_winners }} with a distance of
+                      {{ guessTheNumberInfo?.maybe_last_winning_distance }}.
+                    </p>
+                  </div>
+                  <form class="mt-5" @submit.prevent="submitGuessForm">
+                    <div class="mt-10">
+                      <div class="flex justify-between items-center">
+                        <label
+                          for="guess"
+                          class="text-sm font-medium leading-6 text-white"
+                          >your guess</label
+                        >
+                      </div>
+                      <div>
+                        <input
+                          id="guess"
+                          v-model="guess"
+                          type="number"
+                          step="1"
+                          :min="0"
+                          :max="10000"
+                          required
+                          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
+                          style="border-color: #24ad7c"
+                          placeholder="guess"
+                        />
+                      </div>
+
+                      <!-- Fee description -->
+                      <div class="text-right">
+                        <span class="text-xs text-gray-400"
+                          >Fee: 1 PAS for Incognitee</span
+                        >
+                      </div>
+                    </div>
+                    <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
+                      <button
+                        type="submit"
+                        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                      >
+                        Submit Guess
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
     <TransitionRoot as="template" :show="showScanOverlay">
       <Dialog class="relative z-20" @close="closeScanOverlay">
         <TransitionChild
@@ -1658,6 +1803,8 @@ const recipientAddress = ref("");
 const sendAmount = ref(1.0);
 const shieldAmount = ref(1.0);
 const unshieldAmount = ref(10.0);
+const guess = ref(null);
+const guessTheNumberInfo = ref(null);
 const scanResult = ref("No QR code data yet");
 const extensionAccounts = ref([]);
 const selectedExtensionAccount = ref(null);
@@ -1709,6 +1856,13 @@ const submitUnshieldForm = () => {
   openStatusOverlay();
   closeUnshieldOverlay();
   unshield();
+};
+
+const submitGuessForm = () => {
+  // Handle the form submission here
+  openStatusOverlay();
+  closeGuessTheNumberOverlay();
+  submitGuess();
 };
 
 const setRecipientAddressToSelf = () => {
@@ -1857,6 +2011,11 @@ const sendPrivately = () => {
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
+const submitGuess = () => {
+  console.log("TODO: submit guess: ", guess.value);
+  txStatus.value = "⌛ privately submitting your guess to incognitee";
+};
+
 const getterMap: { [address: string]: any } = {};
 
 const fetchIncogniteeBalance = async () => {
@@ -1921,6 +2080,32 @@ const fetchIncogniteeBalance = async () => {
       console.error(`[fetchIncogniteeBalance] error ${err}`);
       isUpdatingIncogniteeBalance.value = false;
     });
+};
+
+// remove this once the worker-api lib defines it
+interface GuessTheNumberInfo {
+  account: string;
+  balance: number;
+  winnings: number;
+  next_round_timestamp: number;
+  last_winners: string[];
+  maybe_last_lucky_number: number;
+  maybe_last_winning_distance: number;
+}
+
+const fetchGuessTheNumberInfo = async () => {
+  if (!incogniteeStore.apiReady) return;
+  console.log("TODO: fetch guess the number info");
+
+  guessTheNumberInfo.value = {
+    account: "POT_ACCOUNT",
+    balance: 42,
+    winnings: 444,
+    next_round_timestamp: 1728632782000,
+    last_winners: ["0x1234", "0x5678"],
+    maybe_last_lucky_number: 1387,
+    maybe_last_winning_distance: 333,
+  };
 };
 
 const pollCounter = useInterval(2000);
@@ -2172,6 +2357,18 @@ const closePrivateSendOverlay = () => {
   showPrivateSendOverlay.value = false;
 };
 
+const showGuessTheNumberOverlay = ref(false);
+const openGuessTheNumberOverlay = () => {
+  console.log(
+    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`,
+  );
+  fetchGuessTheNumberInfo();
+  showGuessTheNumberOverlay.value = true;
+};
+const closeGuessTheNumberOverlay = () => {
+  console.log("closeGuessTheNumberOverlay");
+  showGuessTheNumberOverlay.value = false;
+};
 const showScanOverlay = ref(false);
 const openScanOverlay = () => {
   scanResult.value = "No QR code data yet";
@@ -2190,6 +2387,19 @@ const closeStatusOverlay = () => {
   showPrivateSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
+};
+
+const formatTimestamp = (timestamp: number) => {
+  const date = new Date(timestamp);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  };
+  return new Intl.DateTimeFormat("de-CH", options).format(date);
 };
 </script>
 

@@ -2045,7 +2045,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.getAccountInfoGetter(
+        await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },

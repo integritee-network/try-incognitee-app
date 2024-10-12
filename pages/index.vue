@@ -1267,7 +1267,8 @@
                   </div>
                   <div class="mt-5">
                     <p class="text-sm text-gray-400 text-left my-4">
-                      winnings: {{ guessTheNumberInfo?.winnings }} PAS
+                      winnings:
+                      {{ guessTheNumberInfo?.winnings / Math.pow(10, 10) }} PAS
                     </p>
                     <p class="text-sm text-gray-400 text-left my-4">
                       round ends:
@@ -1279,9 +1280,26 @@
                     </p>
                     <p class="text-sm text-gray-400 text-left my-4">
                       last round, the lucky number was
-                      {{ guessTheNumberInfo?.maybe_last_lucky_number }} won by
-                      {{ guessTheNumberInfo?.last_winners }} with a distance of
-                      {{ guessTheNumberInfo?.maybe_last_winning_distance }}.
+                      {{
+                        guessTheNumberInfo?.maybe_last_lucky_number
+                          ? "unknown"
+                          : guessTheNumberInfo?.maybe_last_lucky_number
+                      }}
+                    </p>
+                    <p class="text-sm text-gray-400 text-left my-4">
+                      winners:
+                      {{
+                        guessTheNumberInfo?.last_winners.isEmpty
+                          ? "no one"
+                          : guessTheNumberInfo?.last_winners.join(", ")
+                      }}
+                    </p>
+                    <p
+                      v-if="guessTheNumberInfo?.maybe_last_winning_distance > 0"
+                      class="text-sm text-gray-400 text-left my-4"
+                    >
+                      with a distance of
+                      {{ guessTheNumberInfo.maybe_last_winning_distance }}.
                     </p>
                   </div>
                   <form class="mt-5" @submit.prevent="submitGuessForm">
@@ -2014,11 +2032,32 @@ const sendPrivately = () => {
 const submitGuess = () => {
   console.log("TODO: submit guess: ", guess.value);
   txStatus.value = "⌛ privately submitting your guess to incognitee";
+  const account = accountStore.account;
+  console.log(
+    `sending guess ${guess.value} from ${account.address} privately to incognitee`,
+  );
+
+  incogniteeStore.api
+    .guessTheNumber(
+      account,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      guess.value,
+      {
+        signer: accountStore.injector?.signer,
+        nonce: accountStore.incogniteeNonce,
+      },
+    )
+    .then((hash) => {
+      console.log(`trustedOperationHash: ${hash}`);
+      txStatus.value = "😀 Success";
+    });
+  //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
 const getterMap: { [address: string]: any } = {};
 
-const fetchIncogniteeBalance = async () => {
+const fetchIncogniteeAccountInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
 
@@ -2082,37 +2121,23 @@ const fetchIncogniteeBalance = async () => {
     });
 };
 
-// remove this once the worker-api lib defines it
-interface GuessTheNumberInfo {
-  account: string;
-  balance: number;
-  winnings: number;
-  next_round_timestamp: number;
-  last_winners: string[];
-  maybe_last_lucky_number: number;
-  maybe_last_winning_distance: number;
-}
-
 const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("TODO: fetch guess the number info");
-
-  guessTheNumberInfo.value = {
-    account: "POT_ACCOUNT",
-    balance: 42,
-    winnings: 444,
-    next_round_timestamp: 1728632782000,
-    last_winners: ["0x1234", "0x5678"],
-    maybe_last_lucky_number: 1387,
-    maybe_last_winning_distance: 333,
-  };
+  const getter = incogniteeStore.api.guessTheNumberInfoGetter(
+    incogniteeStore.shard,
+  );
+  getter.send().then((info) => {
+    console.log(`guess the number info: ${info}`);
+    guessTheNumberInfo.value = info;
+  });
 };
 
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
   //console.log("ping: " + pollCounter.value);
-  await fetchIncogniteeBalance();
+  await fetchIncogniteeAccountInfo();
 });
 
 watch(accountStore, async () => {
@@ -2138,7 +2163,7 @@ watch(accountStore, async () => {
     },
   );
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-  fetchIncogniteeBalance().then(() =>
+  fetchIncogniteeAccountInfo().then(() =>
     console.log("fetched incognitee balance"),
   );
 });
@@ -2369,6 +2394,7 @@ const closeGuessTheNumberOverlay = () => {
   console.log("closeGuessTheNumberOverlay");
   showGuessTheNumberOverlay.value = false;
 };
+
 const showScanOverlay = ref(false);
 const openScanOverlay = () => {
   scanResult.value = "No QR code data yet";
@@ -2389,8 +2415,10 @@ const closeStatusOverlay = () => {
   showUnshieldOverlay.value = false;
 };
 
-const formatTimestamp = (timestamp: number) => {
-  const date = new Date(timestamp);
+const formatTimestamp = (timestamp: number | null) => {
+  if (!timestamp) return "undefined";
+  console.log("formatting epoch: " + timestamp);
+  const date = new Date(timestamp.toNumber());
   const options: Intl.DateTimeFormatOptions = {
     day: "2-digit",
     month: "2-digit",
@@ -2398,6 +2426,7 @@ const formatTimestamp = (timestamp: number) => {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
+    timeZoneName: "short",
   };
   return new Intl.DateTimeFormat("de-CH", options).format(date);
 };

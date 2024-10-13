@@ -1282,8 +1282,8 @@
                       last round, the lucky number was
                       {{
                         guessTheNumberInfo?.maybe_last_lucky_number
-                          ? "unknown"
-                          : guessTheNumberInfo?.maybe_last_lucky_number
+                          ? guessTheNumberInfo?.maybe_last_lucky_number
+                          : "unknown"
                       }}
                     </p>
                     <p class="text-sm text-gray-400 text-left my-4">

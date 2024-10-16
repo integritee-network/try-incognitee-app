@@ -68,9 +68,9 @@
               <div class="text-white mb-6 text-center">
                 <div class="">
                   <h3 class="text-sm mb-3">Public Balance</h3>
-                  <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+                  <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
                   <div class="text-4xl font-semibold" v-else>
-                    {{ accountStore.getPaseoHumanBalance }}
+                    {{ formatShieldingTokenBalance(accountStore.setShieldingTargetBalance) }}
                     <span class="text-sm font-semibold">PAS</span>
                   </div>
                 </div>
@@ -512,7 +512,7 @@
 
                 <p class="text-sm text-gray-400 text-left my-4">
                   Shielding is the process of moving naked, publicly visible
-                  balance on Paseo to your private wallet on Incognitee.
+                  balance on L1 to your private wallet on Incognitee.
                 </p>
 
                 <form
@@ -529,7 +529,7 @@
 
                       <span class="text-xs text-gray-400"
                         >Available public balance:
-                        {{ accountStore.getPaseoHumanBalance }}</span
+                        {{ accountStore.getShieldingTargetHumanBalance }}</span
                       >
                     </div>
                     <input
@@ -539,8 +539,8 @@
                       step="0.01"
                       :min="0.1"
                       :max="
-                        (accountStore.paseoBalance -
-                          existential_deposit_paseo) /
+                        (accountStore.shieldingTargetBalance -
+                          existential_deposit_shielding_target) /
                           Math.pow(10, 10) -
                         0.1
                       "
@@ -1645,14 +1645,15 @@ import { eventBus } from "@/helpers/eventBus";
 const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
-const isFetchingPaseoBalance = ref(true);
+const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const isSignerBusy = ref(false);
 
-const existential_deposit_paseo = 10000000000;
+const existential_deposit_shielding_target = ref(10000000000);
+const shielding_token_decimals = ref(12);
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
@@ -1722,10 +1723,10 @@ const onDecode = (decodeResult) => {
   closeScanOverlay();
 };
 
-const txResHandlerPaseo = ({ events = [], status, txHash }) => {
+const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
-    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
+    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your L1 balance going down`);
   isSignerBusy.value = false;
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({ _, event: { data, method, section } }) => {
@@ -1768,7 +1769,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
   });
 };
 
-const txErrHandlerPaseo = (err) =>
+const txErrHandlerShieldingTarget = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 const shield = async () => {
   console.log("shielding .....");
@@ -1780,7 +1781,7 @@ const shield = async () => {
   isSignerBusy.value = true;
   txStatus.value = "⌛ awaiting signature and connection";
   if (incogniteeStore.vault) {
-    const balance = accountStore.paseoBalance;
+    const balance = accountStore.shieldingTargetBalance;
     const amount = Math.pow(10, 10) * shieldAmount.value;
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
@@ -1792,8 +1793,8 @@ const shield = async () => {
       .signAsync(accountStore.account, {
         signer: accountStore.injector?.signer,
       })
-      .then((tx) => tx.send(txResHandlerPaseo))
-      .catch(txErrHandlerPaseo);
+      .then((tx) => tx.send(txResHandlerShieldingTarget))
+      .catch(txErrHandlerShieldingTarget);
   }
 };
 
@@ -1886,7 +1887,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.getAccountInfoGetter(
+        await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -1937,19 +1938,23 @@ watch(accountStore, async () => {
     return;
   }
   if (api?.isReady) {
-    //console.log("skipping api init. It seems the Paseo api is already subscribed to balance changes");
+    //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
     return;
   }
 
   console.log("trying to init api");
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
   api = await ApiPromise.create({ provider: wsProvider });
+  await api.isReady;
+  existential_deposit_shielding_target.value = api.consts.balances.existentialDeposit;
+  shielding_token_decimals.value = api.registry.chainDecimals;
+  console.log(`shielding target has ${shielding_token_decimals.value} decimals and an existential deposit of ${existential_deposit_shielding_target.value}`);
   api.query.system.account(
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
-      console.log("paseo balance:" + currentFree);
-      accountStore.setPaseoBalance(Number(currentFree));
-      isFetchingPaseoBalance.value = false;
+      console.log("shielding target balance:" + currentFree);
+      accountStore.setShieldingTargetBalance(BigInt(currentFree));
+      isFetchingShieldingTargetBalance.value = false;
     },
   );
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
@@ -1963,7 +1968,7 @@ const copyOwnAddressToClipboard = () => {
     .writeText(accountStore.getAddress)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the Paseo faucet.",
+        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
       ),
     );
 };
@@ -2190,6 +2195,9 @@ const closeStatusOverlay = () => {
   showPrivateSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
+};
+const formatShieldingTokenBalance = (balance: BigInt, dec: number) => {
+  return formatBalance(balance, { withSi: true, withUnit: "", decimals: dec });
 };
 </script>
 

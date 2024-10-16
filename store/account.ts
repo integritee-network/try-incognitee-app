@@ -1,20 +1,20 @@
 import { defineStore } from "pinia";
-import { formatBalance } from "@polkadot/util";
 import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
 
-formatBalance.setDefaults({
-  decimals: 10,
-  unit: "",
-});
 export const useAccount = defineStore("account", {
   state: () => ({
+    // if we have an external signer, this is an address only. otherwise it should be a pair
     account: <AddressOrPair | null>null,
+    // optional signer extension
     injector: <InjectedExtension | null>null,
-    paseoBalance: 0,
-    incogniteeBalance: 0,
-    incogniteeNonce: 0,
+    // balance on L1 shielding target
+    shieldingTargetBalance: BigInt(0),
+    // balance on L2 in same token as shielding target
+    incogniteeBalance: BigInt(0),
+    // nonce on L2
+    incogniteeNonce: Number(0),
   }),
   getters: {
     getShortAddress({ account }): string {
@@ -28,12 +28,6 @@ export const useAccount = defineStore("account", {
     hasInjector({ injector }): boolean {
       return injector != null;
     },
-    getIncogniteeHumanBalance({ incogniteeBalance }): number {
-      return formatBalance(incogniteeBalance);
-    },
-    getPaseoHumanBalance({ paseoBalance }): number {
-      return formatBalance(paseoBalance);
-    },
   },
   actions: {
     setAccount(account: AddressOrPair) {
@@ -42,8 +36,8 @@ export const useAccount = defineStore("account", {
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
     },
-    setPaseoBalance(balance: number) {
-      this.paseoBalance = balance;
+    setShieldingTargetBalance(balance: number) {
+      this.shieldingTargetBalance = balance;
     },
     setIncogniteeBalance(balance: number) {
       this.incogniteeBalance = balance;

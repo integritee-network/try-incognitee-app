@@ -1659,8 +1659,6 @@ const isSignerBusy = ref(false);
 const shieldingTarget = ref(ChainId.PaseoRelay);
 const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
 
-const existential_deposit_shielding_target = ref(10000000000);
-const shielding_token_decimals = ref(12);
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
@@ -1958,7 +1956,6 @@ watch(accountStore, async () => {
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainToken));
-  console.log(`shielding target has ${shielding_token_decimals.value} decimals and an existential deposit of ${existential_deposit_shielding_target.value}`);
   api.query.system.account(
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {

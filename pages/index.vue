@@ -70,7 +70,7 @@
                   <h3 class="text-sm mb-3">Public Balance</h3>
                   <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
                   <div class="text-4xl font-semibold" v-else>
-                    {{ formatShieldingTokenBalance(accountStore.setShieldingTargetBalance) }}
+                    {{ accountStore.formatBalance(shieldingTarget) }}
                     <span class="text-sm font-semibold">PAS</span>
                   </div>
                 </div>
@@ -133,7 +133,7 @@
                   getter disabled. please reconnect your account
                 </div>
                 <div class="text-4xl font-semibold" v-else>
-                  {{ accountStore.getIncogniteeHumanBalance }}
+                  {{ accountStore.formatBalance(incogniteeSidechain) }}
                   <span class="text-sm font-semibold">PAS</span>
                 </div>
               </div>
@@ -529,7 +529,7 @@
 
                       <span class="text-xs text-gray-400"
                         >Available public balance:
-                        {{ accountStore.getShieldingTargetHumanBalance }}</span
+                        {{ accountStore.formatBalance(shieldingTarget) }}</span
                       >
                     </div>
                     <input
@@ -539,9 +539,8 @@
                       step="0.01"
                       :min="0.1"
                       :max="
-                        (accountStore.shieldingTargetBalance -
-                          existential_deposit_shielding_target) /
-                          Math.pow(10, 10) -
+                        accountStore.getDecimalBalance(shieldingTarget) -
+                        accountStore.getDecimalExistentialDeposit(shieldingTarget) -
                         0.1
                       "
                       required
@@ -855,7 +854,7 @@
 
                     <span class="text-xs text-gray-400"
                       >Available private balance:
-                      {{ accountStore.getIncogniteeHumanBalance }}</span
+                      {{ accountStore.formatBalance(incogniteeSidechain) }}</span
                     >
                   </div>
                   <input
@@ -865,7 +864,9 @@
                     step="0.1"
                     :min="1.1"
                     :max="
-                      accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1
+                      accountStore.getDecimalBalance(incogniteeSidechain) -
+                      accountStore.getDecimalExistentialDeposit(incogniteeSidechain)
+                      - 0.1
                     "
                     required
                     class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -1139,7 +1140,7 @@
 
                         <span class="text-xs text-gray-400"
                           >Available private balance:
-                          {{ accountStore.getIncogniteeHumanBalance }}</span
+                          {{ accountStore.formatBalance(incogniteeSidechain) }}</span
                         >
                       </div>
 
@@ -1152,8 +1153,9 @@
                           step="0.01"
                           :min="0.1"
                           :max="
-                            accountStore.incogniteeBalance / Math.pow(10, 10) -
-                            0.1
+                            accountStore.getDecimalBalance(incogniteeSidechain) -
+                            accountStore.getDecimalExistentialDeposit(incogniteeSidechain)
+                            - 0.1
                           "
                           required
                           class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -1786,12 +1788,13 @@ const shield = async () => {
   isSignerBusy.value = true;
   txStatus.value = "⌛ awaiting signature and connection";
   if (incogniteeStore.vault) {
-    const balance = accountStore.shieldingTargetBalance;
-    const amount = Math.pow(10, 10) * shieldAmount.value;
+    const balance = accountStore.balance[shieldingTarget.value];
+    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
     console.log("api initialized for shielding");
+
 
     api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
@@ -1824,7 +1827,7 @@ const unshield = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: accountStore.nonce[incogniteeSidechain.value],
       },
     )
     .then((hash) => {
@@ -1853,7 +1856,7 @@ const sendPrivately = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: accountStore.nonce[incogniteeSidechain.value],
       },
     )
     .then((hash) => {
@@ -1917,8 +1920,8 @@ const fetchIncogniteeBalance = async () => {
       console.log(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
-      accountStore.setIncogniteeBalance(accountInfo.data.free);
-      accountStore.setIncogniteeNonce(accountInfo.nonce);
+      accountStore.setBalance(BigInt(accountInfo.data.free), incogniteeSidechain.value);
+      accountStore.setNonce(Number(accountInfo.nonce), incogniteeSidechain.value);
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
@@ -1951,14 +1954,16 @@ watch(accountStore, async () => {
   const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
   api = await ApiPromise.create({ provider: wsProvider });
   await api.isReady;
-  existential_deposit_shielding_target.value = api.consts.balances.existentialDeposit;
-  shielding_token_decimals.value = api.registry.chainDecimals;
+  accountStore.setExistentialDeposit(BigInt(api.consts.balances.existentialDeposit));
+  accountStore.setDecimals(Number(api.registry.chainDecimals));
+  accountStore.setSS58Format(Number(api.registry.chainSS58));
+  accountStore.setSymbol(String(api.registry.chainToken));
   console.log(`shielding target has ${shielding_token_decimals.value} decimals and an existential deposit of ${existential_deposit_shielding_target.value}`);
   api.query.system.account(
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
       console.log("shielding target balance:" + currentFree);
-      accountStore.setShieldingTargetBalance(BigInt(currentFree));
+      accountStore.setBalance(BigInt(currentFree), shieldingTarget.value);
       isFetchingShieldingTargetBalance.value = false;
     },
   );

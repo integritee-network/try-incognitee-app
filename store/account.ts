@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
+import { ChainId } from "~/configs/chains";
+import { encodeAddress } from "@polkadot/util-crypto";
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -10,23 +12,51 @@ export const useAccount = defineStore("account", {
     // optional signer extension
     injector: <InjectedExtension | null>null,
     // balance per chain
-    balance: <Record<string, BigInt>>{},
-    //
-    nonce: <Record<string, number>>{},
-    decimals: <Record<string, number>>{},
+    balance: <Record<ChainId, BigInt>>{},
+    // nonce per chain
+    nonce: <Record<ChainId, number>>{},
+    // decimals (we assume it's the same for all used chains as it's the token we're shielding
+    decimals: <number>0,
+    // native token symbol (we assume it's the same for all used chains as it's the token we're shielding
+    symbol: <string>"UNIT",
+    // ss58 format (we assume it's the same for all used chains
+    ss58Format: <number>42,
+    // existential deposit per chain
+    existentialDeposit: <Record<ChainId, BigInt>>{}
   }),
   getters: {
     getShortAddress({ account }): string {
-      return account
-        ? asString(account as AddressOrPair).slice(0, 8) + "..."
-        : "none";
+      if (!account) return "none";
+      const address = asString(account as AddressOrPair);
+      return encodeAddress(address, this.ss58Format).slice(0, 8) + "...";
     },
     getAddress({ account }): string {
-      return account ? asString(account as AddressOrPair) : "none";
+      if (!account) return "none";
+      const address = asString(account as AddressOrPair);
+      return encodeAddress(address, this.ss58Format);
     },
     hasInjector({ injector }): boolean {
       return injector != null;
     },
+    formatBalance({ balance, decimals }) {
+      return (chain: ChainId): string => {
+        if (!balance[chain]) return "0.000";
+        const balanceValue: BigInt = BigInt(balance[chain]) / BigInt(10 ** decimals);
+        return balanceValue.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+      };
+    },
+    getDecimalBalance({ balance, decimals }) {
+      return (chain: ChainId): number => {
+        if (!balance[chain]) return 0;
+        return Number(BigInt(balance[chain]) / BigInt(10 ** decimals));
+      };
+    },
+    getDecimalExistentialDeposit({ existentialDeposit, decimals }) {
+      return (chain: ChainId): number => {
+        if (!existentialDeposit[chain]) return 0;
+        return Number(BigInt(existentialDeposit[chain]) / BigInt(10 ** decimals));
+      };
+    }
   },
   actions: {
     setAccount(account: AddressOrPair) {
@@ -35,15 +65,29 @@ export const useAccount = defineStore("account", {
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
     },
-    setShieldingTargetBalance(balance: BigInt) {
-      this.shieldingTargetBalance = balance;
+    setBalance(balance: BigInt, chain: ChainId) {
+      this.balance[chain] = balance;
     },
-    setIncogniteeBalance(balance: BigInt) {
-      this.incogniteeBalance = balance;
+    setNonce(nonce: number, chain: ChainId) {
+      this.nonce[chain] = nonce;
     },
-    setIncogniteeNonce(nonce: number) {
-      this.incogniteeNonce = nonce;
+    setDecimals(decimals: number) {
+      this.decimals = decimals;
+    },
+    setSymbol(symbol: string) {
+      this.symbol = symbol;
+    },
+    setSS58Format(ss58Format: number) {
+      this.ss58Format = ss58Format;
+    },
+    setExistentialDeposit(existentialDeposit: BigInt, chain: ChainId) {
+      this.existentialDeposit[chain] = existentialDeposit;
     },
   },
+  helpers: {
+    decimalAmountToBigInt(amount: number): BigInt {
+      return BigInt(Math.round(amount * 10 ** this.decimals));
+    }
+  }
 });
 

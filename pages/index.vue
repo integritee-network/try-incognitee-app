@@ -1617,6 +1617,7 @@ import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
+import { ChainId } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import {
@@ -1641,6 +1642,7 @@ import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
+import { useRuntimeConfig } from '#app';
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1651,6 +1653,9 @@ const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const isSignerBusy = ref(false);
+
+const shieldingTarget = ref(ChainId.PaseoRelay);
+const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
 
 const existential_deposit_shielding_target = ref(10000000000);
 const shielding_token_decimals = ref(12);
@@ -1980,6 +1985,17 @@ import {
 } from "@polkadot/extension-dapp";
 
 onMounted(async () => {
+  const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
+  const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
+  if (ChainId[shieldingTargetEnv]) {
+    shieldingTarget.value = ChainId[shieldingTargetEnv];
+  }
+  if (ChainId[incogniteeSidechainEnv]) {
+    incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
+  }
+  console.log("SHIELDING_TARGET: env:" + shieldingTargetEnv + ". using " + ChainId[shieldingTarget.value]);
+  console.log("INCOGNITEE_SIDECHAIN: env:" + incogniteeSidechainEnv + ". using " + ChainId[incogniteeSidechain.value]);
+
   incogniteeStore.initializeApi();
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;

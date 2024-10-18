@@ -9,12 +9,11 @@ export const useAccount = defineStore("account", {
     account: <AddressOrPair | null>null,
     // optional signer extension
     injector: <InjectedExtension | null>null,
-    // balance on L1 shielding target
-    shieldingTargetBalance: BigInt(0),
-    // balance on L2 in same token as shielding target
-    incogniteeBalance: BigInt(0),
-    // nonce on L2
-    incogniteeNonce: Number(0),
+    // balance per chain
+    balance: <Record<string, BigInt>>{},
+    //
+    nonce: <Record<string, number>>{},
+    decimals: <Record<string, number>>{},
   }),
   getters: {
     getShortAddress({ account }): string {
@@ -36,10 +35,10 @@ export const useAccount = defineStore("account", {
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
     },
-    setShieldingTargetBalance(balance: number) {
+    setShieldingTargetBalance(balance: BigInt) {
       this.shieldingTargetBalance = balance;
     },
-    setIncogniteeBalance(balance: number) {
+    setIncogniteeBalance(balance: BigInt) {
       this.incogniteeBalance = balance;
     },
     setIncogniteeNonce(nonce: number) {
@@ -47,3 +46,4 @@ export const useAccount = defineStore("account", {
     },
   },
 });
+

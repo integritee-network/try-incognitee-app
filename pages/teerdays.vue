@@ -6,10 +6,10 @@
     >
       <span
         class="flex rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-      >Note</span
+        >Note</span
       >
       <span class="text-xs mr-2 text-left flex-auto"
-      >You need some signer extension to use this page. Please make sure to
+        >You need some signer extension to use this page. Please make sure to
         enable your extension and reload the page in case the connect button
         doesn't work.</span
       >
@@ -60,7 +60,7 @@
           <p class="mt-6 text-gray-300">
             A new era of digital currency transfer is about to come. Our
             <a class="text-incognitee-green" href="https://incognitee.io"
-            >Incognitee</a
+              >Incognitee</a
             >
             Web3 solution empowers you to make secure, private, and anonymous
             transactions without compromising control over your assets.
@@ -72,28 +72,28 @@
             class="wallet-grid mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
           >
             <a href="https://talisman.xyz/download"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/talisman-logo.svg"
-              alt="talisman"
+              ><img
+                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/talisman-logo.svg"
+                alt="talisman"
             /></a>
             <a href="https://novawallet.io/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/nova-wallet-logo.svg"
-              alt="nova wallet"
+              ><img
+                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                src="/img/index/nova-wallet-logo.svg"
+                alt="nova wallet"
             /></a>
             <a href="https://www.subwallet.app/"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/sub-wallet-logo.svg"
-              alt="sub wallet"
+              ><img
+                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/sub-wallet-logo.svg"
+                alt="sub wallet"
             /></a>
             <a href="https://polkadot.js.org/extension/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/polkadotjs-logo.svg"
-              alt="polkajs"
+              ><img
+                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                src="/img/index/polkadotjs-logo.svg"
+                alt="polkajs"
             /></a>
           </div>
 
@@ -231,7 +231,7 @@
                 <label
                   for="account.address"
                   class="text-sm font-medium leading-6 text-gray-300"
-                >Select your account</label
+                  >Select your account</label
                 >
                 <div class="mt-2">
                   <select
@@ -256,12 +256,12 @@
                 <label
                   for="last-name"
                   class="text-sm font-medium leading-6 text-gray-300"
-                >Selected Address</label
+                  >Selected Address</label
                 >
                 <div class="mt-2">
                   <span class="wallet-address text-sm text-gray-300">{{
-                      accountStore.getAddress
-                    }}</span>
+                    accountStore.getAddress
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -324,7 +324,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                            >{{
+                              >{{
                                 accountStore.getHumanTransferrable
                               }}
                               TEER</time
@@ -343,7 +343,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                            >{{ accountStore.getHumanFrozen }} TEER</time
+                              >{{ accountStore.getHumanFrozen }} TEER</time
                             >
                           </dd>
                         </div>
@@ -359,7 +359,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                            >{{ accountStore.getHumanReserved }} TEER</time
+                              >{{ accountStore.getHumanReserved }} TEER</time
                             >
                           </dd>
                         </div>
@@ -377,7 +377,7 @@
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31"
-                                >{{
+                                  >{{
                                     pendingUnlock
                                       ? pendingUnlock.getTeerToUnlock()
                                       : 0
@@ -395,8 +395,8 @@
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
-                                    pendingUnlock?.getDueDateStr()
-                                  }}</time>
+                                  pendingUnlock?.getDueDateStr()
+                                }}</time>
                               </dd>
                             </div>
                           </div>
@@ -528,7 +528,7 @@
               By bonding your TEER now, you can already accumulate TEERdays
               prior to the launch of
               <a class="text-incognitee-green" href="https://incognitee.io"
-              >Incognitee</a
+                >Incognitee</a
               >. TEERdays are calculated by multiplying the amount of TEER by
               the number of days bonded. You can unbond your TEER anytime within
               7 days, but you will lose a fraction of the accumulated TEERdays
@@ -553,7 +553,7 @@
               TEERdays can be used to increase your revenue share for the launch
               of
               <a class="text-incognitee-green" href="https://incognitee.io"
-              >Incognitee</a
+                >Incognitee</a
               >
               on Polkadot/Kusama and will also increase your governance voting
               power for future decisions related to Incognitee.
@@ -578,18 +578,18 @@
               <a
                 class="text-incognitee-green"
                 href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
-              >Kraken</a
+                >Kraken</a
               >,
               <a
                 class="text-incognitee-green"
                 href="https://www.gate.io/de/trade/TEER_USDT"
-              >Gate</a
+                >Gate</a
               >
               or
               <a
                 class="text-incognitee-green"
                 href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
-              >Basilisk</a
+                >Basilisk</a
               >​<br />
 
               2. Get one of the supported wallets and connect your wallet​​<br />
@@ -654,64 +654,64 @@
             <div class="mt-4 sm:mt-10 overflow-x-auto">
               <table class="rounded-table min-w-full">
                 <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    class="px-4 py-4 text-left text-sm font-semibold text-white"
-                  >
-                    Rank
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-4 text-left text-sm font-semibold text-white"
-                  >
-                    TEERdays
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-4 text-left text-sm font-semibold text-white"
-                  >
-                    Wallet
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-4 py-4 text-left text-sm font-semibold text-white"
-                  >
-                    TEER bonded
-                  </th>
-                </tr>
+                  <tr>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      Rank
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      TEERdays
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      Wallet
+                    </th>
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
+                      TEER bonded
+                    </th>
+                  </tr>
                 </thead>
                 <tbody class="text-left">
-                <tr
-                  v-for="(entry, index) in allBonds.slice(0, 10)"
-                  :key="index"
-                  :class="{
+                  <tr
+                    v-for="(entry, index) in allBonds.slice(0, 10)"
+                    :key="index"
+                    :class="{
                       'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
                       'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
                     }"
-                  class="rounded-lg shadow text-left"
-                >
-                  <td
-                    class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
+                    class="rounded-lg shadow text-left"
                   >
-                    {{ index + 1 }}
-                  </td>
-                  <td
-                    class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                  >
-                    {{ entry[2].toFixed(2) }}
-                  </td>
-                  <td
-                    class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                  >
-                    {{ entry[0] }}
-                  </td>
-                  <td
-                    class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                  >
-                    {{ entry[1].toFixed(2) }}
-                  </td>
-                </tr>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
+                    >
+                      {{ index + 1 }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[2].toFixed(2) }}
+                    </td>
+                    <td
+                      class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[0] }}
+                    </td>
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
+                      {{ entry[1].toFixed(2) }}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -944,11 +944,11 @@
       </div>
       <div class="footer__bottom">
         <span class="paragraph_medium"
-        >©{{ new Date().getFullYear() }} Integritee, Inc.</span
+          >©{{ new Date().getFullYear() }} Integritee, Inc.</span
         >
         <span>
           <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
-          >Imprint and Privacy Policy</NuxtLink
+            >Imprint and Privacy Policy</NuxtLink
           >
         </span>
       </div>
@@ -1057,7 +1057,7 @@ watch(selectedAccount, (newAccount) => {
   }
 });
 import { nextTick } from "vue";
-import {useRuntimeConfig} from "#app";
+import { useRuntimeConfig } from "#app";
 
 const connect = () => {
   web3Enable("Integritee Dapp")
@@ -1126,9 +1126,9 @@ onMounted(async () => {
   }
   console.log(
     "INTEGRITEE_NETWORK: env:" +
-    integriteeNetworkEnv +
-    ". using " +
-    ChainId[integriteeNetwork.value],
+      integriteeNetworkEnv +
+      ". using " +
+      ChainId[integriteeNetwork.value],
   );
   const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
   console.log(
@@ -1187,12 +1187,12 @@ watch(accountStore, async () => {
   await api.query.system.account(
     accountStore.address,
     ({
-       data: {
-         free: currentFree,
-         reserved: currentReserved,
-         frozen: currentFrozen,
-       },
-     }) => {
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
       console.log("TEER balance:" + currentFree);
       accountStore.free = BigInt(currentFree);
       accountStore.reserved = BigInt(currentReserved);
@@ -1206,11 +1206,11 @@ watch(accountStore, async () => {
       if (bond.value) {
         console.log(
           "TEERday bond:" +
-          bond.value +
-          " last updated:" +
-          bond.lastUpdated +
-          " accumulated tokentime:" +
-          bond.accumulatedTokentime,
+            bond.value +
+            " last updated:" +
+            bond.lastUpdated +
+            " accumulated tokentime:" +
+            bond.accumulatedTokentime,
         );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());

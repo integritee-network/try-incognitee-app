@@ -952,6 +952,8 @@
           >
         </span>
       </div>
+      <!-- this is necessary to avoid the footer overlapping the text -->
+      <br /><br /><br /><br /><br /><br /><br />
     </div>
   </footer>
 

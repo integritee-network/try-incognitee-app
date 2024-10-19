@@ -1594,7 +1594,7 @@
 
     <div
       aria-live="assertive"
-      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-10"
     >
       <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
         <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
@@ -1620,7 +1620,7 @@
                 <div class="ml-4 flex flex-shrink-0">
                   <button
                     type="button"
-                    @click="showStatusOverlay = false"
+                    @click="closeStatusOverlay"
                     class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     <span class="sr-only">Close</span>
@@ -1811,13 +1811,10 @@ const shield = async () => {
   }
   isSignerBusy.value = true;
   txStatus.value = "⌛ awaiting signature and connection";
-  if (incogniteeStore.vault) {
+  if (incogniteeStore.vault && api?.isReady) {
     const balance = accountStore.balance[shieldingTarget.value];
     const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
-    const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
-    const api = await ApiPromise.create({ provider: wsProvider });
-    console.log("api initialized for shielding");
 
     api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
@@ -2290,28 +2287,10 @@ const closeStatusOverlay = () => {
   color: #ffffff;
 }
 
-.wallet {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  flex-grow: 1;
-}
-
 .truncate-input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.balance {
-  font-size: 48px;
-  padding: 20px 20px;
-}
-
-.balance-naked {
-  font-size: 24px;
-  padding: 20px 20px;
 }
 
 h1 {
@@ -2322,23 +2301,6 @@ h1 {
   margin-bottom: 20px; /* Adds space below the heading */
 }
 
-.currency-selector {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-}
-
-.currency-logo {
-  height: 50px; /* Adjust as needed */
-  width: 50px; /* Adjust as needed */
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-}
-
 hr {
   border: none;
   border-top: 1px #222; /* Change color as needed */
@@ -2347,90 +2309,11 @@ hr {
   height: 1px; /* Adjust as needed */
 }
 
-.privacy-separator {
-  width: 90%;
-  text-align: center;
-  color: #555;
-}
-
-.alert-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.alert {
-  background: #222;
-  padding: 20px;
-  width: 90%;
-  border-radius: 10px;
-  overflow: auto;
-  max-height: 90%;
-}
-
-.action-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.action {
-  background: #222;
-  padding: 20px;
-  width: 90%;
-  border-radius: 10px;
-  overflow: auto;
-  max-height: 90%;
-}
-
-.status-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.status {
-  background: #269;
-  padding: 20px;
-  width: 90%;
-  border-radius: 10px;
-}
-
 .qrcode-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-}
-
-.qrcode {
-  width: min(90vw, 80vh);
-  height: min(90vw, 80vh);
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
 }
 
 .form-container input {

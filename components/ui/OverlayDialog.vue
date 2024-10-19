@@ -1,7 +1,7 @@
 <template>
   <TransitionRoot as="template" :show="show">
     <Dialog class="relative z-20" @close="close">
-      <TransitionChildSootGlass/>
+      <TransitionChildSootGlass />
       <div
         class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
       >
@@ -44,9 +44,9 @@
               <DialogTitle
                 as="h3"
                 class="text-base font-semibold leading-6 text-white"
-              >{{ title }}
+                >{{ title }}
               </DialogTitle>
-              <slot/>
+              <slot />
             </div>
           </DialogPanel>
         </TransitionChild>
@@ -56,8 +56,14 @@
 </template>
 
 <script setup lang="ts">
-import {Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from "@headlessui/vue";
-import {defineProps} from "vue";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from "@headlessui/vue";
+import { defineProps } from "vue";
 import TransitionChildSootGlass from "@/components/ui/TransitionChildSootGlass.vue";
 
 const props = defineProps({

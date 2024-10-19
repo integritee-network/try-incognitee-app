@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     public: {
       SHIELDING_TARGET: process.env.SHIELDING_TARGET,
       INCOGNITEE_SIDECHAIN: process.env.INCOGNITEE_SIDECHAIN,
+      INTEGRITEE_NETWORK: process.env.INTEGRITEE_NETWORK,
       SHARD: process.env.SHARD,
     },
   },

@@ -76,6 +76,26 @@
                       <p class="text-xs cursor-pointer">Gov</p>
                     </nuxt-link>
                   </div>
+
+                  <div class="flex flex-col items-center text-center">
+                    <nuxt-link :to="{ path: '/teerdays', query: $route.query }">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="size-6 mx-auto mb-2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"
+                        />
+                      </svg>
+                      <p class="text-xs cursor-pointer">TEERdays</p>
+                    </nuxt-link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,6 +158,7 @@ const emitAddressClicked = () => {
 
 .footer {
   flex-shrink: 0; /* Prevents the footer from shrinking */
+  z-index: 5;
 }
 
 .footer-content {

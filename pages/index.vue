@@ -68,10 +68,15 @@
               <div class="text-white mb-6 text-center">
                 <div class="">
                   <h3 class="text-sm mb-3">Public Balance</h3>
-                  <div v-if="isFetchingPaseoBalance" class="spinner"></div>
+                  <div
+                    v-if="isFetchingShieldingTargetBalance"
+                    class="spinner"
+                  ></div>
                   <div class="text-4xl font-semibold" v-else>
-                    {{ accountStore.getPaseoHumanBalance }}
-                    <span class="text-sm font-semibold">PAS</span>
+                    {{ accountStore.formatBalance(shieldingTarget) }}
+                    <span class="text-sm font-semibold">{{
+                      accountStore.getSymbol
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -102,6 +107,7 @@
                   <div
                     class="flex flex-col items-center text-center"
                     @click="openFaucetOverlay"
+                    v-if="faucetUrl"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -133,8 +139,10 @@
                   getter disabled. please reconnect your account
                 </div>
                 <div class="text-4xl font-semibold" v-else>
-                  {{ accountStore.getIncogniteeHumanBalance }}
-                  <span class="text-sm font-semibold">PAS</span>
+                  {{ accountStore.formatBalance(incogniteeSidechain) }}
+                  <span class="text-sm font-semibold">{{
+                    accountStore.getSymbol
+                  }}</span>
                 </div>
               </div>
               <div class="mt-10">
@@ -507,12 +515,12 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Shield PAS
+                  >Shield {{ accountStore.getSymbol }}
                 </DialogTitle>
 
                 <p class="text-sm text-gray-400 text-left my-4">
                   Shielding is the process of moving naked, publicly visible
-                  balance on Paseo to your private wallet on Incognitee.
+                  balance on L1 to your private wallet on Incognitee.
                 </p>
 
                 <form
@@ -524,12 +532,12 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                        >PAS Amount</label
+                        >{{ accountStore.getSymbol }} Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
                         >Available public balance:
-                        {{ accountStore.getPaseoHumanBalance }}</span
+                        {{ accountStore.formatBalance(shieldingTarget) }}</span
                       >
                     </div>
                     <input
@@ -539,9 +547,10 @@
                       step="0.01"
                       :min="0.1"
                       :max="
-                        (accountStore.paseoBalance -
-                          existential_deposit_paseo) /
-                          Math.pow(10, 10) -
+                        accountStore.getDecimalBalance(shieldingTarget) -
+                        accountStore.getDecimalExistentialDeposit(
+                          shieldingTarget,
+                        ) -
                         0.1
                       "
                       required
@@ -550,7 +559,8 @@
                     />
                     <div class="text-right">
                       <span class="text-xs text-gray-400"
-                        >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                        >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175%
+                        for Incognitee</span
                       >
                     </div>
                   </div>
@@ -676,7 +686,7 @@
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <a href="https://faucet.polkadot.io/" target="_blank">
+                <a :href="faucetUrl" target="_blank">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
@@ -752,12 +762,12 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Unshield PAS
+                  >Unshield {{ accountStore.getSymbol }}
                 </DialogTitle>
                 <div class="mt-5">
                   <p class="text-sm text-gray-400 text-left my-4">
                     Unshielding is the process of moving funds from your private
-                    balance on Incognitee to publicly visible (naked) Paseo.
+                    balance on Incognitee to publicly visible (naked) L1.
                   </p>
                 </div>
                 <form class="mt-5" @submit.prevent="submitUnshieldForm">
@@ -841,21 +851,23 @@
 
                   <p class="text-sm text-gray-400 text-left mt-5">
                     For optimal k-anonymity, we advise you to unshield exactly
-                    10 PAS at the time. In the future we will provide a score
-                    including timing and popular amounts to enhance
-                    unlinkability of your actions.
+                    10 {{ accountStore.getSymbol }} at the time. In the future
+                    we will provide a score including timing and popular amounts
+                    to enhance unlinkability of your actions.
                   </p>
 
                   <div class="flex justify-between items-center mt-5">
                     <label
                       for="unshieldAmount"
                       class="text-sm font-medium leading-6 text-white"
-                      >PAS Amount</label
+                      >{{ accountStore.getSymbol }} Amount</label
                     >
 
                     <span class="text-xs text-gray-400"
                       >Available private balance:
-                      {{ accountStore.getIncogniteeHumanBalance }}</span
+                      {{
+                        accountStore.formatBalance(incogniteeSidechain)
+                      }}</span
                     >
                   </div>
                   <input
@@ -865,7 +877,11 @@
                     step="0.1"
                     :min="1.1"
                     :max="
-                      accountStore.incogniteeBalance / Math.pow(10, 10) - 0.1
+                      accountStore.getDecimalBalance(incogniteeSidechain) -
+                      accountStore.getDecimalExistentialDeposit(
+                        incogniteeSidechain,
+                      ) -
+                      0.1
                     "
                     required
                     class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -874,7 +890,8 @@
                   <!-- Fee description -->
                   <div class="text-right">
                     <span class="text-xs text-gray-400"
-                      >Fee: 30m PAS for Incognitee</span
+                      >Fee: 30m {{ accountStore.getSymbol }} for
+                      Incognitee</span
                     >
                   </div>
 
@@ -1134,12 +1151,14 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                          >PAS Amount</label
+                          >{{ accountStore.getSymbol }} Amount</label
                         >
 
                         <span class="text-xs text-gray-400"
                           >Available private balance:
-                          {{ accountStore.getIncogniteeHumanBalance }}</span
+                          {{
+                            accountStore.formatBalance(incogniteeSidechain)
+                          }}</span
                         >
                       </div>
 
@@ -1152,7 +1171,12 @@
                           step="0.01"
                           :min="0.1"
                           :max="
-                            accountStore.incogniteeBalance / Math.pow(10, 10) -
+                            accountStore.getDecimalBalance(
+                              incogniteeSidechain,
+                            ) -
+                            accountStore.getDecimalExistentialDeposit(
+                              incogniteeSidechain,
+                            ) -
                             0.1
                           "
                           required
@@ -1165,7 +1189,8 @@
                       <!-- Fee description -->
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 10m PAS for Incognitee</span
+                          >Fee: 10m {{ accountStore.getSymbol }} for
+                          Incognitee</span
                         >
                       </div>
                     </div>
@@ -1367,12 +1392,13 @@
                       </div>
                     </div>
                     <div class="mt-5">
-                      <a href="https://faucet.polkadot.io/" target="_blank">
+                      <a :href="faucetUrl" target="_blank">
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
-                          Get free PAS tokens from faucet
+                          Get free {{ accountStore.getSymbol }} tokens from
+                          faucet
                         </button>
                       </a>
                     </div>
@@ -1617,6 +1643,7 @@ import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
+import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import {
@@ -1629,7 +1656,8 @@ import {
 import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
@@ -1641,18 +1669,21 @@ import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
+import { useRuntimeConfig } from "#app";
 
 const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
-const isFetchingPaseoBalance = ref(true);
+const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const isSignerBusy = ref(false);
 
-const existential_deposit_paseo = 10000000000;
+const shieldingTarget = ref(ChainId.PaseoRelay);
+const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
+
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
@@ -1661,6 +1692,7 @@ const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 const extensionAccounts = ref([]);
 const selectedExtensionAccount = ref(null);
+const faucetUrl = ref(null);
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
@@ -1722,10 +1754,10 @@ const onDecode = (decodeResult) => {
   closeScanOverlay();
 };
 
-const txResHandlerPaseo = ({ events = [], status, txHash }) => {
+const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
-    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your Paseo balance going down`);
+    : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your L1 balance going down`);
   isSignerBusy.value = false;
   // Loop through Vec<EventRecord> to display all events
   events.forEach(({ _, event: { data, method, section } }) => {
@@ -1768,7 +1800,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
   });
 };
 
-const txErrHandlerPaseo = (err) =>
+const txErrHandlerShieldingTarget = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 const shield = async () => {
   console.log("shielding .....");
@@ -1780,8 +1812,8 @@ const shield = async () => {
   isSignerBusy.value = true;
   txStatus.value = "⌛ awaiting signature and connection";
   if (incogniteeStore.vault) {
-    const balance = accountStore.paseoBalance;
-    const amount = Math.pow(10, 10) * shieldAmount.value;
+    const balance = accountStore.balance[shieldingTarget.value];
+    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
     const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
     const api = await ApiPromise.create({ provider: wsProvider });
@@ -1792,20 +1824,22 @@ const shield = async () => {
       .signAsync(accountStore.account, {
         signer: accountStore.injector?.signer,
       })
-      .then((tx) => tx.send(txResHandlerPaseo))
-      .catch(txErrHandlerPaseo);
+      .then((tx) => tx.send(txResHandlerShieldingTarget))
+      .catch(txErrHandlerShieldingTarget);
   }
 };
 
 const unshield = () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ will unshield to L1";
-  const amount = Math.pow(10, 10) * unshieldAmount.value;
+  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
   const account = accountStore.account;
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
-    `sending ${formatBalance(amount)} from ${
-      accountStore.getAddress
-    } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
+    `sending ${unshieldAmount.value} from ${accountStore.getAddress} privately (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
 
   incogniteeStore.api
@@ -1818,7 +1852,7 @@ const unshield = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: nonce,
       },
     )
     .then((hash) => {
@@ -1831,10 +1865,14 @@ const unshield = () => {
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
-  const amount = Math.pow(10, 10) * sendAmount.value;
+  const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
-    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
   );
 
   incogniteeStore.api
@@ -1847,7 +1885,7 @@ const sendPrivately = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: nonce,
       },
     )
     .then((hash) => {
@@ -1886,7 +1924,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.getAccountInfoGetter(
+        await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -1911,8 +1949,14 @@ const fetchIncogniteeBalance = async () => {
       console.log(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
-      accountStore.setIncogniteeBalance(accountInfo.data.free);
-      accountStore.setIncogniteeNonce(accountInfo.nonce);
+      accountStore.setBalance(
+        BigInt(accountInfo.data.free),
+        incogniteeSidechain.value,
+      );
+      accountStore.setNonce(
+        Number(accountInfo.nonce),
+        incogniteeSidechain.value,
+      );
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
@@ -1937,19 +1981,34 @@ watch(accountStore, async () => {
     return;
   }
   if (api?.isReady) {
-    //console.log("skipping api init. It seems the Paseo api is already subscribed to balance changes");
+    //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
     return;
   }
 
-  console.log("trying to init api");
-  const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
+  const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+  console.log(
+    "trying to init api at " + chainConfigs[shieldingTarget.value].api,
+  );
   api = await ApiPromise.create({ provider: wsProvider });
+  await api.isReady;
+  accountStore.setExistentialDeposit(
+    BigInt(api.consts.balances.existentialDeposit),
+  );
+  accountStore.setDecimals(Number(api.registry.chainDecimals));
+  accountStore.setSS58Format(Number(api.registry.chainSS58));
+  accountStore.setSymbol(String(api.registry.chainTokens));
+
+  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
+    "ADDRESS",
+    accountStore.getAddress,
+  );
+  console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
-      console.log("paseo balance:" + currentFree);
-      accountStore.setPaseoBalance(Number(currentFree));
-      isFetchingPaseoBalance.value = false;
+      console.log("shielding target balance:" + currentFree);
+      accountStore.setBalance(BigInt(currentFree), shieldingTarget.value);
+      isFetchingShieldingTargetBalance.value = false;
     },
   );
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
@@ -1963,7 +2022,7 @@ const copyOwnAddressToClipboard = () => {
     .writeText(accountStore.getAddress)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the Paseo faucet.",
+        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
       ),
     );
 };
@@ -1975,7 +2034,32 @@ import {
 } from "@polkadot/extension-dapp";
 
 onMounted(async () => {
-  incogniteeStore.initializeApi();
+  const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
+  const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
+  const incogniteeShard = useRuntimeConfig().public.SHARD;
+  if (ChainId[shieldingTargetEnv]) {
+    shieldingTarget.value = ChainId[shieldingTargetEnv];
+  }
+  if (ChainId[incogniteeSidechainEnv]) {
+    incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
+  }
+  console.log(
+    "SHIELDING_TARGET: env:" +
+      shieldingTargetEnv +
+      ". using " +
+      ChainId[shieldingTarget.value],
+  );
+  console.log(
+    "INCOGNITEE_SIDECHAIN: env:" +
+      incogniteeSidechainEnv +
+      ". using " +
+      ChainId[incogniteeSidechain.value],
+  );
+
+  incogniteeStore.initializeApi(
+    chainConfigs[incogniteeSidechain.value].api,
+    incogniteeShard,
+  );
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;

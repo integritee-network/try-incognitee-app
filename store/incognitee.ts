@@ -12,25 +12,26 @@ export const useIncognitee = defineStore("incognitee", {
     vault: "",
   }),
   actions: {
-    async initializeApi() {
-      const url = "wss://scv1.paseo.api.incognitee.io:443";
+    async initializeApi(url: string, shard: string) {
+      console.log(
+        "Initializing Incognitee Api at " + url + " for shard " + shard,
+      );
+      this.shard = shard;
       const worker = new IntegriteeWorker(url, {
         createWebSocket: (url) => new WebSocket(url),
         types: {},
       });
       this.api = worker;
-      // shard is ok to be hard-coded, because we don't want to accidentally change shards
-      this.shard = "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
       const sk = await worker.getShardVault();
       this.vault = encodeAddress(sk[0]);
-      console.log("Vault: " + this.vault);
+      console.log("  Vault: " + this.vault);
       const fingerprint_hex = await worker.getFingerprint();
       this.fingerprint = bs58.encode(hexToU8a(fingerprint_hex.toString()));
       console.log(
-        `validateer at ${url} reported fingerprint: ` + this.fingerprint,
+        `  validateer at ${url} reported fingerprint: ` + this.fingerprint,
       );
       //todo: verify fingerprint against teerex
-      console.log("Incognitee Api connected to sidechain");
+      console.log("  Incognitee Api connected to sidechain");
       this.apiReady = true;
     },
   },

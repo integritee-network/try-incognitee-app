@@ -4,25 +4,25 @@
       class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
     >
       <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
-        <Polkadot class="w-[30px] h-[30px]"/>
+        <Polkadot class="w-[30px] h-[30px]" />
         <p class="text-xs">DOT</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >coming soon</span
+          >coming soon</span
         >
       </div>
       <div
         class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
       >
-        <Paseo class="w-[30px] h-[30px]"/>
-        <p class="text-xs">PAS<br/>PASEO</p>
+        <Paseo class="w-[30px] h-[30px]" />
+        <p class="text-xs">PAS<br />PASEO</p>
       </div>
       <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
-        <USDC class="w-[30px] h-[30px]"/>
+        <USDC class="w-[30px] h-[30px]" />
         <p class="text-xs">USDC</p>
         <span
           class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >coming soon</span
+          >coming soon</span
         >
       </div>
     </div>
@@ -75,8 +75,8 @@
                   <div class="text-4xl font-semibold" v-else>
                     {{ accountStore.formatBalance(shieldingTarget) }}
                     <span class="text-sm font-semibold">{{
-                        accountStore.getSymbol
-                      }}</span>
+                      accountStore.getSymbol
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -141,8 +141,8 @@
                 <div class="text-4xl font-semibold" v-else>
                   {{ accountStore.formatBalance(incogniteeSidechain) }}
                   <span class="text-sm font-semibold">{{
-                      accountStore.getSymbol
-                    }}</span>
+                    accountStore.getSymbol
+                  }}</span>
                 </div>
               </div>
               <div class="mt-10">
@@ -226,7 +226,7 @@
 
     <TransitionRoot as="template" :show="showAssetsInfo">
       <Dialog class="relative z-10" @close="closeAssetsInfo">
-        <TransitionChildSootGlass/>
+        <TransitionChildSootGlass />
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
             class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
@@ -271,7 +271,7 @@
                     <DialogTitle
                       as="h3"
                       class="text-base font-semibold leading-6 text-white"
-                    >Other Assets
+                      >Other Assets
                     </DialogTitle>
                     <div class="mt-2">
                       <p class="text-sm text-gray-400 mt-4 text-left">
@@ -303,66 +303,66 @@
       </Dialog>
     </TransitionRoot>
 
-    <OverlayDialog :show="showPrivacyInfo" :close="closeOnOutsideClick" title="On Privacy">
+    <OverlayDialog
+      :show="showPrivacyInfo"
+      :close="closePrivacyInfo"
+      title="On Privacy"
+    >
       <div class="mt-2">
         <p class="text-sm text-gray-400 mt-4 text-justify">
-          Incognitee enhances your privacy while dealing with
-          digital assets. But what does privacy mean and how does
-          incognitee improve privacy?
+          Incognitee enhances your privacy while dealing with digital assets.
+          But what does privacy mean and how does incognitee improve privacy?
         </p>
         <p class="text-sm text-gray-400 text-justify my-4">
           First, let's explore why digital assets are generally
-          <b>not</b> private. When dealing with crypto assets, your
-          account is a pseudonym on a public ledger, much like a
-          bank account number. Every single transaction this account
-          does will be stored publicly forever and you have no right
-          for deletion of the trace you left. If, at a certain point
-          in time your pseudonym can be linked to your identity -
-          i.e. because you send tokens to someone else - your entire
-          behavioral history is revealed as is your balance.
+          <b>not</b> private. When dealing with crypto assets, your account is a
+          pseudonym on a public ledger, much like a bank account number. Every
+          single transaction this account does will be stored publicly forever
+          and you have no right for deletion of the trace you left. If, at a
+          certain point in time your pseudonym can be linked to your identity -
+          i.e. because you send tokens to someone else - your entire behavioral
+          history is revealed as is your balance.
         </p>
         <p class="text-sm text-gray-400 text-justify my-4">
           <NuxtLink to="https://incognitee.io" class="color_blue"
-          >Incognitee
+            >Incognitee
           </NuxtLink>
-          is a privacy enhancing technology that allows you to
-          shield your assets and transfer them privately. This means
-          that you can send tokens to someone else without revealing
-          your balance or transaction history. The recipient will
-          not be able to see your balance or transaction history
-          either. This is achieved by using a technology called
+          is a privacy enhancing technology that allows you to shield your
+          assets and transfer them privately. This means that you can send
+          tokens to someone else without revealing your balance or transaction
+          history. The recipient will not be able to see your balance or
+          transaction history either. This is achieved by using a technology
+          called
           <NuxtLink
             to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
             class="color_blue"
-          >trusted execution environments (TEE)
+            >trusted execution environments (TEE)
           </NuxtLink>
-          . The TEEs we use are a hardware feature of server CPU's
-          called <i>Intel SGX</i>. In addition, the
+          . The TEEs we use are a hardware feature of server CPU's called
+          <i>Intel SGX</i>. In addition, the
           <NuxtLink
             to="https://docs.integritee.network/2-integritee-network"
             class="color_blue"
-          >Integritee Network
+            >Integritee Network
           </NuxtLink>
-          , a Polkadot parachain, performs independent,
-          decentralized remote attestation of TEEs. Moreover, it
-          gives finality to Incognitee sidechain blocks.
+          , a Polkadot parachain, performs independent, decentralized remote
+          attestation of TEEs. Moreover, it gives finality to Incognitee
+          sidechain blocks.
         </p>
         <p class="text-sm text-gray-400 mt-4 text-justify">
-          Incognitee is a layer 2 solution, maintaining a private
-          ledger secured by TEE. All your transactions are
-          confidential, only known to and the person your
-          transacting with. Sender, recipient and amount are
-          invisible to the public and even to the operators of
-          Incognitee infrastructure.
+          Incognitee is a layer 2 solution, maintaining a private ledger secured
+          by TEE. All your transactions are confidential, only known to and the
+          person your transacting with. Sender, recipient and amount are
+          invisible to the public and even to the operators of Incognitee
+          infrastructure.
         </p>
         <p class="text-sm text-gray-400 mt-4 text-justify">
-          For maximal privacy, we suggest to shield your assets to
-          incognitee and from then on transact them on incognitee
-          only. If you need to unshield back to L1, you can still
-          benefit from k-anonymity: the public just sees that
-          someone out of <i>k</i> individuals is the originator of
-          an unshielding event. If <i>k</i> is large enough, you can
-          plausibly deny it was you. You can influence the size of
+          For maximal privacy, we suggest to shield your assets to incognitee
+          and from then on transact them on incognitee only. If you need to
+          unshield back to L1, you can still benefit from k-anonymity: the
+          public just sees that someone out of <i>k</i> individuals is the
+          originator of an unshielding event. If <i>k</i> is large enough, you
+          can plausibly deny it was you. You can influence the size of
           <i>k</i> by choosing popular amounts and timing.
         </p>
       </div>
@@ -395,11 +395,11 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
-            >Available public balance:
+              >Available public balance:
               {{ accountStore.formatBalance(shieldingTarget) }}</span
             >
           </div>
@@ -420,7 +420,7 @@
           />
           <div class="text-right">
             <span class="text-xs text-gray-400"
-            >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175% for
+              >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175% for
               Incognitee</span
             >
           </div>
@@ -496,15 +496,15 @@
       title="Unshield"
     >
       <p class="text-sm text-gray-400 text-left my-4">
-        Unshielding is the process of moving funds from your private balance
-        on Incognitee to publicly visible (naked) L1.
+        Unshielding is the process of moving funds from your private balance on
+        Incognitee to publicly visible (naked) L1.
       </p>
       <form class="mt-5" @submit.prevent="submitUnshieldForm">
         <div class="flex flex-col">
           <label
             for="recipientAddress"
             class="text-sm font-medium leading-6 text-white text-left"
-          >Recipient</label
+            >Recipient</label
           >
           <div class="relative flex items-center rounded-lg">
             <div class="absolute left-3 flex items-center">
@@ -586,11 +586,11 @@
           <label
             for="unshieldAmount"
             class="text-sm font-medium leading-6 text-white"
-          >{{ accountStore.getSymbol }} Amount</label
+            >{{ accountStore.getSymbol }} Amount</label
           >
 
           <span class="text-xs text-gray-400"
-          >Available private balance:
+            >Available private balance:
             {{ accountStore.formatBalance(incogniteeSidechain) }}</span
           >
         </div>
@@ -612,14 +612,14 @@
         <!-- Fee description -->
         <div class="text-right">
           <span class="text-xs text-gray-400"
-          >Fee: 30m {{ accountStore.getSymbol }} for Incognitee</span
+            >Fee: 30m {{ accountStore.getSymbol }} for Incognitee</span
           >
         </div>
 
         <div class="mt-8 w-full bg-gray-800">
           <button
             type="submit"
-            class="btn btn_gradient inline-flex w-full justify-center rounded-md text-sm font-semibold text-white shadow-sm"
+            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
           >
             Unshield
           </button>
@@ -695,7 +695,7 @@
           <label
             for="recipientAddress"
             class="text-sm font-medium leading-6 text-white text-left"
-          >Recipient</label
+            >Recipient</label
           >
           <div class="relative flex items-center rounded-lg">
             <input
@@ -738,11 +738,11 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
-            >Available private balance:
+              >Available private balance:
               {{ accountStore.formatBalance(incogniteeSidechain) }}</span
             >
           </div>
@@ -770,7 +770,7 @@
           <!-- Fee description -->
           <div class="text-right">
             <span class="text-xs text-gray-400"
-            >Fee: 10m {{ accountStore.getSymbol }} for Incognitee</span
+              >Fee: 10m {{ accountStore.getSymbol }} for Incognitee</span
             >
           </div>
         </div>
@@ -883,28 +883,28 @@
             class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
           >
             <a href="https://talisman.xyz/download"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/talisman-logo.svg"
-              alt="talisman"
+              ><img
+                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/talisman-logo.svg"
+                alt="talisman"
             /></a>
             <a href="https://novawallet.io/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/nova-wallet-logo.svg"
-              alt="nova wallet"
+              ><img
+                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                src="/img/index/nova-wallet-logo.svg"
+                alt="nova wallet"
             /></a>
             <a href="https://www.subwallet.app/"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/sub-wallet-logo.svg"
-              alt="sub wallet"
+              ><img
+                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+                src="/img/index/sub-wallet-logo.svg"
+                alt="sub wallet"
             /></a>
             <a href="https://polkadot.js.org/extension/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/polkadotjs-logo.svg"
-              alt="polkajs"
+              ><img
+                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+                src="/img/index/polkadotjs-logo.svg"
+                alt="polkajs"
             /></a>
           </div>
           <div class="mt-10">
@@ -983,7 +983,7 @@
                     class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
                     <span class="sr-only">Close</span>
-                    <XMarkIcon class="h-5 w-5" aria-hidden="true"/>
+                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -996,15 +996,15 @@
 </template>
 
 <script setup lang="ts">
-import {XMarkIcon} from "@heroicons/vue/20/solid";
+import { XMarkIcon } from "@heroicons/vue/20/solid";
 
 import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import {ChainId, chainConfigs} from "@/configs/chains.ts";
-import {useAccount} from "@/store/account.ts";
-import {useIncognitee} from "@/store/incognitee.ts";
+import { ChainId, chainConfigs } from "@/configs/chains.ts";
+import { useAccount } from "@/store/account.ts";
+import { useIncognitee } from "@/store/incognitee.ts";
 import {
   Dialog,
   DialogPanel,
@@ -1014,23 +1014,23 @@ import {
 } from "@headlessui/vue";
 import TransitionChildSootGlass from "@/components/ui/TransitionChildSootGlass.vue";
 import OverlayDialog from "@/components/ui/OverlayDialog.vue";
-import {CheckIcon} from "@heroicons/vue/24/outline";
-import {ApiPromise, WsProvider} from "@polkadot/api";
-import {Keyring} from "@polkadot/keyring";
-import {hexToU8a, u8aToHex} from "@polkadot/util";
-import {TypeRegistry, u32} from "@polkadot/types";
+import { CheckIcon } from "@heroicons/vue/24/outline";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { Keyring } from "@polkadot/keyring";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
-import {useInterval} from "@vueuse/core";
-import {onUnmounted, onMounted, ref, watch} from "vue";
+import { useInterval } from "@vueuse/core";
+import { onUnmounted, onMounted, ref, watch } from "vue";
 import Qrcode from "vue-qrcode";
-import {QrcodeStream} from "vue-qrcode-reader";
-import {useRouter} from "vue-router";
-import {eventBus} from "@/helpers/eventBus";
-import {useRuntimeConfig} from "#app";
+import { QrcodeStream } from "vue-qrcode-reader";
+import { useRouter } from "vue-router";
+import { eventBus } from "@/helpers/eventBus";
+import { useRuntimeConfig } from "#app";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1060,7 +1060,7 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
     console.log("user selected extension account:", selectedAddress);
     dropSubscriptions();
     router.push({
-      query: {address: selectedAddress},
+      query: { address: selectedAddress },
     });
     accountStore.setAccount(selectedAddress.toString());
     const injector = await web3FromAddress(accountStore.getAddress);
@@ -1074,8 +1074,8 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
 let api: ApiPromise | null = null;
 
 const tabs = [
-  {name: "Public Balance", href: "#", current: true},
-  {name: "Private Balance", href: "#", current: false},
+  { name: "Public Balance", href: "#", current: true },
+  { name: "Private Balance", href: "#", current: false },
 ];
 
 const currentTab = ref("public");
@@ -1115,13 +1115,13 @@ const onDecode = (decodeResult) => {
   closeScanOverlay();
 };
 
-const txResHandlerShieldingTarget = ({events = [], status, txHash}) => {
+const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
   status.isFinalized
     ? (txStatus.value = `😀 Finalized. Finalized. You should see your Incognitee balance increase in seconds. Please move to the Private Balance tab`)
     : (txStatus.value = `⌛ Current transaction status: ${status.type}. please be patient a few more seconds. you should see your L1 balance going down`);
   isSignerBusy.value = false;
   // Loop through Vec<EventRecord> to display all events
-  events.forEach(({_, event: {data, method, section}}) => {
+  events.forEach(({ _, event: { data, method, section } }) => {
     if (section + ":" + method === "system:ExtrinsicFailed") {
       // extract the data for this event
       const [dispatchError, dispatchInfo] = data;
@@ -1285,7 +1285,7 @@ const fetchIncogniteeBalance = async () => {
         await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
-          {signer: injector?.signer},
+          { signer: injector?.signer },
         );
     } else {
       console.log(`fetching incognitee balance&nonce using cached getter`);
@@ -1347,7 +1347,7 @@ watch(accountStore, async () => {
   console.log(
     "trying to init api at " + chainConfigs[shieldingTarget.value].api,
   );
-  api = await ApiPromise.create({provider: wsProvider});
+  api = await ApiPromise.create({ provider: wsProvider });
   await api.isReady;
   accountStore.setExistentialDeposit(
     BigInt(api.consts.balances.existentialDeposit),
@@ -1363,7 +1363,7 @@ watch(accountStore, async () => {
   console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
-    ({data: {free: currentFree}}) => {
+    ({ data: { free: currentFree } }) => {
       console.log("shielding target balance:" + currentFree);
       accountStore.setBalance(BigInt(currentFree), shieldingTarget.value);
       isFetchingShieldingTargetBalance.value = false;
@@ -1403,15 +1403,15 @@ onMounted(async () => {
   }
   console.log(
     "SHIELDING_TARGET: env:" +
-    shieldingTargetEnv +
-    ". using " +
-    ChainId[shieldingTarget.value],
+      shieldingTargetEnv +
+      ". using " +
+      ChainId[shieldingTarget.value],
   );
   console.log(
     "INCOGNITEE_SIDECHAIN: env:" +
-    incogniteeSidechainEnv +
-    ". using " +
-    ChainId[incogniteeSidechain.value],
+      incogniteeSidechainEnv +
+      ". using " +
+      ChainId[incogniteeSidechain.value],
   );
 
   incogniteeStore.initializeApi(
@@ -1425,7 +1425,7 @@ onMounted(async () => {
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
-      const localKeyring = new Keyring({type: "sr25519"});
+      const localKeyring = new Keyring({ type: "sr25519" });
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
@@ -1465,7 +1465,7 @@ const createTestingAccount = () => {
   cryptoWaitReady().then(() => {
     dropSubscriptions();
     const generatedMnemonic = mnemonicGenerate();
-    const localKeyring = new Keyring({type: "sr25519", ss58Format: 42});
+    const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
     const newAccount = localKeyring.addFromMnemonic(generatedMnemonic, {
       name: "fresh",
     });
@@ -1474,7 +1474,7 @@ const createTestingAccount = () => {
     console.log(`Private Key in Hex: ${privateKeyHex}`);
     // change url to contain new seed to allow bookmarking
     router.push({
-      query: {seed: privateKeyHex},
+      query: { seed: privateKeyHex },
     });
     accountStore.setAccount(newAccount);
     openNewWalletOverlay();
@@ -1545,12 +1545,6 @@ const openPrivacyInfo = () => {
 };
 const closePrivacyInfo = () => {
   showPrivacyInfo.value = false;
-};
-const privacyInfo = ref(null);
-const closeOnOutsideClick = (event) => {
-  if (event.target === privacyInfo.value) {
-    showPrivacyInfo.value = false;
-  }
 };
 
 const showNewWalletOverlay = ref(false);

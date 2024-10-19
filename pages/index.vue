@@ -226,20 +226,7 @@
 
     <TransitionRoot as="template" :show="showAssetsInfo">
       <Dialog class="relative z-10" @close="closeAssetsInfo">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
             class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
@@ -318,20 +305,7 @@
 
     <TransitionRoot as="template" :show="showPrivacyInfo">
       <Dialog class="relative z-10" @close="closeOnOutsideClick">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div
             class="flex items-start justify-center p-4 text-center sm:items-center sm:p-0"
@@ -457,67 +431,7 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot as="template" :show="showShieldOverlay">
-      <Dialog class="relative z-20" @close="closeShieldOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
-        <div
-          class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
-        >
-          <TransitionChild
-            as="template"
-            enter="ease-out duration-300"
-            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            enter-to="opacity-100 translate-y-0 sm:scale-100"
-            leave="ease-in duration-200"
-            leave-from="opacity-100 translate-y-0 sm:scale-100"
-            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          >
-            <DialogPanel
-              class="w-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-            >
-              <div class="absolute right-0 top-0 pr-4 pt-4">
-                <button
-                  type="button"
-                  class="text-gray-400 hover:text-gray-500"
-                  @click="closeShieldOverlay"
-                >
-                  <span class="sr-only">Close</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div class="mt-3 text-center sm:mt-5 flex-grow">
-                <DialogTitle
-                  as="h3"
-                  class="text-base font-semibold leading-6 text-white"
-                  >Shield {{ accountStore.getSymbol }}
-                </DialogTitle>
-
+    <OverlayDialog :show="showShieldOverlay" :close="closeShieldOverlay" title="Shielding">
                 <p class="text-sm text-gray-400 text-left my-4">
                   Shielding is the process of moving naked, publicly visible
                   balance on L1 to your private wallet on Incognitee.
@@ -574,29 +488,11 @@
                     </button>
                   </div>
                 </form>
-              </div>
-            </DialogPanel>
-          </TransitionChild>
-        </div>
-      </Dialog>
-    </TransitionRoot>
+    </OverlayDialog>
 
     <TransitionRoot as="template" :show="showFaucetOverlay">
       <Dialog class="relative z-20" @close="closeFaucetOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -706,20 +602,7 @@
       :show="showUnshieldOverlay && !showScanOverlay"
     >
       <Dialog class="relative z-10" @close="closeUnshieldOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -916,20 +799,7 @@
         class="fixed inset-0 z-20 flex items-center justify-center"
         @close="closeReceiveOverlay"
       >
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -1038,20 +908,7 @@
       :show="showPrivateSendOverlay && !showScanOverlay"
     >
       <Dialog class="relative z-20" @close="closePrivateSendOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -1214,20 +1071,7 @@
 
     <TransitionRoot as="template" :show="showScanOverlay">
       <Dialog class="relative z-20" @close="closeScanOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -1285,20 +1129,7 @@
 
     <TransitionRoot as="template" :show="showNewWalletOverlay">
       <Dialog class="relative z-10" @close="closeNewWalletOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -1427,20 +1258,7 @@
 
     <TransitionRoot as="template" :show="showChooseWalletOverlay">
       <Dialog class="relative z-10" @close="closeChooseWalletOverlay">
-        <TransitionChild
-          as="template"
-          enter="ease-out duration-300"
-          enter-from="opacity-0"
-          enter-to="opacity-100"
-          leave="ease-in duration-200"
-          leave-from="opacity-100"
-          leave-to="opacity-0"
-        >
-          <div
-            class="fixed inset-0 bg-black bg-opacity-80 transition-opacity"
-          />
-        </TransitionChild>
-
+        <TransitionChildSootGlass/>
         <div
           class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
         >
@@ -1653,6 +1471,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
+import OverlayDialog from "@/components/ui/OverlayDialog.vue";
 import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";

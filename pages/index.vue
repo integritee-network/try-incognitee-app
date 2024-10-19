@@ -71,7 +71,7 @@
                   <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
                   <div class="text-4xl font-semibold" v-else>
                     {{ accountStore.formatBalance(shieldingTarget) }}
-                    <span class="text-sm font-semibold">PAS</span>
+                    <span class="text-sm font-semibold">{{accountStore.getSymbol}}</span>
                   </div>
                 </div>
               </div>
@@ -102,6 +102,7 @@
                   <div
                     class="flex flex-col items-center text-center"
                     @click="openFaucetOverlay"
+                    v-if="faucetUrl"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +135,7 @@
                 </div>
                 <div class="text-4xl font-semibold" v-else>
                   {{ accountStore.formatBalance(incogniteeSidechain) }}
-                  <span class="text-sm font-semibold">PAS</span>
+                  <span class="text-sm font-semibold">{{accountStore.getSymbol}}</span>
                 </div>
               </div>
               <div class="mt-10">
@@ -507,7 +508,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Shield PAS
+                  >Shield {{accountStore.getSymbol}}
                 </DialogTitle>
 
                 <p class="text-sm text-gray-400 text-left my-4">
@@ -524,7 +525,7 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                        >PAS Amount</label
+                        >{{accountStore.getSymbol}} Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
@@ -549,7 +550,7 @@
                     />
                     <div class="text-right">
                       <span class="text-xs text-gray-400"
-                        >Fee: 16 mPAS for Paseo, 0.175% for Incognitee</span
+                        >Fee: 16 m{{accountStore.getSymbol}} for L1, 0.175% for Incognitee</span
                       >
                     </div>
                   </div>
@@ -751,12 +752,12 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Unshield PAS
+                  >Unshield {{accountStore.getSymbol}}
                 </DialogTitle>
                 <div class="mt-5">
                   <p class="text-sm text-gray-400 text-left my-4">
                     Unshielding is the process of moving funds from your private
-                    balance on Incognitee to publicly visible (naked) Paseo.
+                    balance on Incognitee to publicly visible (naked) L1.
                   </p>
                 </div>
                 <form class="mt-5" @submit.prevent="submitUnshieldForm">
@@ -840,7 +841,7 @@
 
                   <p class="text-sm text-gray-400 text-left mt-5">
                     For optimal k-anonymity, we advise you to unshield exactly
-                    10 PAS at the time. In the future we will provide a score
+                    10 {{accountStore.getSymbol}} at the time. In the future we will provide a score
                     including timing and popular amounts to enhance
                     unlinkability of your actions.
                   </p>
@@ -849,7 +850,7 @@
                     <label
                       for="unshieldAmount"
                       class="text-sm font-medium leading-6 text-white"
-                      >PAS Amount</label
+                      >{{accountStore.getSymbol}} Amount</label
                     >
 
                     <span class="text-xs text-gray-400"
@@ -875,7 +876,7 @@
                   <!-- Fee description -->
                   <div class="text-right">
                     <span class="text-xs text-gray-400"
-                      >Fee: 30m PAS for Incognitee</span
+                      >Fee: 30m {{accountStore.getSymbol}} for Incognitee</span
                     >
                   </div>
 
@@ -1135,7 +1136,7 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                          >PAS Amount</label
+                          >{{accountStore.getSymbol}} Amount</label
                         >
 
                         <span class="text-xs text-gray-400"
@@ -1167,7 +1168,7 @@
                       <!-- Fee description -->
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 10m PAS for Incognitee</span
+                          >Fee: 10m {{accountStore.getSymbol}} for Incognitee</span
                         >
                       </div>
                     </div>
@@ -1374,7 +1375,7 @@
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
-                          Get free PAS tokens from faucet
+                          Get free {{accountStore.getSymbol}} tokens from faucet
                         </button>
                       </a>
                     </div>
@@ -1632,7 +1633,7 @@ import {
 import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
-import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
 import { TypeRegistry, u32 } from '@polkadot/types';
 import {
   cryptoWaitReady,
@@ -1959,7 +1960,7 @@ watch(accountStore, async () => {
   accountStore.setExistentialDeposit(BigInt(api.consts.balances.existentialDeposit));
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
-  accountStore.setSymbol(String(api.registry.chainToken));
+  accountStore.setSymbol(String(api.registry.chainTokens));
 
   faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace("ADDRESS", accountStore.getAddress);
   console.log("faucet url: " + faucetUrl.value);

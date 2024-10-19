@@ -35,6 +35,9 @@ export const useAccount = defineStore("account", {
       const address = asString(account as AddressOrPair);
       return encodeAddress(address, this.ss58Format);
     },
+    getSymbol({ symbol }): string {
+      return symbol;
+    },
     hasInjector({ injector }): boolean {
       return injector != null;
     },
@@ -69,13 +72,14 @@ export const useAccount = defineStore("account", {
       this.balance[chain] = balance;
     },
     setNonce(nonce: number, chain: ChainId) {
-      console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
+      //console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
       this.nonce[chain] = nonce;
     },
     setDecimals(decimals: number) {
       this.decimals = decimals;
     },
     setSymbol(symbol: string) {
+      console.debug(`Setting symbol to ${symbol}`);
       this.symbol = symbol;
     },
     setSS58Format(ss58Format: number) {

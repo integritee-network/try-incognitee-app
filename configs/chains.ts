@@ -34,15 +34,15 @@ export const chainConfigs : Record<ChainId, ChainConfig> = {
   },
   [ChainId.IntegriteePolkadot]: {
     name: "Integritee Polkadot",
-    api: "wss://polkadot.api.integritee.io"
+    api: "wss://polkadot.api.integritee.network"
   },
   [ChainId.IntegriteeKusama]: {
     name: "Integritee Kusama",
-    api: "wss://kusama.api.integritee.io"
+    api: "wss://kusama.api.integritee.network"
   },
   [ChainId.IntegriteePaseo]: {
     name: "Integritee Paseo",
-    api: "wss://paseo.api.integritee.io",
+    api: "wss://paseo.api.integritee.network",
     faucetUrl: "https://substratefaucet.xyz/integritee/ADDRESS"
   },
   [ChainId.IntegriteeDev]: {

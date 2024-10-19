@@ -41,20 +41,20 @@ export const useAccount = defineStore("account", {
     formatBalance({ balance, decimals }) {
       return (chain: ChainId): string => {
         if (!balance[chain]) return "0.000";
-        const balanceValue: BigInt = BigInt(balance[chain]) / BigInt(10 ** decimals);
-        return balanceValue.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+        const balanceValue: number = divideBigIntToFloat(balance[chain], 10 ** decimals);
+        return balanceValue.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 3 }).replace(/,/g, "'");
       };
     },
     getDecimalBalance({ balance, decimals }) {
       return (chain: ChainId): number => {
         if (!balance[chain]) return 0;
-        return Number(BigInt(balance[chain]) / BigInt(10 ** decimals));
+        return divideBigIntToFloat(balance[chain],10 ** decimals);
       };
     },
     getDecimalExistentialDeposit({ existentialDeposit, decimals }) {
       return (chain: ChainId): number => {
         if (!existentialDeposit[chain]) return 0;
-        return Number(BigInt(existentialDeposit[chain]) / BigInt(10 ** decimals));
+        return divideBigIntToFloat(existentialDeposit[chain], 10 ** decimals);
       };
     }
   },
@@ -69,6 +69,7 @@ export const useAccount = defineStore("account", {
       this.balance[chain] = balance;
     },
     setNonce(nonce: number, chain: ChainId) {
+      console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
       this.nonce[chain] = nonce;
     },
     setDecimals(decimals: number) {
@@ -83,11 +84,14 @@ export const useAccount = defineStore("account", {
     setExistentialDeposit(existentialDeposit: BigInt, chain: ChainId) {
       this.existentialDeposit[chain] = existentialDeposit;
     },
-  },
-  helpers: {
     decimalAmountToBigInt(amount: number): BigInt {
       return BigInt(Math.round(amount * 10 ** this.decimals));
     }
-  }
+  },
 });
 
+const divideBigIntToFloat = (dividend: BigInt, divisor: number): number => {
+  const integerPart = Number(dividend / BigInt(divisor));
+  const fractionalPart = Number(dividend % BigInt(divisor)) / divisor;
+  return integerPart + fractionalPart;
+}

@@ -11,12 +11,13 @@ export enum ChainId {
   IncogniteeIntegriteeKusama
 }
 
-export type ChainConfig = {
+type ChainConfig = {
   name: string;
   api: string;
+  faucetUrl?: string;
 };
 
-export const chainConfig : Record<ChainId, ChainConfig> = {
+export const chainConfigs : Record<ChainId, ChainConfig> = {
   [ChainId.PolkadotRelay]: {
     name: "Polkadot Relay",
     api: "wss://rpc.polkadot.io"
@@ -27,7 +28,9 @@ export const chainConfig : Record<ChainId, ChainConfig> = {
   },
   [ChainId.PaseoRelay]: {
     name: "Paseo Relay",
-    api: "wss://paseo-rpc.polkadot.io"
+    api: "wss://rpc.ibp.network/paseo",
+    faucetUrl: "https://faucet.polkadot.io/"
+    //faucetUrl: "https://substratefaucet.xyz/paseo/ADDRESS"
   },
   [ChainId.IntegriteePolkadot]: {
     name: "Integritee Polkadot",
@@ -39,7 +42,8 @@ export const chainConfig : Record<ChainId, ChainConfig> = {
   },
   [ChainId.IntegriteePaseo]: {
     name: "Integritee Paseo",
-    api: "wss://paseo.api.integritee.io"
+    api: "wss://paseo.api.integritee.io",
+    faucetUrl: "https://substratefaucet.xyz/integritee/ADDRESS"
   },
   [ChainId.IntegriteeDev]: {
     name: "Integritee Dev",

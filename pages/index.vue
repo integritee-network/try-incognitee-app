@@ -675,7 +675,7 @@
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <a href="https://faucet.polkadot.io/" target="_blank">
+                <a :href=faucetUrl target="_blank">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
@@ -1369,7 +1369,7 @@
                       </div>
                     </div>
                     <div class="mt-5">
-                      <a href="https://faucet.polkadot.io/" target="_blank">
+                      <a :href=faucetUrl target="_blank">
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
@@ -1619,7 +1619,7 @@ import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { ChainId } from "@/configs/chains.ts";
+import { ChainId, chainConfigs} from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import {
@@ -1633,6 +1633,7 @@ import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { formatBalance, hexToU8a, u8aToHex } from "@polkadot/util";
+import { TypeRegistry, u32 } from '@polkadot/types';
 import {
   cryptoWaitReady,
   mnemonicGenerate,
@@ -1667,6 +1668,7 @@ const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 const extensionAccounts = ref([]);
 const selectedExtensionAccount = ref(null);
+const faucetUrl = ref(null);
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
@@ -1807,12 +1809,13 @@ const shield = async () => {
 const unshield = () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ will unshield to L1";
-  const amount = Math.pow(10, 10) * unshieldAmount.value;
+  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
   const account = accountStore.account;
+  const nonce = new u32(new TypeRegistry(), accountStore.nonce[incogniteeSidechain.value])
   console.log(
-    `sending ${formatBalance(amount)} from ${
+    `sending ${unshieldAmount.value} from ${
       accountStore.getAddress
-    } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
+    } privately (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
 
   incogniteeStore.api
@@ -1825,7 +1828,7 @@ const unshield = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.nonce[incogniteeSidechain.value],
+        nonce: nonce,
       },
     )
     .then((hash) => {
@@ -1838,10 +1841,11 @@ const unshield = () => {
 const sendPrivately = () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
-  const amount = Math.pow(10, 10) * sendAmount.value;
+  const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
+  const nonce = new u32(new TypeRegistry(), accountStore.nonce[incogniteeSidechain.value])
   console.log(
-    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
   );
 
   incogniteeStore.api
@@ -1854,7 +1858,7 @@ const sendPrivately = () => {
       amount,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.nonce[incogniteeSidechain.value],
+        nonce: nonce,
       },
     )
     .then((hash) => {
@@ -1948,14 +1952,17 @@ watch(accountStore, async () => {
     return;
   }
 
-  console.log("trying to init api");
-  const wsProvider = new WsProvider("wss://rpc.ibp.network/paseo");
+  const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+  console.log("trying to init api at " + chainConfigs[shieldingTarget.value].api);
   api = await ApiPromise.create({ provider: wsProvider });
   await api.isReady;
   accountStore.setExistentialDeposit(BigInt(api.consts.balances.existentialDeposit));
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainToken));
+
+  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace("ADDRESS", accountStore.getAddress);
+  console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
@@ -1989,6 +1996,7 @@ import {
 onMounted(async () => {
   const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
   const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
+  const incogniteeShard = useRuntimeConfig().public.SHARD;
   if (ChainId[shieldingTargetEnv]) {
     shieldingTarget.value = ChainId[shieldingTargetEnv];
   }
@@ -1998,7 +2006,7 @@ onMounted(async () => {
   console.log("SHIELDING_TARGET: env:" + shieldingTargetEnv + ". using " + ChainId[shieldingTarget.value]);
   console.log("INCOGNITEE_SIDECHAIN: env:" + incogniteeSidechainEnv + ". using " + ChainId[incogniteeSidechain.value]);
 
-  incogniteeStore.initializeApi();
+  incogniteeStore.initializeApi(chainConfigs[incogniteeSidechain.value].api, incogniteeShard);
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;
@@ -2213,9 +2221,6 @@ const closeStatusOverlay = () => {
   showPrivateSendOverlay.value = false;
   showShieldOverlay.value = false;
   showUnshieldOverlay.value = false;
-};
-const formatShieldingTokenBalance = (balance: BigInt, dec: number) => {
-  return formatBalance(balance, { withSi: true, withUnit: "", decimals: dec });
 };
 </script>
 

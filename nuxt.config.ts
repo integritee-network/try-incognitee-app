@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       SHIELDING_TARGET: process.env.SHIELDING_TARGET,
-      INCOGNITEE_SIDECHAIN: process.env.INCOGNITEE_SIDECHAIN
+      INCOGNITEE_SIDECHAIN: process.env.INCOGNITEE_SIDECHAIN,
+      SHARD: process.env.SHARD,
     }
   },
   app: {

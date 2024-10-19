@@ -13,7 +13,9 @@ export const useIncognitee = defineStore("incognitee", {
   }),
   actions: {
     async initializeApi(url: string, shard: string) {
-      console.log("Initializing Incognitee Api at " + url + " for shard " + shard);
+      console.log(
+        "Initializing Incognitee Api at " + url + " for shard " + shard,
+      );
       this.shard = shard;
       const worker = new IntegriteeWorker(url, {
         createWebSocket: (url) => new WebSocket(url),

@@ -1,4 +1,3 @@
-
 export enum ChainId {
   PolkadotRelay,
   KusamaRelay,
@@ -8,7 +7,7 @@ export enum ChainId {
   IntegriteePaseo,
   IntegriteeDev,
   IncogniteePaseoRelay,
-  IncogniteeIntegriteeKusama
+  IncogniteeIntegriteeKusama,
 }
 
 type ChainConfig = {
@@ -17,44 +16,44 @@ type ChainConfig = {
   faucetUrl?: string;
 };
 
-export const chainConfigs : Record<ChainId, ChainConfig> = {
+export const chainConfigs: Record<ChainId, ChainConfig> = {
   [ChainId.PolkadotRelay]: {
     name: "Polkadot Relay",
-    api: "wss://rpc.polkadot.io"
+    api: "wss://rpc.polkadot.io",
   },
   [ChainId.KusamaRelay]: {
     name: "Kusama Relay",
-    api: "wss://kusama-rpc.polkadot.io"
+    api: "wss://kusama-rpc.polkadot.io",
   },
   [ChainId.PaseoRelay]: {
     name: "Paseo Relay",
     api: "wss://rpc.ibp.network/paseo",
-    faucetUrl: "https://faucet.polkadot.io/"
+    faucetUrl: "https://faucet.polkadot.io/",
     //faucetUrl: "https://substratefaucet.xyz/paseo/ADDRESS"
   },
   [ChainId.IntegriteePolkadot]: {
     name: "Integritee Polkadot",
-    api: "wss://polkadot.api.integritee.network"
+    api: "wss://polkadot.api.integritee.network",
   },
   [ChainId.IntegriteeKusama]: {
     name: "Integritee Kusama",
-    api: "wss://kusama.api.integritee.network"
+    api: "wss://kusama.api.integritee.network",
   },
   [ChainId.IntegriteePaseo]: {
     name: "Integritee Paseo",
     api: "wss://paseo.api.integritee.network",
-    faucetUrl: "https://substratefaucet.xyz/integritee/ADDRESS"
+    faucetUrl: "https://substratefaucet.xyz/integritee/ADDRESS",
   },
   [ChainId.IntegriteeDev]: {
     name: "Integritee Dev",
-    api: "ws://localhost:9944"
+    api: "ws://localhost:9944",
   },
   [ChainId.IncogniteePaseoRelay]: {
     name: "Incognitee Paseo Relay",
-    api: "wss://scv1.paseo.api.incognitee.io:443"
+    api: "wss://scv1.paseo.api.incognitee.io:443",
   },
   [ChainId.IncogniteeIntegriteeKusama]: {
     name: "Incognitee Integritee Kusama",
-    api: "wss://scv1.integritee-kusama.api.incognitee.io"
-  }
+    api: "wss://scv1.integritee-kusama.api.incognitee.io",
+  },
 };

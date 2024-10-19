@@ -68,10 +68,15 @@
               <div class="text-white mb-6 text-center">
                 <div class="">
                   <h3 class="text-sm mb-3">Public Balance</h3>
-                  <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
+                  <div
+                    v-if="isFetchingShieldingTargetBalance"
+                    class="spinner"
+                  ></div>
                   <div class="text-4xl font-semibold" v-else>
                     {{ accountStore.formatBalance(shieldingTarget) }}
-                    <span class="text-sm font-semibold">{{accountStore.getSymbol}}</span>
+                    <span class="text-sm font-semibold">{{
+                      accountStore.getSymbol
+                    }}</span>
                   </div>
                 </div>
               </div>
@@ -135,7 +140,9 @@
                 </div>
                 <div class="text-4xl font-semibold" v-else>
                   {{ accountStore.formatBalance(incogniteeSidechain) }}
-                  <span class="text-sm font-semibold">{{accountStore.getSymbol}}</span>
+                  <span class="text-sm font-semibold">{{
+                    accountStore.getSymbol
+                  }}</span>
                 </div>
               </div>
               <div class="mt-10">
@@ -508,7 +515,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Shield {{accountStore.getSymbol}}
+                  >Shield {{ accountStore.getSymbol }}
                 </DialogTitle>
 
                 <p class="text-sm text-gray-400 text-left my-4">
@@ -525,7 +532,7 @@
                       <label
                         for="sendAmount"
                         class="text-sm font-medium leading-6 text-white"
-                        >{{accountStore.getSymbol}} Amount</label
+                        >{{ accountStore.getSymbol }} Amount</label
                       >
 
                       <span class="text-xs text-gray-400"
@@ -541,7 +548,9 @@
                       :min="0.1"
                       :max="
                         accountStore.getDecimalBalance(shieldingTarget) -
-                        accountStore.getDecimalExistentialDeposit(shieldingTarget) -
+                        accountStore.getDecimalExistentialDeposit(
+                          shieldingTarget,
+                        ) -
                         0.1
                       "
                       required
@@ -550,7 +559,8 @@
                     />
                     <div class="text-right">
                       <span class="text-xs text-gray-400"
-                        >Fee: 16 m{{accountStore.getSymbol}} for L1, 0.175% for Incognitee</span
+                        >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175%
+                        for Incognitee</span
                       >
                     </div>
                   </div>
@@ -676,7 +686,7 @@
                 </div>
               </div>
               <div class="mt-5 sm:mt-6">
-                <a :href=faucetUrl target="_blank">
+                <a :href="faucetUrl" target="_blank">
                   <button
                     type="button"
                     class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
@@ -752,7 +762,7 @@
                 <DialogTitle
                   as="h3"
                   class="text-base font-semibold leading-6 text-white"
-                  >Unshield {{accountStore.getSymbol}}
+                  >Unshield {{ accountStore.getSymbol }}
                 </DialogTitle>
                 <div class="mt-5">
                   <p class="text-sm text-gray-400 text-left my-4">
@@ -841,21 +851,23 @@
 
                   <p class="text-sm text-gray-400 text-left mt-5">
                     For optimal k-anonymity, we advise you to unshield exactly
-                    10 {{accountStore.getSymbol}} at the time. In the future we will provide a score
-                    including timing and popular amounts to enhance
-                    unlinkability of your actions.
+                    10 {{ accountStore.getSymbol }} at the time. In the future
+                    we will provide a score including timing and popular amounts
+                    to enhance unlinkability of your actions.
                   </p>
 
                   <div class="flex justify-between items-center mt-5">
                     <label
                       for="unshieldAmount"
                       class="text-sm font-medium leading-6 text-white"
-                      >{{accountStore.getSymbol}} Amount</label
+                      >{{ accountStore.getSymbol }} Amount</label
                     >
 
                     <span class="text-xs text-gray-400"
                       >Available private balance:
-                      {{ accountStore.formatBalance(incogniteeSidechain) }}</span
+                      {{
+                        accountStore.formatBalance(incogniteeSidechain)
+                      }}</span
                     >
                   </div>
                   <input
@@ -866,8 +878,10 @@
                     :min="1.1"
                     :max="
                       accountStore.getDecimalBalance(incogniteeSidechain) -
-                      accountStore.getDecimalExistentialDeposit(incogniteeSidechain)
-                      - 0.1
+                      accountStore.getDecimalExistentialDeposit(
+                        incogniteeSidechain,
+                      ) -
+                      0.1
                     "
                     required
                     class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -876,7 +890,8 @@
                   <!-- Fee description -->
                   <div class="text-right">
                     <span class="text-xs text-gray-400"
-                      >Fee: 30m {{accountStore.getSymbol}} for Incognitee</span
+                      >Fee: 30m {{ accountStore.getSymbol }} for
+                      Incognitee</span
                     >
                   </div>
 
@@ -1136,12 +1151,14 @@
                         <label
                           for="sendAmount"
                           class="text-sm font-medium leading-6 text-white"
-                          >{{accountStore.getSymbol}} Amount</label
+                          >{{ accountStore.getSymbol }} Amount</label
                         >
 
                         <span class="text-xs text-gray-400"
                           >Available private balance:
-                          {{ accountStore.formatBalance(incogniteeSidechain) }}</span
+                          {{
+                            accountStore.formatBalance(incogniteeSidechain)
+                          }}</span
                         >
                       </div>
 
@@ -1154,9 +1171,13 @@
                           step="0.01"
                           :min="0.1"
                           :max="
-                            accountStore.getDecimalBalance(incogniteeSidechain) -
-                            accountStore.getDecimalExistentialDeposit(incogniteeSidechain)
-                            - 0.1
+                            accountStore.getDecimalBalance(
+                              incogniteeSidechain,
+                            ) -
+                            accountStore.getDecimalExistentialDeposit(
+                              incogniteeSidechain,
+                            ) -
+                            0.1
                           "
                           required
                           class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -1168,7 +1189,8 @@
                       <!-- Fee description -->
                       <div class="text-right">
                         <span class="text-xs text-gray-400"
-                          >Fee: 10m {{accountStore.getSymbol}} for Incognitee</span
+                          >Fee: 10m {{ accountStore.getSymbol }} for
+                          Incognitee</span
                         >
                       </div>
                     </div>
@@ -1370,12 +1392,13 @@
                       </div>
                     </div>
                     <div class="mt-5">
-                      <a :href=faucetUrl target="_blank">
+                      <a :href="faucetUrl" target="_blank">
                         <button
                           type="button"
                           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
                         >
-                          Get free {{accountStore.getSymbol}} tokens from faucet
+                          Get free {{ accountStore.getSymbol }} tokens from
+                          faucet
                         </button>
                       </a>
                     </div>
@@ -1620,7 +1643,7 @@ import Paseo from "@/assets/img/paseo-logo.svg";
 import Polkadot from "@/assets/img/polkadot-logo.svg";
 import USDC from "@/assets/img/usdc-logo.svg";
 
-import { ChainId, chainConfigs} from "@/configs/chains.ts";
+import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import {
@@ -1634,7 +1657,7 @@ import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
-import { TypeRegistry, u32 } from '@polkadot/types';
+import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
@@ -1646,7 +1669,7 @@ import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
-import { useRuntimeConfig } from '#app';
+import { useRuntimeConfig } from "#app";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1796,7 +1819,6 @@ const shield = async () => {
     const api = await ApiPromise.create({ provider: wsProvider });
     console.log("api initialized for shielding");
 
-
     api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
       .signAsync(accountStore.account, {
@@ -1812,11 +1834,12 @@ const unshield = () => {
   txStatus.value = "⌛ will unshield to L1";
   const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
   const account = accountStore.account;
-  const nonce = new u32(new TypeRegistry(), accountStore.nonce[incogniteeSidechain.value])
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
-    `sending ${unshieldAmount.value} from ${
-      accountStore.getAddress
-    } privately (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} from ${accountStore.getAddress} privately (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
 
   incogniteeStore.api
@@ -1844,7 +1867,10 @@ const sendPrivately = () => {
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
-  const nonce = new u32(new TypeRegistry(), accountStore.nonce[incogniteeSidechain.value])
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
     `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
   );
@@ -1923,8 +1949,14 @@ const fetchIncogniteeBalance = async () => {
       console.log(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
-      accountStore.setBalance(BigInt(accountInfo.data.free), incogniteeSidechain.value);
-      accountStore.setNonce(Number(accountInfo.nonce), incogniteeSidechain.value);
+      accountStore.setBalance(
+        BigInt(accountInfo.data.free),
+        incogniteeSidechain.value,
+      );
+      accountStore.setNonce(
+        Number(accountInfo.nonce),
+        incogniteeSidechain.value,
+      );
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
@@ -1954,15 +1986,22 @@ watch(accountStore, async () => {
   }
 
   const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
-  console.log("trying to init api at " + chainConfigs[shieldingTarget.value].api);
+  console.log(
+    "trying to init api at " + chainConfigs[shieldingTarget.value].api,
+  );
   api = await ApiPromise.create({ provider: wsProvider });
   await api.isReady;
-  accountStore.setExistentialDeposit(BigInt(api.consts.balances.existentialDeposit));
+  accountStore.setExistentialDeposit(
+    BigInt(api.consts.balances.existentialDeposit),
+  );
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainTokens));
 
-  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace("ADDRESS", accountStore.getAddress);
+  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
+    "ADDRESS",
+    accountStore.getAddress,
+  );
   console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
@@ -2004,10 +2043,23 @@ onMounted(async () => {
   if (ChainId[incogniteeSidechainEnv]) {
     incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
   }
-  console.log("SHIELDING_TARGET: env:" + shieldingTargetEnv + ". using " + ChainId[shieldingTarget.value]);
-  console.log("INCOGNITEE_SIDECHAIN: env:" + incogniteeSidechainEnv + ". using " + ChainId[incogniteeSidechain.value]);
+  console.log(
+    "SHIELDING_TARGET: env:" +
+      shieldingTargetEnv +
+      ". using " +
+      ChainId[shieldingTarget.value],
+  );
+  console.log(
+    "INCOGNITEE_SIDECHAIN: env:" +
+      incogniteeSidechainEnv +
+      ". using " +
+      ChainId[incogniteeSidechain.value],
+  );
 
-  incogniteeStore.initializeApi(chainConfigs[incogniteeSidechain.value].api, incogniteeShard);
+  incogniteeStore.initializeApi(
+    chainConfigs[incogniteeSidechain.value].api,
+    incogniteeShard,
+  );
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;

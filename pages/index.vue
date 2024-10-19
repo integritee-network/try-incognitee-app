@@ -1,307 +1,200 @@
 <template>
   <div class="mt-10 incognitee-border-gradient">
-    <div
-      class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
-    >
-      <div class="currency-box p-3 gap-2 basis-1/2" @click="openAssetsInfo">
-        <Polkadot class="w-[30px] h-[30px]" />
-        <p class="text-xs">DOT</p>
-        <span
-          class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
-        >
-      </div>
-      <div
-        class="currency-box gap-2 p-3 basis-1/2 border-2 border-incognitee-green"
-      >
-        <Paseo class="w-[30px] h-[30px]" />
-        <p class="text-xs">PAS<br />PASEO</p>
-      </div>
-      <div class="currency-box gap-2 p-3 basis-1/2" @click="openAssetsInfo">
-        <USDC class="w-[30px] h-[30px]" />
-        <p class="text-xs">USDC</p>
-        <span
-          class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-          >coming soon</span
-        >
-      </div>
-    </div>
+    <NetworkSelector :openAssetsInfo="openAssetsInfo" />
 
     <div class="container">
-      <div class="w-full bg-incognitee-blue mt-10">
-        <div
-          class="border bg-incognitee-blue border-incognitee-green rounded-lg p-1"
-        >
-          <nav class="flex space-x-4" aria-label="Tabs">
-            <button
-              @click="selectTab('public')"
-              :class="[
-                currentTab === 'public'
-                  ? 'bg-gray-800 text-white'
-                  : 'text-gray-500 hover:text-gray-700',
-                'flex-1 py-2 text-sm font-medium   rounded-lg',
-              ]"
-            >
-              Public Balance
-            </button>
-            <button
-              @click="selectTab('private')"
-              :class="[
-                currentTab === 'private'
-                  ? 'bg-gray-800 text-white'
-                  : 'text-gray-500 hover:text-gray-700',
-                'flex-1 py-2 text-sm font-medium rounded-lg',
-              ]"
-            >
-              Private Balance
-            </button>
-          </nav>
-        </div>
-      </div>
+      <PublicPrivateBalanceSwitcher
+        :selectTab="selectTab"
+        :currentTab="currentTab"
+      />
 
-      <div class="bg-gray-900 flex mt-2">
-        <div class="custom-border-gradient">
-          <div class="inner-box">
-            <div v-if="currentTab === 'public'">
-              <!-- Public Balance Content -->
+      <BalanceInteractorContainer>
+        <div v-if="currentTab === 'public'">
+          <!-- Public Balance Content -->
 
-              <div class="text-white mb-6 text-center">
-                <div class="">
-                  <h3 class="text-sm mb-3">Public Balance</h3>
-                  <div
-                    v-if="isFetchingShieldingTargetBalance"
-                    class="spinner"
-                  ></div>
-                  <div class="text-4xl font-semibold" v-else>
-                    {{ accountStore.formatBalance(shieldingTarget) }}
-                    <span class="text-sm font-semibold">{{
-                      accountStore.getSymbol
-                    }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="mt-10">
-                <div
-                  class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
-                >
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openShieldOverlay"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
-                      />
-                    </svg>
-                    <p class="text-xs">Shield</p>
-                  </div>
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openFaucetOverlay"
-                    v-if="faucetUrl"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                      />
-                    </svg>
-                    <p class="text-xs">Faucet</p>
-                  </div>
-                </div>
+          <div class="text-white mb-6 text-center">
+            <div class="">
+              <h3 class="text-sm mb-3">Public Balance</h3>
+              <div
+                v-if="isFetchingShieldingTargetBalance"
+                class="spinner"
+              ></div>
+              <div class="text-4xl font-semibold" v-else>
+                {{ accountStore.formatBalance(shieldingTarget) }}
+                <span class="text-sm font-semibold">{{
+                  accountStore.getSymbol
+                }}</span>
               </div>
             </div>
-            <div v-else>
-              <!-- Private Balance Content -->
-              <div class="text-white mb-6 text-center">
-                <h3 class="text-sm mb-3" @click="openPrivacyInfo">
-                  Private Balance ⓘ
-                </h3>
-                <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
-                <div v-if="disableGetter">
-                  getter disabled. please reconnect your account
-                </div>
-                <div class="text-4xl font-semibold" v-else>
-                  {{ accountStore.formatBalance(incogniteeSidechain) }}
-                  <span class="text-sm font-semibold">{{
-                    accountStore.getSymbol
-                  }}</span>
-                </div>
-              </div>
-              <div class="mt-10">
-                <div
-                  class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
+          </div>
+          <div class="mt-10">
+            <div
+              class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
+            >
+              <div
+                class="flex flex-col items-center text-center"
+                @click="openShieldOverlay"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 mx-auto mb-2"
                 >
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openPrivateSendOverlay"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-                      />
-                    </svg>
-                    <p class="text-xs">Send</p>
-                  </div>
-
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openReceiveOverlay"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                      />
-                    </svg>
-                    <p class="text-xs">Receive</p>
-                  </div>
-
-                  <div
-                    class="flex flex-col items-center text-center"
-                    @click="openUnshieldOverlay"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-6 mx-auto mb-2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                      />
-                    </svg>
-                    <p class="text-xs">Unshield</p>
-                  </div>
-                </div>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
+                  />
+                </svg>
+                <p class="text-xs">Shield</p>
+              </div>
+              <div
+                class="flex flex-col items-center text-center"
+                @click="openFaucetOverlay"
+                v-if="faucetUrl"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 mx-auto mb-2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                  />
+                </svg>
+                <p class="text-xs">Faucet</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div v-else>
+          <!-- Private Balance Content -->
+          <div class="text-white mb-6 text-center">
+            <h3 class="text-sm mb-3" @click="openPrivacyInfo">
+              Private Balance ⓘ
+            </h3>
+            <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
+            <div v-if="disableGetter">
+              getter disabled. please reconnect your account
+            </div>
+            <div class="text-4xl font-semibold" v-else>
+              {{ accountStore.formatBalance(incogniteeSidechain) }}
+              <span class="text-sm font-semibold">{{
+                accountStore.getSymbol
+              }}</span>
+            </div>
+          </div>
+          <div class="mt-10">
+            <div
+              class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
+            >
+              <div
+                class="flex flex-col items-center text-center"
+                @click="openPrivateSendOverlay"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 mx-auto mb-2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+                  />
+                </svg>
+                <p class="text-xs">Send</p>
+              </div>
+
+              <div
+                class="flex flex-col items-center text-center"
+                @click="openReceiveOverlay"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 mx-auto mb-2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                  />
+                </svg>
+                <p class="text-xs">Receive</p>
+              </div>
+
+              <div
+                class="flex flex-col items-center text-center"
+                @click="openUnshieldOverlay"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6 mx-auto mb-2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                  />
+                </svg>
+                <p class="text-xs">Unshield</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BalanceInteractorContainer>
     </div>
 
-    <TransitionRoot as="template" :show="showAssetsInfo">
-      <Dialog class="relative z-10" @close="closeAssetsInfo">
-        <TransitionChildSootGlass />
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <div
-            class="fixed inset-0 z-10 w-screen flex items-center justify-center p-4"
-          >
-            <TransitionChild
-              as="template"
-              enter="ease-out duration-300"
-              enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-              enter-to="opacity-100 translate-y-0 sm:scale-100"
-              leave="ease-in duration-200"
-              leave-from="opacity-100 translate-y-0 sm:scale-100"
-              leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-            >
-              <DialogPanel
-                class="w-full relative transform overflow-hidden rounded-xl bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
-              >
-                <div class="absolute right-0 top-0 pr-4 pt-4">
-                  <button
-                    type="button"
-                    class="text-gray-400 hover:text-gray-500"
-                    @click="closeAssetsInfo"
-                  >
-                    <span class="sr-only">Close</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <div>
-                  <div class="mt-3 text-center sm:mt-5">
-                    <DialogTitle
-                      as="h3"
-                      class="text-base font-semibold leading-6 text-white"
-                      >Other Assets
-                    </DialogTitle>
-                    <div class="mt-2">
-                      <p class="text-sm text-gray-400 mt-4 text-left">
-                        Incognitee is capable of shielding any fungible asset on
-                        any substrate-based chain. Stay tuned for dedicated
-                        deployments for DOT, KSM, USDC, USDT and others
-                      </p>
-                      <p class="text-sm text-gray-400 text-left my-4">
-                        With further extension, Incognitee will be able to
-                        shield BTC, ETH and any other token whose protocol
-                        supports light clients
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="w-full mt-8 bg-gray-800">
-                  <button
-                    type="button"
-                    class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-                    @click="closeAssetsInfo"
-                  >
-                    Got it!
-                  </button>
-                </div>
-              </DialogPanel>
-            </TransitionChild>
-          </div>
-        </div>
-      </Dialog>
-    </TransitionRoot>
+    <OverlayDialog
+      :show="showAssetsInfo"
+      :close="closeAssetsInfo"
+      title="Other Assets"
+    >
+      <div class="mt-2">
+        <p class="text-sm text-gray-400 mt-4 text-left">
+          Incognitee is capable of shielding any fungible asset on any
+          substrate-based chain. Stay tuned for dedicated deployments for DOT,
+          KSM, USDC, USDT and others
+        </p>
+        <p class="text-sm text-gray-400 text-left my-4">
+          With further extension, Incognitee will be able to shield BTC, ETH and
+          any other token whose protocol supports light clients
+        </p>
+      </div>
+      <div class="w-full mt-8 bg-gray-800">
+        <button
+          type="button"
+          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+          @click="closeAssetsInfo"
+        >
+          Got it!
+        </button>
+      </div>
+    </OverlayDialog>
 
     <OverlayDialog
       :show="showPrivacyInfo"
@@ -951,70 +844,28 @@
       </div>
     </OverlayDialog>
 
-    <div
-      aria-live="assertive"
-      class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-10"
-    >
-      <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-        <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-        <transition
-          enter-active-class="transform ease-out duration-300 transition"
-          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-          leave-active-class="transition ease-in duration-100"
-          leave-from-class="opacity-100"
-          leave-to-class="opacity-0"
-        >
-          <div
-            v-if="showStatusOverlay"
-            class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
-          >
-            <div class="p-4">
-              <div class="flex items-center">
-                <div class="flex w-0 flex-1 justify-between">
-                  <p class="w-0 flex-1 text-sm font-medium text-gray-900">
-                    {{ txStatus }}
-                  </p>
-                </div>
-                <div class="ml-4 flex flex-shrink-0">
-                  <button
-                    type="button"
-                    @click="closeStatusOverlay"
-                    class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <span class="sr-only">Close</span>
-                    <XMarkIcon class="h-5 w-5" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </transition>
-      </div>
-    </div>
+    <StatusOverlay
+      :tx-status="txStatus"
+      :show="showStatusOverlay"
+      :close="closeStatusOverlay"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { XMarkIcon } from "@heroicons/vue/20/solid";
-
-import Paseo from "@/assets/img/paseo-logo.svg";
-import Polkadot from "@/assets/img/polkadot-logo.svg";
-import USDC from "@/assets/img/usdc-logo.svg";
-
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress,
+} from "@polkadot/extension-dapp";
+import NetworkSelector from "@/components/ui/NetworkSelector.vue";
+import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
+import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
+import StatusOverlay from "@/components/ui/StatusOverlay.vue";
 import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  TransitionChild,
-  TransitionRoot,
-} from "@headlessui/vue";
-import TransitionChildSootGlass from "@/components/ui/TransitionChildSootGlass.vue";
 import OverlayDialog from "@/components/ui/OverlayDialog.vue";
-import { CheckIcon } from "@heroicons/vue/24/outline";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
@@ -1072,11 +923,6 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
 });
 
 let api: ApiPromise | null = null;
-
-const tabs = [
-  { name: "Public Balance", href: "#", current: true },
-  { name: "Private Balance", href: "#", current: false },
-];
 
 const currentTab = ref("public");
 
@@ -1384,12 +1230,6 @@ const copyOwnAddressToClipboard = () => {
       ),
     );
 };
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-  web3FromSource,
-} from "@polkadot/extension-dapp";
 
 onMounted(async () => {
   const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;

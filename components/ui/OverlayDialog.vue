@@ -65,7 +65,7 @@ import {
   TransitionChild,
   TransitionRoot,
 } from "@headlessui/vue";
-import { defineProps, ref } from "vue";
+import { defineProps } from "vue";
 import TransitionChildSootGlass from "@/components/ui/TransitionChildSootGlass.vue";
 
 const props = defineProps({

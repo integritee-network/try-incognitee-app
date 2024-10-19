@@ -6,10 +6,10 @@
     >
       <span
         class="flex rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Note</span
+      >Note</span
       >
       <span class="text-xs mr-2 text-left flex-auto"
-        >You need some signer extension to use this page. Please make sure to
+      >You need some signer extension to use this page. Please make sure to
         enable your extension and reload the page in case the connect button
         doesn't work.</span
       >
@@ -45,7 +45,7 @@
         "
       />
     </div>
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl">
       <div
         class="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
       >
@@ -59,47 +59,59 @@
           </h2>
           <p class="mt-6 text-gray-300">
             A new era of digital currency transfer is about to come. Our
-            Incognitee Web3 solution empowers you to make secure, private, and
-            anonymous transactions without compromising control over your
-            assets. <br /><br />
+            <a class="text-incognitee-green" href="https://incognitee.io"
+            >Incognitee</a
+            >
+            Web3 solution empowers you to make secure, private, and anonymous
+            transactions without compromising control over your assets.
+            <br /><br />
             Collect TEERdays now and save the pole position for the Incognitee
             Go-Live.
           </p>
           <div
-            class="mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
+            class="wallet-grid mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
           >
             <a href="https://talisman.xyz/download"
-              ><img
-                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-                src="/img/index/talisman-logo.svg"
-                alt="talisman"
+            ><img
+              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+              src="/img/index/talisman-logo.svg"
+              alt="talisman"
             /></a>
             <a href="https://novawallet.io/"
-              ><img
-                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-                src="/img/index/nova-wallet-logo.svg"
-                alt="nova wallet"
+            ><img
+              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+              src="/img/index/nova-wallet-logo.svg"
+              alt="nova wallet"
             /></a>
             <a href="https://www.subwallet.app/"
-              ><img
-                class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-                src="/img/index/sub-wallet-logo.svg"
-                alt="sub wallet"
+            ><img
+              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
+              src="/img/index/sub-wallet-logo.svg"
+              alt="sub wallet"
             /></a>
             <a href="https://polkadot.js.org/extension/"
-              ><img
-                class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-                src="/img/index/polkadotjs-logo.svg"
-                alt="polkajs"
+            ><img
+              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
+              src="/img/index/polkadotjs-logo.svg"
+              alt="polkajs"
             /></a>
           </div>
-          <div v-if="accounts.length < 1" class="mt-10 flex">
+
+          <div class="mt-10 flex">
             <button
+              v-if="accounts.length < 1"
               @click="connect"
-              class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              class="mr-5 incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
             >
               Connect Wallet
             </button>
+            <!-- <a href="referral" target="_blank">
+              <button
+                class="ring-1 ring-inset ring-incognitee-green rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-incognitee-green"
+              >
+                Refer a friend
+              </button></a
+            > -->
           </div>
         </div>
         <div class="hidden sm:block sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
@@ -135,7 +147,7 @@
               d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
             />
           </svg>
-          <dt class="text-base font-normal text-gray-300">TEERday holder</dt>
+          <dt class="text-base font-normal text-gray-300">TEERday holders</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
             <div
               class="flex items-baseline text-2xl font-semibold text-incognitee-green"
@@ -219,7 +231,7 @@
                 <label
                   for="account.address"
                   class="text-sm font-medium leading-6 text-gray-300"
-                  >Select your account</label
+                >Select your account</label
                 >
                 <div class="mt-2">
                   <select
@@ -244,12 +256,12 @@
                 <label
                   for="last-name"
                   class="text-sm font-medium leading-6 text-gray-300"
-                  >Selected Address</label
+                >Selected Address</label
                 >
                 <div class="mt-2">
                   <span class="wallet-address text-sm text-gray-300">{{
-                    accountStore.getAddress
-                  }}</span>
+                      accountStore.getAddress
+                    }}</span>
                 </div>
               </div>
             </div>
@@ -312,7 +324,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                              >{{
+                            >{{
                                 accountStore.getHumanTransferrable
                               }}
                               TEER</time
@@ -331,7 +343,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanFrozen }} TEER</time
+                            >{{ accountStore.getHumanFrozen }} TEER</time
                             >
                           </dd>
                         </div>
@@ -347,7 +359,7 @@
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
                             <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanReserved }} TEER</time
+                            >{{ accountStore.getHumanReserved }} TEER</time
                             >
                           </dd>
                         </div>
@@ -365,7 +377,7 @@
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31"
-                                  >{{
+                                >{{
                                     pendingUnlock
                                       ? pendingUnlock.getTeerToUnlock()
                                       : 0
@@ -383,8 +395,8 @@
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
-                                  pendingUnlock?.getDueDateStr()
-                                }}</time>
+                                    pendingUnlock?.getDueDateStr()
+                                  }}</time>
                               </dd>
                             </div>
                           </div>
@@ -417,17 +429,7 @@
                         "
                         class="text-sm text-red-500"
                       >
-                        Not enough transferrable TEER. Please get free test TEER
-                        at our
-                        <a
-                          :href="
-                            'https://substratefaucet.xyz/integritee/' +
-                            accountStore.getAddress
-                          "
-                          target="_blank"
-                          class="text-indigo-500 underline"
-                          >testnet faucet</a
-                        >.
+                        Not enough transferrable TEER.
                       </div>
                       <div
                         v-else-if="pendingUnlock"
@@ -520,16 +522,18 @@
             <h1
               class="title text-3xl font-bold tracking-tight text-white sm:text-4xl"
             >
-              TEERdays Intro​
+              TEERdays Intro
             </h1>
             <p class="mt-4 text-gray-300">
               By bonding your TEER now, you can already accumulate TEERdays
-              prior to the launch of Incognitee. TEERdays are calculated by
-              multiplying the amount of TEER by the number of days bonded. You
-              can unbond your TEER anytime within 7 days, but you will lose a
-              fraction of the accumulated TEERdays if you do. TEERdays are
-              non-transferable. Start now to get the best position for the
-              Incognitee launch. ​
+              prior to the launch of
+              <a class="text-incognitee-green" href="https://incognitee.io"
+              >Incognitee</a
+              >. TEERdays are calculated by multiplying the amount of TEER by
+              the number of days bonded. You can unbond your TEER anytime within
+              7 days, but you will lose a fraction of the accumulated TEERdays
+              if you do. TEERdays are non-transferable. Start now to get the
+              best position for the Incognitee launch. ​
             </p>
           </div>
         </div>
@@ -547,9 +551,12 @@
             </h1>
             <p class="mt-4 text-gray-300">
               TEERdays can be used to increase your revenue share for the launch
-              of Incognitee on Polkadot/Kusama and will also increase your
-              governance voting power for future decisions related to
-              Incognitee.
+              of
+              <a class="text-incognitee-green" href="https://incognitee.io"
+              >Incognitee</a
+              >
+              on Polkadot/Kusama and will also increase your governance voting
+              power for future decisions related to Incognitee.
             </p>
           </div>
         </div>
@@ -569,24 +576,31 @@
               1. First, you need to possess some TEER. Grab them at one of the
               avenues like
               <a
+                class="text-incognitee-green"
                 href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
-                >Kraken</a
+              >Kraken</a
               >,
-              <a href="https://www.gate.io/de/trade/TEER_USDT">Gate</a>
+              <a
+                class="text-incognitee-green"
+                href="https://www.gate.io/de/trade/TEER_USDT"
+              >Gate</a
+              >
               or
-              <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
-                >Basilisk</a
-              >. ​<br />
+              <a
+                class="text-incognitee-green"
+                href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+              >Basilisk</a
+              >​<br />
 
-              2. Get one of the supported wallets and connect your wallet. ​​<br />
+              2. Get one of the supported wallets and connect your wallet​​<br />
 
-              3. Transfer TEER to your wallet. ​​<br />
+              3. Transfer TEER to your wallet​​<br />
 
               4. Bond your TEER using this current page<br />
 
-              5. Start automatically collecting TEERdays.​​<br />
+              5. Start automatically collecting TEERdays<br />
 
-              6. Refer a friend (coming soon).​
+              6. Refer a friend (coming soon)
             </p>
           </div>
         </div>
@@ -640,64 +654,64 @@
             <div class="mt-4 sm:mt-10 overflow-x-auto">
               <table class="rounded-table min-w-full">
                 <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
-                    >
-                      Rank
-                    </th>
-                    <th
-                      scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
-                    >
-                      TEERdays
-                    </th>
-                    <th
-                      scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
-                    >
-                      Wallet
-                    </th>
-                    <th
-                      scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
-                    >
-                      TEER bonded
-                    </th>
-                  </tr>
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-4 py-4 text-left text-sm font-semibold text-white"
+                  >
+                    Rank
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-4 text-left text-sm font-semibold text-white"
+                  >
+                    TEERdays
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-4 text-left text-sm font-semibold text-white"
+                  >
+                    Wallet
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-4 py-4 text-left text-sm font-semibold text-white"
+                  >
+                    TEER bonded
+                  </th>
+                </tr>
                 </thead>
                 <tbody class="text-left">
-                  <tr
-                    v-for="(entry, index) in allBonds.slice(0, 10)"
-                    :key="index"
-                    :class="{
+                <tr
+                  v-for="(entry, index) in allBonds.slice(0, 10)"
+                  :key="index"
+                  :class="{
                       'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
                       'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
                     }"
-                    class="rounded-lg shadow text-left"
+                  class="rounded-lg shadow text-left"
+                >
+                  <td
+                    class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
                   >
-                    <td
-                      class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
-                    >
-                      {{ index + 1 }}
-                    </td>
-                    <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                    >
-                      {{ entry[2].toFixed(2) }}
-                    </td>
-                    <td
-                      class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                    >
-                      {{ entry[0] }}
-                    </td>
-                    <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
-                    >
-                      {{ entry[1].toFixed(2) }}
-                    </td>
-                  </tr>
+                    {{ index + 1 }}
+                  </td>
+                  <td
+                    class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                  >
+                    {{ entry[2].toFixed(2) }}
+                  </td>
+                  <td
+                    class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                  >
+                    {{ entry[0] }}
+                  </td>
+                  <td
+                    class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                  >
+                    {{ entry[1].toFixed(2) }}
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -706,9 +720,6 @@
       </div>
     </div>
   </div>
-  <hr
-    class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
-  />
 
   <footer class="footer">
     <div class="container">
@@ -933,11 +944,11 @@
       </div>
       <div class="footer__bottom">
         <span class="paragraph_medium"
-          >©{{ new Date().getFullYear() }} Integritee, Inc.</span
+        >©{{ new Date().getFullYear() }} Integritee, Inc.</span
         >
         <span>
           <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
-            >Imprint and Privacy Policy</NuxtLink
+          >Imprint and Privacy Policy</NuxtLink
           >
         </span>
       </div>
@@ -1020,6 +1031,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, ref, watch } from "vue";
 import { useAccount } from "@/store/teerAccount.ts";
+import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
@@ -1034,6 +1046,7 @@ const allBonds = ref([]);
 const summaryHolders = ref(0);
 const summaryTeerBonded = ref(0);
 const summaryTeerDays = ref(0);
+const integriteeNetwork = ref(ChainId.IntegriteeKusama);
 
 watch(selectedAccount, (newAccount) => {
   if (newAccount) {
@@ -1042,6 +1055,7 @@ watch(selectedAccount, (newAccount) => {
   }
 });
 import { nextTick } from "vue";
+import {useRuntimeConfig} from "#app";
 
 const connect = () => {
   web3Enable("Integritee Dapp")
@@ -1104,8 +1118,20 @@ const connect = () => {
 let api: ApiPromise | null = null;
 
 onMounted(async () => {
-  console.log("trying to init api");
-  const wsProvider = new WsProvider("wss://paseo.api.integritee.network");
+  const integriteeNetworkEnv = useRuntimeConfig().public.INTEGRITEE_NETWORK;
+  if (ChainId[integriteeNetworkEnv]) {
+    integriteeNetwork.value = ChainId[integriteeNetworkEnv];
+  }
+  console.log(
+    "INTEGRITEE_NETWORK: env:" +
+    integriteeNetworkEnv +
+    ". using " +
+    ChainId[integriteeNetwork.value],
+  );
+  const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
+  console.log(
+    "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
+  );
   api = await ApiPromise.create({ provider: wsProvider });
   console.log("api initialized");
   allBonds.value = [];
@@ -1159,12 +1185,12 @@ watch(accountStore, async () => {
   await api.query.system.account(
     accountStore.address,
     ({
-      data: {
-        free: currentFree,
-        reserved: currentReserved,
-        frozen: currentFrozen,
-      },
-    }) => {
+       data: {
+         free: currentFree,
+         reserved: currentReserved,
+         frozen: currentFrozen,
+       },
+     }) => {
       console.log("TEER balance:" + currentFree);
       accountStore.free = BigInt(currentFree);
       accountStore.reserved = BigInt(currentReserved);
@@ -1178,11 +1204,11 @@ watch(accountStore, async () => {
       if (bond.value) {
         console.log(
           "TEERday bond:" +
-            bond.value +
-            " last updated:" +
-            bond.lastUpdated +
-            " accumulated tokentime:" +
-            bond.accumulatedTokentime,
+          bond.value +
+          " last updated:" +
+          bond.lastUpdated +
+          " accumulated tokentime:" +
+          bond.accumulatedTokentime,
         );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
@@ -1221,7 +1247,7 @@ watch(accountStore, async () => {
 const amountToBond = ref(0);
 const bondAmount = () => {
   // Handle the bonding process here
-  const amount = amountToBond.value * Math.pow(10, 12);
+  const amount = BigInt(amountToBond.value) * BigInt(Math.pow(10, 12));
   console.log(`Bonding ${amount}`);
   txStatus.value = "⌛ Bonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -1250,7 +1276,7 @@ const bondAmount = () => {
 const amountToUnbond = ref(0);
 const unbondAmount = () => {
   // Handle the bonding process here
-  const amount = amountToUnbond.value * Math.pow(10, 12);
+  const amount = BigInt(amountToUnbond.value) * BigInt(Math.pow(10, 12));
   console.log(`Unbonding ${amount}`);
   txStatus.value = "⌛ Unbonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -1522,10 +1548,13 @@ input[type="number"] {
 }
 
 .footer {
+  margin-top: 50px;
+}
+
+.footer {
   &__logo {
     display: block;
-    width: 191px;
-    height: 40px;
+
     margin-bottom: 19px;
 
     @include slg {
@@ -1742,7 +1771,10 @@ input[type="number"] {
   }
 }
 
-a {
-  color: #24ad7c; /* Ensure this matches the .text-incognitee-green class */
+@media (max-width: 640px) {
+  .wallet-grid a:nth-child(3),
+  .wallet-grid a:nth-child(4) {
+    margin-top: 20px;
+  }
 }
 </style>

@@ -138,6 +138,7 @@ const emitAddressClicked = () => {
 
 .footer {
   flex-shrink: 0; /* Prevents the footer from shrinking */
+  z-index: 100;
 }
 
 .footer-content {

@@ -48,12 +48,11 @@ export const useAccount = defineStore("account", {
           balance[chain],
           10 ** decimals,
         );
-        return balanceValue
-          .toLocaleString(undefined, {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 3,
-          })
-          .replace(/,/g, "'");
+        return balanceValue.toLocaleString("de-CH", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 3,
+          thousandsSeparator: "'",
+        });
       };
     },
     getDecimalBalance({ balance, decimals }) {

@@ -1234,7 +1234,10 @@ const copyOwnAddressToClipboard = () => {
 onMounted(async () => {
   const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
   const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
-  const incogniteeShard = useRuntimeConfig().public.SHARD;
+  const incogniteeShard =
+    useRuntimeConfig().public.SHARD.length > 0
+      ? useRuntimeConfig().public.SHARD
+      : "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
   if (ChainId[shieldingTargetEnv]) {
     shieldingTarget.value = ChainId[shieldingTargetEnv];
   }
@@ -1253,7 +1256,12 @@ onMounted(async () => {
       ". using " +
       ChainId[incogniteeSidechain.value],
   );
-
+  console.log(
+    "SHARD: env:" +
+      useRuntimeConfig().public.SHARD +
+      ". using " +
+      incogniteeShard,
+  );
   incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
     incogniteeShard,

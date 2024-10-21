@@ -3,12 +3,19 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-        <p class="address" @click="emitAddressClicked">
-          {{ accountStore.getShortAddress }}
-        </p>
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.75H3M21 9.75h-4.5M3 12.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v5.25m-18 0h18m-18 0V16.5A2.25 2.25 0 0 0 5.25 18.75h13.5A2.25 2.25 0 0 0 21 16.5v-3.75" />
+  </svg>
+    <p class="address cursor-pointer" @click="emitAddressClicked">
+      <!-- Full address on larger screens and short address on mobile -->
+      <span class="hidden md:inline">{{ accountStore.getAddress }}</span>
+      <span class="inline md:hidden">{{ accountStore.getShortAddress }}</span>
+    </p>
+  </div>
       </div>
     </header>
-    <footer class="footer">
+    <footer class="footer z-20">
       <nav class="footer-content">
         <div class="container">
           <div
@@ -76,6 +83,13 @@
                       <p class="text-xs cursor-pointer">Gov</p>
                     </nuxt-link>
                   </div>
+                  <div class="flex flex-col items-center justify-center text-center">
+    <nuxt-link :to="{ path: '/teerdays', query: $route.query }" class="flex flex-col items-center justify-center">
+      <TEERdays class="w-6 h-6 mb-2" /> <!-- Make TEERdays icon the same size as others -->
+      <p class="text-xs cursor-pointer">TEERDays</p>
+    </nuxt-link>
+  </div>
+
                 </div>
               </div>
             </div>
@@ -91,6 +105,7 @@
 
 <script setup lang="ts">
 import Incognitee from "@/assets/img/incognitee-mask.svg";
+import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 import { useAccount } from "@/store/account.ts";
 import { eventBus } from "@/helpers/eventBus";
 const accountStore = useAccount();
@@ -100,6 +115,10 @@ const emitAddressClicked = () => {
 </script>
 
 <style scoped>
+.address {
+  font-size: 0.875rem; /* Small text size */
+  color: white; /* Adjust as necessary for your theme */
+}
 .layout {
   display: flex;
   flex-direction: column;
@@ -110,6 +129,7 @@ const emitAddressClicked = () => {
 .footer {
   background: #11111a;
   width: 100%;
+ 
 }
 
 .header {

@@ -169,6 +169,7 @@
       </BalanceInteractorContainer>
     </div>
 
+    <!-- Assets Info -->
     <OverlayDialog
       :show="showAssetsInfo"
       :close="closeAssetsInfo"
@@ -196,6 +197,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- Privacy Info -->
     <OverlayDialog
       :show="showPrivacyInfo"
       :close="closePrivacyInfo"
@@ -270,6 +272,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- Shielding -->
     <OverlayDialog
       :show="showShieldOverlay"
       :close="closeShieldOverlay"
@@ -279,6 +282,13 @@
         Shielding is the process of moving naked, publicly visible balance on L1
         to your private wallet on Incognitee.
       </p>
+      <div v-if="shieldingLimit < Infinity">
+        <p class="text-sm text-gray-400 text-left my-4">
+          During beta phase, you can only shield up to
+          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
+          current private balance on incognitee.
+        </p>
+      </div>
       <form
         @submit.prevent="submitShieldForm"
         class="flex-grow flex flex-col justify-between"
@@ -302,11 +312,7 @@
             type="number"
             step="0.01"
             :min="0.1"
-            :max="
-              accountStore.getDecimalBalance(shieldingTarget) -
-              accountStore.getDecimalExistentialDeposit(shieldingTarget) -
-              0.1
-            "
+            :max="computedShieldingMax"
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
             style="border-color: #24ad7c"
@@ -330,6 +336,7 @@
       </form>
     </OverlayDialog>
 
+    <!-- Faucet -->
     <OverlayDialog
       :show="showFaucetOverlay"
       :close="closeFaucetOverlay"
@@ -383,6 +390,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- Unshield -->
     <OverlayDialog
       :show="showUnshieldOverlay && !showScanOverlay"
       :close="closeUnshieldOverlay"
@@ -520,6 +528,7 @@
       </form>
     </OverlayDialog>
 
+    <!-- Receive -->
     <OverlayDialog
       :show="showReceiveOverlay"
       :close="closeReceiveOverlay"
@@ -572,6 +581,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- Send Privately -->
     <OverlayDialog
       :show="showPrivateSendOverlay && !showScanOverlay"
       :close="closePrivateSendOverlay"
@@ -679,6 +689,7 @@
       </form>
     </OverlayDialog>
 
+    <!-- Scan QR -->
     <OverlayDialog
       :show="showScanOverlay"
       :close="closeScanOverlay"
@@ -689,6 +700,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- New Wallet -->
     <OverlayDialog
       :show="showNewWalletOverlay"
       :close="closeNewWalletOverlay"
@@ -755,6 +767,7 @@
       </div>
     </OverlayDialog>
 
+    <!-- Choose Wallet -->
     <OverlayDialog
       :show="showChooseWalletOverlay"
       :close="closeChooseWalletOverlay"
@@ -862,6 +875,7 @@ import NetworkSelector from "@/components/ui/NetworkSelector.vue";
 import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
 import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
 import StatusOverlay from "@/components/ui/StatusOverlay.vue";
+import { computed } from "vue";
 import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -894,7 +908,9 @@ const disableGetter = ref(false);
 const isSignerBusy = ref(false);
 
 const shieldingTarget = ref(ChainId.PaseoRelay);
+const shieldingLimit = ref(Infinity);
 const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
+const incogniteeShard = ref(null);
 
 const txStatus = ref("");
 const recipientAddress = ref("");
@@ -938,6 +954,14 @@ const submitSendForm = () => {
   sendPrivately();
 };
 const submitShieldForm = () => {
+  // double check input values here
+  // fixme: why is this necessary? it seems computed max will not be enforced otherwise
+  if (shieldAmount.value > computedShieldingMax.value) {
+    alert(
+      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`,
+    );
+    return;
+  }
   // Handle the form submission here
   openStatusOverlay();
   closeShieldOverlay();
@@ -1232,39 +1256,10 @@ const copyOwnAddressToClipboard = () => {
 };
 
 onMounted(async () => {
-  const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
-  const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
-  const incogniteeShard =
-    useRuntimeConfig().public.SHARD.length > 0
-      ? useRuntimeConfig().public.SHARD
-      : "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
-  if (ChainId[shieldingTargetEnv]) {
-    shieldingTarget.value = ChainId[shieldingTargetEnv];
-  }
-  if (ChainId[incogniteeSidechainEnv]) {
-    incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
-  }
-  console.log(
-    "SHIELDING_TARGET: env:" +
-      shieldingTargetEnv +
-      ". using " +
-      ChainId[shieldingTarget.value],
-  );
-  console.log(
-    "INCOGNITEE_SIDECHAIN: env:" +
-      incogniteeSidechainEnv +
-      ". using " +
-      ChainId[incogniteeSidechain.value],
-  );
-  console.log(
-    "SHARD: env:" +
-      useRuntimeConfig().public.SHARD +
-      ". using " +
-      incogniteeShard,
-  );
+  loadEnv();
   incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
-    incogniteeShard,
+    incogniteeShard.value,
   );
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
@@ -1377,7 +1372,64 @@ const connectExtension = () => {
     });
 };
 
-const open = ref(true);
+const loadEnv = () => {
+  const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
+  const shieldingLimitEnv = useRuntimeConfig().public.SHIELDING_LIMIT;
+  const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
+  const incogniteeShardEnv = useRuntimeConfig().public.SHARD;
+
+  // apply sane defaults and fallbacks
+
+  incogniteeShard.value =
+    incogniteeShardEnv.length > 0
+      ? incogniteeShardEnv
+      : "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
+
+  if (ChainId[shieldingTargetEnv]) {
+    shieldingTarget.value = ChainId[shieldingTargetEnv];
+  }
+  if (ChainId[incogniteeSidechainEnv]) {
+    incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
+  }
+  if (shieldingLimitEnv > 0) {
+    shieldingLimit.value = Number(shieldingLimitEnv);
+  }
+
+  console.log(
+    "SHIELDING_TARGET: env:" +
+      shieldingTargetEnv +
+      ". using " +
+      ChainId[shieldingTarget.value],
+  );
+  console.log(
+    "SHIELDING_LIMIT: env:" +
+      shieldingLimitEnv +
+      ". using " +
+      shieldingLimit.value,
+  );
+  console.log(
+    "INCOGNITEE_SIDECHAIN: env:" +
+      incogniteeSidechainEnv +
+      ". using " +
+      ChainId[incogniteeSidechain.value],
+  );
+  console.log(
+    "SHARD: env:" +
+      useRuntimeConfig().public.SHARD +
+      ". using " +
+      incogniteeShard.value,
+  );
+};
+
+const computedShieldingMax = computed(() => {
+  return Math.min(
+    shieldingLimit.value -
+      accountStore.getDecimalBalance(incogniteeSidechain.value),
+    accountStore.getDecimalBalance(shieldingTarget.value) -
+      accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
+      0.1,
+  );
+});
 
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {

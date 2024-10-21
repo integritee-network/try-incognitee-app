@@ -302,16 +302,16 @@
             >
 
             <span class="text-xs text-gray-400"
-              >Available public balance:
-              {{ accountStore.formatBalance(shieldingTarget) }}</span
+              >Available for shielding: {{ computedShieldingMax.toFixed(3) }}
+              {{ accountStore.getSymbol }}</span
             >
           </div>
           <input
             id="shieldAmount"
             v-model="shieldAmount"
             type="number"
-            step="0.01"
-            :min="0.1"
+            step="1"
+            :min="1"
             :max="computedShieldingMax"
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -342,7 +342,7 @@
       :close="closeFaucetOverlay"
       title="Drip Faucet"
     >
-      <p class="text-sm text-gray-400">
+      <p class="text-sm text-gray-400 text-left my-4">
         The Paseo Faucet grants you PAS tokens every day. Just copy-paste your
         address and solve a CAPTCHA to get free PAS tokens
       </p>
@@ -915,7 +915,7 @@ const incogniteeShard = ref(null);
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
-const shieldAmount = ref(1.0);
+const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const scanResult = ref("No QR code data yet");
 const extensionAccounts = ref([]);
@@ -931,8 +931,8 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
     });
     accountStore.setAccount(selectedAddress.toString());
     const injector = await web3FromAddress(accountStore.getAddress);
-    console.log(`setting injector: ${JSON.stringify(injector)}`);
-    console.log(`setting injector: ${JSON.stringify(injector.signer)}`);
+    console.debug(`setting injector: ${JSON.stringify(injector)}`);
+    console.debug(`setting injector: ${JSON.stringify(injector.signer)}`);
     accountStore.setInjector(injector);
     isUpdatingIncogniteeBalance.value = false;
   }
@@ -948,7 +948,6 @@ const selectTab = (tab) => {
 
 const submitSendForm = () => {
   // Handle the form submission here
-  console.log("submitting send form");
   openStatusOverlay();
   closePrivateSendOverlay();
   sendPrivately();
@@ -1084,7 +1083,7 @@ const unshield = () => {
       },
     )
     .then((hash) => {
-      txStatus.value = "😀 Triggered unshielding of funds successfully.";
+      txStatus.value = "😀 Triggered unshielding of funds";
       console.log(`trustedOperationHash: ${hash}`);
     });
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
@@ -1117,8 +1116,8 @@ const sendPrivately = () => {
       },
     )
     .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}`);
-      txStatus.value = "😀 Success";
+      console.log(`trustedOperationHash: ${hash}. status unknown`);
+      txStatus.value = "😀 submitted";
     });
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
@@ -1147,7 +1146,7 @@ const fetchIncogniteeBalance = async () => {
   try {
     if (!getterMap[accountStore.account]) {
       if (injector) {
-        console.log(
+        console.debug(
           `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
         );
       }
@@ -1158,7 +1157,7 @@ const fetchIncogniteeBalance = async () => {
           { signer: injector?.signer },
         );
     } else {
-      console.log(`fetching incognitee balance&nonce using cached getter`);
+      console.debug(`fetching incognitee balance&nonce using cached getter`);
       if (isChoosingAccount.value == false) {
         closeChooseWalletOverlay();
       }
@@ -1174,7 +1173,7 @@ const fetchIncogniteeBalance = async () => {
   await getterMap[accountStore.account]
     .send()
     .then((accountInfo) => {
-      console.log(
+      console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
       accountStore.setBalance(
@@ -1198,7 +1197,6 @@ const fetchIncogniteeBalance = async () => {
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
-  //console.log("ping: " + pollCounter.value);
   await fetchIncogniteeBalance();
 });
 
@@ -1277,11 +1275,11 @@ onMounted(async () => {
     try {
       accountStore.setAccount(injectedAddress.toString());
       const injector = await web3FromAddress(accountStore.getAddress);
-      console.log(`setting injector: ${JSON.stringify(injector)}`);
-      console.log(`setting injector: ${JSON.stringify(injector.signer)}`);
+      console.debug(`setting injector: ${JSON.stringify(injector)}`);
+      console.debug(`setting injector: ${JSON.stringify(injector.signer)}`);
       accountStore.setInjector(injector);
     } catch (e) {
-      console.log("could not load injected account" + e);
+      console.warn("could not load injected account" + e);
       alert(
         "could not find selected address in extensions. Have you enabled your extensions?",
       );
@@ -1469,6 +1467,9 @@ const closeChooseWalletOverlay = () => {
 
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => {
+  shieldAmount.value = Math.floor(
+    Math.min(shieldAmount.value, computedShieldingMax.value),
+  );
   showShieldOverlay.value = true;
 };
 const closeShieldOverlay = () => {
@@ -1485,7 +1486,9 @@ const closeFaucetOverlay = () => {
 
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
-  unshieldAmount.value = 10;
+  unshieldAmount.value = Math.floor(
+    Math.min(10, accountStore.getDecimalBalance(incogniteeSidechain.value)),
+  );
   showUnshieldOverlay.value = true;
 };
 const closeUnshieldOverlay = () => {
@@ -1500,11 +1503,19 @@ const closeReceiveOverlay = () => {
 };
 const showPrivateSendOverlay = ref(false);
 const openPrivateSendOverlay = () => {
-  console.log(`openSendOverlay (scanoverlay=${showScanOverlay.value})`);
+  console.debug(
+    `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`,
+  );
+  sendAmount.value = Math.floor(
+    Math.min(
+      sendAmount.value,
+      accountStore.getDecimalBalance(incogniteeSidechain.value) - 0.1,
+    ),
+  );
   showPrivateSendOverlay.value = true;
 };
 const closePrivateSendOverlay = () => {
-  console.log("closePrivateSendOverlay");
+  console.debug("closePrivateSendOverlay");
   showPrivateSendOverlay.value = false;
 };
 
@@ -1514,7 +1525,7 @@ const openScanOverlay = () => {
   showScanOverlay.value = true;
 };
 const closeScanOverlay = () => {
-  console.log("closeScanOverlay");
+  console.debug("closeScanOverlay");
   showScanOverlay.value = false;
 };
 const showStatusOverlay = ref(false);

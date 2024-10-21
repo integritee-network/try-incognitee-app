@@ -280,20 +280,13 @@
     >
       <p class="text-sm text-gray-400 text-left my-4">
         Shielding is the process of moving naked, publicly visible balance on L1
-        to your private wallet on Incognitee. current limit:
-        {{
-          Math.min(
-            shieldingLimit,
-            accountStore.getDecimalBalance(shieldingTarget) -
-              accountStore.getDecimalExistentialDeposit(shieldingTarget) -
-              0.1,
-          )
-        }}
+        to your private wallet on Incognitee.
       </p>
       <div v-if="shieldingLimit < Infinity">
         <p class="text-sm text-gray-400 text-left my-4">
           During beta phase, you can only shield up to
-          {{ shieldingLimit }} {{ accountStore.getSymbol }}.
+          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
+          current private balance on incognitee.
         </p>
       </div>
       <form
@@ -1430,7 +1423,8 @@ const loadEnv = () => {
 
 const computedShieldingMax = computed(() => {
   return Math.min(
-    shieldingLimit.value,
+    shieldingLimit.value -
+      accountStore.getDecimalBalance(incogniteeSidechain.value),
     accountStore.getDecimalBalance(shieldingTarget.value) -
       accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
       0.1,

@@ -19,14 +19,15 @@ jobs:
         id: set-env-file
         run: |
           if [ "${{ github.repository }}" == "integritee-network/try-incognitee-app" ]; then
-            echo "ENV_FILE=.env.testnet" >> $GITHUB_ENV
+            echo "using testnet environment file"
+            cp .env.testnet .env
           elif [ "${{ github.repository }}" == "integritee-network/incognitee-app" ]; then
-            echo "ENV_FILE=.env.production" >> $GITHUB_ENV
+            echo "using production environment file"
+            cp .env.production .env
           fi
       - run: yarn run generate
         env:
           NITRO_PRESET: github_pages
-          ENV_FILE: ${{ env.ENV_FILE }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:

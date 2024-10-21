@@ -1066,7 +1066,7 @@ const unshield = () => {
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${unshieldAmount.value} from ${accountStore.getAddress} privately (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
 
   incogniteeStore.api

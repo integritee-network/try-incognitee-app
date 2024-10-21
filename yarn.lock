@@ -554,20 +554,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@encointer/util@npm:^0.15.0":
-  version: 0.15.0
-  resolution: "@encointer/util@npm:0.15.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.18.9"
-    "@polkadot/util": "npm:^12.6.2"
-    "@polkadot/util-crypto": "npm:^12.6.2"
-    "@types/bn.js": "npm:^5.1.5"
-    assert: "npm:^2.0.0"
-    bn.js: "npm:^5.2.1"
-  checksum: 10c0/24fa6d8cba374d6bd36cc6b4d742e84034d85ee7ccd5dbc24f8ec4fc0d6f2369924d79f88136c5490db91dada54192abe2724cdec486bbff48bd09188da9dd5e
-  languageName: node
-  linkType: hard
-
 "@encointer/util@npm:^0.15.1":
   version: 0.15.1
   resolution: "@encointer/util@npm:0.15.1"
@@ -10406,7 +10392,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nuxt-app@workspace:."
   dependencies:
-    "@encointer/util": "npm:^0.15.0"
+    "@encointer/util": "npm:^0.15.1"
     "@encointer/worker-api": "npm:^0.15.1"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
     "@headlessui/vue": "npm:^1.7.22"

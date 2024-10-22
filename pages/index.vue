@@ -8,7 +8,10 @@
 
   <div class="mt-4"></div>
 
-  <NetworkSelector :openAssetsInfo="openAssetsInfo" />
+  <NetworkSelector
+    :openAssetsInfo="openAssetsInfo"
+    :selectedNetwork="shieldingTarget"
+  />
 
   <div class="container">
     <PublicPrivateBalanceSwitcher
@@ -699,7 +702,7 @@
     title="Guess The Number"
   >
     <div class="my-3 text-gray-300 text-sm text-center">
-      <p>Guess a number between 1-10000 and win a weekly giveaway!</p>
+      <p>Guess a number between 0-10000 and win a weekly giveaway!</p>
       <p>You can place up to 10 guesses per round.</p>
     </div>
 

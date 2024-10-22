@@ -1114,9 +1114,6 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
     console.log("user selected extension account:", selectedAddress);
     dropSubscriptions();
-    router.push({
-      query: { address: selectedAddress },
-    });
     accountStore.setAccount(selectedAddress.toString());
     const injector = await web3FromAddress(accountStore.getAddress);
     console.debug(`setting injector: ${JSON.stringify(injector)}`);
@@ -1456,7 +1453,11 @@ watch(accountStore, async () => {
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainTokens));
-
+  if (accountStore.hasInjector) {
+    router.push({
+      query: { address: accountStore.getAddress },
+    });
+  }
   faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
     "ADDRESS",
     accountStore.getAddress,

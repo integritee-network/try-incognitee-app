@@ -946,94 +946,11 @@
   </OverlayDialog>
 
   <!-- Choose Wallet -->
-  <OverlayDialog
+  <ChooseWalletOverlay
     :show="showChooseWalletOverlay"
     :close="closeChooseWalletOverlay"
-    title="Access Your Wallet!"
-  >
-    <div class="mt-2">
-      <p class="text-sm text-gray-400">How would you like to connect?</p>
-      <div class="mt-4">
-        <button
-          @click="createTestingAccount"
-          class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-        >
-          Create a New Account for Testing
-        </button>
-      </div>
-      <p class="mt-4">or</p>
-      <div v-if="extensionAccounts.length < 1" class="mt-4 flex flex-col">
-        <div
-          class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
-        >
-          <a href="https://talisman.xyz/download"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/talisman-logo.svg"
-              alt="talisman"
-          /></a>
-          <a href="https://novawallet.io/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/nova-wallet-logo.svg"
-              alt="nova wallet"
-          /></a>
-          <a href="https://www.subwallet.app/"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/sub-wallet-logo.svg"
-              alt="sub wallet"
-          /></a>
-          <a href="https://polkadot.js.org/extension/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/polkadotjs-logo.svg"
-              alt="polkajs"
-          /></a>
-        </div>
-        <div class="mt-10">
-          <button
-            @click="connectExtension"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-          >
-            Connect Signer Extension
-          </button>
-        </div>
-      </div>
-      <div
-        v-if="extensionAccounts.length > 0"
-        ref="walletSection"
-        id="wallet"
-        class="py-12 sm:py-16"
-      >
-        <p class="text-sm text-gray-400">
-          Choose one of your extension accounts
-        </p>
-        <select
-          v-model="selectedExtensionAccount"
-          id="account.address"
-          name="account.address"
-          placeholder="account.address"
-          class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-        >
-          <option
-            v-for="account in extensionAccounts"
-            :key="account.address"
-            :value="account.address"
-          >
-            {{ account.meta.name }}
-          </option>
-        </select>
-      </div>
-      <div v-if="accountStore.hasInjector" class="mt-10">
-        <p>
-          please allow this app to read your balance by signing the upcoming
-          request in your extension
-        </p>
-        <p>this window will close once a balance could be fetched</p>
-      </div>
-    </div>
-  </OverlayDialog>
+    :createTestingAccount="createTestingAccount"
+  />
 
   <StatusOverlay
     :tx-status="txStatus"
@@ -1043,17 +960,13 @@
 </template>
 
 <script setup lang="ts">
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-} from "@polkadot/extension-dapp";
 import NetworkSelector from "@/components/ui/NetworkSelector.vue";
 import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
 import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
 import StatusOverlay from "@/components/ui/StatusOverlay.vue";
+import ChooseWalletOverlay from "@/components/ui/ChooseWalletOverlay.vue";
 import { computed } from "vue";
-import { ChainId, chainConfigs } from "@/configs/chains.ts";
+import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
 import OverlayDialog from "@/components/ui/OverlayDialog.vue";
@@ -1072,9 +985,21 @@ import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
-import { useRuntimeConfig } from "#app";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import CampaignBanner from "~/components/ui/CampaignBanner.vue";
+import {
+  extensionAccounts,
+  connectExtension,
+  injectorForAddress,
+} from "@/lib/signerExtensionUtils";
+import {
+  loadEnv,
+  shieldingTarget,
+  shieldingLimit,
+  incogniteeSidechain,
+  incogniteeShard,
+  isLive,
+} from "@/lib/environmentConfig";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1085,13 +1010,6 @@ const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const isSignerBusy = ref(false);
-
-const shieldingTarget = ref(ChainId.PaseoRelay);
-const shieldingLimit = ref(Infinity);
-const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
-const incogniteeShard = ref(null);
-const isLive = ref(true);
-
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
@@ -1100,7 +1018,6 @@ const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
 const scanResult = ref("No QR code data yet");
-const extensionAccounts = ref([]);
 const selectedExtensionAccount = ref(null);
 const faucetUrl = ref(null);
 
@@ -1115,10 +1032,7 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
     console.log("user selected extension account:", selectedAddress);
     dropSubscriptions();
     accountStore.setAccount(selectedAddress.toString());
-    const injector = await web3FromAddress(accountStore.getAddress);
-    console.debug(`setting injector: ${JSON.stringify(injector)}`);
-    console.debug(`setting injector: ${JSON.stringify(injector.signer)}`);
-    accountStore.setInjector(injector);
+    accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
     isUpdatingIncogniteeBalance.value = false;
   }
 });
@@ -1157,14 +1071,12 @@ const submitUnshieldForm = () => {
   closeUnshieldOverlay();
   unshield();
 };
-
 const submitGuessForm = () => {
   // Handle the form submission here
   openStatusOverlay();
   closeGuessTheNumberOverlay();
   submitGuess();
 };
-
 const setRecipientAddressToSelf = () => {
   recipientAddress.value = accountStore.getAddress;
 };
@@ -1510,10 +1422,9 @@ onMounted(async () => {
     connectExtension();
     try {
       accountStore.setAccount(injectedAddress.toString());
-      const injector = await web3FromAddress(accountStore.getAddress);
-      console.debug(`setting injector: ${JSON.stringify(injector)}`);
-      console.debug(`setting injector: ${JSON.stringify(injector.signer)}`);
-      accountStore.setInjector(injector);
+      accountStore.setInjector(
+        await injectorForAddress(accountStore.getAddress),
+      );
     } catch (e) {
       console.warn("could not load injected account" + e);
       alert(
@@ -1563,101 +1474,6 @@ const createTestingAccount = () => {
   });
 };
 
-const connectExtension = () => {
-  web3Enable("Integritee Dapp")
-    .then((extensions) => {
-      console.log("Enabled extensions:", extensions);
-
-      // Check if any extensions are found
-      if (extensions.length === 0) {
-        console.error(
-          "No wallet extensions found. Please install or enable a wallet.",
-        );
-        alert("No wallet extensions found. Please install or enable a wallet.");
-        return; // Stop execution if no extensions are found
-      }
-
-      return web3Accounts();
-    })
-    .then((accountsList) => {
-      // If web3Accounts() didn't return a list, exit gracefully
-      if (!accountsList) {
-        console.error("No accounts found. Please unlock your wallet.");
-        alert("No accounts found. Please unlock your wallet.");
-        return;
-      }
-
-      // If accounts are found, store them
-      extensionAccounts.value = accountsList;
-      console.log("Found accounts:", accountsList);
-
-      if (accountsList.length < 1) {
-        console.error(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
-        );
-        alert(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
-        );
-      }
-    })
-    .catch((error) => {
-      // Handle any errors during the connection process
-      console.error("Error during wallet connection:", error);
-      alert("Error during wallet connection. Please try again.");
-    });
-};
-
-const loadEnv = () => {
-  const shieldingTargetEnv = useRuntimeConfig().public.SHIELDING_TARGET;
-  const shieldingLimitEnv = useRuntimeConfig().public.SHIELDING_LIMIT;
-  const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
-  const incogniteeShardEnv = useRuntimeConfig().public.SHARD;
-  const isLiveEnv = useRuntimeConfig().public.LIVE;
-  // apply sane defaults and fallbacks
-
-  incogniteeShard.value =
-    incogniteeShardEnv.length > 0
-      ? incogniteeShardEnv
-      : "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c";
-
-  if (ChainId[shieldingTargetEnv]) {
-    shieldingTarget.value = ChainId[shieldingTargetEnv];
-  }
-  if (ChainId[incogniteeSidechainEnv]) {
-    incogniteeSidechain.value = ChainId[incogniteeSidechainEnv];
-  }
-  if (shieldingLimitEnv > 0) {
-    shieldingLimit.value = Number(shieldingLimitEnv);
-  }
-  isLive.value = toBoolean(isLiveEnv);
-
-  console.log(
-    "SHIELDING_TARGET: env:" +
-      shieldingTargetEnv +
-      ". using " +
-      ChainId[shieldingTarget.value],
-  );
-  console.log(
-    "SHIELDING_LIMIT: env:" +
-      shieldingLimitEnv +
-      ". using " +
-      shieldingLimit.value,
-  );
-  console.log(
-    "INCOGNITEE_SIDECHAIN: env:" +
-      incogniteeSidechainEnv +
-      ". using " +
-      ChainId[incogniteeSidechain.value],
-  );
-  console.log(
-    "SHARD: env:" +
-      useRuntimeConfig().public.SHARD +
-      ". using " +
-      incogniteeShard.value,
-  );
-  console.log("LIVE: env:" + isLiveEnv + ". using " + isLive.value);
-};
-
 const computedShieldingMax = computed(() => {
   return Math.min(
     shieldingLimit.value -
@@ -1667,14 +1483,6 @@ const computedShieldingMax = computed(() => {
       0.1,
   );
 });
-
-const toBoolean = (value: string | number | boolean): boolean => {
-  if (typeof value === "boolean") return value;
-  if (typeof value === "number") return value === 1;
-  if (typeof value === "string")
-    return value.toLowerCase() === "true" || value === "1";
-  return false;
-};
 
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {

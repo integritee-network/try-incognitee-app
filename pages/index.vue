@@ -1,51 +1,10 @@
 <template>
-  <div
-    class="flex flex-col lg:flex-row container p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
-  >
-    <div
-      class="flex w-full justify-between items-center"
-      :class="{ 'py-2': isMobile }"
-    >
-      <!-- Live Badge -->
-      <span
-        class="rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Live</span
-      >
-
-      <!-- Mobile Version -->
-      <p v-if="isMobile" class="flex-1 text-sm font-medium text-white mx-2">
-        "Guess the number" Campaign.
-      </p>
-
-      <!-- Desktop Version -->
-      <p v-else class="flex-1 text-sm font-medium text-white mx-2">
-        Join the "Guess the number" Campaign and win some juicy prizes.
-      </p>
-
-      <!-- Click here button, always aligned to the right -->
-      <button
-        type="button"
-        class="text-white font-bold text-xs lg:text-right flex items-center ml-auto"
-        @click="openGuessTheNumberOverlay"
-      >
-        Click here
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          class="w-4 h-4 ml-1"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M13.5 4.5l6 6m0 0l-6 6m6-6H6"
-          />
-        </svg>
-      </button>
-    </div>
-  </div>
+  <InfoBanner
+    :onClick="openGuessTheNumberOverlay"
+    :isMobile="isMobile"
+    textMobile="Guess-The-Number Campaign."
+    textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+  />
 
   <div class="mt-4"></div>
 
@@ -1096,6 +1055,7 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
 import { useRuntimeConfig } from "#app";
+import InfoBanner from "~/components/ui/InfoBanner.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1839,19 +1799,6 @@ const formatTimestamp = (timestamp: number | null) => {
 </script>
 
 <style scoped>
-.popup-content {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.details-box {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.transferrable-box {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .border-green-500 {
   border-color: #24ad7c;
 }
@@ -1902,25 +1849,6 @@ hr {
   font-size: 2em; /* Make the font size twice as large */
   text-align: center; /* Center the text */
   width: 50%; /* Reduce the width by 50% */
-}
-
-.incognitee-border-gradient {
-  width: 100%;
-  height: 100%;
-  background: url("/img/global/bg-line.svg") no-repeat center center;
-  background-size: cover;
-}
-
-.incognitee-bg {
-  background: linear-gradient(84.58deg, #24ad7c, #1845b9);
-}
-
-.incognitee-blue {
-  background: #1845b9;
-}
-
-.incognitee-green {
-  background: #24ad7c;
 }
 
 .spinner {

@@ -1,49 +1,51 @@
 <template>
-<div
-  class="flex flex-col lg:flex-row container p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full">
-  <div class="flex w-full justify-between items-center" :class="{ 'py-2': isMobile }">
-    <!-- Live Badge -->
-    <span
-      class="rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-      >Live</span
+  <div
+    class="flex flex-col lg:flex-row container p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
+  >
+    <div
+      class="flex w-full justify-between items-center"
+      :class="{ 'py-2': isMobile }"
     >
-
-    <!-- Mobile Version -->
-    <p v-if="isMobile" class="flex-1 text-sm font-medium text-white mx-2">
-      "Guess the number" Campaign.
-    </p>
-
-    <!-- Desktop Version -->
-    <p v-else class="flex-1 text-sm font-medium text-white mx-2">
-      Join the "Guess the number" Campaign and win some juicy prizes.
-    </p>
-
-    <!-- Click here button, always aligned to the right -->
-    <button
-      type="button"
-      class="text-white font-bold text-xs lg:text-right flex items-center ml-auto"
-      @click="openGuessTheNumberOverlay"
-    >
-      Click here
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="w-4 h-4 ml-1"
+      <!-- Live Badge -->
+      <span
+        class="rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
+        >Live</span
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M13.5 4.5l6 6m0 0l-6 6m6-6H6"
-        />
-      </svg>
-    </button>
+
+      <!-- Mobile Version -->
+      <p v-if="isMobile" class="flex-1 text-sm font-medium text-white mx-2">
+        "Guess the number" Campaign.
+      </p>
+
+      <!-- Desktop Version -->
+      <p v-else class="flex-1 text-sm font-medium text-white mx-2">
+        Join the "Guess the number" Campaign and win some juicy prizes.
+      </p>
+
+      <!-- Click here button, always aligned to the right -->
+      <button
+        type="button"
+        class="text-white font-bold text-xs lg:text-right flex items-center ml-auto"
+        @click="openGuessTheNumberOverlay"
+      >
+        Click here
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-4 h-4 ml-1"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M13.5 4.5l6 6m0 0l-6 6m6-6H6"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
-</div>
-
-
 
   <div class="mt-5">
     <div
@@ -1247,10 +1249,9 @@
           leave-from="opacity-100 translate-y-0 sm:scale-100"
           leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
-        <DialogPanel
-  class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-10 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
->
-
+          <DialogPanel
+            class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-10 pt-5 text-left shadow-xl transition-all flex flex-col sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+          >
             <div class="absolute right-0 top-0 pr-4 pt-4">
               <button
                 type="button"
@@ -1297,9 +1298,7 @@
                         class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3"
                       >
                         <dl class="flex flex-wrap">
-                          <div
-                            class="w-full flex  justify-between px-6 pt-3"
-                          >
+                          <div class="w-full flex justify-between px-6 pt-3">
                             <div class="flex-auto text-left mb-4 md:mb-0">
                               <dt
                                 class="text-sm text-left font-semibold leading-6 text-gray-300"
@@ -1317,7 +1316,7 @@
                               </dd>
                             </div>
 
-                            <div class="flex-auto  text-right">
+                            <div class="flex-auto text-right">
                               <dt
                                 class="text-sm font-semibold leading-6 text-gray-300"
                               >
@@ -1328,7 +1327,7 @@
                               >
                                 {{
                                   formatTimestamp(
-                                    guessTheNumberInfo?.next_round_timestamp
+                                    guessTheNumberInfo?.next_round_timestamp,
                                   )
                                 }}
                               </dd>
@@ -1376,35 +1375,38 @@
                           </div>
 
                           <div
-  class="mt-3 flex flex-col w-full flex-none gap-y-4 border-t border-gray-700 px-6 pt-3"
->
-  <!-- Last weeks lucky number -->
-  <div class="text-sm font-semibold leading-6 text-gray-300">
-    Last lucky winners
-  </div>
+                            class="mt-3 flex flex-col w-full flex-none gap-y-4 border-t border-gray-700 px-6 pt-3"
+                          >
+                            <!-- Last weeks lucky number -->
+                            <div
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
+                              Last lucky winners
+                            </div>
 
-  <!-- Winner's address displayed under the last lucky number -->
-  <div class="text-sm leading-6 text-gray-400">
-    <span v-if="isMobile">
-    {{
-      guessTheNumberInfo?.last_winners.isEmpty
-        ? "no one"
-        : guessTheNumberInfo?.last_winners
-            .join(", ")
-            .slice(0, 20) + '...'
-    }}
-  </span>
+                            <!-- Winner's address displayed under the last lucky number -->
+                            <div class="text-sm leading-6 text-gray-400">
+                              <span v-if="isMobile">
+                                {{
+                                  guessTheNumberInfo?.last_winners.isEmpty
+                                    ? "no one"
+                                    : guessTheNumberInfo?.last_winners
+                                        .join(", ")
+                                        .slice(0, 20) + "..."
+                                }}
+                              </span>
 
-  <span v-else>
-    {{
-      guessTheNumberInfo?.last_winners.isEmpty
-        ? "no one"
-        : guessTheNumberInfo?.last_winners.join(", ")
-    }}
-  </span>
-  </div>
-</div>
-
+                              <span v-else>
+                                {{
+                                  guessTheNumberInfo?.last_winners.isEmpty
+                                    ? "no one"
+                                    : guessTheNumberInfo?.last_winners.join(
+                                        ", ",
+                                      )
+                                }}
+                              </span>
+                            </div>
+                          </div>
                         </dl>
                       </div>
                     </div>
@@ -1416,50 +1418,52 @@
                 </div>
 
                 <form class="" @submit.prevent="submitGuessForm">
-  <!-- Label for the input -->
-  <div class="flex justify-between mb-2">
-    <label for="guess" class="text-sm font-medium leading-6 text-white">Enter your guess</label>
-  </div>
+                  <!-- Label for the input -->
+                  <div class="flex justify-between mb-2">
+                    <label
+                      for="guess"
+                      class="text-sm font-medium leading-6 text-white"
+                      >Enter your guess</label
+                    >
+                  </div>
 
-  <!-- Flex container for input and button -->
-  <div class="flex items-center space-x-4">
-    <!-- Guess Input Field -->
-    <div class="flex-grow relative">
-      <input
-        id="guess"
-        v-model="guess"
-        type="number"
-        step="1"
-        :min="0"
-        :max="10000"
-        required
-        class="w-full text-sm rounded-lg bg-cool-900 text-white placeholder-gray-500 border border-green-500"
-        style="border-color: #24ad7c"
-        placeholder="guess"
-      />
+                  <!-- Flex container for input and button -->
+                  <div class="flex items-center space-x-4">
+                    <!-- Guess Input Field -->
+                    <div class="flex-grow relative">
+                      <input
+                        id="guess"
+                        v-model="guess"
+                        type="number"
+                        step="1"
+                        :min="0"
+                        :max="10000"
+                        required
+                        class="w-full text-sm rounded-lg bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+                        style="border-color: #24ad7c"
+                        placeholder="guess"
+                      />
 
-      <!-- Fee description below input, right-aligned -->
-      <div class="absolute right-0 -bottom-5">
-        <span class="text-xs text-gray-400">Fee: 1 PAS for Incognitee</span>
-      </div>
-    </div>
+                      <!-- Fee description below input, right-aligned -->
+                      <div class="absolute right-0 -bottom-5">
+                        <span class="text-xs text-gray-400"
+                          >Fee: 1 PAS for Incognitee</span
+                        >
+                      </div>
+                    </div>
 
-    <!-- Submit Button -->
-    <div class="flex items-center justify-center">
-      <button
-        type="submit"
-        class="btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-        style="margin-left: auto; margin-right: auto;"
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-</form>
-
-
-
-
+                    <!-- Submit Button -->
+                    <div class="flex items-center justify-center">
+                      <button
+                        type="submit"
+                        class="btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+                        style="margin-left: auto; margin-right: auto"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </DialogPanel>
@@ -1798,7 +1802,9 @@
                     id="wallet"
                     class="mb-5"
                   >
-                    <p class="text-sm font-medium leading-6 text-white mt-5 mb-1.5">
+                    <p
+                      class="text-sm font-medium leading-6 text-white mt-5 mb-1.5"
+                    >
                       Choose one of your extension accounts
                     </p>
                     <select
@@ -1822,7 +1828,6 @@
                       Allow this app to read your balance by signing the
                       upcoming request in your extension
                     </p>
-                   
                   </div>
                 </div>
               </div>
@@ -1931,29 +1936,27 @@ const scanResult = ref("No QR code data yet");
 const extensionAccounts = ref([]);
 const selectedExtensionAccount = ref(null);
 
+// Funktion, um die Adressen zu kürzen
+const shortenAddress = (address) => {
+  if (!address) return "";
+  return address.slice(0, 6) + "..." + address.slice(-6);
+};
 
+const isMobile = ref(false);
 
-  // Funktion, um die Adressen zu kürzen
-  const shortenAddress = (address) => {
-    if (!address) return '';
-    return address.slice(0, 6) + '...' + address.slice(-6);
-  };
+// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
+const checkIfMobile = () => {
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+};
 
-  const isMobile = ref(false);
+onMounted(() => {
+  checkIfMobile();
+  window.addEventListener("resize", checkIfMobile);
+});
 
-  // Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
-  const checkIfMobile = () => {
-    isMobile.value = window.matchMedia('(max-width: 768px)').matches;
-  };
-
-  onMounted(() => {
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener('resize', checkIfMobile);
-  });
+onUnmounted(() => {
+  window.removeEventListener("resize", checkIfMobile);
+});
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
@@ -2045,7 +2048,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
-          ])
+          ]),
         );
         const message = `${error.section}.${error.name}${
           Array.isArray(error.docs)
@@ -2062,7 +2065,7 @@ const txResHandlerPaseo = ({ events = [], status, txHash }) => {
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
       console.log(
-        `✅ Transaction successful with status: ${status} hash: ${txHash}`
+        `✅ Transaction successful with status: ${status} hash: ${txHash}`,
       );
     }
   });
@@ -2105,7 +2108,7 @@ const unshield = () => {
   console.log(
     `sending ${formatBalance(amount)} from ${
       accountStore.getAddress
-    } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`
+    } privately to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard}`,
   );
 
   incogniteeStore.api
@@ -2119,7 +2122,7 @@ const unshield = () => {
       {
         signer: accountStore.injector?.signer,
         nonce: accountStore.incogniteeNonce,
-      }
+      },
     )
     .then((hash) => {
       txStatus.value = "😀 Triggered unshielding of funds successfully.";
@@ -2134,7 +2137,7 @@ const sendPrivately = () => {
   const amount = Math.pow(10, 10) * sendAmount.value;
   const account = accountStore.account;
   console.log(
-    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`
+    `sending ${formatBalance(amount)} from ${account.address} privately to ${recipientAddress.value}`,
   );
 
   incogniteeStore.api
@@ -2148,7 +2151,7 @@ const sendPrivately = () => {
       {
         signer: accountStore.injector?.signer,
         nonce: accountStore.incogniteeNonce,
-      }
+      },
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -2162,7 +2165,7 @@ const submitGuess = () => {
   txStatus.value = "⌛ privately submitting your guess to incognitee";
   const account = accountStore.account;
   console.log(
-    `sending guess ${guess.value} from ${account.address} privately to incognitee`
+    `sending guess ${guess.value} from ${account.address} privately to incognitee`,
   );
 
   incogniteeStore.api
@@ -2174,7 +2177,7 @@ const submitGuess = () => {
       {
         signer: accountStore.injector?.signer,
         nonce: accountStore.incogniteeNonce,
-      }
+      },
     )
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
@@ -2196,7 +2199,7 @@ const fetchIncogniteeAccountInfo = async () => {
 
   if (disableGetter.value == true) {
     console.log(
-      "[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again..."
+      "[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again...",
     );
     return;
   }
@@ -2208,14 +2211,14 @@ const fetchIncogniteeAccountInfo = async () => {
     if (!getterMap[accountStore.account]) {
       if (injector) {
         console.log(
-          `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`
+          `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
         );
       }
       getterMap[accountStore.account] =
         await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
-          { signer: injector?.signer }
+          { signer: injector?.signer },
         );
     } else {
       console.log(`fetching incognitee balance&nonce using cached getter`);
@@ -2235,7 +2238,7 @@ const fetchIncogniteeAccountInfo = async () => {
     .send()
     .then((accountInfo) => {
       console.log(
-        `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`
+        `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
       accountStore.setIncogniteeBalance(accountInfo.data.free);
       accountStore.setIncogniteeNonce(accountInfo.nonce);
@@ -2253,7 +2256,7 @@ const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("TODO: fetch guess the number info");
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
-    incogniteeStore.shard
+    incogniteeStore.shard,
   );
   getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
@@ -2288,11 +2291,11 @@ watch(accountStore, async () => {
       console.log("paseo balance:" + currentFree);
       accountStore.setPaseoBalance(Number(currentFree));
       isFetchingPaseoBalance.value = false;
-    }
+    },
   );
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   fetchIncogniteeAccountInfo().then(() =>
-    console.log("fetched incognitee balance")
+    console.log("fetched incognitee balance"),
   );
 });
 
@@ -2301,8 +2304,8 @@ const copyOwnAddressToClipboard = () => {
     .writeText(accountStore.getAddress)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the Paseo faucet."
-      )
+        "copied your account address to clipboard. Please paste it into the address field on the Paseo faucet.",
+      ),
     );
 };
 import {
@@ -2336,7 +2339,7 @@ onMounted(async () => {
     } catch (e) {
       console.log("could not load injected account" + e);
       alert(
-        "could not find selected address in extensions. Have you enabled your extensions?"
+        "could not find selected address in extensions. Have you enabled your extensions?",
       );
     }
   } else {
@@ -2389,7 +2392,7 @@ const connectExtension = () => {
       // Check if any extensions are found
       if (extensions.length === 0) {
         console.error(
-          "No wallet extensions found. Please install or enable a wallet."
+          "No wallet extensions found. Please install or enable a wallet.",
         );
         alert("No wallet extensions found. Please install or enable a wallet.");
         return; // Stop execution if no extensions are found
@@ -2411,10 +2414,10 @@ const connectExtension = () => {
 
       if (accountsList.length < 1) {
         console.error(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account."
+          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
         );
         alert(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account."
+          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
         );
       }
     })
@@ -2513,7 +2516,7 @@ const closePrivateSendOverlay = () => {
 const showGuessTheNumberOverlay = ref(false);
 const openGuessTheNumberOverlay = () => {
   console.log(
-    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`
+    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`,
   );
   fetchGuessTheNumberInfo();
   showGuessTheNumberOverlay.value = true;

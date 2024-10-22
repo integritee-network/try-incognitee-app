@@ -1,8 +1,9 @@
 <template>
-
-
   <div class="py-24 sm:py-32 container">
-    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+    <div
+      class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+      aria-hidden="true"
+    >
       <div
         class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
         style="
@@ -24,52 +25,88 @@
             76.1% 97.7%,
             74.1% 44.1%
           );
-        " />
+        "
+      />
     </div>
 
-
-    <hr class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+    <hr
+      class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
+    />
 
     <div class="mb-20">
       <dl
-        class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0">
+        class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0"
+      >
         <div class="px-4 py-5 sm:p-6">
-          <svg class="h-6 w-6 mb-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+            />
           </svg>
           <dt class="text-base font-normal text-gray-300">TEERday holder</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
               {{ summaryHolders }}
             </div>
           </dd>
         </div>
         <div class="px-4 py-5 sm:p-6">
-          <svg class="h-6 w-6 mb-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"
+            />
           </svg>
           <dt class="text-base font-normal text-gray-300">Total TEER bonded</dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
               {{ summaryTeerBonded.toFixed(2) }}
             </div>
           </dd>
         </div>
         <div class="px-4 py-5 sm:p-6">
-          <svg class="h-6 w-6 mb-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-            aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+          <svg
+            class="h-6 w-6 mb-3 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
+            />
           </svg>
           <dt class="text-base font-normal text-gray-300">
             Total TEERdays active
           </dt>
           <dd class="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div class="flex items-baseline text-2xl font-semibold text-incognitee-green">
+            <div
+              class="flex items-baseline text-2xl font-semibold text-incognitee-green"
+            >
               {{ summaryTeerDays.toFixed(2) }}
             </div>
           </dd>
@@ -77,23 +114,43 @@
       </dl>
     </div>
 
-    <div v-if="accounts.length > 0" ref="walletSection" id="wallet" class="py-12 sm:py-16">
+    <div
+      v-if="accounts.length > 0"
+      ref="walletSection"
+      id="wallet"
+      class="py-12 sm:py-16"
+    >
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:max-w-none">
-          <h1 class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl">
+          <h1
+            class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
+          >
             My Wallet
           </h1>
 
           <div class="mt-5">
-            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
+            <div
+              class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10"
+            >
               <div class="sm:col-span-3">
-                <label for="account.address" class="text-sm font-medium leading-6 text-gray-300">Select your
-                  account</label>
+                <label
+                  for="account.address"
+                  class="text-sm font-medium leading-6 text-gray-300"
+                  >Select your account</label
+                >
                 <div class="mt-2">
-                  <select v-model="selectedAccount" id="account.address" name="account.address"
+                  <select
+                    v-model="selectedAccount"
+                    id="account.address"
+                    name="account.address"
                     placeholder="account.address"
-                    class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6">
-                    <option v-for="account in accounts" :key="account.address" :value="account.address">
+                    class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                  >
+                    <option
+                      v-for="account in accounts"
+                      :key="account.address"
+                      :value="account.address"
+                    >
                       {{ account.meta.name }}
                     </option>
                   </select>
@@ -101,11 +158,15 @@
               </div>
 
               <div class="sm:col-span-3">
-                <label for="last-name" class="text-sm font-medium leading-6 text-gray-300">Selected Address</label>
+                <label
+                  for="last-name"
+                  class="text-sm font-medium leading-6 text-gray-300"
+                  >Selected Address</label
+                >
                 <div class="mt-2">
                   <span class="wallet-address text-sm text-gray-300">{{
                     accountStore.getAddress
-                    }}</span>
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -113,21 +174,29 @@
             <div v-if="selectedAccount">
               <div v-if="isFetchingTeerBalance">
                 <div
-                  class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8">
-                </div>
+                  class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8"
+                ></div>
               </div>
 
               <div v-else class="mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   <div>
-                    <div class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5">
+                    <div
+                      class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5"
+                    >
                       <dl class="flex flex-wrap">
-                        <div class="w-full flex flex-col md:flex-row justify-between px-6 pt-6">
+                        <div
+                          class="w-full flex flex-col md:flex-row justify-between px-6 pt-6"
+                        >
                           <div class="flex-auto mb-4 md:mb-0">
-                            <dt class="text-sm font-semibold leading-6 text-gray-300">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
                               Current bond
                             </dt>
-                            <dd class="mt-1 text-base font-semibold leading-6 text-white">
+                            <dd
+                              class="mt-1 text-base font-semibold leading-6 text-white"
+                            >
                               {{
                                 currentBond ? currentBond.getTeerBonded() : 0
                               }}
@@ -136,77 +205,115 @@
                           </div>
 
                           <div class="flex-auto text-left md:text-right">
-                            <dt class="text-sm font-semibold leading-6 text-gray-300">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
                               Accumulated TEERdays
                             </dt>
-                            <dd class="mt-1 text-base font-semibold leading-6 text-white">
+                            <dd
+                              class="mt-1 text-base font-semibold leading-6 text-white"
+                            >
                               {{ currentBond ? currentBond.getTeerDays() : 0 }}
                               TEERdays
                             </dd>
                           </div>
                         </div>
 
-                        <div class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6">
-                          <dt class="text-sm font-semibold leading-6 text-gray-300">
+                        <div
+                          class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6"
+                        >
+                          <dt
+                            class="text-sm font-semibold leading-6 text-gray-300"
+                          >
                             Transferrable
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31">{{
-                              accountStore.getHumanTransferrable
-                            }}
-                              TEER</time>
+                            <time datetime="2023-01-31"
+                              >{{
+                                accountStore.getHumanTransferrable
+                              }}
+                              TEER</time
+                            >
                           </dd>
                         </div>
 
-                        <div v-if="accountStore.frozen > 0" class="flex w-full flex-none gap-x-4 px-6">
-                          <dt class="text-sm font-semibold leading-6 text-gray-300">
+                        <div
+                          v-if="accountStore.frozen > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
+                          <dt
+                            class="text-sm font-semibold leading-6 text-gray-300"
+                          >
                             Locked
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31">{{ accountStore.getHumanFrozen }} TEER</time>
+                            <time datetime="2023-01-31"
+                              >{{ accountStore.getHumanFrozen }} TEER</time
+                            >
                           </dd>
                         </div>
 
-                        <div v-if="accountStore.reserved > 0" class="flex w-full flex-none gap-x-4 px-6">
-                          <dt class="text-sm font-semibold leading-6 text-gray-300">
+                        <div
+                          v-if="accountStore.reserved > 0"
+                          class="flex w-full flex-none gap-x-4 px-6"
+                        >
+                          <dt
+                            class="text-sm font-semibold leading-6 text-gray-300"
+                          >
                             Reserved
                           </dt>
                           <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31">{{ accountStore.getHumanReserved }} TEER</time>
+                            <time datetime="2023-01-31"
+                              >{{ accountStore.getHumanReserved }} TEER</time
+                            >
                           </dd>
                         </div>
 
-                        <div v-if="pendingUnlock" class="w-full flex justify-between flex-col md:flex-row px-6 pt-6">
+                        <div
+                          v-if="pendingUnlock"
+                          class="w-full flex justify-between flex-col md:flex-row px-6 pt-6"
+                        >
                           <div class="flex-auto mb-4 md:mb-0">
                             <div class="flex w-full flex-none gap-x-4">
-                              <dt class="text-sm font-semibold leading-6 text-gray-300">
+                              <dt
+                                class="text-sm font-semibold leading-6 text-gray-300"
+                              >
                                 Pending unlock
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
-                                <time datetime="2023-01-31">{{
-                                  pendingUnlock
-                                    ? pendingUnlock.getTeerToUnlock()
-                                    : 0
-                                }}
-                                  TEER</time>
+                                <time datetime="2023-01-31"
+                                  >{{
+                                    pendingUnlock
+                                      ? pendingUnlock.getTeerToUnlock()
+                                      : 0
+                                  }}
+                                  TEER</time
+                                >
                               </dd>
                             </div>
 
                             <div class="flex w-full flex-none gap-x-4">
-                              <dt class="text-sm font-semibold leading-6 text-gray-300">
+                              <dt
+                                class="text-sm font-semibold leading-6 text-gray-300"
+                              >
                                 Unlocked on
                               </dt>
                               <dd class="text-sm leading-6 text-gray-400">
                                 <time datetime="2023-01-31">{{
                                   pendingUnlock?.getDueDateStr()
-                                  }}</time>
+                                }}</time>
                               </dd>
                             </div>
                           </div>
 
-                          <div v-if="pendingUnlock?.canWithdraw()" class="flex-auto text-left md:text-right gap-x-4">
-                            <button @click="withdrawUnbonded"
-                              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient">
+                          <div
+                            v-if="pendingUnlock?.canWithdraw()"
+                            class="flex-auto text-left md:text-right gap-x-4"
+                          >
+                            <button
+                              @click="withdrawUnbonded"
+                              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient"
+                            >
                               Withdraw!
                             </button>
                           </div>
@@ -220,31 +327,53 @@
                       <div class="text-sm font-medium leading-6 text-gray-300">
                         Bond TEER to accumulate TEERdays
                       </div>
-                      <div v-if="
-                        accountStore.getTransferrable <
-                        BigInt(Math.pow(10, 9))
-                      " class="text-sm text-red-500">
+                      <div
+                        v-if="
+                          accountStore.getTransferrable <
+                          BigInt(Math.pow(10, 9))
+                        "
+                        class="text-sm text-red-500"
+                      >
                         Not enough transferrable TEER. Please get free test TEER
                         at our
-                        <a :href="'https://substratefaucet.xyz/integritee/' +
-                          accountStore.getAddress
-                          " target="_blank" class="text-indigo-500 underline">testnet faucet</a>.
+                        <a
+                          :href="
+                            'https://substratefaucet.xyz/integritee/' +
+                            accountStore.getAddress
+                          "
+                          target="_blank"
+                          class="text-indigo-500 underline"
+                          >testnet faucet</a
+                        >.
                       </div>
-                      <div v-else-if="pendingUnlock" class="text-sm text-red-500">
+                      <div
+                        v-else-if="pendingUnlock"
+                        class="text-sm text-red-500"
+                      >
                         Can't bond more during unbonding period
                       </div>
                       <div v-else>
                         <form @submit.prevent="bondAmount" class="space-y-2">
                           <div class="flex flex-col sm:flex-row sm:space-x-2">
-                            <input type="number" v-model="amountToBond" placeholder="Enter amount to bond" step="0.1"
-                              :min="0.1" :max="Number(
-                                accountStore.getTransferrable /
-                                BigInt(Math.pow(10, 12)),
-                              ) - 0.1
-                                " required
-                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6" />
-                            <button type="submit"
-                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient">
+                            <input
+                              type="number"
+                              v-model="amountToBond"
+                              placeholder="Enter amount to bond"
+                              step="0.1"
+                              :min="0.1"
+                              :max="
+                                Number(
+                                  accountStore.getTransferrable /
+                                    BigInt(Math.pow(10, 12)),
+                                ) - 0.1
+                              "
+                              required
+                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                            />
+                            <button
+                              type="submit"
+                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                            >
                               Bond!
                             </button>
                           </div>
@@ -264,16 +393,28 @@
                       <div v-else class="space-y-2">
                         <form @submit.prevent="unbondAmount" class="space-y-2">
                           <div class="flex flex-col sm:flex-row sm:space-x-2">
-                            <input type="number" v-model="amountToUnbond" placeholder="Enter amount to unbond"
-                              step="0.1" :min="0.1" :max="currentBond.teerBonded" required
-                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6" />
-                            <button type="submit"
-                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient">
+                            <input
+                              type="number"
+                              v-model="amountToUnbond"
+                              placeholder="Enter amount to unbond"
+                              step="0.1"
+                              :min="0.1"
+                              :max="currentBond.teerBonded"
+                              required
+                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                            />
+                            <button
+                              type="submit"
+                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                            >
                               Unbond!
                             </button>
                           </div>
                         </form>
-                        <p class="mt-2 text-xs text-gray-500" id="email-description">
+                        <p
+                          class="mt-2 text-xs text-gray-500"
+                          id="email-description"
+                        >
                           Unbonded TEER will be locked for 7 days.
                         </p>
                       </div>
@@ -288,113 +429,148 @@
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
-    <!-- Accordion 1: TEERdays Intro -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(1)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">TEERdays Intro</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 1"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 1: TEERdays Intro -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(1)"
         >
-          <p class="text-gray-300 mt-4">
-            By bonding your TEER now, you can already accumulate TEERdays prior to the launch of Incognitee. TEERdays are calculated by multiplying the amount of TEER by the number of days bonded. You can unbond your TEER anytime within 7 days, but you will lose a fraction of the accumulated TEERdays if you do. TEERdays are non-transferable. Start now to get the best position for the Incognitee launch.
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            TEERdays Intro
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 1"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              By bonding your TEER now, you can already accumulate TEERdays
+              prior to the launch of Incognitee. TEERdays are calculated by
+              multiplying the amount of TEER by the number of days bonded. You
+              can unbond your TEER anytime within 7 days, but you will lose a
+              fraction of the accumulated TEERdays if you do. TEERdays are
+              non-transferable. Start now to get the best position for the
+              Incognitee launch.
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 2: Why collect TEERdays? -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(2)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Why collect TEERdays?</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 2"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 2: Why collect TEERdays? -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(2)"
         >
-          <p class="text-gray-300 mt-4">
-            TEERdays can be used to increase your revenue share for the launch of Incognitee on Polkadot/Kusama and will also increase your governance voting power for future decisions related to Incognitee.
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Why collect TEERdays?
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 2"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              TEERdays can be used to increase your revenue share for the launch
+              of Incognitee on Polkadot/Kusama and will also increase your
+              governance voting power for future decisions related to
+              Incognitee.
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 3: How to participate? -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(3)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">How to participate?</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 3"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 3: How to participate? -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(3)"
         >
-          <p class="text-gray-300 mt-4">
-            1. First, you need to possess some TEER. Grab them at one of the avenues like
-            <a href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h" class="text-blue-400 underline">Kraken</a>,
-            <a href="https://www.gate.io/de/trade/TEER_USDT" class="text-blue-400 underline">Gate</a>, or
-            <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17" class="text-blue-400 underline">Basilisk</a>. <br />
-            2. Get one of the supported wallets and connect your wallet. <br />
-            3. Transfer TEER to your wallet. <br />
-            4. Bond your TEER using this current page. <br />
-            5. Start automatically collecting TEERdays. <br />
-            6. Refer a friend (coming soon).
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            How to participate?
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 3"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              1. First, you need to possess some TEER. Grab them at one of the
+              avenues like
+              <a
+                href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+                class="text-blue-400 underline"
+                >Kraken</a
+              >,
+              <a
+                href="https://www.gate.io/de/trade/TEER_USDT"
+                class="text-blue-400 underline"
+                >Gate</a
+              >, or
+              <a
+                href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+                class="text-blue-400 underline"
+                >Basilisk</a
+              >. <br />
+              2. Get one of the supported wallets and connect your wallet.
+              <br />
+              3. Transfer TEER to your wallet. <br />
+              4. Bond your TEER using this current page. <br />
+              5. Start automatically collecting TEERdays. <br />
+              6. Refer a friend (coming soon).
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 4: Rules -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(4)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Rules</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 4"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 4: Rules -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(4)"
         >
-          <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
-            <li>You can bond as many TEER as you like</li>
-            <li>You can unbond any time with a 7-day unbonding period</li>
-            <li>You will not accumulate any TEERdays during the unbonding period</li>
-            <li>You can’t bond any additional TEER during the unbonding period</li>
-            <li>You will lose a % of your TEERdays if you unbond your TEER pro rata of the unbonded amount</li>
-            <li>TEERdays are non-transferable</li>
-            <li>
-              TEERdays are calculated as follows:<br />
-              Amount of TEER times the number of days bonded = TEERdays <br />
-              Example: 20 TEER * 7 days = 140 TEERdays
-            </li>
-          </ul>
-        </div>
-      </transition>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Rules</h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 4"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
+              <li>You can bond as many TEER as you like</li>
+              <li>You can unbond any time with a 7-day unbonding period</li>
+              <li>
+                You will not accumulate any TEERdays during the unbonding period
+              </li>
+              <li>
+                You can’t bond any additional TEER during the unbonding period
+              </li>
+              <li>
+                You will lose a % of your TEERdays if you unbond your TEER pro
+                rata of the unbonded amount
+              </li>
+              <li>TEERdays are non-transferable</li>
+              <li>
+                TEERdays are calculated as follows:<br />
+                Amount of TEER times the number of days bonded = TEERdays <br />
+                Example: 20 TEER * 7 days = 140 TEERdays
+              </li>
+            </ul>
+          </div>
+        </transition>
+      </div>
     </div>
-
-  </div>
-
-
 
     <div class="mt-20 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
           <div class="mt-10">
-            <h1 class="title text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            <h1
+              class="title text-3xl font-bold tracking-tight text-white sm:text-4xl"
+            >
               Leaderboard​​
             </h1>
             <!-- Verwende kleinere obere Randabstände auf mobilen Geräten -->
@@ -402,35 +578,60 @@
               <table class="rounded-table min-w-full">
                 <thead>
                   <tr>
-                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
                       Rank
                     </th>
-                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
                       TEERdays
                     </th>
-                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
                       Wallet
                     </th>
-                    <th scope="col" class="px-4 py-4 text-left text-sm font-semibold text-white">
+                    <th
+                      scope="col"
+                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                    >
                       TEER bonded
                     </th>
                   </tr>
                 </thead>
                 <tbody class="text-left">
-                  <tr v-for="(entry, index) in allBonds.slice(0, 10)" :key="index" :class="{
-                    'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
-                    'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
-                  }" class="rounded-lg shadow text-left">
-                    <td class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left">
+                  <tr
+                    v-for="(entry, index) in allBonds.slice(0, 10)"
+                    :key="index"
+                    :class="{
+                      'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
+                      'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
+                    }"
+                    class="rounded-lg shadow text-left"
+                  >
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
+                    >
                       {{ index + 1 }}
                     </td>
-                    <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
                       {{ entry[2].toFixed(2) }}
                     </td>
-                    <td class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                    <td
+                      class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
                       {{ entry[0] }}
                     </td>
-                    <td class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left">
+                    <td
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                    >
                       {{ entry[1].toFixed(2) }}
                     </td>
                   </tr>
@@ -442,26 +643,39 @@
       </div>
     </div>
   </div>
-  <hr class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent" />
+  <hr
+    class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
+  />
 
-
-  <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
+  <div
+    aria-live="assertive"
+    class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+  >
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
       <!-- Notification panel, dynamically insert this into the live region when it needs to be displayed -->
-      <transition enter-active-class="transform ease-out duration-300 transition"
+      <transition
+        enter-active-class="transform ease-out duration-300 transition"
         enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0" leave-active-class="transition ease-in duration-100"
-        leave-from-class="opacity-100" leave-to-class="opacity-0">
-        <div v-if="showStatusOverlay"
-          class="bg-cover bg-no-repeat shadow-blue-500/20 pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-gray-800 border-incognitee-green shadow-lg ring-1 ring-incognitee-green">
+        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+        leave-active-class="transition ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+      >
+        <div
+          v-if="showStatusOverlay"
+          class="bg-cover bg-no-repeat shadow-blue-500/20 pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-gray-800 border-incognitee-green shadow-lg ring-1 ring-incognitee-green"
+        >
           <div class="p-4">
             <div class="flex items-start">
               <div class="ml-3 w-0 flex-1 pt-0.5">
                 <p class="mt-1 text-sm text-gray-300">{{ txStatus }}</p>
               </div>
               <div class="ml-4 flex flex-shrink-0">
-                <button type="button" @click="showStatusOverlay = false"
-                  class="inline-flex rounded-md bg-gray-800 text-gray-400 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button
+                  type="button"
+                  @click="showStatusOverlay = false"
+                  class="inline-flex rounded-md bg-gray-800 text-gray-400 hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
                   <span class="sr-only">Close</span>
                   <XMarkIcon class="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -475,7 +689,6 @@
 </template>
 
 <script setup lang="ts">
-
 import {
   web3Accounts,
   web3Enable,
@@ -648,11 +861,11 @@ watch(accountStore, async () => {
       if (bond.value) {
         console.log(
           "TEERday bond:" +
-          bond.value +
-          " last updated:" +
-          bond.lastUpdated +
-          " accumulated tokentime:" +
-          bond.accumulatedTokentime,
+            bond.value +
+            " last updated:" +
+            bond.lastUpdated +
+            " accumulated tokentime:" +
+            bond.accumulatedTokentime,
         );
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
@@ -856,10 +1069,11 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
           ]),
         );
-        const message = `${error.section}.${error.name}${Array.isArray(error.docs)
+        const message = `${error.section}.${error.name}${
+          Array.isArray(error.docs)
             ? `(${error.docs.join("")})`
             : error.docs || ""
-          }`;
+        }`;
 
         errorInfo = `${message}`;
         console.log(`Error-info::${JSON.stringify(error)}`);

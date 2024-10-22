@@ -15,6 +15,16 @@ jobs:
         with:
           node-version: "20"
       - run: yarn install
+      - name: Set environment file
+        id: set-env-file
+        run: |
+          if [ "${{ github.repository }}" == "integritee-network/try-incognitee-app" ]; then
+            echo "using testnet environment file"
+            cp .env.testnet .env
+          elif [ "${{ github.repository }}" == "integritee-network/incognitee-app" ]; then
+            echo "using production environment file"
+            cp .env.production .env
+          fi
       - run: yarn run generate
         env:
           NITRO_PRESET: github_pages

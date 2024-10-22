@@ -28,7 +28,7 @@
         </div>
       </div>
     </header>
-    <footer class="footer z-20">
+    <footer class="footer">
       <nav class="footer-content">
         <div class="container">
           <div
@@ -175,6 +175,7 @@ const emitAddressClicked = () => {
 
 .footer {
   flex-shrink: 0; /* Prevents the footer from shrinking */
+  z-index: 5;
 }
 
 .footer-content {

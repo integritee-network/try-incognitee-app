@@ -407,16 +407,26 @@ a {
   }
 }
 
+:root {
+  --integritee-blue: #1845b9;
+  --integritee-green: #24ad7c;
+  --integritee-red: #ff4d4d;
+}
+
 .incognitee-bg {
-  background: linear-gradient(84.58deg, #24ad7c, #1845b9);
+  background: linear-gradient(
+    84.58deg,
+    var(--integritee-green),
+    var(--integritee-blue)
+  );
 }
 
 .incognitee-blue {
-  background: #1845b9;
+  background: var(--integritee-blue);
 }
 
 .incognitee-green {
-  background: #24ad7c;
+  background: var(--integritee-green);
 }
 
 .incognitee-border-gradient {

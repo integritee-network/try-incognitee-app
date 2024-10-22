@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       INTEGRITEE_NETWORK: process.env.INTEGRITEE_NETWORK,
       SHARD: process.env.SHARD,
       SHIELDING_LIMIT: process.env.SHIELDING_LIMIT,
+      LIVE: process.env.LIVE,
     },
   },
   app: {

@@ -1,9 +1,24 @@
 <template>
-  <InfoBanner
+  <CampaignBanner
+    v-if="isLive"
     :onClick="openGuessTheNumberOverlay"
     :isMobile="isMobile"
     textMobile="Guess-The-Number Campaign."
     textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+  />
+
+  <InfoBanner
+    v-if="!isLive"
+    :isMobile="isMobile"
+    textMobile="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
+    textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
+  />
+
+  <InfoBanner
+    v-if="!isLive"
+    :isMobile="isMobile"
+    textMobile="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
+    textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
   />
 
   <div class="mt-4"></div>
@@ -1059,6 +1074,7 @@ import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
 import { useRuntimeConfig } from "#app";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
+import CampaignBanner from "~/components/ui/CampaignBanner.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1074,6 +1090,7 @@ const shieldingTarget = ref(ChainId.PaseoRelay);
 const shieldingLimit = ref(Infinity);
 const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
 const incogniteeShard = ref(null);
+const isLive = ref(true);
 
 const txStatus = ref("");
 const recipientAddress = ref("");
@@ -1092,22 +1109,6 @@ const shortenAddress = (address) => {
   if (!address) return "";
   return address.slice(0, 6) + "..." + address.slice(-6);
 };
-
-const isMobile = ref(false);
-
-// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
-const checkIfMobile = () => {
-  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
-};
-
-onMounted(() => {
-  checkIfMobile();
-  window.addEventListener("resize", checkIfMobile);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", checkIfMobile);
-});
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {
@@ -1486,6 +1487,8 @@ const copyOwnAddressToClipboard = () => {
 };
 
 onMounted(async () => {
+  checkIfMobile();
+  window.addEventListener("resize", checkIfMobile);
   loadEnv();
   incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
@@ -1523,6 +1526,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   eventBus.off("addressClicked", openChooseWalletOverlay);
+  window.removeEventListener("resize", checkIfMobile);
 });
 
 const dropSubscriptions = () => {
@@ -1607,7 +1611,7 @@ const loadEnv = () => {
   const shieldingLimitEnv = useRuntimeConfig().public.SHIELDING_LIMIT;
   const incogniteeSidechainEnv = useRuntimeConfig().public.INCOGNITEE_SIDECHAIN;
   const incogniteeShardEnv = useRuntimeConfig().public.SHARD;
-
+  const isLiveEnv = useRuntimeConfig().public.LIVE;
   // apply sane defaults and fallbacks
 
   incogniteeShard.value =
@@ -1624,6 +1628,7 @@ const loadEnv = () => {
   if (shieldingLimitEnv > 0) {
     shieldingLimit.value = Number(shieldingLimitEnv);
   }
+  isLive.value = toBoolean(isLiveEnv);
 
   console.log(
     "SHIELDING_TARGET: env:" +
@@ -1649,6 +1654,7 @@ const loadEnv = () => {
       ". using " +
       incogniteeShard.value,
   );
+  console.log("LIVE: env:" + isLiveEnv + ". using " + isLive.value);
 };
 
 const computedShieldingMax = computed(() => {
@@ -1660,6 +1666,14 @@ const computedShieldingMax = computed(() => {
       0.1,
   );
 });
+
+const toBoolean = (value: string | number | boolean): boolean => {
+  if (typeof value === "boolean") return value;
+  if (typeof value === "number") return value === 1;
+  if (typeof value === "string")
+    return value.toLowerCase() === "true" || value === "1";
+  return false;
+};
 
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {
@@ -1679,6 +1693,10 @@ const closePrivacyInfo = () => {
 
 const showNewWalletOverlay = ref(false);
 const openNewWalletOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   showNewWalletOverlay.value = true;
 };
 const closeNewWalletOverlay = () => {
@@ -1687,6 +1705,10 @@ const closeNewWalletOverlay = () => {
 
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   selectedExtensionAccount.value = null;
   isChoosingAccount.value = true;
   isUpdatingIncogniteeBalance.value = true;
@@ -1699,6 +1721,10 @@ const closeChooseWalletOverlay = () => {
 
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   shieldAmount.value = Math.floor(
     Math.min(shieldAmount.value, computedShieldingMax.value),
   );
@@ -1710,6 +1736,10 @@ const closeShieldOverlay = () => {
 
 const showFaucetOverlay = ref(false);
 const openFaucetOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   showFaucetOverlay.value = true;
 };
 const closeFaucetOverlay = () => {
@@ -1718,6 +1748,10 @@ const closeFaucetOverlay = () => {
 
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   unshieldAmount.value = Math.floor(
     Math.min(10, accountStore.getDecimalBalance(incogniteeSidechain.value)),
   );
@@ -1728,6 +1762,10 @@ const closeUnshieldOverlay = () => {
 };
 const showReceiveOverlay = ref(false);
 const openReceiveOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   showReceiveOverlay.value = true;
 };
 const closeReceiveOverlay = () => {
@@ -1735,6 +1773,10 @@ const closeReceiveOverlay = () => {
 };
 const showPrivateSendOverlay = ref(false);
 const openPrivateSendOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   console.debug(
     `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`,
   );
@@ -1753,6 +1795,10 @@ const closePrivateSendOverlay = () => {
 
 const showGuessTheNumberOverlay = ref(false);
 const openGuessTheNumberOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
   console.log(
     `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`,
   );
@@ -1784,6 +1830,12 @@ const closeStatusOverlay = () => {
   showUnshieldOverlay.value = false;
 };
 
+const isMobile = ref(false);
+
+// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
+const checkIfMobile = () => {
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+};
 const formatTimestamp = (timestamp: number | null) => {
   if (!timestamp) return "undefined";
   console.log("formatting epoch: " + timestamp);

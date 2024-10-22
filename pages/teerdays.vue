@@ -1519,18 +1519,6 @@ const txErrHandlerIntegritee = (err) => {
   /* Icon color */
 }
 
-.incognitee-bg {
-  background: linear-gradient(84.58deg, #24ad7c, #1845b9);
-}
-
-.incognitee-blue {
-  background: #1845b9;
-}
-
-.incognitee-green {
-  background: #24ad7c;
-}
-
 /* Hide the arrows for number input fields */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

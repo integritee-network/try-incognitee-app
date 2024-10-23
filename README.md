@@ -1,12 +1,37 @@
-# Nuxt 3 Minimal Starter
+# Incognitee App
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This repository contains the sources for the Incognitee app statically deployed on [try.incognitee.io](https://try.incognitee.io) for Testnets and [app.incognitee.io](https://app.incognitee.io) for production.
 
 ## Note
 
 The `@encointer/worker-api` uses the browser's built-in `webcrypto` api. This library is only available in secure
 secure contexts. Hence, in local development you must use `localhost`. `webcrypto` is undefined on `127.0.0.1` and
 `0.0.0.0`.
+
+## Configuration
+
+This dapp uses `.env` to configure deployment settings like default networks and endpoints.
+
+### local testing
+
+Create a `.env` file in the root folder and set your preferences
+
+```
+SHIELDING_TARGET=PaseoRelay
+INCOGNITEE_SIDECHAIN=IncogniteePaseoRelay
+INTEGRITEE_NETWORK=IntegriteePaseo
+SHARD=5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c
+SHIELDING_LIMIT=50
+LIVE=true
+```
+
+### try.incognitee.io
+
+For testnets, GH actions will automatically use the `.env.testnet` file to deploy the app.
+
+### app.incognitee.io
+
+For production, GH actions will automatically use the `.env.production` file to deploy the app.
 
 ## Setup
 

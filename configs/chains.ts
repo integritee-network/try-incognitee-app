@@ -54,6 +54,6 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
   },
   [ChainId.IncogniteeIntegriteeKusama]: {
     name: "Incognitee Integritee Kusama",
-    api: "wss://scv1.integritee-kusama.api.incognitee.io",
+    api: "wss://scv1.integritee-kusama.api.incognitee.io:443",
   },
 };

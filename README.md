@@ -12,12 +12,12 @@ secure contexts. Hence, in local development you must use `localhost`. `webcrypt
 
 This dapp uses `.env` to configure deployment settings like default networks and endpoints.
 
-* `SHIELDING_TARGET` The L1 chain whose native token shall be shielded to Incognitee
-* `INCOGNITEE_SIDECHAIN` The Incognitee sidechain where the native token shall be shielded to
-* `INTEGRITEE_NETWORK` The Integritee network where the Incognitee sidechain is anchored and TEERdays are collected
-* `SHARD` The Incognitee shard where the native token shall be shielded to
-* `SHIELDING_LIMIT` The maximum amount of native tokens that can be shielded
-* `LIVE` Whether any actions should be enabled or not
+- `SHIELDING_TARGET` The L1 chain whose native token shall be shielded to Incognitee
+- `INCOGNITEE_SIDECHAIN` The Incognitee sidechain where the native token shall be shielded to
+- `INTEGRITEE_NETWORK` The Integritee network where the Incognitee sidechain is anchored and TEERdays are collected
+- `SHARD` The Incognitee shard where the native token shall be shielded to
+- `SHIELDING_LIMIT` The maximum amount of native tokens that can be shielded
+- `LIVE` Whether any actions should be enabled or not
 
 please check [./configs/chains.ts](./configs/chains.ts) for the available options.
 

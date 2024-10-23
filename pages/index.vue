@@ -95,6 +95,27 @@
               </svg>
               <p class="text-xs">Faucet</p>
             </div>
+            <div
+              class="flex flex-col items-center text-center"
+              @click="openObtainTokenOverlay"
+              v-else
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6 mx-auto mb-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                />
+              </svg>
+              <p class="text-xs">Get {{ accountStore.getSymbol }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -411,6 +432,13 @@
       </a>
     </div>
   </OverlayDialog>
+
+  <ObtainTokenOverlay
+    :withdraw-to-address="accountStore.getAddress"
+    :token-symbol="accountStore.getSymbol"
+    :close="closeObtainTokenOverlay"
+    :show="showObtainTokenOverlay"
+  />
 
   <!-- Unshield -->
   <OverlayDialog
@@ -1016,6 +1044,7 @@ import {
   incogniteeShard,
   isLive,
 } from "@/lib/environmentConfig";
+import ObtainTokenOverlay from "~/components/ui/ObtainTokenOverlay.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1562,6 +1591,18 @@ const openFaucetOverlay = () => {
 };
 const closeFaucetOverlay = () => {
   showFaucetOverlay.value = false;
+};
+
+const showObtainTokenOverlay = ref(false);
+const openObtainTokenOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
+  showObtainTokenOverlay.value = true;
+};
+const closeObtainTokenOverlay = () => {
+  showObtainTokenOverlay.value = false;
 };
 
 const showUnshieldOverlay = ref(false);

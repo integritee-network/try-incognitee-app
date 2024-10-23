@@ -824,50 +824,63 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="
+        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > 1.0
+      "
+    >
+      <form class="" @submit.prevent="submitGuessForm">
+        <!-- Label for the input -->
+        <div class="flex justify-between mb-2">
+          <label for="guess" class="text-sm font-medium leading-6 text-white"
+            >Enter your guess</label
+          >
+        </div>
 
-    <form class="" @submit.prevent="submitGuessForm">
-      <!-- Label for the input -->
-      <div class="flex justify-between mb-2">
-        <label for="guess" class="text-sm font-medium leading-6 text-white"
-          >Enter your guess</label
-        >
-      </div>
+        <!-- Flex container for input and button -->
+        <div class="flex items-center space-x-4">
+          <!-- Guess Input Field -->
+          <div class="flex-grow relative">
+            <input
+              id="guess"
+              v-model="guess"
+              type="number"
+              step="1"
+              :min="0"
+              :max="10000"
+              required
+              class="w-full text-sm rounded-lg bg-cool-900 text-white placeholder-gray-500 border border-green-500"
+              style="border-color: #24ad7c"
+              placeholder="guess"
+            />
 
-      <!-- Flex container for input and button -->
-      <div class="flex items-center space-x-4">
-        <!-- Guess Input Field -->
-        <div class="flex-grow relative">
-          <input
-            id="guess"
-            v-model="guess"
-            type="number"
-            step="1"
-            :min="0"
-            :max="10000"
-            required
-            class="w-full text-sm rounded-lg bg-cool-900 text-white placeholder-gray-500 border border-green-500"
-            style="border-color: #24ad7c"
-            placeholder="guess"
-          />
+            <!-- Fee description below input, right-aligned -->
+            <div class="absolute right-0 -bottom-5">
+              <span class="text-xs text-gray-400"
+                >Fee: 1 PAS for Incognitee</span
+              >
+            </div>
+          </div>
 
-          <!-- Fee description below input, right-aligned -->
-          <div class="absolute right-0 -bottom-5">
-            <span class="text-xs text-gray-400">Fee: 1 PAS for Incognitee</span>
+          <!-- Submit Button -->
+          <div class="flex items-center justify-center">
+            <button
+              type="submit"
+              class="btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+              style="margin-left: auto; margin-right: auto"
+            >
+              Submit
+            </button>
           </div>
         </div>
-
-        <!-- Submit Button -->
-        <div class="flex items-center justify-center">
-          <button
-            type="submit"
-            class="btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-            style="margin-left: auto; margin-right: auto"
-          >
-            Submit
-          </button>
-        </div>
+      </form>
+    </div>
+    <div v-else>
+      <div class="text-sm text-red-400 text-left my-4">
+        You need at least 1.0 private PAS to participate in the game. Please
+        shield some first.
       </div>
-    </form>
+    </div>
   </OverlayDialog>
 
   <!-- Scan QR -->

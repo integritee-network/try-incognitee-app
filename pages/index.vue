@@ -1482,12 +1482,15 @@ const createTestingAccount = () => {
 };
 
 const computedShieldingMax = computed(() => {
-  return Math.min(
-    shieldingLimit.value -
-      accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
-    accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
-      accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
-      0.1,
+  return Math.max(
+    0,
+    Math.min(
+      shieldingLimit.value -
+        accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
+      accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
+        accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
+        0.1,
+    ),
   );
 });
 

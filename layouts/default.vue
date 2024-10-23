@@ -108,6 +108,7 @@
                     </nuxt-link>
                   </div>
                   <div
+                    v-if="accountStore.getSymbol === 'TEER'"
                     class="flex flex-col items-center justify-center text-center"
                   >
                     <nuxt-link

@@ -1266,6 +1266,10 @@ const submitGuess = () => {
   console.log("submit guess: ", guess.value);
   txStatus.value = "⌛ privately submitting your guess to incognitee";
   const account = accountStore.account;
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
     `sending guess ${guess.value} from ${account.address} privately to incognitee`,
   );
@@ -1278,7 +1282,7 @@ const submitGuess = () => {
       guess.value,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: nonce,
       },
     )
     .then((hash) => {

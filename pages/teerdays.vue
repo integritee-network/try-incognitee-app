@@ -10,249 +10,259 @@
         doesn't work."
   />
 
-  <div
-    v-if="accountStore.hasInjector"
-    ref="walletSection"
-    id="wallet"
-    class="py-12 sm:py-16"
-  >
-    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl lg:max-w-none">
-        <h1
-          class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
-        >
-          My Wallet
-        </h1>
+  <div class="py-24 sm:py-32 container">
+    <div
+      v-if="accountStore.hasInjector"
+      ref="walletSection"
+      id="wallet"
+      class="py-12 sm:py-16"
+    >
+      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:max-w-none">
+          <h1
+            class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
+          >
+            My Wallet
+          </h1>
 
-        <div class="mt-5">
-          <div v-if="isFetchingTeerBalance">
-            <div
-              class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8"
-            ></div>
-          </div>
-          <div v-else class="mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-              <div>
-                <div
-                  class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5"
-                >
-                  <dl class="flex flex-wrap">
-                    <div
-                      class="w-full flex flex-col md:flex-row justify-between px-6 pt-6"
-                    >
-                      <div class="flex-auto mb-4 md:mb-0">
-                        <dt
-                          class="text-sm font-semibold leading-6 text-gray-300"
-                        >
-                          Current bond
-                        </dt>
-                        <dd
-                          class="mt-1 text-base font-semibold leading-6 text-white"
-                        >
-                          {{ currentBond ? currentBond.getTeerBonded() : 0 }}
-                          TEER
-                        </dd>
-                      </div>
-
-                      <div class="flex-auto text-left md:text-right">
-                        <dt
-                          class="text-sm font-semibold leading-6 text-gray-300"
-                        >
-                          Accumulated TEERdays
-                        </dt>
-                        <dd
-                          class="mt-1 text-base font-semibold leading-6 text-white"
-                        >
-                          {{ currentBond ? currentBond.getTeerDays() : 0 }}
-                          TEERdays
-                        </dd>
-                      </div>
-                    </div>
-
-                    <div
-                      class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6"
-                    >
-                      <dt class="text-sm font-semibold leading-6 text-gray-300">
-                        Transferrable
-                      </dt>
-                      <dd class="text-sm leading-6 text-gray-400">
-                        <time datetime="2023-01-31"
-                          >{{ transferableBalance }} TEER</time
-                        >
-                      </dd>
-                    </div>
-
-                    <div
-                      v-if="
-                        accountStore.getDecimalBalanceFrozen(
-                          integriteeNetwork,
-                        ) > 0
-                      "
-                      class="flex w-full flex-none gap-x-4 px-6"
-                    >
-                      <dt class="text-sm font-semibold leading-6 text-gray-300">
-                        Locked
-                      </dt>
-                      <dd class="text-sm leading-6 text-gray-400">
-                        <time datetime="2023-01-31"
-                          >{{
-                            accountStore.formatBalanceFrozen(integriteeNetwork)
-                          }}
-                          TEER</time
-                        >
-                      </dd>
-                    </div>
-
-                    <div
-                      v-if="
-                        accountStore.getDecimalBalanceReserved(
-                          integriteeNetwork,
-                        ) > 0
-                      "
-                      class="flex w-full flex-none gap-x-4 px-6"
-                    >
-                      <dt class="text-sm font-semibold leading-6 text-gray-300">
-                        Reserved
-                      </dt>
-                      <dd class="text-sm leading-6 text-gray-400">
-                        <time datetime="2023-01-31"
-                          >{{
-                            accountStore.formatBalanceReserved(
-                              integriteeNetwork,
-                            )
-                          }}
-                          TEER</time
-                        >
-                      </dd>
-                    </div>
-
-                    <div
-                      v-if="pendingUnlock"
-                      class="w-full flex justify-between flex-col md:flex-row px-6 pt-6"
-                    >
-                      <div class="flex-auto mb-4 md:mb-0">
-                        <div class="flex w-full flex-none gap-x-4">
+          <div class="mt-5">
+            <div v-if="isFetchingTeerBalance">
+              <div
+                class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8"
+              ></div>
+            </div>
+            <div v-else class="mx-auto">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                  <div
+                    class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5"
+                  >
+                    <dl class="flex flex-wrap">
+                      <div
+                        class="w-full flex flex-col md:flex-row justify-between px-6 pt-6"
+                      >
+                        <div class="flex-auto mb-4 md:mb-0">
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
-                            Pending unlock
+                            Current bond
                           </dt>
-                          <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31"
-                              >{{
-                                pendingUnlock
-                                  ? pendingUnlock.getTeerToUnlock()
-                                  : 0
-                              }}
-                              TEER</time
-                            >
+                          <dd
+                            class="mt-1 text-base font-semibold leading-6 text-white"
+                          >
+                            {{ currentBond ? currentBond.getTeerBonded() : 0 }}
+                            TEER
                           </dd>
                         </div>
 
-                        <div class="flex w-full flex-none gap-x-4">
+                        <div class="flex-auto text-left md:text-right">
                           <dt
                             class="text-sm font-semibold leading-6 text-gray-300"
                           >
-                            Unlocked on
+                            Accumulated TEERdays
                           </dt>
-                          <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31">{{
-                              pendingUnlock?.getDueDateStr()
-                            }}</time>
+                          <dd
+                            class="mt-1 text-base font-semibold leading-6 text-white"
+                          >
+                            {{ currentBond ? currentBond.getTeerDays() : 0 }}
+                            TEERdays
                           </dd>
                         </div>
                       </div>
 
                       <div
-                        v-if="pendingUnlock?.canWithdraw()"
-                        class="flex-auto text-left md:text-right gap-x-4"
+                        class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6"
                       >
-                        <button
-                          @click="withdrawUnbonded"
-                          class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient"
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
                         >
-                          Withdraw!
-                        </button>
+                          Transferrable
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{ transferableBalance }} TEER</time
+                          >
+                        </dd>
                       </div>
-                    </div>
-                  </dl>
-                </div>
-              </div>
 
-              <div>
+                      <div
+                        v-if="
+                          accountStore.getDecimalBalanceFrozen(
+                            integriteeNetwork,
+                          ) > 0
+                        "
+                        class="flex w-full flex-none gap-x-4 px-6"
+                      >
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
+                        >
+                          Locked
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{
+                              accountStore.formatBalanceFrozen(
+                                integriteeNetwork,
+                              )
+                            }}
+                            TEER</time
+                          >
+                        </dd>
+                      </div>
+
+                      <div
+                        v-if="
+                          accountStore.getDecimalBalanceReserved(
+                            integriteeNetwork,
+                          ) > 0
+                        "
+                        class="flex w-full flex-none gap-x-4 px-6"
+                      >
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
+                        >
+                          Reserved
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{
+                              accountStore.formatBalanceReserved(
+                                integriteeNetwork,
+                              )
+                            }}
+                            TEER</time
+                          >
+                        </dd>
+                      </div>
+
+                      <div
+                        v-if="pendingUnlock"
+                        class="w-full flex justify-between flex-col md:flex-row px-6 pt-6"
+                      >
+                        <div class="flex-auto mb-4 md:mb-0">
+                          <div class="flex w-full flex-none gap-x-4">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
+                              Pending unlock
+                            </dt>
+                            <dd class="text-sm leading-6 text-gray-400">
+                              <time datetime="2023-01-31"
+                                >{{
+                                  pendingUnlock
+                                    ? pendingUnlock.getTeerToUnlock()
+                                    : 0
+                                }}
+                                TEER</time
+                              >
+                            </dd>
+                          </div>
+
+                          <div class="flex w-full flex-none gap-x-4">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
+                              Unlocked on
+                            </dt>
+                            <dd class="text-sm leading-6 text-gray-400">
+                              <time datetime="2023-01-31">{{
+                                pendingUnlock?.getDueDateStr()
+                              }}</time>
+                            </dd>
+                          </div>
+                        </div>
+
+                        <div
+                          v-if="pendingUnlock?.canWithdraw()"
+                          class="flex-auto text-left md:text-right gap-x-4"
+                        >
+                          <button
+                            @click="withdrawUnbonded"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient"
+                          >
+                            Withdraw!
+                          </button>
+                        </div>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+
                 <div>
-                  <div class="text-sm font-medium leading-6 text-gray-300">
-                    Bond TEER to accumulate TEERdays
-                  </div>
-                  <div
-                    v-if="transferableBalance < 0.0001"
-                    class="text-sm text-red-500"
-                  >
-                    Not enough transferable TEER.
-                  </div>
-                  <div v-else-if="pendingUnlock" class="text-sm text-red-500">
-                    Can't bond more during unbonding period
-                  </div>
-                  <div v-else>
-                    <form @submit.prevent="bondAmount" class="space-y-2">
-                      <div class="flex flex-col sm:flex-row sm:space-x-2">
-                        <input
-                          type="number"
-                          v-model="amountToBond"
-                          placeholder="Enter amount to bond"
-                          step="0.1"
-                          :min="0.1"
-                          :max="transferableBalance - 0.1"
-                          required
-                          class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                        />
-                        <button
-                          type="submit"
-                          class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
-                        >
-                          Bond!
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-
-                <div class="form-container mt-8" v-if="currentBond">
-                  <div class="text-sm font-medium leading-6 text-gray-300">
-                    Unbond TEER
-                  </div>
-
-                  <div v-if="pendingUnlock" class="text-sm text-red-500">
-                    Not possible until pending unlock expired and withdrawn.
-                  </div>
-
-                  <div v-else class="space-y-2">
-                    <form @submit.prevent="unbondAmount" class="space-y-2">
-                      <div class="flex flex-col sm:flex-row sm:space-x-2">
-                        <input
-                          type="number"
-                          v-model="amountToUnbond"
-                          placeholder="Enter amount to unbond"
-                          step="0.1"
-                          :min="0.1"
-                          :max="currentBond.teerBonded"
-                          required
-                          class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                        />
-                        <button
-                          type="submit"
-                          class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
-                        >
-                          Unbond!
-                        </button>
-                      </div>
-                    </form>
-                    <p
-                      class="mt-2 text-xs text-gray-500"
-                      id="email-description"
+                  <div>
+                    <div class="text-sm font-medium leading-6 text-gray-300">
+                      Bond TEER to accumulate TEERdays
+                    </div>
+                    <div
+                      v-if="transferableBalance < 0.0001"
+                      class="text-sm text-red-500"
                     >
-                      Unbonded TEER will be locked for 7 days.
-                    </p>
+                      Not enough transferable TEER.
+                    </div>
+                    <div v-else-if="pendingUnlock" class="text-sm text-red-500">
+                      Can't bond more during unbonding period
+                    </div>
+                    <div v-else>
+                      <form @submit.prevent="bondAmount" class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:space-x-2">
+                          <input
+                            type="number"
+                            v-model="amountToBond"
+                            placeholder="Enter amount to bond"
+                            step="0.1"
+                            :min="0.1"
+                            :max="transferableBalance - 0.1"
+                            required
+                            class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                          />
+                          <button
+                            type="submit"
+                            class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                          >
+                            Bond!
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="form-container mt-8" v-if="currentBond">
+                    <div class="text-sm font-medium leading-6 text-gray-300">
+                      Unbond TEER
+                    </div>
+
+                    <div v-if="pendingUnlock" class="text-sm text-red-500">
+                      Not possible until pending unlock expired and withdrawn.
+                    </div>
+
+                    <div v-else class="space-y-2">
+                      <form @submit.prevent="unbondAmount" class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:space-x-2">
+                          <input
+                            type="number"
+                            v-model="amountToUnbond"
+                            placeholder="Enter amount to unbond"
+                            step="0.1"
+                            :min="0.1"
+                            :max="currentBond.teerBonded"
+                            required
+                            class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                          />
+                          <button
+                            type="submit"
+                            class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                          >
+                            Unbond!
+                          </button>
+                        </div>
+                      </form>
+                      <p
+                        class="mt-2 text-xs text-gray-500"
+                        id="email-description"
+                      >
+                        Unbonded TEER will be locked for 7 days.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -261,9 +271,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="py-24 sm:py-32 container">
     <div
       class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"

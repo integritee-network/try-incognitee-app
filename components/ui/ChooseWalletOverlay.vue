@@ -65,6 +65,7 @@
           placeholder="account.address"
           class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
         >
+          <option disabled value="">choose...</option>
           <option
             v-for="account in extensionAccounts"
             :key="account.address"
@@ -74,7 +75,10 @@
           </option>
         </select>
       </div>
-      <div v-if="accountStore.hasInjector" class="mt-10">
+      <div
+        v-if="accountStore.hasInjector && showTrustedGetterHint"
+        class="mt-10"
+      >
         <p>
           please allow this app to read your balance by signing the upcoming
           request in your extension
@@ -96,7 +100,7 @@ import { defineProps, computed, ref, watch } from "vue";
 import { useAccount } from "@/store/account.ts";
 
 const accountStore = useAccount();
-const selectedExtensionAccount = ref(null);
+const selectedExtensionAccount = ref("");
 
 const props = defineProps({
   createTestingAccount: {
@@ -114,6 +118,10 @@ const props = defineProps({
   onExtensionAccountChange: {
     type: Function,
     required: true,
+  },
+  showTrustedGetterHint: {
+    type: Boolean,
+    required: false,
   },
 });
 const hasCreateTestingAccountFn = computed(

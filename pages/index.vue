@@ -106,7 +106,8 @@
           </h3>
           <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
           <div v-if="disableGetter">
-            getter disabled. please reconnect your account
+            getter disabled. please reconnect your account and sign the getter
+            request in your extension
           </div>
           <div class="text-4xl font-semibold" v-else>
             {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
@@ -951,6 +952,7 @@
     :close="closeChooseWalletOverlay"
     :createTestingAccount="createTestingAccount"
     :onExtensionAccountChange="onExtensionAccountChange"
+    :showTrustedGetterHint="true"
   />
 
   <StatusOverlay

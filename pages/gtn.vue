@@ -8,20 +8,20 @@
           <p
             class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            Play and Earn!​
+            Play and Earn!
           </p>
           <p class="mt-6 text-gray-300">
-            Join our new Incognitee based Guess the number giveaway contest and
+            Join our new Incognitee-based Guess-The-Number giveaway contest and
             get the chance to win the weekly price. Are you able to guess the
-            next randomly chosen number?​
+            next randomly chosen number?
           </p>
         </div>
         <div class="mt-10 flex">
-          <a href="https://app.incognitee.io" target="_blank">
+          <a href="/" target="_blank">
             <button
               class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white mr-5"
             >
-              Start Guessing​
+              Start Guessing
             </button>
           </a>
 
@@ -29,7 +29,7 @@
             <button
               class="incognitee-blue ring-1 ring-inset ring-incognitee-green rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-incognitee-green"
             >
-              What is Incognitee?​
+              What is Incognitee?
             </button>
           </a>
         </div>
@@ -38,7 +38,7 @@
         ></dl>
 
         <p class="text-xl font-bold tracking-tight text-white sm:text-xl">
-          Current active contest period​
+          Current active contest period
         </p>
         <!-- Countdown Timer -->
         <div
@@ -88,7 +88,7 @@
         <p
           class="text-xl font-bold tracking-tight text-white sm:text-xl text-center mb-5"
         >
-          Weekly prices:​
+          Weekly Prize
         </p>
         <div class="mx-auto max-w-2xl">
           <dl
@@ -117,11 +117,12 @@
               Incognitee Guess the Number Intro
             </h1>
             <p class="mt-4 text-gray-300">
-              Guess the Number is the first productive deployment of core
-              Incognitee functionalities on the Integritee Network. You can now
-              either start transferring TEER on the Integritee Network
-              privately, or you can participate in the Guess the Number giveaway
-              contest and earn one of the weekly prices.
+              Guess the Number is a playful way for you to explore Incognitee
+              and its capabilities with our beta-deployment on the productive
+              Integritee Network using real TEER tokens. You can now either
+              start transferring TEER privately, or you can participate in the
+              Guess the Number giveaway contest and earn one of the weekly
+              prices while learning how our product works.
             </p>
           </div>
         </div>
@@ -138,21 +139,19 @@
               What does it have to do with Incognitee?
             </h1>
             <div class="mt-4 text-gray-300">
+              <p>
+                The Guess the Number contest includes some core functionalities
+                that we want to first test on our own Integritee Network before
+                deploying Incognitee sidechains for other tokens like DOT, KSM
+                or stablecoins.
+              </p>
+              <br />
+              Restrictions while in beta:
               <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
+                <li>Limited shielding amounts from L1 to L2</li>
                 <li>
-                  The Guess the Number contest includes some core
-                  functionalities that we want to first test on our own
-                  Integritee Network before deploying it to Kusama or Polkadot.
-                </li>
-                <br />
-                <li>
-                  Features that are included:
-                  <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
-                    <li>Limited shielding from L1 to L2</li>
-                    <li>Private number guessing and private storage</li>
-                    <li>Stable operations of Infra</li>
-                    <li>Maintenance mode</li>
-                  </ul>
+                  sudo access for Integritee team for maintenance and
+                  emergencies
                 </li>
               </ul>
             </div>
@@ -168,7 +167,7 @@
             <h1
               class="title text-3xl font-bold tracking-tight text-white sm:text-4xl text-left"
             >
-              How to participate?​​
+              How to participate
             </h1>
             <p class="mt-6 text-gray-300">
               1. First, you need to possess some TEER. Grab them at one of the
@@ -189,7 +188,9 @@
                 href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
                 >Basilisk</a
               >​<br />
-              2. Go to the Incognitee Wallet​ ​<br />
+              2. Go to the
+              <a class="text-incognitee-green" href="/">Incognitee Wallet</a
+              ><br />
               3. Shield some TEER to Incognitee L2​ ​​<br />
               4. Start entering your guessing numbers
             </p>
@@ -209,17 +210,19 @@
             </h1>
             <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
               <li>
-                The contest runs on a weekly basis and always starts on Monday
-                at 2 pm CET​​
+                The contest runs on a weekly basis and always starts and ends on
+                Monday at 0:00am GMT. It doesn't matter when during a round you
+                place your guess.
               </li>
               <li>
-                A random number between 1 and 10’000 will be generated by our
-                randomness oracle which will be the reference number​​
+                A random number between 0 and 10’000 will be generated by our
+                confidential randomness oracle at the start of each round. This
+                will be the lucky number you should try to guess.
               </li>
-              <li>You can enter up to 10 numbers per week​</li>
+              <li>You can enter up to 10 numbers per week</li>
               <li>
-                The one who enters a number that is the closest to the randomly
-                chosen one, will win​
+                Whoever submits the guess closest to the randomly chosen number
+                will win the prize.
               </li>
               <li>
                 If multiple participants are guessing the same number and win,
@@ -432,7 +435,7 @@
                 Jobs
               </NuxtLink>
               <NuxtLink
-                to="/about#roadmap"
+                to="https://integritee.network/about#roadmap"
                 class="footer__column-link text-link"
               >
                 Roadmap
@@ -457,7 +460,9 @@
           >©{{ new Date().getFullYear() }} Integritee, Inc.</span
         >
         <span>
-          <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
+          <NuxtLink
+            to="https://integritee.network/privacy-policy"
+            class="blue paragraph_medium"
             >Imprint and Privacy Policy</NuxtLink
           >
         </span>
@@ -466,7 +471,7 @@
   </footer>
 </template>
 <script setup lang="ts">
-import LogoIntegritee from "~/components/Logo/integritee-logo.vue";
+import LogoIntegritee from "@/components/Logo/integritee-logo.vue";
 import Socials from "@/components/Socials/index.vue";
 import {
   BASILISK_LINK,
@@ -510,11 +515,10 @@ const startCountdown = () => {
   const getNextMonday = () => {
     const now = new Date();
 
-    // Set the time to Monday at 14:00 CET
+    // Set the time to Monday at 00:00 GMT
     const nextMonday = new Date();
     nextMonday.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7)); // Find the next Monday
-    nextMonday.setHours(14, 0, 0, 0); // Set time to 14:00
-
+    nextMonday.setUTCHours(0, 0, 0, 0);
     return nextMonday;
   };
 

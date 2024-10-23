@@ -18,13 +18,24 @@
               d="M21 12.75H3M21 9.75h-4.5M3 12.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v5.25m-18 0h18m-18 0V16.5A2.25 2.25 0 0 0 5.25 18.75h13.5A2.25 2.25 0 0 0 21 16.5v-3.75"
             />
           </svg>
-          <p class="address cursor-pointer" @click="emitAddressClicked">
+          <div class="address cursor-pointer" @click="emitAddressClicked">
             <!-- Full address on larger screens and short address on mobile -->
-            <span class="hidden md:inline">{{ accountStore.getAddress }}</span>
-            <span class="inline md:hidden">{{
-              accountStore.getShortAddress
-            }}</span>
-          </p>
+            <div v-if="accountStore.getAddress === 'none'">
+              <button
+                class="mr-5 incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+              >
+                Connect Wallet
+              </button>
+            </div>
+            <div v-else>
+              <span class="hidden md:inline">{{
+                accountStore.getAddress
+              }}</span>
+              <span class="inline md:hidden">{{
+                accountStore.getShortAddress
+              }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -126,6 +137,7 @@ import Incognitee from "@/assets/img/incognitee-mask.svg";
 import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 import { useAccount } from "@/store/account.ts";
 import { eventBus } from "@/helpers/eventBus";
+import { connectExtension } from "~/lib/signerExtensionUtils";
 const accountStore = useAccount();
 const emitAddressClicked = () => {
   eventBus.emit("addressClicked");

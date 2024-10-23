@@ -43,7 +43,7 @@
             <h3 class="text-sm mb-3">Public Balance</h3>
             <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
             <div class="text-4xl font-semibold" v-else>
-              {{ accountStore.formatBalance(shieldingTarget) }}
+              {{ accountStore.formatBalanceFree(shieldingTarget) }}
               <span class="text-sm font-semibold">{{
                 accountStore.getSymbol
               }}</span>
@@ -109,7 +109,7 @@
             getter disabled. please reconnect your account
           </div>
           <div class="text-4xl font-semibold" v-else>
-            {{ accountStore.formatBalance(incogniteeSidechain) }}
+            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
             <span class="text-sm font-semibold">{{
               accountStore.getSymbol
             }}</span>
@@ -513,7 +513,7 @@
 
         <span class="text-xs text-gray-400"
           >Available private balance:
-          {{ accountStore.formatBalance(incogniteeSidechain) }}</span
+          {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
         >
       </div>
       <input
@@ -523,7 +523,7 @@
         step="0.1"
         :min="1.1"
         :max="
-          accountStore.getDecimalBalance(incogniteeSidechain) -
+          accountStore.getDecimalBalanceFree(incogniteeSidechain) -
           accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
           0.1
         "
@@ -667,7 +667,7 @@
 
           <span class="text-xs text-gray-400"
             >Available private balance:
-            {{ accountStore.formatBalance(incogniteeSidechain) }}</span
+            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
           >
         </div>
 
@@ -680,7 +680,7 @@
             step="0.01"
             :min="0.1"
             :max="
-              accountStore.getDecimalBalance(incogniteeSidechain) -
+              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
               accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
               0.1
             "
@@ -950,6 +950,7 @@
     :show="showChooseWalletOverlay"
     :close="closeChooseWalletOverlay"
     :createTestingAccount="createTestingAccount"
+    :onExtensionAccountChange="onExtensionAccountChange"
   />
 
   <StatusOverlay
@@ -1018,24 +1019,16 @@ const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
 const scanResult = ref("No QR code data yet");
-const selectedExtensionAccount = ref(null);
+
 const faucetUrl = ref(null);
 
-// Funktion, um die Adressen zu kürzen
-const shortenAddress = (address) => {
-  if (!address) return "";
-  return address.slice(0, 6) + "..." + address.slice(-6);
+const onExtensionAccountChange = async (selectedAddress) => {
+  dropSubscriptions();
+  console.log("user selected extension account:", selectedAddress);
+  accountStore.setAccount(selectedAddress.toString());
+  accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
+  isUpdatingIncogniteeBalance.value = false;
 };
-
-watch(selectedExtensionAccount, async (selectedAddress) => {
-  if (selectedAddress) {
-    console.log("user selected extension account:", selectedAddress);
-    dropSubscriptions();
-    accountStore.setAccount(selectedAddress.toString());
-    accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
-    isUpdatingIncogniteeBalance.value = false;
-  }
-});
 
 let api: ApiPromise | null = null;
 
@@ -1146,7 +1139,6 @@ const shield = async () => {
   isSignerBusy.value = true;
   txStatus.value = "⌛ awaiting signature and connection";
   if (incogniteeStore.vault && api?.isReady) {
-    const balance = accountStore.balance[shieldingTarget.value];
     const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
 
@@ -1306,7 +1298,7 @@ const fetchIncogniteeBalance = async () => {
       console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
-      accountStore.setBalance(
+      accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
         incogniteeSidechain.value,
       );
@@ -1379,7 +1371,7 @@ watch(accountStore, async () => {
     accountStore.getAddress,
     ({ data: { free: currentFree } }) => {
       console.log("shielding target balance:" + currentFree);
-      accountStore.setBalance(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
       isFetchingShieldingTargetBalance.value = false;
     },
   );
@@ -1477,8 +1469,8 @@ const createTestingAccount = () => {
 const computedShieldingMax = computed(() => {
   return Math.min(
     shieldingLimit.value -
-      accountStore.getDecimalBalance(incogniteeSidechain.value),
-    accountStore.getDecimalBalance(shieldingTarget.value) -
+      accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
+    accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
       accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
       0.1,
   );
@@ -1518,7 +1510,6 @@ const openChooseWalletOverlay = () => {
     console.error("network not live");
     return;
   }
-  selectedExtensionAccount.value = null;
   isChoosingAccount.value = true;
   isUpdatingIncogniteeBalance.value = true;
   showChooseWalletOverlay.value = true;
@@ -1562,7 +1553,7 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalance(incogniteeSidechain.value)),
+    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value)),
   );
   showUnshieldOverlay.value = true;
 };
@@ -1592,7 +1583,7 @@ const openPrivateSendOverlay = () => {
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,
-      accountStore.getDecimalBalance(incogniteeSidechain.value) - 0.1,
+      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1,
     ),
   );
   showPrivateSendOverlay.value = true;

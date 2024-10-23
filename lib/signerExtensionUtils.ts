@@ -8,7 +8,7 @@ import {
 import { ref } from "vue";
 
 export const extensionAccounts = ref([]);
-
+export const selectedExtensionAccount = ref(null);
 export const connectExtension = () => {
   return web3Enable("Integritee Dapp")
     .then((extensions) => {

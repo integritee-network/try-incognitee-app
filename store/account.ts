@@ -11,8 +11,12 @@ export const useAccount = defineStore("account", {
     account: <AddressOrPair | null>null,
     // optional signer extension
     injector: <InjectedExtension | null>null,
-    // balance per chain
-    balance: <Record<ChainId, BigInt>>{},
+    // free balance per chain
+    balanceFree: <Record<ChainId, BigInt>>{},
+    // reserved balance per chain
+    balanceReserved: <Record<ChainId, BigInt>>{},
+    // frozen balance per chain
+    balanceFrozen: <Record<ChainId, BigInt>>{},
     // nonce per chain
     nonce: <Record<ChainId, number>>{},
     // decimals (we assume it's the same for all used chains as it's the token we're shielding
@@ -41,24 +45,59 @@ export const useAccount = defineStore("account", {
     hasInjector({ injector }): boolean {
       return injector != null;
     },
-    formatBalance({ balance, decimals }) {
+    formatBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): string => {
-        if (!balance[chain]) return "0.000";
+        if (!balanceFree[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
-          balance[chain],
+          balanceFree[chain],
           10 ** decimals,
         );
-        return balanceValue.toLocaleString("de-CH", {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 3,
-          thousandsSeparator: "'",
-        });
+        return formatDecimalBalance(balanceValue);
       };
     },
-    getDecimalBalance({ balance, decimals }) {
+    formatBalanceReserved({ balanceReserved, decimals }) {
+      return (chain: ChainId): string => {
+        if (!balanceReserved[chain]) return "0.000";
+        const balanceValue: number = divideBigIntToFloat(
+          balanceReserved[chain],
+          10 ** decimals,
+        );
+        return formatDecimalBalance(balanceValue);
+      };
+    },
+    formatBalanceFrozen({ balanceFrozen, decimals }) {
+      return (chain: ChainId): string => {
+        if (!balanceFrozen[chain]) return "0.000";
+        const balanceValue: number = divideBigIntToFloat(
+          balanceFrozen[chain],
+          10 ** decimals,
+        );
+        return formatDecimalBalance(balanceValue);
+      };
+    },
+    getDecimalBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): number => {
-        if (!balance[chain]) return 0;
-        return divideBigIntToFloat(balance[chain], 10 ** decimals);
+        if (!balanceFree[chain]) return 0;
+        return divideBigIntToFloat(balanceFree[chain], 10 ** decimals);
+      };
+    },
+    getDecimalBalanceReserved({ balanceReserved, decimals }) {
+      return (chain: ChainId): number => {
+        if (!balanceReserved[chain]) return 0;
+        return divideBigIntToFloat(balanceReserved[chain], 10 ** decimals);
+      };
+    },
+    getDecimalBalanceFrozen({ balanceFrozen, decimals }) {
+      return (chain: ChainId): number => {
+        if (!balanceFrozen[chain]) return 0;
+        return divideBigIntToFloat(balanceFrozen[chain], 10 ** decimals);
+      };
+    },
+    getDecimalBalanceTransferable({ balanceFree, balanceFrozen, decimals }) {
+      return (chain: ChainId): number => {
+        const frozen = balanceFrozen[chain] ? balanceFrozen[chain] : BigInt(0);
+        const free = balanceFree[chain] ? balanceFree[chain] : BigInt(0);
+        return divideBigIntToFloat(BigInt(free - frozen), 10 ** decimals);
       };
     },
     getDecimalExistentialDeposit({ existentialDeposit, decimals }) {
@@ -75,8 +114,14 @@ export const useAccount = defineStore("account", {
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
     },
-    setBalance(balance: BigInt, chain: ChainId) {
-      this.balance[chain] = balance;
+    setBalanceFree(balance: BigInt, chain: ChainId) {
+      this.balanceFree[chain] = balance;
+    },
+    setBalanceReserved(balance: BigInt, chain: ChainId) {
+      this.balanceReserved[chain] = balance;
+    },
+    setBalanceFrozen(balance: BigInt, chain: ChainId) {
+      this.balanceFrozen[chain] = balance;
     },
     setNonce(nonce: number, chain: ChainId) {
       //console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
@@ -105,4 +150,12 @@ const divideBigIntToFloat = (dividend: BigInt, divisor: number): number => {
   const integerPart = Number(dividend / BigInt(divisor));
   const fractionalPart = Number(dividend % BigInt(divisor)) / divisor;
   return integerPart + fractionalPart;
+};
+
+export const formatDecimalBalance = (balance: number): string => {
+  return balance.toLocaleString("de-CH", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 3,
+    thousandsSeparator: "'",
+  });
 };

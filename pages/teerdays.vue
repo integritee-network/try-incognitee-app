@@ -1,22 +1,276 @@
 <template>
-  <div class="text-center mb-17 sm:mb-20 lg:mb-20 py-4 lg:px-4">
-    <div
-      class="p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
-      role="alert"
-    >
-      <span
-        class="flex rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Note</span
-      >
-      <span class="text-xs mr-2 text-left flex-auto"
-        >You need some signer extension to use this page. Please make sure to
+  <InfoBanner
+    v-if="!accountStore.hasInjector"
+    :isMobile="isMobile"
+    textMobile="You need some signer extension to use this page. Please make sure to
         enable your extension and reload the page in case the connect button
-        doesn't work.</span
-      >
-    </div>
-  </div>
+        doesn't work."
+    textDesktop="You need some signer extension to use this page. Please make sure to
+        enable your extension and reload the page in case the connect button
+        doesn't work."
+  />
 
   <div class="py-24 sm:py-32 container">
+    <div
+      v-if="accountStore.hasInjector"
+      ref="walletSection"
+      id="wallet"
+      class="py-12 sm:py-16"
+    >
+      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:max-w-none">
+          <h1
+            class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
+          >
+            My Wallet
+          </h1>
+
+          <div class="mt-5">
+            <div v-if="isFetchingTeerBalance">
+              <div
+                class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8"
+              ></div>
+            </div>
+            <div v-else class="mx-auto">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div>
+                  <div
+                    class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5"
+                  >
+                    <dl class="flex flex-wrap">
+                      <div
+                        class="w-full flex flex-col md:flex-row justify-between px-6 pt-6"
+                      >
+                        <div class="flex-auto mb-4 md:mb-0">
+                          <dt
+                            class="text-sm font-semibold leading-6 text-gray-300"
+                          >
+                            Current bond
+                          </dt>
+                          <dd
+                            class="mt-1 text-base font-semibold leading-6 text-white"
+                          >
+                            {{ currentBond ? currentBond.getTeerBonded() : 0 }}
+                            TEER
+                          </dd>
+                        </div>
+
+                        <div class="flex-auto text-left md:text-right">
+                          <dt
+                            class="text-sm font-semibold leading-6 text-gray-300"
+                          >
+                            Accumulated TEERdays
+                          </dt>
+                          <dd
+                            class="mt-1 text-base font-semibold leading-6 text-white"
+                          >
+                            {{ currentBond ? currentBond.getTeerDays() : 0 }}
+                            TEERdays
+                          </dd>
+                        </div>
+                      </div>
+
+                      <div
+                        class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6"
+                      >
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
+                        >
+                          Transferrable
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{ transferableBalance }} TEER</time
+                          >
+                        </dd>
+                      </div>
+
+                      <div
+                        v-if="
+                          accountStore.getDecimalBalanceFrozen(
+                            integriteeNetwork,
+                          ) > 0
+                        "
+                        class="flex w-full flex-none gap-x-4 px-6"
+                      >
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
+                        >
+                          Locked
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{
+                              accountStore.formatBalanceFrozen(
+                                integriteeNetwork,
+                              )
+                            }}
+                            TEER</time
+                          >
+                        </dd>
+                      </div>
+
+                      <div
+                        v-if="
+                          accountStore.getDecimalBalanceReserved(
+                            integriteeNetwork,
+                          ) > 0
+                        "
+                        class="flex w-full flex-none gap-x-4 px-6"
+                      >
+                        <dt
+                          class="text-sm font-semibold leading-6 text-gray-300"
+                        >
+                          Reserved
+                        </dt>
+                        <dd class="text-sm leading-6 text-gray-400">
+                          <time datetime="2023-01-31"
+                            >{{
+                              accountStore.formatBalanceReserved(
+                                integriteeNetwork,
+                              )
+                            }}
+                            TEER</time
+                          >
+                        </dd>
+                      </div>
+
+                      <div
+                        v-if="pendingUnlock"
+                        class="w-full flex justify-between flex-col md:flex-row px-6 pt-6"
+                      >
+                        <div class="flex-auto mb-4 md:mb-0">
+                          <div class="flex w-full flex-none gap-x-4">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
+                              Pending unlock
+                            </dt>
+                            <dd class="text-sm leading-6 text-gray-400">
+                              <time datetime="2023-01-31"
+                                >{{
+                                  pendingUnlock
+                                    ? pendingUnlock.getTeerToUnlock()
+                                    : 0
+                                }}
+                                TEER</time
+                              >
+                            </dd>
+                          </div>
+
+                          <div class="flex w-full flex-none gap-x-4">
+                            <dt
+                              class="text-sm font-semibold leading-6 text-gray-300"
+                            >
+                              Unlocked on
+                            </dt>
+                            <dd class="text-sm leading-6 text-gray-400">
+                              <time datetime="2023-01-31">{{
+                                pendingUnlock?.getDueDateStr()
+                              }}</time>
+                            </dd>
+                          </div>
+                        </div>
+
+                        <div
+                          v-if="pendingUnlock?.canWithdraw()"
+                          class="flex-auto text-left md:text-right gap-x-4"
+                        >
+                          <button
+                            @click="withdrawUnbonded"
+                            class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient"
+                          >
+                            Withdraw!
+                          </button>
+                        </div>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div>
+                  <div>
+                    <div class="text-sm font-medium leading-6 text-gray-300">
+                      Bond TEER to accumulate TEERdays
+                    </div>
+                    <div
+                      v-if="transferableBalance < 0.0001"
+                      class="text-sm text-red-500"
+                    >
+                      Not enough transferable TEER.
+                    </div>
+                    <div v-else-if="pendingUnlock" class="text-sm text-red-500">
+                      Can't bond more during unbonding period
+                    </div>
+                    <div v-else>
+                      <form @submit.prevent="bondAmount" class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:space-x-2">
+                          <input
+                            type="number"
+                            v-model="amountToBond"
+                            placeholder="Enter amount to bond"
+                            step="0.1"
+                            :min="0.1"
+                            :max="transferableBalance - 0.1"
+                            required
+                            class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                          />
+                          <button
+                            type="submit"
+                            class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                          >
+                            Bond!
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  <div class="form-container mt-8" v-if="currentBond">
+                    <div class="text-sm font-medium leading-6 text-gray-300">
+                      Unbond TEER
+                    </div>
+
+                    <div v-if="pendingUnlock" class="text-sm text-red-500">
+                      Not possible until pending unlock expired and withdrawn.
+                    </div>
+
+                    <div v-else class="space-y-2">
+                      <form @submit.prevent="unbondAmount" class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:space-x-2">
+                          <input
+                            type="number"
+                            v-model="amountToUnbond"
+                            placeholder="Enter amount to unbond"
+                            step="0.1"
+                            :min="0.1"
+                            :max="currentBond.teerBonded"
+                            required
+                            class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+                          />
+                          <button
+                            type="submit"
+                            class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
+                          >
+                            Unbond!
+                          </button>
+                        </div>
+                      </form>
+                      <p
+                        class="mt-2 text-xs text-gray-500"
+                        id="email-description"
+                      >
+                        Unbonded TEER will be locked for 7 days.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"
@@ -49,7 +303,7 @@
       <div
         class="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
       >
-        <div class="mx-auto w-full max-w-xl lg:mx-0">
+        <div class="mx-auto w-full max-w-xl lg:mx-0 mt-10">
           <h2
             class="title text-4xl font-bold tracking-tight text-white mt-16 sm:mt-15 lg:mt-7 sm:text-6xl"
           >
@@ -95,23 +349,6 @@
                 src="/img/index/polkadotjs-logo.svg"
                 alt="polkajs"
             /></a>
-          </div>
-
-          <div class="mt-10 flex">
-            <button
-              v-if="accounts.length < 1"
-              @click="connect"
-              class="mr-5 incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-            >
-              Connect Wallet
-            </button>
-            <!-- <a href="referral" target="_blank">
-              <button
-                class="ring-1 ring-inset ring-incognitee-green rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-incognitee-green"
-              >
-                Refer a friend
-              </button></a
-            > -->
           </div>
         </div>
         <div class="hidden sm:block sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
@@ -207,310 +444,6 @@
           </dd>
         </div>
       </dl>
-    </div>
-
-    <div
-      v-if="accounts.length > 0"
-      ref="walletSection"
-      id="wallet"
-      class="py-12 sm:py-16"
-    >
-      <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl lg:max-w-none">
-          <h1
-            class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
-          >
-            My Wallet
-          </h1>
-
-          <div class="mt-5">
-            <div
-              class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10"
-            >
-              <div class="sm:col-span-3">
-                <label
-                  for="account.address"
-                  class="text-sm font-medium leading-6 text-gray-300"
-                  >Select your account</label
-                >
-                <div class="mt-2">
-                  <select
-                    v-model="selectedAccount"
-                    id="account.address"
-                    name="account.address"
-                    placeholder="account.address"
-                    class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                  >
-                    <option
-                      v-for="account in accounts"
-                      :key="account.address"
-                      :value="account.address"
-                    >
-                      {{ account.meta.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="sm:col-span-3">
-                <label
-                  for="last-name"
-                  class="text-sm font-medium leading-6 text-gray-300"
-                  >Selected Address</label
-                >
-                <div class="mt-2">
-                  <span class="wallet-address text-sm text-gray-300">{{
-                    accountStore.getAddress
-                  }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="selectedAccount">
-              <div v-if="isFetchingTeerBalance">
-                <div
-                  class="spinner border-t-transparent border-solid animate-spin rounded-full border-gray-400 border-4 h-8 w-8"
-                ></div>
-              </div>
-
-              <div v-else class="mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                  <div>
-                    <div
-                      class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-5"
-                    >
-                      <dl class="flex flex-wrap">
-                        <div
-                          class="w-full flex flex-col md:flex-row justify-between px-6 pt-6"
-                        >
-                          <div class="flex-auto mb-4 md:mb-0">
-                            <dt
-                              class="text-sm font-semibold leading-6 text-gray-300"
-                            >
-                              Current bond
-                            </dt>
-                            <dd
-                              class="mt-1 text-base font-semibold leading-6 text-white"
-                            >
-                              {{
-                                currentBond ? currentBond.getTeerBonded() : 0
-                              }}
-                              TEER
-                            </dd>
-                          </div>
-
-                          <div class="flex-auto text-left md:text-right">
-                            <dt
-                              class="text-sm font-semibold leading-6 text-gray-300"
-                            >
-                              Accumulated TEERdays
-                            </dt>
-                            <dd
-                              class="mt-1 text-base font-semibold leading-6 text-white"
-                            >
-                              {{ currentBond ? currentBond.getTeerDays() : 0 }}
-                              TEERdays
-                            </dd>
-                          </div>
-                        </div>
-
-                        <div
-                          class="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-6"
-                        >
-                          <dt
-                            class="text-sm font-semibold leading-6 text-gray-300"
-                          >
-                            Transferrable
-                          </dt>
-                          <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31"
-                              >{{
-                                accountStore.getHumanTransferrable
-                              }}
-                              TEER</time
-                            >
-                          </dd>
-                        </div>
-
-                        <div
-                          v-if="accountStore.frozen > 0"
-                          class="flex w-full flex-none gap-x-4 px-6"
-                        >
-                          <dt
-                            class="text-sm font-semibold leading-6 text-gray-300"
-                          >
-                            Locked
-                          </dt>
-                          <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanFrozen }} TEER</time
-                            >
-                          </dd>
-                        </div>
-
-                        <div
-                          v-if="accountStore.reserved > 0"
-                          class="flex w-full flex-none gap-x-4 px-6"
-                        >
-                          <dt
-                            class="text-sm font-semibold leading-6 text-gray-300"
-                          >
-                            Reserved
-                          </dt>
-                          <dd class="text-sm leading-6 text-gray-400">
-                            <time datetime="2023-01-31"
-                              >{{ accountStore.getHumanReserved }} TEER</time
-                            >
-                          </dd>
-                        </div>
-
-                        <div
-                          v-if="pendingUnlock"
-                          class="w-full flex justify-between flex-col md:flex-row px-6 pt-6"
-                        >
-                          <div class="flex-auto mb-4 md:mb-0">
-                            <div class="flex w-full flex-none gap-x-4">
-                              <dt
-                                class="text-sm font-semibold leading-6 text-gray-300"
-                              >
-                                Pending unlock
-                              </dt>
-                              <dd class="text-sm leading-6 text-gray-400">
-                                <time datetime="2023-01-31"
-                                  >{{
-                                    pendingUnlock
-                                      ? pendingUnlock.getTeerToUnlock()
-                                      : 0
-                                  }}
-                                  TEER</time
-                                >
-                              </dd>
-                            </div>
-
-                            <div class="flex w-full flex-none gap-x-4">
-                              <dt
-                                class="text-sm font-semibold leading-6 text-gray-300"
-                              >
-                                Unlocked on
-                              </dt>
-                              <dd class="text-sm leading-6 text-gray-400">
-                                <time datetime="2023-01-31">{{
-                                  pendingUnlock?.getDueDateStr()
-                                }}</time>
-                              </dd>
-                            </div>
-                          </div>
-
-                          <div
-                            v-if="pendingUnlock?.canWithdraw()"
-                            class="flex-auto text-left md:text-right gap-x-4"
-                          >
-                            <button
-                              @click="withdrawUnbonded"
-                              class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white btn btn_gradient"
-                            >
-                              Withdraw!
-                            </button>
-                          </div>
-                        </div>
-                      </dl>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div>
-                      <div class="text-sm font-medium leading-6 text-gray-300">
-                        Bond TEER to accumulate TEERdays
-                      </div>
-                      <div
-                        v-if="
-                          accountStore.getTransferrable <
-                          BigInt(Math.pow(10, 9))
-                        "
-                        class="text-sm text-red-500"
-                      >
-                        Not enough transferrable TEER.
-                      </div>
-                      <div
-                        v-else-if="pendingUnlock"
-                        class="text-sm text-red-500"
-                      >
-                        Can't bond more during unbonding period
-                      </div>
-                      <div v-else>
-                        <form @submit.prevent="bondAmount" class="space-y-2">
-                          <div class="flex flex-col sm:flex-row sm:space-x-2">
-                            <input
-                              type="number"
-                              v-model="amountToBond"
-                              placeholder="Enter amount to bond"
-                              step="0.1"
-                              :min="0.1"
-                              :max="
-                                Number(
-                                  accountStore.getTransferrable /
-                                    BigInt(Math.pow(10, 12)),
-                                ) - 0.1
-                              "
-                              required
-                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                            />
-                            <button
-                              type="submit"
-                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
-                            >
-                              Bond!
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-
-                    <div class="form-container mt-8" v-if="currentBond">
-                      <div class="text-sm font-medium leading-6 text-gray-300">
-                        Unbond TEER
-                      </div>
-
-                      <div v-if="pendingUnlock" class="text-sm text-red-500">
-                        Not possible until pending unlock expired and withdrawn.
-                      </div>
-
-                      <div v-else class="space-y-2">
-                        <form @submit.prevent="unbondAmount" class="space-y-2">
-                          <div class="flex flex-col sm:flex-row sm:space-x-2">
-                            <input
-                              type="number"
-                              v-model="amountToUnbond"
-                              placeholder="Enter amount to unbond"
-                              step="0.1"
-                              :min="0.1"
-                              :max="currentBond.teerBonded"
-                              required
-                              class="flex-grow rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
-                            />
-                            <button
-                              type="submit"
-                              class="w-full sm:w-40 mt-5 sm:mt-0 inline-flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 btn btn_gradient"
-                            >
-                              Unbond!
-                            </button>
-                          </div>
-                        </form>
-                        <p
-                          class="mt-2 text-xs text-gray-500"
-                          id="email-description"
-                        >
-                          Unbonded TEER will be locked for 7 days.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
@@ -918,11 +851,14 @@
           <div class="footer__column">
             <div class="footer__column-title">Company</div>
             <div class="footer__column-list">
-              <NuxtLink to="/about#join" class="footer__column-link text-link">
+              <NuxtLink
+                to="https://www.integritee.network/about#join"
+                class="footer__column-link text-link"
+              >
                 Jobs
               </NuxtLink>
               <NuxtLink
-                to="/about#roadmap"
+                to="https://www.integritee.network/about#roadmap"
                 class="footer__column-link text-link"
               >
                 Roadmap
@@ -947,7 +883,9 @@
           >©{{ new Date().getFullYear() }} Integritee, Inc.</span
         >
         <span>
-          <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
+          <NuxtLink
+            to="https://integritee.network/privacy-policy"
+            class="blue paragraph_medium"
             >Imprint and Privacy Policy</NuxtLink
           >
         </span>
@@ -996,6 +934,12 @@
       </transition>
     </div>
   </div>
+  <!-- Choose Wallet -->
+  <ChooseWalletOverlay
+    :show="showChooseWalletOverlay"
+    :close="closeChooseWalletOverlay"
+    :onExtensionAccountChange="onExtensionAccountChange"
+  />
 </template>
 
 <script setup lang="ts">
@@ -1031,15 +975,27 @@ import {
 } from "@polkadot/extension-dapp";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { onMounted, ref, watch } from "vue";
-import { useAccount } from "@/store/teerAccount.ts";
+import { onMounted, onUnmounted, computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useAccount, formatDecimalBalance } from "@/store/account.ts";
 import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { CheckCircleIcon } from "@heroicons/vue/24/outline";
+import { eventBus } from "@/helpers/eventBus";
+import { loadEnv, integriteeNetwork, isLive } from "@/lib/environmentConfig";
+import { Bond, PendingUnlock } from "@/lib/teerDays";
+import {
+  extensionAccounts,
+  connectExtension,
+  injectorForAddress,
+} from "@/lib/signerExtensionUtils";
+import { nextTick } from "vue";
+import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
+import InfoBanner from "~/components/ui/InfoBanner.vue";
 
 const accountStore = useAccount();
-
+const router = useRouter();
 const accounts = ref([]);
 const selectedAccount = ref(null);
 const currentBond = ref(null);
@@ -1048,16 +1004,100 @@ const allBonds = ref([]);
 const summaryHolders = ref(0);
 const summaryTeerBonded = ref(0);
 const summaryTeerDays = ref(0);
-const integriteeNetwork = ref(ChainId.IntegriteeKusama);
+const isChoosingAccount = ref(false);
 
-watch(selectedAccount, (newAccount) => {
-  if (newAccount) {
-    console.log("user selected account:", newAccount);
-    accountStore.setAddress(newAccount);
+const dropSubscriptions = async () => {
+  console.log("dropping subscriptions");
+  api?.disconnect();
+  api = null;
+  accountStore.setInjector(null);
+  isFetchingTeerBalance.value = false;
+};
+const onExtensionAccountChange = async (selectedAddress) => {
+  await dropSubscriptions();
+  console.log("user selected extension account:", selectedAddress);
+  try {
+    accountStore.setAccount(selectedAddress.toString());
+    accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
+  } catch (e) {
+    console.warn("could not load injected account" + e);
+    alert(
+      "could not find selected address in extensions. Have you enabled your extensions?",
+    );
   }
-});
-import { nextTick } from "vue";
-import { useRuntimeConfig } from "#app";
+  await subscribeToTeerDayStats();
+  if (accountStore.getAddress === "none") {
+    console.log("skipping api init. no address");
+    return;
+  }
+  await api.query.system.account(
+    accountStore.getAddress,
+    ({
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
+      console.log("TEER balance:" + currentFree);
+      accountStore.setBalanceFree(BigInt(currentFree), integriteeNetwork);
+      accountStore.setBalanceReserved(
+        BigInt(currentReserved),
+        integriteeNetwork,
+      );
+      accountStore.setBalanceFrozen(BigInt(currentFrozen), integriteeNetwork);
+      closeChooseWalletOverlay();
+      isFetchingTeerBalance.value = false;
+    },
+  );
+  await api.query.teerDays.teerDayBonds(
+    accountStore.getAddress,
+    ({ value: bond }) => {
+      if (bond.value) {
+        console.log(
+          "TEERday bond:" +
+            bond.value +
+            " last updated:" +
+            bond.lastUpdated +
+            " accumulated tokentime:" +
+            bond.accumulatedTokentime,
+        );
+        let lastUpdated = new Date(0);
+        lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
+        currentBond.value = new Bond(
+          bond.value / Math.pow(10, accountStore.decimals),
+          lastUpdated,
+          bond.accumulatedTokentime /
+            Math.pow(10, accountStore.decimals) /
+            86400 /
+            1000,
+        );
+        currentBond.value.updateTeerDays();
+      } else {
+        console.log("TEERday bond not found");
+        currentBond.value = null;
+      }
+    },
+  );
+  await api.query.teerDays.pendingUnlock(
+    accountStore.getAddress,
+    ({ value: timestamp_amount }) => {
+      console.log("TEER pending unlock:" + timestamp_amount);
+      if (timestamp_amount[1]) {
+        let unlockDate = new Date(0);
+        const unlockEpoch = timestamp_amount[0].toNumber();
+        unlockDate.setUTCMilliseconds(unlockEpoch);
+        console.log("Unlock date:" + unlockDate + "epoch:" + unlockEpoch);
+        pendingUnlock.value = new PendingUnlock(
+          timestamp_amount[1] / Math.pow(10, accountStore.decimals),
+          unlockDate,
+        );
+      } else {
+        pendingUnlock.value = null;
+      }
+    },
+  );
+};
 
 const connect = () => {
   web3Enable("Integritee Dapp")
@@ -1119,39 +1159,40 @@ const connect = () => {
 
 let api: ApiPromise | null = null;
 
-onMounted(async () => {
-  const integriteeNetworkEnv = useRuntimeConfig().public.INTEGRITEE_NETWORK;
-  if (ChainId[integriteeNetworkEnv]) {
-    integriteeNetwork.value = ChainId[integriteeNetworkEnv];
-  }
-  console.log(
-    "INTEGRITEE_NETWORK: env:" +
-      integriteeNetworkEnv +
-      ". using " +
-      ChainId[integriteeNetwork.value],
-  );
+const subscribeToTeerDayStats = async () => {
   const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
   console.log(
     "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
   );
   api = await ApiPromise.create({ provider: wsProvider });
+  accountStore.setDecimals(Number(api.registry.chainDecimals));
+  accountStore.setSS58Format(Number(api.registry.chainSS58));
+  accountStore.setSymbol(String(api.registry.chainTokens));
+  if (accountStore.hasInjector) {
+    router.push({
+      query: { address: accountStore.getAddress },
+    });
+  }
   console.log("api initialized");
   allBonds.value = [];
   cryptoWaitReady().then(() => {
     api.query.teerDays.teerDayBonds.entries().then((entries) => {
       entries.forEach(([key, maybeBond]) => {
-        console.log(key.args + " " + maybeBond);
+        //console.debug(key.args + " " + maybeBond);
         let account = key.args[0];
         let lastUpdated = new Date(0);
         let bond = maybeBond.unwrap();
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
         let mybond = new Bond(
-          bond.value / Math.pow(10, 12),
+          bond.value / Math.pow(10, accountStore.decimals),
           lastUpdated,
-          bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
+          bond.accumulatedTokentime /
+            Math.pow(10, accountStore.decimals) /
+            86400 /
+            1000,
         );
         mybond.updateTeerDays();
-        console.log(mybond);
+        //console.debug(mybond);
         allBonds.value.push([
           account,
           mybond.teerBonded,
@@ -1161,7 +1202,7 @@ onMounted(async () => {
       });
       // sort descending by value
       allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
-      console.log(allBonds.value);
+      //console.debug(allBonds.value);
       summaryTeerBonded.value = allBonds.value.reduce(
         (acc, val) => acc + val[1],
         0,
@@ -1171,85 +1212,35 @@ onMounted(async () => {
         0,
       );
       summaryHolders.value = allBonds.value.length;
-      console.log(summaryHolders.value);
+      //console.log(summaryHolders.value);
     });
   });
+};
+
+onMounted(async () => {
+  loadEnv();
+  eventBus.on("addressClicked", openChooseWalletOverlay);
+  subscribeToTeerDayStats();
+  const injectedAddress = router.currentRoute.value.query.address;
+  if (injectedAddress) {
+    connectExtension();
+    onExtensionAccountChange(injectedAddress.toString());
+  } else {
+    //openChooseWalletOverlay();
+  }
+});
+
+onUnmounted(() => {
+  eventBus.off("addressClicked", openChooseWalletOverlay);
 });
 
 const isFetchingTeerBalance = ref(true);
 
-watch(accountStore, async () => {
-  //todo! only reinitialize if account changes
-  if (accountStore.getAddress === "none") {
-    console.log("skipping api init. no address");
-    return;
-  }
-  await api.query.system.account(
-    accountStore.address,
-    ({
-      data: {
-        free: currentFree,
-        reserved: currentReserved,
-        frozen: currentFrozen,
-      },
-    }) => {
-      console.log("TEER balance:" + currentFree);
-      accountStore.free = BigInt(currentFree);
-      accountStore.reserved = BigInt(currentReserved);
-      accountStore.frozen = BigInt(currentFrozen);
-      isFetchingTeerBalance.value = false;
-    },
-  );
-  await api.query.teerDays.teerDayBonds(
-    accountStore.address,
-    ({ value: bond }) => {
-      if (bond.value) {
-        console.log(
-          "TEERday bond:" +
-            bond.value +
-            " last updated:" +
-            bond.lastUpdated +
-            " accumulated tokentime:" +
-            bond.accumulatedTokentime,
-        );
-        let lastUpdated = new Date(0);
-        lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
-        currentBond.value = new Bond(
-          bond.value / Math.pow(10, 12),
-          lastUpdated,
-          bond.accumulatedTokentime / Math.pow(10, 12) / 86400 / 1000,
-        );
-        currentBond.value.updateTeerDays();
-      } else {
-        console.log("TEERday bond not found");
-        currentBond.value = null;
-      }
-    },
-  );
-  await api.query.teerDays.pendingUnlock(
-    accountStore.address,
-    ({ value: timestamp_amount }) => {
-      console.log("TEER pending unlock:" + timestamp_amount);
-      if (timestamp_amount[1]) {
-        let unlockDate = new Date(0);
-        const unlockEpoch = timestamp_amount[0].toNumber();
-        unlockDate.setUTCMilliseconds(unlockEpoch);
-        console.log("Unlock date:" + unlockDate + "epoch:" + unlockEpoch);
-        pendingUnlock.value = new PendingUnlock(
-          timestamp_amount[1] / Math.pow(10, 12),
-          unlockDate,
-        );
-      } else {
-        pendingUnlock.value = null;
-      }
-    },
-  );
-});
-
 const amountToBond = ref(0);
 const bondAmount = () => {
   // Handle the bonding process here
-  const amount = BigInt(amountToBond.value) * BigInt(Math.pow(10, 12));
+  const amount =
+    BigInt(amountToBond.value) * BigInt(Math.pow(10, accountStore.decimals));
   console.log(`Bonding ${amount}`);
   txStatus.value = "⌛ Bonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -1278,7 +1269,8 @@ const bondAmount = () => {
 const amountToUnbond = ref(0);
 const unbondAmount = () => {
   // Handle the bonding process here
-  const amount = BigInt(amountToUnbond.value) * BigInt(Math.pow(10, 12));
+  const amount =
+    BigInt(amountToUnbond.value) * BigInt(Math.pow(10, accountStore.decimals));
   console.log(`Unbonding ${amount}`);
   txStatus.value = "⌛ Unbonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -1319,58 +1311,10 @@ watch(refreshCounter, async () => {
   currentBond.value?.updateTeerDays();
 });
 
-class Bond {
-  teerBonded: number;
-  lastUpdated: Date;
-  accumulatedTeerDays: number;
-
-  constructor(
-    teerBonded: number = 0,
-    lastUpdated: Date = new Date(),
-    accumulatedTeerDays: number = 0,
-  ) {
-    this.teerBonded = teerBonded;
-    this.lastUpdated = lastUpdated;
-    this.accumulatedTeerDays = accumulatedTeerDays;
-  }
-
-  updateTeerDays() {
-    const now = new Date();
-    const elapsed = now.getTime() - this.lastUpdated.getTime(); //milliseconds
-    this.accumulatedTeerDays += (this.teerBonded * elapsed) / 86400 / 1000;
-    this.lastUpdated = now;
-  }
-
-  getTeerDays() {
-    return this.accumulatedTeerDays.toFixed(4);
-  }
-
-  getTeerBonded() {
-    return this.teerBonded.toFixed(4);
-  }
-}
-
-class PendingUnlock {
-  teerToUnlock: number;
-  due: Date;
-
-  constructor(teerToUnlock: number = 0, due: Date = new Date()) {
-    this.teerToUnlock = teerToUnlock;
-    this.due = due;
-  }
-
-  getDueDateStr() {
-    return this.due.toISOString();
-  }
-
-  getTeerToUnlock() {
-    return this.teerToUnlock > 0 ? this.teerToUnlock.toFixed(4) : null;
-  }
-
-  canWithdraw() {
-    return this.due < new Date();
-  }
-}
+const transferableBalance = computed(() => {
+  const balance = accountStore.getDecimalBalanceTransferable(integriteeNetwork);
+  return formatDecimalBalance(balance);
+});
 
 const txStatus = ref("");
 const showStatusOverlay = ref(false);
@@ -1437,6 +1381,21 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
 
 const txErrHandlerIntegritee = (err) => {
   txStatus.value = `😞 Transaction Failed: ${err.toString()}`;
+};
+
+const showChooseWalletOverlay = ref(false);
+const openChooseWalletOverlay = () => {
+  if (!isLive.value) {
+    console.error("network not live");
+    return;
+  }
+  isChoosingAccount.value = true;
+  isFetchingTeerBalance.value = true;
+  showChooseWalletOverlay.value = true;
+};
+const closeChooseWalletOverlay = () => {
+  isChoosingAccount.value == false;
+  showChooseWalletOverlay.value = false;
 };
 </script>
 

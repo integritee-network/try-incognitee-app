@@ -70,6 +70,7 @@ export default defineNuxtConfig({
   routeRules: {
     "/": { ssr: false },
     "/teerdays": { ssr: false },
+    "/teerdays-lp": { ssr: false },
   },
   imports: {
     autoImport: false,

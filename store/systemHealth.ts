@@ -30,11 +30,11 @@ export const useSystemHealth = defineStore("system-health", {
     },
     getIntegriteeSystemHealth({ shieldingTargetFinalizedBlockNumber }): Health {
       return Health.Warning;
-    }
     },
+  },
   actions: {
     setShieldingTargetFinalizedBlockNumber(block_number: number) {
       this.shieldingTargetFinalizedBlockNumber.observe(block_number);
-    }
+    },
   },
 });

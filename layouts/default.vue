@@ -3,7 +3,7 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
-        <HealthIndicator/>
+        <HealthIndicator />
         <div class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -222,5 +222,4 @@ const emitAddressClicked = () => {
 .rounded-full {
   border-radius: 9999px; /* Makes the element a circle */
 }
-
 </style>

@@ -362,7 +362,7 @@
         />
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175% for
+            >Fee: ~16 m{{ accountStore.getSymbol }} for L1, {{ formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100) }}% for
             Incognitee</span
           >
         </div>
@@ -563,7 +563,7 @@
       <!-- Fee description -->
       <div class="text-right">
         <span class="text-xs text-gray-400"
-          >Fee: 30m {{ accountStore.getSymbol }} for Incognitee</span
+          >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE)}} {{ accountStore.getSymbol }} for Incognitee</span
         >
       </div>
 
@@ -723,7 +723,7 @@
         <!-- Fee description -->
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: 10m {{ accountStore.getSymbol }} for Incognitee</span
+            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }} {{ accountStore.getSymbol }} for Incognitee</span
           >
         </div>
       </div>
@@ -767,8 +767,8 @@
                   <dd
                     class="mt-1 text-left text-base font-semibold leading-6 text-white"
                   >
-                    {{ guessTheNumberInfo?.winnings / Math.pow(10, 10) }}
-                    PAS
+                    {{ formatDecimalBalance(guessTheNumberInfo?.winnings / Math.pow(10, accountStore.decimals)) }}
+                    {{ accountStore.getSymbol }}
                   </dd>
                 </div>
 
@@ -885,7 +885,7 @@
             <!-- Fee description below input, right-aligned -->
             <div class="absolute right-0 -bottom-5">
               <span class="text-xs text-gray-400"
-                >Fee: 1 PAS for Incognitee</span
+                >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} {{ accountStore.getSymbol }} for Incognitee</span
               >
             </div>
           </div>
@@ -1045,6 +1045,13 @@ import {
   isLive,
 } from "@/lib/environmentConfig";
 import ObtainTokenOverlay from "~/components/ui/ObtainTokenOverlay.vue";
+import { formatDecimalBalance } from "@/store/account";
+import {
+  INCOGNITEE_GTN_GUESS_FEE,
+  INCOGNITEE_SHIELDING_FEE_FRACTION,
+  INCOGNITEE_TX_FEE,
+  INCOGNITEE_UNSHIELDING_FEE
+} from "../configs/incognitee";
 
 const router = useRouter();
 const accountStore = useAccount();

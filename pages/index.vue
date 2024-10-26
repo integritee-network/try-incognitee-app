@@ -1082,6 +1082,7 @@ const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
+const parentchainsInfo = ref(null);
 const scanResult = ref("No QR code data yet");
 
 const faucetUrl = ref(null);
@@ -1386,7 +1387,7 @@ const fetchIncogniteeBalance = async () => {
 
 const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
-  console.log("TODO: fetch guess the number info");
+  console.log("fetch guess the number info");
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
     incogniteeStore.shard,
   );
@@ -1396,10 +1397,30 @@ const fetchGuessTheNumberInfo = async () => {
   });
 };
 
+const fetchNetworkStatus = async () => {
+  if (!incogniteeStore.apiReady) return;
+  console.debug("fetch network status info");
+  const getter = incogniteeStore.api.parentchainsInfoGetter(
+    incogniteeShard.value,
+  );
+  getter.send().then((info) => {
+    console.log(`parentchains info: ${info}`);
+    parentchainsInfo.value = info;
+  });
+  api.rpc.chain.getFinalizedHead().then((head) => {
+    api.rpc.chain.getBlock(head).then((block) => {
+      console.log(
+        `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+      );
+    });
+  });
+};
+
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
-  await fetchIncogniteeBalance();
+  fetchIncogniteeBalance();
+  fetchNetworkStatus();
 });
 
 watch(accountStore, async () => {

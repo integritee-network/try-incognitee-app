@@ -1006,6 +1006,12 @@ const summaryTeerBonded = ref(0);
 const summaryTeerDays = ref(0);
 const isChoosingAccount = ref(false);
 
+const isMobile = ref(false);
+
+// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
+const checkIfMobile = () => {
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+};
 const dropSubscriptions = async () => {
   console.log("dropping subscriptions");
   api?.disconnect();

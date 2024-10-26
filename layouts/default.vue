@@ -3,6 +3,7 @@
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
+        <HealthIndicator/>
         <div class="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -138,8 +139,10 @@ import Incognitee from "@/assets/img/incognitee-mask.svg";
 import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 import { useAccount } from "@/store/account.ts";
 import { eventBus } from "@/helpers/eventBus";
-import { connectExtension } from "~/lib/signerExtensionUtils";
+import HealthIndicator from "@/components/ui/HealthIndicator.vue";
+
 const accountStore = useAccount();
+
 const emitAddressClicked = () => {
   eventBus.emit("addressClicked");
 };
@@ -203,4 +206,21 @@ const emitAddressClicked = () => {
   padding: 0;
   list-style-type: none;
 }
+
+.bg-green-500 {
+  background-color: #2dad24; /* Adjust the color as needed */
+}
+
+.w-4 {
+  width: 1rem; /* Adjust the size as needed */
+}
+
+.h-4 {
+  height: 1rem; /* Adjust the size as needed */
+}
+
+.rounded-full {
+  border-radius: 9999px; /* Makes the element a circle */
+}
+
 </style>

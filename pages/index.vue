@@ -1403,10 +1403,10 @@ const fetchNetworkStatus = async () => {
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
   );
-  getter.send().then((info) => {
-    console.log(`parentchains info: ${info}`);
-    parentchainsInfo.value = info;
-  });
+  // getter.send().then((info) => {
+  //   console.log(`parentchains info: ${info}`);
+  //   parentchainsInfo.value = info;
+  // });
   api.rpc.chain.getFinalizedHead().then((head) => {
     api.rpc.chain.getBlock(head).then((block) => {
       console.log(

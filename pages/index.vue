@@ -40,10 +40,14 @@
 
         <div class="text-white mb-6 text-center">
           <div class="">
-            <h3 class="text-sm mb-3">Public Balance</h3>
+            <h3 class="text-sm mb-3">Public Transferable Balance</h3>
             <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
             <div class="text-4xl font-semibold" v-else>
-              {{ accountStore.formatBalanceFree(shieldingTarget) }}
+              {{
+                formatDecimalBalance(
+                  accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                )
+              }}
               <span class="text-sm font-semibold">{{
                 accountStore.getSymbol
               }}</span>
@@ -362,8 +366,9 @@
         />
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: ~16 m{{ accountStore.getSymbol }} for L1, {{ formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100) }}% for
-            Incognitee</span
+            >Fee: ~16 m{{ accountStore.getSymbol }} for L1,
+            {{ formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100) }}%
+            for Incognitee</span
           >
         </div>
       </div>
@@ -563,7 +568,8 @@
       <!-- Fee description -->
       <div class="text-right">
         <span class="text-xs text-gray-400"
-          >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE)}} {{ accountStore.getSymbol }} for Incognitee</span
+          >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
+          {{ accountStore.getSymbol }} for Incognitee</span
         >
       </div>
 
@@ -723,7 +729,8 @@
         <!-- Fee description -->
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }} {{ accountStore.getSymbol }} for Incognitee</span
+            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span
           >
         </div>
       </div>
@@ -767,7 +774,12 @@
                   <dd
                     class="mt-1 text-left text-base font-semibold leading-6 text-white"
                   >
-                    {{ formatDecimalBalance(guessTheNumberInfo?.winnings / Math.pow(10, accountStore.decimals)) }}
+                    {{
+                      formatDecimalBalance(
+                        guessTheNumberInfo?.winnings /
+                          Math.pow(10, accountStore.decimals),
+                      )
+                    }}
                     {{ accountStore.getSymbol }}
                   </dd>
                 </div>
@@ -885,7 +897,8 @@
             <!-- Fee description below input, right-aligned -->
             <div class="absolute right-0 -bottom-5">
               <span class="text-xs text-gray-400"
-                >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} {{ accountStore.getSymbol }} for Incognitee</span
+                >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
+                {{ accountStore.getSymbol }} for Incognitee</span
               >
             </div>
           </div>
@@ -1050,7 +1063,7 @@ import {
   INCOGNITEE_GTN_GUESS_FEE,
   INCOGNITEE_SHIELDING_FEE_FRACTION,
   INCOGNITEE_TX_FEE,
-  INCOGNITEE_UNSHIELDING_FEE
+  INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
 
 const router = useRouter();
@@ -1424,9 +1437,30 @@ watch(accountStore, async () => {
   console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
-    ({ data: { free: currentFree } }) => {
-      console.log("shielding target balance:" + currentFree);
+    ({
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
+      console.log(
+        "shielding-target balance: free=" +
+          currentFree +
+          " reserved=" +
+          currentReserved +
+          " frozen=" +
+          currentFrozen,
+      );
       accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceReserved(
+        BigInt(currentReserved),
+        shieldingTarget.value,
+      );
+      accountStore.setBalanceFrozen(
+        BigInt(currentFrozen),
+        shieldingTarget.value,
+      );
       isFetchingShieldingTargetBalance.value = false;
     },
   );

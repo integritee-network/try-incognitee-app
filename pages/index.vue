@@ -1057,7 +1057,7 @@ import {
   incogniteeShard,
   isLive,
 } from "@/lib/environmentConfig";
-import ObtainTokenOverlay from "~/components/ui/ObtainTokenOverlay.vue";
+import ObtainTokenOverlay from "@/components/ui/ObtainTokenOverlay.vue";
 import { formatDecimalBalance } from "@/store/account";
 import {
   INCOGNITEE_GTN_GUESS_FEE,
@@ -1065,10 +1065,12 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
+import {useSystemHealth} from "@/store/systemHealth";
 
 const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
+const systemHealth = useSystemHealth();
 const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
@@ -1082,7 +1084,6 @@ const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
-const parentchainsInfo = ref(null);
 const scanResult = ref("No QR code data yet");
 
 const faucetUrl = ref(null);
@@ -1309,6 +1310,10 @@ const submitGuess = () => {
     .then((hash) => {
       console.log(`trustedOperationHash: ${hash}`);
       txStatus.value = "😀 Success";
+    })
+    .catch((err) => {
+      console.error(`error: ${err}`);
+      txStatus.value = "😞 Failed";
     });
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
@@ -1403,10 +1408,15 @@ const fetchNetworkStatus = async () => {
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
   );
-  // getter.send().then((info) => {
-  //   console.log(`parentchains info: ${info}`);
-  //   parentchainsInfo.value = info;
-  // });
+  getter.send().then((info) => {
+    console.log(`parentchains info: ${info}`);
+    const shielding_target_id = info.shielding_target.toString().toLowerCase();
+    const block_number = info[shielding_target_id]?.block_number;
+    console.log("shielding target last imported block number: " + block_number);
+    if (block_number !== null && block_number !== undefined) {
+      systemHealth.observeShieldingTargetImportedBlockNumber(block_number);
+    }
+  });
   api.rpc.chain.getFinalizedHead().then((head) => {
     api.rpc.chain.getBlock(head).then((block) => {
       console.log(
@@ -1485,6 +1495,9 @@ watch(accountStore, async () => {
       isFetchingShieldingTargetBalance.value = false;
     },
   );
+  api.rpc.chain.subscribeNewHeads((lastHeader) => {
+    systemHealth.observeShieldingTargetBlockNumber(lastHeader.number.toNumber());
+  });
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),

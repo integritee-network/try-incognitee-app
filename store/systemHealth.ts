@@ -35,7 +35,8 @@ export enum Health {
 
 export const useSystemHealth = defineStore("system-health", {
   state: () => ({
-    shieldingTargetFinalizedBlockNumber: <ObservableNumber | null>null,
+    shieldingTargetLastBlockNumber: <ObservableNumber | null>null,
+    shieldingTargetImportedBlockNumber: <ObservableNumber | null>null,
     integriteeLastBlockNumber: <ObservableNumber | null>null,
   }),
   getters: {
@@ -54,10 +55,27 @@ export const useSystemHealth = defineStore("system-health", {
     }): ObservableNumber {
       return integriteeLastBlockNumber;
     },
+    getShieldingTargetBlockNumberObservable({
+                                         shieldingTargetLastBlockNumber
+                                       }): ObservableNumber {
+      return shieldingTargetLastBlockNumber;
+    },
+    getShieldingTargetImportedBlockNumberObservable({
+                                              shieldingTargetImportedBlockNumber
+                                            }): ObservableNumber {
+      return shieldingTargetImportedBlockNumber;
+    },
   },
   actions: {
-    observeShieldingTargetFinalizedBlockNumber(block_number: number) {
-      this.shieldingTargetFinalizedBlockNumber?.observe(block_number);
+    observeShieldingTargetBlockNumber(block_number: number) {
+      this.shieldingTargetLastBlockNumber
+        ? this.shieldingTargetLastBlockNumber?.observe(block_number)
+        : (this.shieldingTargetLastBlockNumber = new ObservableNumber(block_number));
+    },
+    observeShieldingTargetImportedBlockNumber(block_number: number) {
+      this.shieldingTargetImportedBlockNumber
+        ? this.shieldingTargetImportedBlockNumber?.observe(block_number)
+        : (this.shieldingTargetImportedBlockNumber = new ObservableNumber(block_number));
     },
     observeIntegriteeBlockNumber(block_number: number) {
       this.integriteeLastBlockNumber

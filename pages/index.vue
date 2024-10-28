@@ -1,6 +1,6 @@
 <template>
   <CampaignBanner
-    v-if="isLive"
+    v-if="enableActions"
     :onClick="openGuessTheNumberOverlay"
     :isMobile="isMobile"
     textMobile="Guess-The-Number Campaign."
@@ -8,14 +8,14 @@
   />
 
   <InfoBanner
-    v-if="!isLive"
+    v-if="!enableActions"
     :isMobile="isMobile"
     textMobile="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
     textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
   />
 
   <InfoBanner
-    v-if="!isLive"
+    v-if="!enableActions"
     :isMobile="isMobile"
     textMobile="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
     textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
@@ -1099,8 +1099,8 @@ const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
 const scanResult = ref("No QR code data yet");
-
 const faucetUrl = ref(null);
+const forceLive = ref(false);
 
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
@@ -1475,13 +1475,15 @@ const fetchNetworkStatus = async () => {
       systemHealth.setShieldingTargetLightClientGenesisHashHex(genesis_hash);
     }
   });
-  api.rpc.chain.getFinalizedHead().then((head) => {
-    api.rpc.chain.getBlock(head).then((block) => {
-      console.log(
-        `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
-      );
+  if (api?.isReady) {
+    api.rpc.chain.getFinalizedHead().then((head) => {
+      api.rpc.chain.getBlock(head).then((block) => {
+        console.log(
+          `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+        );
+      });
     });
-  });
+  }
 };
 
 const pollCounter = useInterval(2000);
@@ -1518,8 +1520,11 @@ watch(accountStore, async () => {
     api.genesisHash.toHex().toString(),
   );
   if (accountStore.hasInjector) {
+    const currentQuery = { ...router.currentRoute.value.query };
+    currentQuery.address = accountStore.getAddress;
+    currentQuery.seed = undefined;
     router.push({
-      query: { address: accountStore.getAddress },
+      query: currentQuery,
     });
   }
   faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
@@ -1588,7 +1593,10 @@ onMounted(async () => {
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;
-
+  if (router.currentRoute.value.query.forceLive) {
+    forceLive.value = true;
+    console.log("forcing live status to true");
+  }
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     cryptoWaitReady().then(() => {
@@ -1640,8 +1648,11 @@ const createTestingAccount = () => {
     const privateKeyHex = u8aToHex(seed);
     console.log(`Private Key in Hex: ${privateKeyHex}`);
     // change url to contain new seed to allow bookmarking
+    const currentQuery = { ...router.currentRoute.value.query };
+    currentQuery.address = undefined;
+    currentQuery.seed = privateKeyHex;
     router.push({
-      query: { seed: privateKeyHex },
+      query: currentQuery,
     });
     accountStore.setAccount(newAccount);
     openNewWalletOverlay();
@@ -1683,7 +1694,7 @@ const closePrivacyInfo = () => {
 
 const showNewWalletOverlay = ref(false);
 const openNewWalletOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1695,7 +1706,7 @@ const closeNewWalletOverlay = () => {
 
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1710,7 +1721,7 @@ const closeChooseWalletOverlay = () => {
 
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1725,7 +1736,7 @@ const closeShieldOverlay = () => {
 
 const showFaucetOverlay = ref(false);
 const openFaucetOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1737,7 +1748,7 @@ const closeFaucetOverlay = () => {
 
 const showObtainTokenOverlay = ref(false);
 const openObtainTokenOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1749,7 +1760,7 @@ const closeObtainTokenOverlay = () => {
 
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1763,7 +1774,7 @@ const closeUnshieldOverlay = () => {
 };
 const showReceiveOverlay = ref(false);
 const openReceiveOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1774,7 +1785,7 @@ const closeReceiveOverlay = () => {
 };
 const showPrivateSendOverlay = ref(false);
 const openPrivateSendOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1796,7 +1807,7 @@ const closePrivateSendOverlay = () => {
 
 const showGuessTheNumberOverlay = ref(false);
 const openGuessTheNumberOverlay = () => {
-  if (!isLive.value) {
+  if (!enableActions.value) {
     console.error("network not live");
     return;
   }
@@ -1852,6 +1863,10 @@ const formatTimestamp = (timestamp: number | null) => {
   };
   return new Intl.DateTimeFormat("de-CH", options).format(date);
 };
+
+const enableActions = computed(() => {
+  return isLive.Value || forceLive.value;
+});
 </script>
 
 <style scoped>

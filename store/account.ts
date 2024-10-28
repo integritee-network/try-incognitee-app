@@ -19,6 +19,8 @@ export const useAccount = defineStore("account", {
     balanceFrozen: <Record<ChainId, BigInt>>{},
     // nonce per chain
     nonce: <Record<ChainId, number>>{},
+    // genesis hash
+    genesisHash: <Record<String, number>>{},
     // decimals (we assume it's the same for all used chains as it's the token we're shielding
     decimals: <number>0,
     // native token symbol (we assume it's the same for all used chains as it's the token we're shielding
@@ -129,6 +131,9 @@ export const useAccount = defineStore("account", {
     setNonce(nonce: number, chain: ChainId) {
       //console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
       this.nonce[chain] = nonce;
+    },
+    setGenesisHash(genesisHash: String, chain: ChainId) {
+      this.genesisHash[chain] = genesisHash;
     },
     setDecimals(decimals: number) {
       this.decimals = decimals;

@@ -1458,17 +1458,21 @@ const fetchNetworkStatus = async () => {
     incogniteeShard.value,
   );
   getter.send().then((info) => {
-    console.log(`parentchains info: ${info}`);
+    console.debug(`parentchains info: ${info}`);
     const shielding_target_id = info.shielding_target
       .toString()
       .replace(/([A-Z])/g, "_$1")
       .toLowerCase()
       .replace(/^_/, "");
-    console.log("shielding target: " + shielding_target_id);
     const block_number = info[shielding_target_id]?.block_number;
-    console.log("shielding target last imported block number: " + block_number);
+    const genesis_hash = info[shielding_target_id]?.genesis_hash
+      .toHex()
+      .toString();
     if (block_number !== null && block_number !== undefined) {
       systemHealth.observeShieldingTargetImportedBlockNumber(block_number);
+    }
+    if (genesis_hash?.length > 0) {
+      systemHealth.setShieldingTargetLightClientGenesisHashHex(genesis_hash);
     }
   });
   api.rpc.chain.getFinalizedHead().then((head) => {
@@ -1510,6 +1514,9 @@ watch(accountStore, async () => {
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainTokens));
+  systemHealth.setShieldingTargetApiGenesisHashHex(
+    api.genesisHash.toHex().toString(),
+  );
   if (accountStore.hasInjector) {
     router.push({
       query: { address: accountStore.getAddress },

@@ -41,7 +41,6 @@
           <p class="text-sm text-gray-400">
             Shielding Target: <b>{{ chainConfigs[shieldingTarget].name }}</b>
           </p>
-
           <p
             :class="[
               'text-sm',
@@ -58,6 +57,27 @@
               )
             }}
             <b>{{ shieldingTargetBlockNumberAge }}s</b>
+          </p>
+          <br />
+          <p class="text-sm text-gray-400 wrap">
+            genesis hash for api vs enclave light client:
+          </p>
+          <p
+            :class="[
+              'text-sm',
+              'text-gray-400',
+              healthColor(systemHealth.getSidechainSystemHealth.genesisMatch),
+            ]"
+          >
+            {{
+              systemHealth.getShieldingTargetApiGenesisHashHex.slice(0, 8)
+            }}... vs
+            {{
+              systemHealth.getShieldingTargetLightClientGenesisHashHex.slice(
+                0,
+                8,
+              )
+            }}...
           </p>
           <br />
           <p class="text-sm text-gray-400">

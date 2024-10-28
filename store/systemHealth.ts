@@ -36,18 +36,22 @@ export enum Health {
 export class SidechainHealth {
   shieldingTargetProgress: Health;
   shieldingTargetImportProgress: Health;
+  genesisMatch: Health;
 
   constructor(
     shieldingTargetProgress: Health,
     shieldingTargetImportProgress: Health,
+    genesisMatch: Health,
   ) {
     this.shieldingTargetProgress = shieldingTargetProgress;
     this.shieldingTargetImportProgress = shieldingTargetImportProgress;
+    this.genesisMatch = genesisMatch;
   }
   overall(): Health {
     return Math.min(
       this.shieldingTargetProgress,
       this.shieldingTargetImportProgress,
+      this.genesisMatch,
     );
   }
 }
@@ -67,12 +71,16 @@ export const useSystemHealth = defineStore("system-health", {
   state: () => ({
     shieldingTargetLastBlockNumber: <ObservableNumber | null>null,
     shieldingTargetImportedBlockNumber: <ObservableNumber | null>null,
+    shieldingTargetApiGenesisHashHex: <string | null>null,
+    shieldingTargetLightClientGenesisHashHex: <string | null>null,
     integriteeLastBlockNumber: <ObservableNumber | null>null,
   }),
   getters: {
     getSidechainSystemHealth({
       shieldingTargetLastBlockNumber,
       shieldingTargetImportedBlockNumber,
+      shieldingTargetApiGenesisHashHex,
+      shieldingTargetLightClientGenesisHashHex,
     }): SidechainHealth {
       const lag =
         shieldingTargetLastBlockNumber?.value -
@@ -90,7 +98,18 @@ export const useSystemHealth = defineStore("system-health", {
       const targetHealth = parachainBlockAgeToHealth(
         shieldingTargetLastBlockNumber?.age(),
       );
-      return new SidechainHealth(targetHealth, importHealth);
+      let genesisMatch = Health.Unknown;
+      if (
+        shieldingTargetApiGenesisHashHex?.length > 0 &&
+        shieldingTargetLightClientGenesisHashHex?.length > 0
+      ) {
+        genesisMatch =
+          shieldingTargetApiGenesisHashHex ===
+          shieldingTargetLightClientGenesisHashHex
+            ? Health.Healthy
+            : Health.Critical;
+      }
+      return new SidechainHealth(targetHealth, importHealth, genesisMatch);
     },
     getIntegriteeSystemHealth({ integriteeLastBlockNumber }): IntegriteeHealth {
       const progressHealth = parachainBlockAgeToHealth(
@@ -113,6 +132,16 @@ export const useSystemHealth = defineStore("system-health", {
     }): ObservableNumber {
       return shieldingTargetImportedBlockNumber;
     },
+    getShieldingTargetApiGenesisHashHex({
+      shieldingTargetApiGenesisHashHex,
+    }): string {
+      return shieldingTargetApiGenesisHashHex;
+    },
+    getShieldingTargetLightClientGenesisHashHex({
+      shieldingTargetLightClientGenesisHashHex,
+    }): string {
+      return shieldingTargetLightClientGenesisHashHex;
+    },
   },
   actions: {
     observeShieldingTargetBlockNumber(block_number: number) {
@@ -133,6 +162,12 @@ export const useSystemHealth = defineStore("system-health", {
       this.integriteeLastBlockNumber
         ? this.integriteeLastBlockNumber?.observe(block_number)
         : (this.integriteeLastBlockNumber = new ObservableNumber(block_number));
+    },
+    setShieldingTargetApiGenesisHashHex(genesis_hash_hex: string) {
+      this.shieldingTargetApiGenesisHashHex = genesis_hash_hex;
+    },
+    setShieldingTargetLightClientGenesisHashHex(genesis_hash_hex: string) {
+      this.shieldingTargetLightClientGenesisHashHex = genesis_hash_hex;
     },
   },
 });

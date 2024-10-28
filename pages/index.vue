@@ -846,11 +846,11 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       v-if="
         accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > 1.0
       "
-    >
+    > -->
       <form class="" @submit.prevent="submitGuessForm">
         <!-- Label for the input -->
         <div class="flex justify-between mb-2">
@@ -897,13 +897,13 @@
           </div>
         </div>
       </form>
-    </div>
-    <div v-else>
+    <!-- </div>
+    <div v-else> -->
       <div class="text-sm text-red-400 text-left my-4">
         You need at least 1.0 private PAS to participate in the game. Please
         shield some first.
       </div>
-    </div>
+    <!-- </div> -->
   </OverlayDialog>
 
   <!-- Scan QR -->
@@ -1178,6 +1178,32 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
 
 const txErrHandlerShieldingTarget = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
+
+const handleTopResult = (result, successMsg?) => {
+    console.log("TOP result: " + result);
+    if (result) {
+      if (result.status.isInSidechainBlock) {
+        if (successMsg) {
+          txStatus.value = successMsg;
+        } else {
+          txStatus.value = "😀 included in sidechain block: " + result.status.asInSidechainBlock;
+        }
+        return
+      }
+      if (result.status.isInvalid) {
+        txStatus.value = "😞 Invalid (unspecified reason)";
+        return
+      }
+    }
+    console.error(`unknown result: ${result}`);
+    txStatus.value = "😞 Unknown Result";
+};
+
+const handleTopError = (err) => {
+  console.error(`error: ${err}`);
+  txStatus.value = `😞 Submission Failed: ${err}`;
+};
+
 const shield = async () => {
   console.log("shielding .....");
   if (isSignerBusy.value) {
@@ -1227,10 +1253,8 @@ const unshield = () => {
         nonce: nonce,
       },
     )
-    .then((hash) => {
-      txStatus.value = "😀 Triggered unshielding of funds";
-      console.log(`trustedOperationHash: ${hash}`);
-    });
+    .then((result) => handleTopResult(result, "😀 Triggered unshielding of funds"))
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
@@ -1260,10 +1284,8 @@ const sendPrivately = () => {
         nonce: nonce,
       },
     )
-    .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}. status unknown`);
-      txStatus.value = "😀 submitted";
-    });
+    .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
@@ -1290,14 +1312,8 @@ const submitGuess = () => {
         nonce: nonce,
       },
     )
-    .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}`);
-      txStatus.value = "😀 Success";
-    })
-    .catch((err) => {
-      console.error(`error: ${err}`);
-      txStatus.value = "😞 Failed";
-    });
+    .then((result) => handleTopResult(result, "😀 Guess submission successful"))
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 

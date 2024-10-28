@@ -34,7 +34,7 @@ const router = useRouter();
 const contextualHealth = computed(() => {
   switch (router.currentRoute.value.path) {
     case "/":
-      return systemHealth.getAggregatedSystemHealth;
+      return systemHealth.getSidechainSystemHealth;
     case "/teerdays":
       return systemHealth.getIntegriteeSystemHealth;
     default:

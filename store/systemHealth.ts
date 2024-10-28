@@ -28,9 +28,25 @@ class ObservableNumber {
 
 export enum Health {
   Unknown,
-  Healthy,
-  Warning,
   Critical,
+  Warning,
+  Healthy,
+}
+
+export class SidechainHealth {
+  shieldingTargetProgress: Health;
+  shieldingTargetImportProgress: Health;
+
+  overall(): Health {
+    return Math.min(this.shieldingTargetProgress, this.shieldingTargetImportProgress);
+  }
+}
+
+export class IntegriteeHealth {
+  integriteeProgress: Health;
+  overall(): Health {
+    return this.integriteeProgress;
+  }
 }
 
 export const useSystemHealth = defineStore("system-health", {
@@ -40,10 +56,21 @@ export const useSystemHealth = defineStore("system-health", {
     integriteeLastBlockNumber: <ObservableNumber | null>null,
   }),
   getters: {
-    getAggregatedSystemHealth({ shieldingTargetFinalizedBlockNumber }): Health {
+    getSidechainSystemHealth({ shieldingTargetLastBlockNumber, shieldingTargetImportedBlockNumber }): SidechainHealth {
+      const lag = shieldingTargetLastBlockNumber?.value - shieldingTargetImportedBlockNumber?.value;
+      let importHealth;
+      if (lag < 5) {
+        importHealth = Health.Healthy;
+      } else if (lag < 10) {
+        importHealth = Health.Warning;
+      } else if (lag >= 10) {
+        importHealth = Health.Critical;
+      } else {
+        importHealth = Health.Unknown;
+      }
       return Health.Healthy;
     },
-    getIntegriteeSystemHealth({ shieldingTargetFinalizedBlockNumber }): Health {
+    getIntegriteeSystemHealth({ shieldingTargetFinalizedBlockNumber }): IntegriteeHealth {
       let health = Health.Healthy;
       if (this.integriteeLastBlockNumber?.age() > 24000) {
         health = Health.Warning;

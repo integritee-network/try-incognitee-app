@@ -1,17 +1,28 @@
 <template>
-  <div class="layout">
-    <header class="header">
-      <div class="header-content">
+  <div class="container">
+    <header class="header bg-gray-800 text-white py-4">
+      <div class="header-content mx-auto flex items-center justify-between">
+        <!-- Logo -->
         <Incognitee class="logo" />
-        <HealthIndicator />
-        <div class="flex items-center">
+
+        <!-- Flex container for network health, indicator, and wallet information -->
+        <div class="flex items-center gap-4">
+          <!-- gap-4 steuert den Abstand zwischen den Elementen -->
+          <!-- Network health text and health indicator -->
+          <div class="flex items-center gap-2">
+            <!-- gap-2 für den Abstand zwischen Network Health und Indikator -->
+            <span class="text-sm">Network health</span>
+            <HealthIndicator />
+          </div>
+
+          <!-- SVG icon -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-6 h-6 mr-2"
+            class="w-6 h-6"
           >
             <path
               stroke-linecap="round"
@@ -19,11 +30,16 @@
               d="M21 12.75H3M21 9.75h-4.5M3 12.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v5.25m-18 0h18m-18 0V16.5A2.25 2.25 0 0 0 5.25 18.75h13.5A2.25 2.25 0 0 0 21 16.5v-3.75"
             />
           </svg>
-          <div class="address cursor-pointer" @click="emitAddressClicked">
+
+          <!-- Address and Connect Wallet button -->
+          <div
+            class="text-white text-sm cursor-pointer"
+            @click="emitAddressClicked"
+          >
             <!-- Full address on larger screens and short address on mobile -->
             <div v-if="accountStore.getAddress === 'none'">
               <button
-                class="mr-5 incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
               >
                 Connect Wallet
               </button>
@@ -40,13 +56,14 @@
         </div>
       </div>
     </header>
+
     <footer class="footer">
-      <nav class="footer-content">
+      <nav class="footer-content container mx-auto">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around"
+            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around z-30"
           >
-            <div class="custom-border-gradient">
+            <div class="container custom-border-gradient">
               <div class="inner-box">
                 <div class="flex justify-around text-white">
                   <div class="flex flex-col items-center text-center">
@@ -165,15 +182,17 @@ const emitAddressClicked = () => {
   width: 100%;
 }
 
-.header {
-  flex-shrink: 0; /* Prevents the header from shrinking */
+.header,
+.footer {
+  flex-shrink: 0;
 }
 
-.header-content {
+.header-content,
+.footer-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1em;
+  width: 100%;
 }
 
 .logo {
@@ -182,29 +201,16 @@ const emitAddressClicked = () => {
 }
 
 .main {
-  flex-grow: 1; /* Allows the main content to take up the remaining space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow-y: auto;
 }
 
-.footer {
-  flex-shrink: 0; /* Prevents the footer from shrinking */
-  z-index: 5;
-}
-
-.footer-content {
-  display: flex;
-  justify-content: space-around;
-}
-
-.footer-content ul {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  padding: 0;
-  list-style-type: none;
+.address {
+  font-size: 0.875rem;
+  color: white;
 }
 
 .bg-green-500 {

@@ -699,7 +699,7 @@ onMounted(() => {
 
   &__columns-row {
     display: flex;
-    gap: 82px;
+    gap: 50px;
 
     @include lg {
       gap: 52px;

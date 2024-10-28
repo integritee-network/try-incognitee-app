@@ -37,13 +37,27 @@ export class SidechainHealth {
   shieldingTargetProgress: Health;
   shieldingTargetImportProgress: Health;
 
+  constructor(
+    shieldingTargetProgress: Health,
+    shieldingTargetImportProgress: Health,
+  ) {
+    this.shieldingTargetProgress = shieldingTargetProgress;
+    this.shieldingTargetImportProgress = shieldingTargetImportProgress;
+  }
   overall(): Health {
-    return Math.min(this.shieldingTargetProgress, this.shieldingTargetImportProgress);
+    return Math.min(
+      this.shieldingTargetProgress,
+      this.shieldingTargetImportProgress,
+    );
   }
 }
 
 export class IntegriteeHealth {
   integriteeProgress: Health;
+
+  constructor(progressHealth: Health) {
+    this.integriteeProgress = progressHealth;
+  }
   overall(): Health {
     return this.integriteeProgress;
   }
@@ -56,8 +70,13 @@ export const useSystemHealth = defineStore("system-health", {
     integriteeLastBlockNumber: <ObservableNumber | null>null,
   }),
   getters: {
-    getSidechainSystemHealth({ shieldingTargetLastBlockNumber, shieldingTargetImportedBlockNumber }): SidechainHealth {
-      const lag = shieldingTargetLastBlockNumber?.value - shieldingTargetImportedBlockNumber?.value;
+    getSidechainSystemHealth({
+      shieldingTargetLastBlockNumber,
+      shieldingTargetImportedBlockNumber,
+    }): SidechainHealth {
+      const lag =
+        shieldingTargetLastBlockNumber?.value -
+        shieldingTargetImportedBlockNumber?.value;
       let importHealth;
       if (lag < 5) {
         importHealth = Health.Healthy;
@@ -68,14 +87,16 @@ export const useSystemHealth = defineStore("system-health", {
       } else {
         importHealth = Health.Unknown;
       }
-      return Health.Healthy;
+      const targetHealth = parachainBlockAgeToHealth(
+        shieldingTargetLastBlockNumber?.age(),
+      );
+      return new SidechainHealth(targetHealth, importHealth);
     },
-    getIntegriteeSystemHealth({ shieldingTargetFinalizedBlockNumber }): IntegriteeHealth {
-      let health = Health.Healthy;
-      if (this.integriteeLastBlockNumber?.age() > 24000) {
-        health = Health.Warning;
-      }
-      return health;
+    getIntegriteeSystemHealth({ integriteeLastBlockNumber }): IntegriteeHealth {
+      const progressHealth = parachainBlockAgeToHealth(
+        integriteeLastBlockNumber?.age(),
+      );
+      return new IntegriteeHealth(progressHealth);
     },
     getIntergiteeBlockNumberObservable({
       integriteeLastBlockNumber,
@@ -83,13 +104,13 @@ export const useSystemHealth = defineStore("system-health", {
       return integriteeLastBlockNumber;
     },
     getShieldingTargetBlockNumberObservable({
-                                         shieldingTargetLastBlockNumber
-                                       }): ObservableNumber {
+      shieldingTargetLastBlockNumber,
+    }): ObservableNumber {
       return shieldingTargetLastBlockNumber;
     },
     getShieldingTargetImportedBlockNumberObservable({
-                                              shieldingTargetImportedBlockNumber
-                                            }): ObservableNumber {
+      shieldingTargetImportedBlockNumber,
+    }): ObservableNumber {
       return shieldingTargetImportedBlockNumber;
     },
   },
@@ -97,12 +118,16 @@ export const useSystemHealth = defineStore("system-health", {
     observeShieldingTargetBlockNumber(block_number: number) {
       this.shieldingTargetLastBlockNumber
         ? this.shieldingTargetLastBlockNumber?.observe(block_number)
-        : (this.shieldingTargetLastBlockNumber = new ObservableNumber(block_number));
+        : (this.shieldingTargetLastBlockNumber = new ObservableNumber(
+            block_number,
+          ));
     },
     observeShieldingTargetImportedBlockNumber(block_number: number) {
       this.shieldingTargetImportedBlockNumber
         ? this.shieldingTargetImportedBlockNumber?.observe(block_number)
-        : (this.shieldingTargetImportedBlockNumber = new ObservableNumber(block_number));
+        : (this.shieldingTargetImportedBlockNumber = new ObservableNumber(
+            block_number,
+          ));
     },
     observeIntegriteeBlockNumber(block_number: number) {
       this.integriteeLastBlockNumber
@@ -111,3 +136,13 @@ export const useSystemHealth = defineStore("system-health", {
     },
   },
 });
+
+const parachainBlockAgeToHealth = (millis: number) => {
+  if (millis < 18000) {
+    return Health.Healthy;
+  } else if (millis < 30000) {
+    return Health.Warning;
+  } else {
+    return Health.Critical;
+  }
+};

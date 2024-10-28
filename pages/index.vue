@@ -835,7 +835,10 @@
                 </div>
 
                 <!-- Winner's address displayed under the last lucky number -->
-                <div class="text-sm leading-6 text-gray-400" v-html="gtnWinners"/>
+                <div
+                  class="text-sm leading-6 text-gray-400"
+                  v-html="gtnWinners"
+                />
               </div>
             </dl>
           </div>
@@ -846,11 +849,11 @@
         </div>
       </div>
     </div>
-    <!-- <div
+    <div
       v-if="
         accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > 1.0
       "
-    > -->
+    >
       <form class="" @submit.prevent="submitGuessForm">
         <!-- Label for the input -->
         <div class="flex justify-between mb-2">
@@ -897,13 +900,13 @@
           </div>
         </div>
       </form>
-    <!-- </div>
-    <div v-else> -->
+    </div>
+    <div v-else>
       <div class="text-sm text-red-400 text-left my-4">
         You need at least 1.0 private PAS to participate in the game. Please
         shield some first.
       </div>
-    <!-- </div> -->
+    </div>
   </OverlayDialog>
 
   <!-- Scan QR -->
@@ -1048,7 +1051,7 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
-import {useSystemHealth} from "@/store/systemHealth";
+import { useSystemHealth } from "@/store/systemHealth";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1180,23 +1183,24 @@ const txErrHandlerShieldingTarget = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
 
 const handleTopResult = (result, successMsg?) => {
-    console.log("TOP result: " + result);
-    if (result) {
-      if (result.status.isInSidechainBlock) {
-        if (successMsg) {
-          txStatus.value = successMsg;
-        } else {
-          txStatus.value = "😀 included in sidechain block: " + result.status.asInSidechainBlock;
-        }
-        return
+  console.log("TOP result: " + result);
+  if (result) {
+    if (result.status.isInSidechainBlock) {
+      if (successMsg) {
+        txStatus.value = successMsg;
+      } else {
+        txStatus.value =
+          "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
-      if (result.status.isInvalid) {
-        txStatus.value = "😞 Invalid (unspecified reason)";
-        return
-      }
+      return;
     }
-    console.error(`unknown result: ${result}`);
-    txStatus.value = "😞 Unknown Result";
+    if (result.status.isInvalid) {
+      txStatus.value = "😞 Invalid (unspecified reason)";
+      return;
+    }
+  }
+  console.error(`unknown result: ${result}`);
+  txStatus.value = "😞 Unknown Result";
 };
 
 const handleTopError = (err) => {
@@ -1253,7 +1257,9 @@ const unshield = () => {
         nonce: nonce,
       },
     )
-    .then((result) => handleTopResult(result, "😀 Triggered unshielding of funds"))
+    .then((result) =>
+      handleTopResult(result, "😀 Triggered unshielding of funds"),
+    )
     .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
@@ -1405,8 +1411,10 @@ const gtnWinners = computed(() => {
   if (guessTheNumberInfo.value) {
     let winners = [];
     for (const winner of guessTheNumberInfo.value.last_winners) {
-      winners.push(encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...");
-    };
+      winners.push(
+        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
+      );
+    }
     return winners.join("<br>");
   }
   return "no one";
@@ -1419,10 +1427,10 @@ const fetchNetworkStatus = async () => {
     incogniteeShard.value,
   );
   getter.send().then((info) => {
-    console.log(`parentchains info: ${info}`);
+    // console.log(`parentchains info: ${info}`);
     const shielding_target_id = info.shielding_target.toString().toLowerCase();
     const block_number = info[shielding_target_id]?.block_number;
-    console.log("shielding target last imported block number: " + block_number);
+    // console.log("shielding target last imported block number: " + block_number);
     if (block_number !== null && block_number !== undefined) {
       systemHealth.observeShieldingTargetImportedBlockNumber(block_number);
     }
@@ -1506,7 +1514,9 @@ watch(accountStore, async () => {
     },
   );
   api.rpc.chain.subscribeNewHeads((lastHeader) => {
-    systemHealth.observeShieldingTargetBlockNumber(lastHeader.number.toNumber());
+    systemHealth.observeShieldingTargetBlockNumber(
+      lastHeader.number.toNumber(),
+    );
   });
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   fetchIncogniteeBalance().then(() =>

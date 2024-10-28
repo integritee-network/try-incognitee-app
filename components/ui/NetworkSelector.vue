@@ -7,8 +7,7 @@
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
         'border-incognitee-green':
-          teerHover ||
-          (selectedNetwork === ChainId.IntegriteeKusama),
+          teerHover || selectedNetwork === ChainId.IntegriteeKusama,
       }"
       @mouseover="teerHover = true"
       @mouseleave="teerHover = false"
@@ -28,8 +27,7 @@
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
         'border-incognitee-green':
-          pasHover ||
-          (selectedNetwork === ChainId.PaseoRelay),
+          pasHover || selectedNetwork === ChainId.PaseoRelay,
       }"
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
@@ -77,7 +75,9 @@ const props = defineProps({
 });
 
 // in case we need it somewhere
-const isProd = computed(() => chainConfigs[props.selectedNetwork].faucetUrl === undefined);
+const isProd = computed(
+  () => chainConfigs[props.selectedNetwork].faucetUrl === undefined,
+);
 
 // Hover-Zustände
 const teerHover = ref(false);

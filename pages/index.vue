@@ -853,7 +853,8 @@
     </div>
     <div
       v-if="
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > INCOGNITEE_GTN_GUESS_FEE
+        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
+        INCOGNITEE_GTN_GUESS_FEE
       "
     >
       <form class="" @submit.prevent="submitGuessForm">

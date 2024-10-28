@@ -23,7 +23,7 @@
           <h1
             class="title mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl"
           >
-            My Wallet
+            My TEERdays
           </h1>
 
           <div class="mt-5">

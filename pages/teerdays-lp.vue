@@ -48,7 +48,7 @@
             Web3 solution empowers you to make secure, private, and anonymous
             transactions without compromising control over your assets.
             <br /><br />
-            Collect TEERdays now and save the pole position for the Incognitee
+            Collect TEERdays now and save the pole position for the Incognitee (stable)
             Go-Live.
           </p>
           <div
@@ -87,6 +87,23 @@
             alt="polkajs"
           />
         </div>
+      </div>
+      <div class="mt-10 flex">
+        <a href="/teerdays" target="_blank">
+          <button
+            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white mr-5"
+          >
+            Start Collecting
+          </button>
+        </a>
+
+        <a href="https://incognitee.io" target="_blank">
+          <button
+            class="incognitee-blue ring-1 ring-inset ring-incognitee-green rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-incognitee-green"
+          >
+            What is Incognitee?
+          </button>
+        </a>
       </div>
     </div>
 

@@ -70,14 +70,20 @@
             ]"
           >
             {{
-              systemHealth.getShieldingTargetApiGenesisHashHex.slice(0, 8)
-            }}... vs
+              systemHealth.getShieldingTargetApiGenesisHashHex
+                ? systemHealth.getShieldingTargetApiGenesisHashHex.slice(0, 8) +
+                  "..."
+                : "unknown"
+            }}
+            vs
             {{
-              systemHealth.getShieldingTargetLightClientGenesisHashHex.slice(
-                0,
-                8,
-              )
-            }}...
+              systemHealth.getShieldingTargetLightClientGenesisHashHex
+                ? systemHealth.getShieldingTargetLightClientGenesisHashHex.slice(
+                    0,
+                    8,
+                  ) + "..."
+                : "unknown"
+            }}
           </p>
           <br />
           <p class="text-sm text-gray-400">

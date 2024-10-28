@@ -98,7 +98,7 @@ export const useSystemHealth = defineStore("system-health", {
       const targetHealth = parachainBlockAgeToHealth(
         shieldingTargetLastBlockNumber?.age(),
       );
-      let genesisMatch = Health.Unknown;
+      let genesisMatch = Health.Warning;
       if (
         shieldingTargetApiGenesisHashHex?.length > 0 &&
         shieldingTargetLightClientGenesisHashHex?.length > 0

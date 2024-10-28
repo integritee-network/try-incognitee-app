@@ -48,8 +48,8 @@
             Web3 solution empowers you to make secure, private, and anonymous
             transactions without compromising control over your assets.
             <br /><br />
-            Collect TEERdays now and save the pole position for the Incognitee (stable)
-            Go-Live.
+            Collect TEERdays now and save the pole position for the Incognitee
+            (stable) Go-Live.
           </p>
           <div
             class="wallet-grid mx-auto mt-10 grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
@@ -645,8 +645,7 @@
     aria-live="assertive"
     class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
   >
-    <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-    </div>
+    <div class="flex w-full flex-col items-center space-y-4 sm:items-end"></div>
   </div>
 </template>
 
@@ -684,7 +683,7 @@ import { useRouter } from "vue-router";
 import { useAccount } from "@/store/account.ts";
 import { chainConfigs } from "@/configs/chains.ts";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
-import { loadEnv, integriteeNetwork, } from "@/lib/environmentConfig";
+import { loadEnv, integriteeNetwork } from "@/lib/environmentConfig";
 import { Bond } from "@/lib/teerDays";
 import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
@@ -762,7 +761,6 @@ onMounted(async () => {
   loadEnv();
   subscribeToTeerDayStats();
 });
-
 </script>
 
 <style scoped>

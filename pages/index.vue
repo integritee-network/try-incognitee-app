@@ -853,7 +853,7 @@
     </div>
     <div
       v-if="
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > 1.0
+        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > INCOGNITEE_GTN_GUESS_FEE
       "
     >
       <form class="" @submit.prevent="submitGuessForm">
@@ -924,9 +924,10 @@
           <div class="ml-3">
             <div class="text-left text-sm text-yellow-700">
               <p>
-                You need at least {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
-                private {{ accountStore.getSymbol }} to participate in the game.
-                Please shield some first.
+                You need at least
+                {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} private
+                {{ accountStore.getSymbol }} to participate in the game. Please
+                shield some first.
               </p>
             </div>
           </div>
@@ -1454,10 +1455,11 @@ const fetchNetworkStatus = async () => {
   );
   getter.send().then((info) => {
     console.log(`parentchains info: ${info}`);
-    const shielding_target_id = info.shielding_target.toString()
-      .replace(/([A-Z])/g, '_$1')
+    const shielding_target_id = info.shielding_target
+      .toString()
+      .replace(/([A-Z])/g, "_$1")
       .toLowerCase()
-      .replace(/^_/, '');
+      .replace(/^_/, "");
     console.log("shielding target: " + shielding_target_id);
     const block_number = info[shielding_target_id]?.block_number;
     console.log("shielding target last imported block number: " + block_number);

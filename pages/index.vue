@@ -776,8 +776,13 @@
                   <dd
                     class="mt-1 text-left text-base font-semibold leading-6 text-white"
                   >
-                    {{ guessTheNumberInfo?.winnings / Math.pow(10, 10) }}
-                    PAS
+                    {{
+                      formatDecimalBalance(
+                        guessTheNumberInfo?.winnings /
+                          Math.pow(10, accountStore.decimals),
+                      )
+                    }}
+                    {{ accountStore.getSymbol }}
                   </dd>
                 </div>
 
@@ -879,7 +884,8 @@
             <!-- Fee description below input, right-aligned -->
             <div class="absolute right-0 -bottom-5">
               <span class="text-xs text-gray-400"
-                >Fee: 1 PAS for Incognitee</span
+                >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
+                {{ accountStore.getSymbol }} for Incognitee</span
               >
             </div>
           </div>
@@ -918,7 +924,8 @@
           <div class="ml-3">
             <div class="text-left text-sm text-yellow-700">
               <p>
-                You need at least 1.0 private PAS to participate in the game.
+                You need at least {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
+                private {{ accountStore.getSymbol }} to participate in the game.
                 Please shield some first.
               </p>
             </div>
@@ -1034,6 +1041,7 @@ import OverlayDialog from "@/components/ui/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { encodeAddress } from "@polkadot/util-crypto";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
@@ -1061,11 +1069,20 @@ import {
   incogniteeShard,
   isLive,
 } from "@/lib/environmentConfig";
-import ObtainTokenOverlay from "~/components/ui/ObtainTokenOverlay.vue";
+import ObtainTokenOverlay from "@/components/ui/ObtainTokenOverlay.vue";
+import { formatDecimalBalance } from "@/store/account";
+import {
+  INCOGNITEE_GTN_GUESS_FEE,
+  INCOGNITEE_SHIELDING_FEE_FRACTION,
+  INCOGNITEE_TX_FEE,
+  INCOGNITEE_UNSHIELDING_FEE,
+} from "../configs/incognitee";
+import { useSystemHealth } from "@/store/systemHealth";
 
 const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
+const systemHealth = useSystemHealth();
 const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
@@ -1190,6 +1207,33 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
 
 const txErrHandlerShieldingTarget = (err) =>
   (txStatus.value = `😞 Transaction Failed: ${err.toString()}`);
+
+const handleTopResult = (result, successMsg?) => {
+  console.log("TOP result: " + result);
+  if (result) {
+    if (result.status.isInSidechainBlock) {
+      if (successMsg) {
+        txStatus.value = successMsg;
+      } else {
+        txStatus.value =
+          "😀 included in sidechain block: " + result.status.asInSidechainBlock;
+      }
+      return;
+    }
+    if (result.status.isInvalid) {
+      txStatus.value = "😞 Invalid (unspecified reason)";
+      return;
+    }
+  }
+  console.error(`unknown result: ${result}`);
+  txStatus.value = "😞 Unknown Result";
+};
+
+const handleTopError = (err) => {
+  console.error(`error: ${err}`);
+  txStatus.value = `😞 Submission Failed: ${err}`;
+};
+
 const shield = async () => {
   console.log("shielding .....");
   if (isSignerBusy.value) {
@@ -1239,10 +1283,10 @@ const unshield = () => {
         nonce: nonce,
       },
     )
-    .then((hash) => {
-      txStatus.value = "😀 Triggered unshielding of funds";
-      console.log(`trustedOperationHash: ${hash}`);
-    });
+    .then((result) =>
+      handleTopResult(result, "😀 Triggered unshielding of funds"),
+    )
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
@@ -1272,10 +1316,8 @@ const sendPrivately = () => {
         nonce: nonce,
       },
     )
-    .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}. status unknown`);
-      txStatus.value = "😀 submitted";
-    });
+    .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
@@ -1283,6 +1325,10 @@ const submitGuess = () => {
   console.log("submit guess: ", guess.value);
   txStatus.value = "⌛ privately submitting your guess to incognitee";
   const account = accountStore.account;
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   console.log(
     `sending guess ${guess.value} from ${account.address} privately to incognitee`,
   );
@@ -1295,13 +1341,11 @@ const submitGuess = () => {
       guess.value,
       {
         signer: accountStore.injector?.signer,
-        nonce: accountStore.incogniteeNonce,
+        nonce: nonce,
       },
     )
-    .then((hash) => {
-      console.log(`trustedOperationHash: ${hash}`);
-      txStatus.value = "😀 Success";
-    });
+    .then((result) => handleTopResult(result, "😀 Guess submission successful"))
+    .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
@@ -1379,7 +1423,7 @@ const fetchIncogniteeBalance = async () => {
 
 const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
-  console.log("TODO: fetch guess the number info");
+  console.log("fetch guess the number info");
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
     incogniteeStore.shard,
   );
@@ -1389,10 +1433,52 @@ const fetchGuessTheNumberInfo = async () => {
   });
 };
 
+const gtnWinners = computed(() => {
+  if (guessTheNumberInfo.value) {
+    let winners = [];
+    for (const winner of guessTheNumberInfo.value.last_winners) {
+      winners.push(
+        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
+      );
+    }
+    return winners.join("<br>");
+  }
+  return "no one";
+});
+
+const fetchNetworkStatus = async () => {
+  if (!incogniteeStore.apiReady) return;
+  console.debug("fetch network status info");
+  const getter = incogniteeStore.api.parentchainsInfoGetter(
+    incogniteeShard.value,
+  );
+  getter.send().then((info) => {
+    console.log(`parentchains info: ${info}`);
+    const shielding_target_id = info.shielding_target.toString()
+      .replace(/([A-Z])/g, '_$1')
+      .toLowerCase()
+      .replace(/^_/, '');
+    console.log("shielding target: " + shielding_target_id);
+    const block_number = info[shielding_target_id]?.block_number;
+    console.log("shielding target last imported block number: " + block_number);
+    if (block_number !== null && block_number !== undefined) {
+      systemHealth.observeShieldingTargetImportedBlockNumber(block_number);
+    }
+  });
+  api.rpc.chain.getFinalizedHead().then((head) => {
+    api.rpc.chain.getBlock(head).then((block) => {
+      console.log(
+        `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+      );
+    });
+  });
+};
+
 const pollCounter = useInterval(2000);
 
 watch(pollCounter, async () => {
-  await fetchIncogniteeBalance();
+  fetchIncogniteeBalance();
+  fetchNetworkStatus();
 });
 
 watch(accountStore, async () => {
@@ -1430,12 +1516,38 @@ watch(accountStore, async () => {
   console.log("faucet url: " + faucetUrl.value);
   api.query.system.account(
     accountStore.getAddress,
-    ({ data: { free: currentFree } }) => {
-      console.log("shielding target balance:" + currentFree);
+    ({
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
+      console.log(
+        "shielding-target balance: free=" +
+          currentFree +
+          " reserved=" +
+          currentReserved +
+          " frozen=" +
+          currentFrozen,
+      );
       accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceReserved(
+        BigInt(currentReserved),
+        shieldingTarget.value,
+      );
+      accountStore.setBalanceFrozen(
+        BigInt(currentFrozen),
+        shieldingTarget.value,
+      );
       isFetchingShieldingTargetBalance.value = false;
     },
   );
+  api.rpc.chain.subscribeNewHeads((lastHeader) => {
+    systemHealth.observeShieldingTargetBlockNumber(
+      lastHeader.number.toNumber(),
+    );
+  });
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),

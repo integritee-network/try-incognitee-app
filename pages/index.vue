@@ -835,25 +835,7 @@
                 </div>
 
                 <!-- Winner's address displayed under the last lucky number -->
-                <div class="text-sm leading-6 text-gray-400">
-                  <span v-if="isMobile">
-                    {{
-                      guessTheNumberInfo?.last_winners.isEmpty
-                        ? "no one"
-                        : guessTheNumberInfo?.last_winners
-                            .join(", ")
-                            .slice(0, 20) + "..."
-                    }}
-                  </span>
-
-                  <span v-else>
-                    {{
-                      guessTheNumberInfo?.last_winners.isEmpty
-                        ? "no one"
-                        : guessTheNumberInfo?.last_winners.join(", ")
-                    }}
-                  </span>
-                </div>
+                <div class="text-sm leading-6 text-gray-400" v-html="gtnWinners"/>
               </div>
             </dl>
           </div>
@@ -1030,6 +1012,7 @@ import OverlayDialog from "@/components/ui/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { encodeAddress } from "@polkadot/util-crypto";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
@@ -1401,6 +1384,17 @@ const fetchGuessTheNumberInfo = async () => {
     guessTheNumberInfo.value = info;
   });
 };
+
+const gtnWinners = computed(() => {
+  if (guessTheNumberInfo.value) {
+    let winners = [];
+    for (const winner of guessTheNumberInfo.value.last_winners) {
+      winners.push(encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...");
+    };
+    return winners.join("<br>");
+  }
+  return "no one";
+});
 
 const fetchNetworkStatus = async () => {
   if (!incogniteeStore.apiReady) return;

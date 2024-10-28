@@ -11,6 +11,7 @@
   />
 
   <div class="container">
+    <!-- interaction with the wallet -->
     <div
       v-if="accountStore.hasInjector"
       ref="walletSection"
@@ -271,6 +272,8 @@
         </div>
       </div>
     </div>
+
+
     <div
       class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"

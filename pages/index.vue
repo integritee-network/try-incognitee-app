@@ -1017,7 +1017,7 @@
   <ChooseWalletOverlay
     :show="showChooseWalletOverlay"
     :close="closeChooseWalletOverlay"
-    :createTestingAccount="createTestingAccount"
+    :createTestingAccount="isProd ? undefined : createTestingAccount"
     :onExtensionAccountChange="onExtensionAccountChange"
     :showTrustedGetterHint="true"
   />
@@ -1102,6 +1102,9 @@ const scanResult = ref("No QR code data yet");
 
 const faucetUrl = ref(null);
 
+const isProd = computed(
+  () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
+);
 const onExtensionAccountChange = async (selectedAddress) => {
   dropSubscriptions();
   console.log("user selected extension account:", selectedAddress);

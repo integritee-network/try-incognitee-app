@@ -74,11 +74,6 @@ const props = defineProps({
   },
 });
 
-// in case we need it somewhere
-const isProd = computed(
-  () => chainConfigs[props.selectedNetwork].faucetUrl === undefined,
-);
-
 // Hover-Zustände
 const teerHover = ref(false);
 const pasHover = ref(false);

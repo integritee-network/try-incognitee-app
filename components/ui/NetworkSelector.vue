@@ -8,8 +8,7 @@
       :class="{
         'border-incognitee-green':
           teerHover ||
-          (isProd && selectedNetwork === ChainId.IntegriteeKusama) ||
-          (!isProd && selectedNetwork !== ChainId.PaseoRelay),
+          (selectedNetwork === ChainId.IntegriteeKusama),
       }"
       @mouseover="teerHover = true"
       @mouseleave="teerHover = false"
@@ -30,8 +29,7 @@
       :class="{
         'border-incognitee-green':
           pasHover ||
-          (!isProd && selectedNetwork === ChainId.PaseoRelay) ||
-          (isProd && teerHover),
+          (selectedNetwork === ChainId.PaseoRelay),
       }"
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
@@ -58,12 +56,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import Paseo from "assets/img/paseo-logo.svg";
 import USDC from "assets/img/usdc-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
 import { ChainId } from "@/configs/chains.ts";
 import { defineProps } from "vue";
+import { chainConfigs } from "@/configs/chains.ts";
 
 // Props werden übergeben
 const props = defineProps({
@@ -77,8 +76,8 @@ const props = defineProps({
   },
 });
 
-// Umgebungsvariable für Prod/Dev erkennen
-const isProd = ref(process.env.LIVE === "false");
+// in case we need it somewhere
+const isProd = computed(() => chainConfigs[props.selectedNetwork].faucetUrl === undefined);
 
 // Hover-Zustände
 const teerHover = ref(false);

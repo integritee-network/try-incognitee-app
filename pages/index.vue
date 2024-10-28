@@ -753,8 +753,10 @@
     title="Guess The Number"
   >
     <div class="my-3 text-gray-300 text-sm text-center">
-      <p>Guess a number between 0-10000 and win a weekly giveaway!</p>
-      <p>You can place up to 10 guesses per round.</p>
+      <p>
+        Guess a number between 0-10000 and win a weekly giveaway! You can place
+        up to 10 guesses per round.
+      </p>
     </div>
 
     <div class="mx-auto">
@@ -851,7 +853,8 @@
     </div>
     <div
       v-if="
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) > 1.0
+        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
+        INCOGNITEE_GTN_GUESS_FEE
       "
     >
       <form class="" @submit.prevent="submitGuessForm">
@@ -902,9 +905,34 @@
       </form>
     </div>
     <div v-else>
-      <div class="text-sm text-red-400 text-left my-4">
-        You need at least 1.0 private PAS to participate in the game. Please
-        shield some first.
+      <div class="rounded-md bg-yellow-50 p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg
+              class="h-5 w-5 text-yellow-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+              data-slot="icon"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <div class="text-left text-sm text-yellow-700">
+              <p>
+                You need at least
+                {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} private
+                {{ accountStore.getSymbol }} to participate in the game. Please
+                shield some first.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </OverlayDialog>
@@ -1428,10 +1456,11 @@ const fetchNetworkStatus = async () => {
   );
   getter.send().then((info) => {
     console.log(`parentchains info: ${info}`);
-    const shielding_target_id = info.shielding_target.toString()
-      .replace(/([A-Z])/g, '_$1')
+    const shielding_target_id = info.shielding_target
+      .toString()
+      .replace(/([A-Z])/g, "_$1")
       .toLowerCase()
-      .replace(/^_/, '');
+      .replace(/^_/, "");
     console.log("shielding target: " + shielding_target_id);
     const block_number = info[shielding_target_id]?.block_number;
     console.log("shielding target last imported block number: " + block_number);
@@ -1816,6 +1845,21 @@ const formatTimestamp = (timestamp: number | null) => {
 </script>
 
 <style scoped>
+.currency-box {
+  position: relative;
+  outline: none; /* Keine Outline standardmäßig */
+}
+
+.currency-box:hover {
+  outline: 2px solid var(--incognitee-green); /* Verwende outline statt border */
+}
+
+.text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .border-green-500 {
   border-color: #24ad7c;
 }

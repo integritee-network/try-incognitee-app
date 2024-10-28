@@ -71,6 +71,7 @@ export default defineNuxtConfig({
     "/": { ssr: false },
     "/teerdays": { ssr: false },
     "/gtn": { ssr: false },
+    "/teerdays-lp": { ssr: false },
   },
   imports: {
     autoImport: false,

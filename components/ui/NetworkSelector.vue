@@ -2,21 +2,15 @@
   <div
     class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
   >
-    <!-- USE THIS LATER TO LINK TO app.incognitee.io <a
-          href=""
-      target="_blank"
-      class="currency-box p-3 gap-2 basis-1/4 hover:border-2 hover:border-incognitee-green"
-    >
-      <TEER class="w-[30px] h-[30px]" />
-      <p class="text-xs">TEER<br />Integritee</p>
-    </a>
-    -->
+    <!-- TEER Box -->
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
-        'border-2 border-incognitee-green':
-          selectedNetwork === ChainId.IntegriteeKusama,
+        'border-incognitee-green':
+          teerHover || selectedNetwork === ChainId.IntegriteeKusama,
       }"
+      @mouseover="teerHover = true"
+      @mouseleave="teerHover = false"
       @click="handleTeerClick"
     >
       <TEER class="w-[30px] h-[30px]" />
@@ -27,18 +21,24 @@
       >
       <div class="ribbon red"><span>beta</span></div>
     </div>
+
+    <!-- PAS PASEO Box -->
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
-        'border-2 border-incognitee-green':
-          selectedNetwork === ChainId.PaseoRelay,
+        'border-incognitee-green':
+          pasHover || selectedNetwork === ChainId.PaseoRelay,
       }"
+      @mouseover="pasHover = true"
+      @mouseleave="pasHover = false"
       @click="handlePasClick"
     >
       <Paseo class="w-[30px] h-[30px]" />
       <p class="text-xs">PAS<br />PASEO</p>
       <div class="ribbon blue"><span>test</span></div>
     </div>
+
+    <!-- USDC Box -->
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       @click="openAssetsInfo"
@@ -54,12 +54,15 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from "vue";
 import Paseo from "assets/img/paseo-logo.svg";
 import USDC from "assets/img/usdc-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
 import { ChainId } from "@/configs/chains.ts";
 import { defineProps } from "vue";
+import { chainConfigs } from "@/configs/chains.ts";
 
+// Props werden übergeben
 const props = defineProps({
   openAssetsInfo: {
     type: Function,
@@ -71,12 +74,21 @@ const props = defineProps({
   },
 });
 
+// in case we need it somewhere
+const isProd = computed(
+  () => chainConfigs[props.selectedNetwork].faucetUrl === undefined,
+);
+
+// Hover-Zustände
+const teerHover = ref(false);
+const pasHover = ref(false);
+
+// Funktionen für das Klicken auf die Boxen
 const handleTeerClick = () => {
   try {
     if (props.selectedNetwork === ChainId.IntegriteeKusama) {
       console.log("do nothing");
     } else {
-      console.log("open link");
       window.open("https://app.incognitee.io", "_blank");
     }
   } catch (e) {
@@ -89,7 +101,6 @@ const handlePasClick = () => {
     if (props.selectedNetwork === ChainId.PaseoRelay) {
       console.log("do nothing");
     } else {
-      console.log("open link");
       window.open("https://try.incognitee.io", "_blank");
     }
   } catch (e) {
@@ -99,6 +110,16 @@ const handlePasClick = () => {
 </script>
 
 <style scoped>
+.currency-box {
+  position: relative;
+  border: 2px solid transparent; /* Transparenter Rahmen als Platzhalter */
+  transition: border-color 0.3s ease; /* Sanfter Übergang der Rahmenfarbe */
+}
+
+.currency-box.border-incognitee-green {
+  border-color: #24ad7c; /* Grüne Rahmenfarbe */
+}
+
 .ribbon {
   position: absolute;
   top: 0;

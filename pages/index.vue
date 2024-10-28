@@ -40,10 +40,14 @@
 
         <div class="text-white mb-6 text-center">
           <div class="">
-            <h3 class="text-sm mb-3">Public Balance</h3>
+            <h3 class="text-sm mb-3">Public Transferable Balance</h3>
             <div v-if="isFetchingShieldingTargetBalance" class="spinner"></div>
             <div class="text-4xl font-semibold" v-else>
-              {{ accountStore.formatBalanceFree(shieldingTarget) }}
+              {{
+                formatDecimalBalance(
+                  accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                )
+              }}
               <span class="text-sm font-semibold">{{
                 accountStore.getSymbol
               }}</span>
@@ -362,8 +366,9 @@
         />
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: 16 m{{ accountStore.getSymbol }} for L1, 0.175% for
-            Incognitee</span
+            >Fee: ~16 m{{ accountStore.getSymbol }} for L1,
+            {{ formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100) }}%
+            for Incognitee</span
           >
         </div>
       </div>
@@ -563,7 +568,8 @@
       <!-- Fee description -->
       <div class="text-right">
         <span class="text-xs text-gray-400"
-          >Fee: 30m {{ accountStore.getSymbol }} for Incognitee</span
+          >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
+          {{ accountStore.getSymbol }} for Incognitee</span
         >
       </div>
 
@@ -723,7 +729,8 @@
         <!-- Fee description -->
         <div class="text-right">
           <span class="text-xs text-gray-400"
-            >Fee: 10m {{ accountStore.getSymbol }} for Incognitee</span
+            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span
           >
         </div>
       </div>
@@ -825,25 +832,10 @@
                 </div>
 
                 <!-- Winner's address displayed under the last lucky number -->
-                <div class="text-sm leading-6 text-gray-400 text-overflow">
-                  <span v-if="isMobile">
-                    {{
-                      guessTheNumberInfo?.last_winners.isEmpty
-                        ? "no one"
-                        : guessTheNumberInfo?.last_winners
-                            .join(", ")
-                            .slice(0, 20) + "..."
-                    }}
-                  </span>
-
-                  <span v-else>
-                    {{
-                      guessTheNumberInfo?.last_winners.isEmpty
-                        ? "no one"
-                        : guessTheNumberInfo?.last_winners.join(", ")
-                    }}
-                  </span>
-                </div>
+                <div
+                  class="text-sm leading-6 text-gray-400"
+                  v-html="gtnWinners"
+                />
               </div>
             </dl>
           </div>

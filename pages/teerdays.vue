@@ -659,6 +659,7 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAccount, formatDecimalBalance } from "@/store/account.ts";
+import { useSystemHealth } from "@/store/systemHealth.ts";
 import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
@@ -680,6 +681,7 @@ const toggleAccordion = (index) => {
 };
 
 const accountStore = useAccount();
+const systemHealth = useSystemHealth();
 const router = useRouter();
 const accounts = ref([]);
 const selectedAccount = ref(null);
@@ -691,6 +693,12 @@ const summaryTeerBonded = ref(0);
 const summaryTeerDays = ref(0);
 const isChoosingAccount = ref(false);
 
+const isMobile = ref(false);
+
+// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
+const checkIfMobile = () => {
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
+};
 const dropSubscriptions = async () => {
   console.log("dropping subscriptions");
   api?.disconnect();
@@ -898,6 +906,9 @@ const subscribeToTeerDayStats = async () => {
       );
       summaryHolders.value = allBonds.value.length;
       //console.log(summaryHolders.value);
+    });
+    api.rpc.chain.subscribeNewHeads((lastHeader) => {
+      systemHealth.observeIntegriteeBlockNumber(lastHeader.number.toNumber());
     });
   });
 };

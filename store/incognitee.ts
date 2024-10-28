@@ -11,6 +11,17 @@ export const useIncognitee = defineStore("incognitee", {
     fingerprint: "",
     vault: "",
   }),
+  getters: {
+    getShard(): string {
+      return this.shard;
+    },
+    getFingerprint(): string {
+      return this.fingerprint;
+    },
+    getVault(): string {
+      return this.vault;
+    },
+  },
   actions: {
     async initializeApi(url: string, shard: string) {
       console.log(

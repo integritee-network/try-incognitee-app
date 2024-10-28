@@ -39,6 +39,9 @@ export const useAccount = defineStore("account", {
       const address = asString(account as AddressOrPair);
       return encodeAddress(address, this.ss58Format);
     },
+    getSs58Format({ ss58Format }): number {
+      return ss58Format;
+    },
     getSymbol({ symbol }): string {
       return symbol;
     },

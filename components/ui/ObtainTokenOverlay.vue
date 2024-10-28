@@ -2,7 +2,12 @@
   <OverlayDialog :show="show" :close="close" title="Obtain TEER Tokens!">
     <div class="mt-2">
       <p class="text-sm text-gray-400">
-        You can get {{ tokenSymbol }} at <a href="https://www.gate.io/de/trade/TEER_USDT">gate.io</a> and <a href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h">Kraken</a>
+        You can get {{ tokenSymbol }} at
+        <a href="https://www.gate.io/de/trade/TEER_USDT">gate.io</a> and
+        <a
+          href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+          >Kraken</a
+        >
       </p>
       <p class="text-sm text-gray-400">
         after buying {{ tokenSymbol }}, withdraw them to this address:
@@ -37,7 +42,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </OverlayDialog>
 </template>

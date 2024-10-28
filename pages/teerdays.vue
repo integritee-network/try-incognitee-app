@@ -10,7 +10,7 @@
         doesn't work."
   />
 
-  <div class=" container">
+  <div class="container">
     <div
       v-if="accountStore.hasInjector"
       ref="walletSection"
@@ -300,7 +300,6 @@
       />
     </div>
 
-
     <hr
       class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
     />
@@ -387,105 +386,140 @@
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
-    <!-- Accordion 1: TEERdays Intro -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(1)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">TEERdays Intro</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 1"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 1: TEERdays Intro -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(1)"
         >
-          <p class="text-gray-300 mt-4">
-            By bonding your TEER now, you can already accumulate TEERdays prior to the launch of Incognitee. TEERdays are calculated by multiplying the amount of TEER by the number of days bonded. You can unbond your TEER anytime within 7 days, but you will lose a fraction of the accumulated TEERdays if you do. TEERdays are non-transferable. Start now to get the best position for the Incognitee launch.
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            TEERdays Intro
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 1"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              By bonding your TEER now, you can already accumulate TEERdays
+              prior to the launch of Incognitee. TEERdays are calculated by
+              multiplying the amount of TEER by the number of days bonded. You
+              can unbond your TEER anytime within 7 days, but you will lose a
+              fraction of the accumulated TEERdays if you do. TEERdays are
+              non-transferable. Start now to get the best position for the
+              Incognitee launch.
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 2: Why collect TEERdays? -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(2)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Why collect TEERdays?</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 2"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 2: Why collect TEERdays? -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(2)"
         >
-          <p class="text-gray-300 mt-4">
-            TEERdays can be used to increase your revenue share for the launch of Incognitee on Polkadot/Kusama and will also increase your governance voting power for future decisions related to Incognitee.
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            Why collect TEERdays?
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 2"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              TEERdays can be used to increase your revenue share for the launch
+              of Incognitee on Polkadot/Kusama and will also increase your
+              governance voting power for future decisions related to
+              Incognitee.
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 3: How to participate? -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(3)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">How to participate?</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 3"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 3: How to participate? -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(3)"
         >
-          <p class="text-gray-300 mt-4">
-            1. First, you need to possess some TEER. Grab them at one of the avenues like
-            <a href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h" class="text-blue-400 underline">Kraken</a>,
-            <a href="https://www.gate.io/de/trade/TEER_USDT" class="text-blue-400 underline">Gate</a>, or
-            <a href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17" class="text-blue-400 underline">Basilisk</a>. <br />
-            2. Get one of the supported wallets and connect your wallet. <br />
-            3. Transfer TEER to your wallet. <br />
-            4. Bond your TEER using this current page. <br />
-            5. Start automatically collecting TEERdays. <br />
-            6. Refer a friend (coming soon).
-          </p>
-        </div>
-      </transition>
-    </div>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            How to participate?
+          </h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 3"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <p class="text-gray-300 mt-4">
+              1. First, you need to possess some TEER. Grab them at one of the
+              avenues like
+              <a
+                href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+                class="text-blue-400 underline"
+                >Kraken</a
+              >,
+              <a
+                href="https://www.gate.io/de/trade/TEER_USDT"
+                class="text-blue-400 underline"
+                >Gate</a
+              >, or
+              <a
+                href="https://app.basilisk.cloud/trade?assetIn=1&assetOut=17"
+                class="text-blue-400 underline"
+                >Basilisk</a
+              >. <br />
+              2. Get one of the supported wallets and connect your wallet.
+              <br />
+              3. Transfer TEER to your wallet. <br />
+              4. Bond your TEER using this current page. <br />
+              5. Start automatically collecting TEERdays. <br />
+              6. Refer a friend (coming soon).
+            </p>
+          </div>
+        </transition>
+      </div>
 
-    <!-- Accordion 4: Rules -->
-    <div class="sm:col-span-6">
-      <button
-        class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
-        @click="toggleAccordion(4)"
-      >
-        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Rules</h2>
-      </button>
-      <transition name="smooth-accordion">
-        <div
-          v-show="activeAccordion === 4"
-          class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+      <!-- Accordion 4: Rules -->
+      <div class="sm:col-span-6">
+        <button
+          class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
+          @click="toggleAccordion(4)"
         >
-          <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
-            <li>You can bond as many TEER as you like</li>
-            <li>You can unbond any time with a 7-day unbonding period</li>
-            <li>You will not accumulate any TEERdays during the unbonding period</li>
-            <li>You can’t bond any additional TEER during the unbonding period</li>
-            <li>You will lose a % of your TEERdays if you unbond your TEER pro rata of the unbonded amount</li>
-            <li>TEERdays are non-transferable</li>
-            <li>
-              TEERdays are calculated as follows:<br />
-              Amount of TEER times the number of days bonded = TEERdays <br />
-              Example: 20 TEER * 7 days = 140 TEERdays
-            </li>
-          </ul>
-        </div>
-      </transition>
+          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Rules</h2>
+        </button>
+        <transition name="smooth-accordion">
+          <div
+            v-show="activeAccordion === 4"
+            class="accordion-content p-6 border border-incognitee-green bg-gray-900 rounded-md shadow-2xl shadow-blue-500/20"
+          >
+            <ul class="list-disc list-outside text-gray-300 mt-6 px-4">
+              <li>You can bond as many TEER as you like</li>
+              <li>You can unbond any time with a 7-day unbonding period</li>
+              <li>
+                You will not accumulate any TEERdays during the unbonding period
+              </li>
+              <li>
+                You can’t bond any additional TEER during the unbonding period
+              </li>
+              <li>
+                You will lose a % of your TEERdays if you unbond your TEER pro
+                rata of the unbonded amount
+              </li>
+              <li>TEERdays are non-transferable</li>
+              <li>
+                TEERdays are calculated as follows:<br />
+                Amount of TEER times the number of days bonded = TEERdays <br />
+                Example: 20 TEER * 7 days = 140 TEERdays
+              </li>
+            </ul>
+          </div>
+        </transition>
+      </div>
     </div>
-
-  </div>
 
     <div class="my-40 mx-auto max-w-7xl">
       <div class="sm:flex sm:items-center">
@@ -566,8 +600,6 @@
       </div>
     </div>
   </div>
-
-
 
   <div
     aria-live="assertive"
@@ -1071,7 +1103,7 @@ const closeChooseWalletOverlay = () => {
   transition: max-height 0.3s ease;
 }
 
-.smooth-accordion-enter, 
+.smooth-accordion-enter,
 .smooth-accordion-leave-to {
   max-height: 0;
 }

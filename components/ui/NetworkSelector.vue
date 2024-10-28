@@ -6,7 +6,10 @@
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
-        'border-incognitee-green': teerHover || (isProd && selectedNetwork === ChainId.IntegriteeKusama) || (!isProd && selectedNetwork !== ChainId.PaseoRelay),
+        'border-incognitee-green':
+          teerHover ||
+          (isProd && selectedNetwork === ChainId.IntegriteeKusama) ||
+          (!isProd && selectedNetwork !== ChainId.PaseoRelay),
       }"
       @mouseover="teerHover = true"
       @mouseleave="teerHover = false"
@@ -25,7 +28,10 @@
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       :class="{
-        'border-incognitee-green': pasHover || (!isProd && selectedNetwork === ChainId.PaseoRelay) || (isProd && teerHover),
+        'border-incognitee-green':
+          pasHover ||
+          (!isProd && selectedNetwork === ChainId.PaseoRelay) ||
+          (isProd && teerHover),
       }"
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
@@ -72,7 +78,7 @@ const props = defineProps({
 });
 
 // Umgebungsvariable für Prod/Dev erkennen
-const isProd = ref(process.env.LIVE === 'false');
+const isProd = ref(process.env.LIVE === "false");
 
 // Hover-Zustände
 const teerHover = ref(false);

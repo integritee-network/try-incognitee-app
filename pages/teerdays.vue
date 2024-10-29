@@ -1057,10 +1057,6 @@ const txErrHandlerIntegritee = (err) => {
 
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
-  if (!isLive.value) {
-    console.error("network not live");
-    return;
-  }
   isChoosingAccount.value = true;
   isFetchingTeerBalance.value = true;
   showChooseWalletOverlay.value = true;

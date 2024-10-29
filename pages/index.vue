@@ -1464,7 +1464,7 @@ const fetchNetworkStatus = async () => {
         );
       });
     });
-    promises.push(p)
+    promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
   console.debug("fetch network status info");
@@ -1586,12 +1586,12 @@ const subscribeWhatsReady = async () => {
       isFetchingShieldingTargetBalance.value = false;
     },
   );
-  promises.push(p1)
+  promises.push(p1);
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   let p2 = fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
   );
-  promises.push(p2)
+  promises.push(p2);
 
   await Promise.all(promises);
 };

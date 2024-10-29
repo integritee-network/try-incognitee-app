@@ -892,12 +892,12 @@ const subscribeToTeerDayStats = async () => {
 onMounted(async () => {
   loadEnv();
   eventBus.on("addressClicked", openChooseWalletOverlay);
-  subscribeToTeerDayStats();
   const injectedAddress = router.currentRoute.value.query.address;
   if (injectedAddress) {
     connectExtension();
     onExtensionAccountChange(injectedAddress.toString());
   } else {
+    subscribeToTeerDayStats();
     //openChooseWalletOverlay();
   }
 });

@@ -1443,7 +1443,7 @@ const fetchGuessTheNumberInfo = async () => {
 
 const gtnWinners = computed(() => {
   if (guessTheNumberInfo.value) {
-    let winners = [];
+    const winners = [];
     for (const winner of guessTheNumberInfo.value.last_winners) {
       winners.push(
         encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
@@ -1455,7 +1455,7 @@ const gtnWinners = computed(() => {
 });
 
 const fetchNetworkStatus = async () => {
-  let promises = [];
+  const promises = [];
   if (api?.isReady) {
     const p = api.rpc.chain.getFinalizedHead().then((head) => {
       api.rpc.chain.getBlock(head).then((block) => {
@@ -1471,7 +1471,7 @@ const fetchNetworkStatus = async () => {
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
   );
-  let p2 = getter.send().then((info) => {
+  const p2 = getter.send().then((info) => {
     console.debug(`parentchains info: ${info}`);
     const shielding_target_id = info.shielding_target
       .toString()
@@ -1557,7 +1557,7 @@ const subscribeWhatsReady = async () => {
   }
 
   const promises = [];
-  let p1 = api.query.system.account(
+  const p1 = api.query.system.account(
     accountStore.getAddress,
     ({
       data: {
@@ -1588,7 +1588,7 @@ const subscribeWhatsReady = async () => {
   );
   promises.push(p1);
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-  let p2 = fetchIncogniteeBalance().then(() =>
+  const p2 = fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
   );
   promises.push(p2);

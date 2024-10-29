@@ -38,8 +38,8 @@
     "vue-router": "^4.3.2"
   },
   "dependencies": {
-    "@encointer/util": "^0.16.0-alpha.1",
-    "@encointer/worker-api": "^0.16.0-alpha.1",
+    "@encointer/util": "^0.16.0-alpha.2",
+    "@encointer/worker-api": "^0.16.0-alpha.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@headlessui/vue": "^1.7.22",
     "@heroicons/vue": "^2.1.3",

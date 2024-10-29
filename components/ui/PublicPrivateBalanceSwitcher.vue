@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-incognitee-blue mt-10">
+  <div class="w-full bg-incognitee-blue mt-4">
     <div
       class="border bg-incognitee-blue border-incognitee-green rounded-lg p-1"
     >

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row justify-between w-full text-center gap-4 container mb-10"
+    class="flex flex-row justify-between w-full text-center gap-4 container mb-4"
   >
     <!-- TEER Box -->
     <div
@@ -17,7 +17,7 @@
       <p class="text-xs">TEER</p>
       <span
         class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >coming soon</span
+        >soon</span
       >
       <div class="ribbon red"><span>beta</span></div>
     </div>
@@ -47,7 +47,7 @@
       <p class="text-xs">USDC</p>
       <span
         class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >coming soon</span
+        >soon</span
       >
     </div>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <header class="header bg-gray-800 text-white py-4">
+    <header class="header bg-gray-800 text-white py-1">
       <div class="header-content mx-auto flex items-center justify-between">
         <!-- Logo -->
         <Incognitee class="logo" />
@@ -60,7 +60,7 @@
       <nav class="footer-content container mx-auto">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around z-30"
+            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around z-5"
           >
             <div class="container custom-border-gradient">
               <div class="inner-box">

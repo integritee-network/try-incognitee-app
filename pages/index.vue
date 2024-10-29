@@ -3,21 +3,21 @@
     v-if="enableActions"
     :onClick="openGuessTheNumberOverlay"
     :isMobile="isMobile"
-    textMobile="Guess-The-Number Campaign."
+    textMobile="Guess-The-Number"
     textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
   />
 
   <InfoBanner
     v-if="!enableActions"
     :isMobile="isMobile"
-    textMobile="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
+    textMobile="This page is not yet live for mainnet"
     textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
   />
 
   <InfoBanner
     v-if="!enableActions"
     :isMobile="isMobile"
-    textMobile="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
+    textMobile="Looking for <a href='/teerdays'>TEERdays</a>?"
     textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
   />
 
@@ -54,7 +54,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-10">
+        <div class="mt-5">
           <div
             class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
           >
@@ -144,7 +144,7 @@
             }}</span>
           </div>
         </div>
-        <div class="mt-10">
+        <div class="mt-5">
           <div
             class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
           >
@@ -859,6 +859,7 @@
         accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
         INCOGNITEE_GTN_GUESS_FEE
       "
+      class="mb-4"
     >
       <form class="" @submit.prevent="submitGuessForm">
         <!-- Label for the input -->
@@ -886,7 +887,7 @@
             />
 
             <!-- Fee description below input, right-aligned -->
-            <div class="absolute right-0 -bottom-5">
+            <div class="text-left right-0">
               <span class="text-xs text-gray-400"
                 >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
                 {{ accountStore.getSymbol }} for Incognitee</span

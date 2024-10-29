@@ -41,7 +41,6 @@ import Incognitee from "assets/img/incognitee-mask.svg";
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 }
 .logo {
   height: 50px;

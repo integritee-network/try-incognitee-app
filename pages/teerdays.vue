@@ -273,7 +273,6 @@
       </div>
     </div>
 
-
     <hr
       class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
     />

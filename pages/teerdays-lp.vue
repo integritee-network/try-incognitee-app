@@ -1,6 +1,5 @@
 <template>
   <div class="py-24 sm:py-32 container">
-  
     <div class="mx-auto max-w-7xl">
       <div
         class="grid grid-cols-1 items-center gap-x-8 gap-y-16 lg:grid-cols-2"
@@ -54,7 +53,6 @@
           </div>
         </div>
         <div class="hidden sm:block sm:pl-40 mx-auto w-full max-w-xl lg:mx-0">
-     
           <img
             class="col-span-1 w-80 w-full object-contain lg:col-span-1"
             src="/img/index/incognitee-wallet.png"
@@ -610,7 +608,6 @@
           >
         </span>
       </div>
- 
     </div>
   </footer>
 

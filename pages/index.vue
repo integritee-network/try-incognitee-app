@@ -1292,7 +1292,10 @@ const unshield = async () => {
       },
     )
     .then((result) =>
-      handleTopResult(result, "😀 Triggered unshielding of funds"),
+      handleTopResult(
+        result,
+        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
+      ),
     )
     .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance

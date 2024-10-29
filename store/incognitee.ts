@@ -28,10 +28,7 @@ export const useIncognitee = defineStore("incognitee", {
         "Initializing Incognitee Api at " + url + " for shard " + shard,
       );
       this.shard = shard;
-      const worker = new IntegriteeWorker(url, {
-        createWebSocket: (url) => new WebSocket(url),
-        types: {},
-      });
+      const worker = new IntegriteeWorker(url);
       this.api = worker;
       const sk = await worker.getShardVault();
       this.vault = encodeAddress(sk[0]);

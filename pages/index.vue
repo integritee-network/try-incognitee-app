@@ -134,7 +134,10 @@
             getter disabled. please reconnect your account and sign the getter
             request in your extension
           </div>
-          <div class="text-4xl font-semibold" v-else>
+          <div
+            v-if="!isFetchingIncogniteeBalance && !disableGetter"
+            class="text-4xl font-semibold"
+          >
             {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
             <span class="text-sm font-semibold">{{
               accountStore.getSymbol
@@ -1452,6 +1455,15 @@ const gtnWinners = computed(() => {
 });
 
 const fetchNetworkStatus = async () => {
+  if (api?.isReady) {
+    api.rpc.chain.getFinalizedHead().then((head) => {
+      api.rpc.chain.getBlock(head).then((block) => {
+        console.log(
+          `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+        );
+      });
+    });
+  }
   if (!incogniteeStore.apiReady) return;
   console.debug("fetch network status info");
   const getter = incogniteeStore.api.parentchainsInfoGetter(
@@ -1475,15 +1487,6 @@ const fetchNetworkStatus = async () => {
       systemHealth.setShieldingTargetLightClientGenesisHashHex(genesis_hash);
     }
   });
-  if (api?.isReady) {
-    api.rpc.chain.getFinalizedHead().then((head) => {
-      api.rpc.chain.getBlock(head).then((block) => {
-        console.log(
-          `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
-        );
-      });
-    });
-  }
 };
 
 const pollCounter = useInterval(2000);
@@ -1493,84 +1496,91 @@ watch(pollCounter, async () => {
   fetchNetworkStatus();
 });
 
-watch(accountStore, async () => {
-  //todo! only reinitialize if account changes
-  if (accountStore.getAddress === "none") {
-    console.log("skipping api init. no address");
-    return;
-  }
-  if (api?.isReady) {
-    //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
-    return;
-  }
+watch(
+  () => accountStore.getAddress,
+  async () => {
+    //todo! only reinitialize if account changes
+    if (api?.isReady) {
+      //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
+      return;
+    }
 
-  const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
-  console.log(
-    "trying to init api at " + chainConfigs[shieldingTarget.value].api,
-  );
-  api = await ApiPromise.create({ provider: wsProvider });
-  await api.isReady;
-  accountStore.setExistentialDeposit(
-    BigInt(api.consts.balances.existentialDeposit),
-  );
-  accountStore.setDecimals(Number(api.registry.chainDecimals));
-  accountStore.setSS58Format(Number(api.registry.chainSS58));
-  accountStore.setSymbol(String(api.registry.chainTokens));
-  systemHealth.setShieldingTargetApiGenesisHashHex(
-    api.genesisHash.toHex().toString(),
-  );
-  if (accountStore.hasInjector) {
-    const currentQuery = { ...router.currentRoute.value.query };
-    currentQuery.address = accountStore.getAddress;
-    currentQuery.seed = undefined;
-    router.push({
-      query: currentQuery,
-    });
-  }
-  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
-    "ADDRESS",
-    accountStore.getAddress,
-  );
-  console.log("faucet url: " + faucetUrl.value);
-  api.query.system.account(
-    accountStore.getAddress,
-    ({
-      data: {
-        free: currentFree,
-        reserved: currentReserved,
-        frozen: currentFrozen,
-      },
-    }) => {
-      console.log(
-        "shielding-target balance: free=" +
-          currentFree +
-          " reserved=" +
-          currentReserved +
-          " frozen=" +
-          currentFrozen,
-      );
-      accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
-      accountStore.setBalanceReserved(
-        BigInt(currentReserved),
-        shieldingTarget.value,
-      );
-      accountStore.setBalanceFrozen(
-        BigInt(currentFrozen),
-        shieldingTarget.value,
-      );
-      isFetchingShieldingTargetBalance.value = false;
-    },
-  );
-  api.rpc.chain.subscribeNewHeads((lastHeader) => {
-    systemHealth.observeShieldingTargetBlockNumber(
-      lastHeader.number.toNumber(),
+    const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+    console.log(
+      "trying to init api at " + chainConfigs[shieldingTarget.value].api,
     );
-  });
-  // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-  fetchIncogniteeBalance().then(() =>
-    console.log("fetched incognitee balance"),
-  );
-});
+    api = await ApiPromise.create({ provider: wsProvider });
+    await api.isReady;
+    accountStore.setExistentialDeposit(
+      BigInt(api.consts.balances.existentialDeposit),
+    );
+    accountStore.setDecimals(Number(api.registry.chainDecimals));
+    accountStore.setSS58Format(Number(api.registry.chainSS58));
+    accountStore.setSymbol(String(api.registry.chainTokens));
+    console.log(
+      "api-reported genesis hash for shielding target: " +
+        api.genesisHash.toHex().toString(),
+    );
+    systemHealth.setShieldingTargetApiGenesisHashHex(
+      api.genesisHash.toHex().toString(),
+    );
+    api.rpc.chain.subscribeNewHeads((lastHeader) => {
+      systemHealth.observeShieldingTargetBlockNumber(
+        lastHeader.number.toNumber(),
+      );
+    });
+    faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
+      "ADDRESS",
+      accountStore.getAddress,
+    );
+    console.log("faucet url: " + faucetUrl.value);
+    if (accountStore.hasInjector) {
+      const currentQuery = { ...router.currentRoute.value.query };
+      currentQuery.address = accountStore.getAddress;
+      currentQuery.seed = undefined;
+      router.push({
+        query: currentQuery,
+      });
+    }
+    if (accountStore.getAddress === "none") {
+      console.log("skipping account subscription. no address");
+      return;
+    }
+    api.query.system.account(
+      accountStore.getAddress,
+      ({
+        data: {
+          free: currentFree,
+          reserved: currentReserved,
+          frozen: currentFrozen,
+        },
+      }) => {
+        console.log(
+          "shielding-target balance: free=" +
+            currentFree +
+            " reserved=" +
+            currentReserved +
+            " frozen=" +
+            currentFrozen,
+        );
+        accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+        accountStore.setBalanceReserved(
+          BigInt(currentReserved),
+          shieldingTarget.value,
+        );
+        accountStore.setBalanceFrozen(
+          BigInt(currentFrozen),
+          shieldingTarget.value,
+        );
+        isFetchingShieldingTargetBalance.value = false;
+      },
+    );
+    // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
+    fetchIncogniteeBalance().then(() =>
+      console.log("fetched incognitee balance"),
+    );
+  },
+);
 
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
@@ -1865,7 +1875,7 @@ const formatTimestamp = (timestamp: number | null) => {
 };
 
 const enableActions = computed(() => {
-  return isLive.Value || forceLive.value;
+  return isLive.value || forceLive.value;
 });
 </script>
 

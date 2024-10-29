@@ -1,5 +1,5 @@
 <template>
-  <div class="gtn-layout">
+  <div class="container">
     <header class="header">
       <div class="header-content">
         <Incognitee class="logo" />
@@ -41,7 +41,6 @@ import Incognitee from "assets/img/incognitee-mask.svg";
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1em;
 }
 .logo {
   height: 50px;

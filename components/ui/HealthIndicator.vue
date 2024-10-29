@@ -1,13 +1,22 @@
 <template>
   <div @click="openHealthDetailsOverlay" class="cursor-pointer">
     <div v-if="contextualHealth === Health.Healthy">
-      <div class="bg-green-500 w-4 h-4 rounded-full" title="all good"></div>
+      <div
+        class="bg-green-500 w-4 h-4 rounded-full"
+        title="system health: all good"
+      ></div>
     </div>
     <div v-else-if="contextualHealth === Health.Warning">
-      <div class="bg-yellow-500 w-4 h-4 rounded-full" title="warnings"></div>
+      <div
+        class="bg-yellow-500 w-4 h-4 rounded-full"
+        title="system health: warnings"
+      ></div>
     </div>
     <div v-else-if="contextualHealth === Health.Critical">
-      <div class="bg-red-500 w-4 h-4 rounded-full" title="critical"></div>
+      <div
+        class="bg-red-500 w-4 h-4 rounded-full"
+        title="system health: critical"
+      ></div>
     </div>
     <div v-else>
       <div

@@ -11,7 +11,6 @@
           <!-- Network health text and health indicator -->
           <div class="flex items-center gap-2">
             <!-- gap-2 für den Abstand zwischen Network Health und Indikator -->
-            <span class="text-sm">Network health</span>
             <HealthIndicator />
           </div>
 

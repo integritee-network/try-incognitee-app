@@ -1,115 +1,108 @@
 <template>
   <OverlayDialog :show="show" :close="close" title="System Health">
     <div class="mt-2">
-      <div v-if="!isLive">
-        <p class="text-sm text-yellow-400">
-          This service is not live yet. please try again later!
+      <div v-if="router.currentRoute.value.path === '/teerdays'">
+        <p
+          :class="[
+            'text-sm',
+            'text-gray-400',
+            healthColor(
+              systemHealth.getIntegriteeSystemHealth.integriteeProgress,
+            ),
+          ]"
+        >
+          Integritee Network Block Height:<br />
+          {{
+            formatBlockNumber(
+              systemHealth.getIntergiteeBlockNumberObservable?.value,
+            )
+          }}
+          <b>{{ integriteeNetworkBlockNumberAge }}s</b>
         </p>
       </div>
       <div v-else>
-        <div v-if="router.currentRoute.value.path === '/teerdays'">
-          <p
-            :class="[
-              'text-sm',
-              'text-gray-400',
-              healthColor(
-                systemHealth.getIntegriteeSystemHealth.integriteeProgress,
-              ),
-            ]"
-          >
-            Integritee Network Block Height:<br />
-            {{
-              formatBlockNumber(
-                systemHealth.getIntergiteeBlockNumberObservable?.value,
-              )
-            }}
-            <b>{{ integriteeNetworkBlockNumberAge }}s</b>
-          </p>
-        </div>
-        <div v-else>
-          <p class="text-sm text-gray-400">
-            This service is in <b>BETA</b>. Use at your own risk.
-          </p>
-          <br />
-          <p class="text-sm text-gray-400 wrap">
-            Incognitee shard: <i>{{ incogniteeShard }}</i>
-          </p>
-          <p class="text-sm text-gray-400 wrap">
-            Incognitee fingerprint: <i>{{ incogniteeStore.getFingerprint }}</i>
-          </p>
-          <br />
-          <p class="text-sm text-gray-400">
-            Shielding Target: <b>{{ chainConfigs[shieldingTarget].name }}</b>
-          </p>
-          <p
-            :class="[
-              'text-sm',
-              'text-gray-400',
-              healthColor(
-                systemHealth.getSidechainSystemHealth.shieldingTargetProgress,
-              ),
-            ]"
-          >
-            Last block:
-            {{
-              formatBlockNumber(
-                systemHealth.getShieldingTargetBlockNumberObservable?.value,
-              )
-            }}
-            <b>{{ shieldingTargetBlockNumberAge }}s</b>
-          </p>
-          <br />
-          <p class="text-sm text-gray-400 wrap">
-            genesis hash for api vs enclave light client:
-          </p>
-          <p
-            :class="[
-              'text-sm',
-              'text-gray-400',
-              healthColor(systemHealth.getSidechainSystemHealth.genesisMatch),
-            ]"
-          >
-            {{
-              systemHealth.getShieldingTargetApiGenesisHashHex
-                ? systemHealth.getShieldingTargetApiGenesisHashHex.slice(0, 8) +
-                  "..."
-                : "unknown"
-            }}
-            vs
-            {{
-              systemHealth.getShieldingTargetLightClientGenesisHashHex
-                ? systemHealth.getShieldingTargetLightClientGenesisHashHex.slice(
-                    0,
-                    8,
-                  ) + "..."
-                : "unknown"
-            }}
-          </p>
-          <br />
-          <p class="text-sm text-gray-400">
-            Sidechain import of finalized target blocks
-          </p>
-          <p
-            :class="[
-              'text-sm',
-              'text-gray-400',
-              healthColor(
-                systemHealth.getSidechainSystemHealth
-                  .shieldingTargetImportProgress,
-              ),
-            ]"
-          >
-            Last imported L1 block<br />
-            {{
-              formatBlockNumber(
-                systemHealth.getShieldingTargetImportedBlockNumberObservable
-                  ?.value,
-              )
-            }}
+        <p class="text-sm text-gray-400">
+          This service is in <b>BETA</b>. Use at your own risk.
+        </p>
+        <br />
+        <p class="text-sm text-gray-400 wrap">
+          Incognitee shard: <i>{{ incogniteeShard }}</i>
+        </p>
+        <p class="text-sm text-gray-400 wrap">
+          Incognitee fingerprint: <i>{{ incogniteeStore.getFingerprint }}</i>
+        </p>
+        <br />
+        <p class="text-sm text-gray-400">
+          Shielding Target: <b>{{ chainConfigs[shieldingTarget].name }}</b>
+        </p>
+        <p
+          :class="[
+            'text-sm',
+            'text-gray-400',
+            healthColor(
+              systemHealth.getSidechainSystemHealth.shieldingTargetProgress,
+            ),
+          ]"
+        >
+          Last block:
+          {{
+            formatBlockNumber(
+              systemHealth.getShieldingTargetBlockNumberObservable?.value,
+            )
+          }}
+          <b>{{ shieldingTargetBlockNumberAge }}s</b>
+        </p>
+        <br />
+        <p class="text-sm text-gray-400 wrap">
+          genesis hash for api vs enclave light client:
+        </p>
+        <p
+          :class="[
+            'text-sm',
+            'text-gray-400',
+            healthColor(systemHealth.getSidechainSystemHealth.genesisMatch),
+          ]"
+        >
+          {{
+            systemHealth.getShieldingTargetApiGenesisHashHex
+              ? systemHealth.getShieldingTargetApiGenesisHashHex.slice(0, 8) +
+                "..."
+              : "unknown"
+          }}
+          vs
+          {{
+            systemHealth.getShieldingTargetLightClientGenesisHashHex
+              ? systemHealth.getShieldingTargetLightClientGenesisHashHex.slice(
+                  0,
+                  8,
+                ) + "..."
+              : "unknown"
+          }}
+        </p>
+        <br />
+        <p class="text-sm text-gray-400">
+          Sidechain import of finalized target blocks
+        </p>
+        <p
+          :class="[
+            'text-sm',
+            'text-gray-400',
+            healthColor(
+              systemHealth.getSidechainSystemHealth
+                .shieldingTargetImportProgress,
+            ),
+          ]"
+        >
+          Last imported L1 block<br />
+          {{
+            formatBlockNumber(
+              systemHealth.getShieldingTargetImportedBlockNumberObservable
+                ?.value,
+            )
+          }}
 
-            <b>{{ shieldingTargetImportLag }} blocks behind</b>
-          </p>
-        </div>
+          <b>{{ shieldingTargetImportLag }} blocks behind</b>
+        </p>
       </div>
     </div>
   </OverlayDialog>
@@ -123,11 +116,7 @@ import { useInterval } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { useIncognitee } from "@/store/incognitee.ts";
 import { chainConfigs } from "@/configs/chains.ts";
-import {
-  shieldingTarget,
-  incogniteeShard,
-  isLive,
-} from "@/lib/environmentConfig";
+import { shieldingTarget, incogniteeShard } from "@/lib/environmentConfig";
 
 const router = useRouter();
 const systemHealth = useSystemHealth();

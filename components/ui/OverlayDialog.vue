@@ -52,6 +52,11 @@
             </DialogPanel>
           </TransitionChild>
         </div>
+        <div class="mt-20 h-32 mb-20">
+          <!-- this is a spacer that is necessary to scroll
+          up the dialog on mobile if the soft-keyboard
+          obscures the content -->
+        </div>
       </div>
     </Dialog>
   </TransitionRoot>

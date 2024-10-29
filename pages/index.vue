@@ -1490,10 +1490,9 @@ const fetchNetworkStatus = async () => {
 };
 
 const pollCounter = useInterval(2000);
-
 watch(pollCounter, async () => {
-  fetchIncogniteeBalance();
-  fetchNetworkStatus();
+  await fetchIncogniteeBalance();
+  await fetchNetworkStatus();
 });
 
 watch(

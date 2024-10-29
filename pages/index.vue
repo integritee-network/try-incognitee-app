@@ -1130,7 +1130,7 @@ const submitSendForm = () => {
   closePrivateSendOverlay();
   sendPrivately();
 };
-const submitShieldForm = () => {
+const submitShieldForm = async () => {
   // double check input values here
   // fixme: why is this necessary? it seems computed max will not be enforced otherwise
   if (shieldAmount.value > computedShieldingMax.value) {
@@ -1142,19 +1142,19 @@ const submitShieldForm = () => {
   // Handle the form submission here
   openStatusOverlay();
   closeShieldOverlay();
-  shield();
+  await shield();
 };
-const submitUnshieldForm = () => {
+const submitUnshieldForm = async () => {
   // Handle the form submission here
   openStatusOverlay();
   closeUnshieldOverlay();
-  unshield();
+  await unshield();
 };
-const submitGuessForm = () => {
+const submitGuessForm = async () => {
   // Handle the form submission here
   openStatusOverlay();
   closeGuessTheNumberOverlay();
-  submitGuess();
+  await submitGuess();
 };
 const setRecipientAddressToSelf = () => {
   recipientAddress.value = accountStore.getAddress;
@@ -1255,7 +1255,7 @@ const shield = async () => {
     const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
     console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
 
-    api.tx.balances
+    await api.tx.balances
       .transferKeepAlive(incogniteeStore.vault, amount)
       .signAsync(accountStore.account, {
         signer: accountStore.injector?.signer,
@@ -1265,7 +1265,7 @@ const shield = async () => {
   }
 };
 
-const unshield = () => {
+const unshield = async () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ will unshield to L1";
   const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
@@ -1278,7 +1278,7 @@ const unshield = () => {
     `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
 
-  incogniteeStore.api
+  await incogniteeStore.api
     .balanceUnshieldFunds(
       account,
       incogniteeStore.shard,
@@ -1298,7 +1298,7 @@ const unshield = () => {
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
-const sendPrivately = () => {
+const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
@@ -1311,7 +1311,7 @@ const sendPrivately = () => {
     `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
   );
 
-  incogniteeStore.api
+  await incogniteeStore.api
     .trustedBalanceTransfer(
       account,
       incogniteeStore.shard,
@@ -1329,7 +1329,7 @@ const sendPrivately = () => {
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
-const submitGuess = () => {
+const submitGuess = async () => {
   console.log("submit guess: ", guess.value);
   txStatus.value = "⌛ privately submitting your guess to incognitee";
   const account = accountStore.account;
@@ -1341,7 +1341,7 @@ const submitGuess = () => {
     `sending guess ${guess.value} from ${account.address} privately to incognitee`,
   );
 
-  incogniteeStore.api
+  await incogniteeStore.api
     .guessTheNumber(
       account,
       incogniteeStore.shard,
@@ -1435,7 +1435,7 @@ const fetchGuessTheNumberInfo = async () => {
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
     incogniteeStore.shard,
   );
-  getter.send().then((info) => {
+  await getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
     guessTheNumberInfo.value = info;
   });
@@ -1443,7 +1443,7 @@ const fetchGuessTheNumberInfo = async () => {
 
 const gtnWinners = computed(() => {
   if (guessTheNumberInfo.value) {
-    let winners = [];
+    const winners = [];
     for (const winner of guessTheNumberInfo.value.last_winners) {
       winners.push(
         encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
@@ -1455,21 +1455,23 @@ const gtnWinners = computed(() => {
 });
 
 const fetchNetworkStatus = async () => {
+  const promises = [];
   if (api?.isReady) {
-    api.rpc.chain.getFinalizedHead().then((head) => {
+    const p = api.rpc.chain.getFinalizedHead().then((head) => {
       api.rpc.chain.getBlock(head).then((block) => {
         console.log(
           `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
         );
       });
     });
+    promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
   console.debug("fetch network status info");
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
   );
-  getter.send().then((info) => {
+  const p2 = getter.send().then((info) => {
     console.debug(`parentchains info: ${info}`);
     const shielding_target_id = info.shielding_target
       .toString()
@@ -1487,6 +1489,9 @@ const fetchNetworkStatus = async () => {
       systemHealth.setShieldingTargetLightClientGenesisHashHex(genesis_hash);
     }
   });
+  promises.push(p2);
+
+  await Promise.all(promises);
 };
 
 const pollCounter = useInterval(2000);
@@ -1497,7 +1502,7 @@ watch(pollCounter, async () => {
 
 watch(
   () => accountStore.getAddress,
-  async () => subscribeWhatsReady(),
+  async () => await subscribeWhatsReady(),
 );
 
 const subscribeWhatsReady = async () => {
@@ -1526,7 +1531,9 @@ const subscribeWhatsReady = async () => {
   systemHealth.setShieldingTargetApiGenesisHashHex(
     api.genesisHash.toHex().toString(),
   );
-  api.rpc.chain.subscribeNewHeads((lastHeader) => {
+
+  // await is quick as we only subscribe
+  await api.rpc.chain.subscribeNewHeads((lastHeader) => {
     systemHealth.observeShieldingTargetBlockNumber(
       lastHeader.number.toNumber(),
     );
@@ -1548,7 +1555,9 @@ const subscribeWhatsReady = async () => {
     console.log("skipping account subscription. no address");
     return;
   }
-  api.query.system.account(
+
+  const promises = [];
+  const p1 = api.query.system.account(
     accountStore.getAddress,
     ({
       data: {
@@ -1577,10 +1586,14 @@ const subscribeWhatsReady = async () => {
       isFetchingShieldingTargetBalance.value = false;
     },
   );
+  promises.push(p1);
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-  fetchIncogniteeBalance().then(() =>
+  const p2 = fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
   );
+  promises.push(p2);
+
+  await Promise.all(promises);
 };
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
@@ -1609,13 +1622,13 @@ onMounted(async () => {
   }
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
-    cryptoWaitReady().then(() => {
+    await cryptoWaitReady().then(() => {
       const localKeyring = new Keyring({ type: "sr25519" });
       const account = localKeyring.addFromSeed(hexToU8a(seedHex));
       accountStore.setAccount(account);
     });
   } else if (injectedAddress) {
-    connectExtension();
+    await connectExtension();
     try {
       accountStore.setAccount(injectedAddress.toString());
       accountStore.setInjector(
@@ -1628,8 +1641,8 @@ onMounted(async () => {
       );
     }
   } else {
-    subscribeWhatsReady();
     openChooseWalletOverlay();
+    await subscribeWhatsReady();
   }
 });
 
@@ -1647,8 +1660,8 @@ const dropSubscriptions = () => {
   accountStore.setInjector(null);
 };
 
-const createTestingAccount = () => {
-  cryptoWaitReady().then(() => {
+const createTestingAccount = async () => {
+  await cryptoWaitReady().then(() => {
     dropSubscriptions();
     const generatedMnemonic = mnemonicGenerate();
     const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });

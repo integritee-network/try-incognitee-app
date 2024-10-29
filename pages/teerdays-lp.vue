@@ -314,7 +314,7 @@
                     </th>
                     <th
                       scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                      class="px-4 py-4 text-right text-sm font-semibold text-white"
                     >
                       TEERdays
                     </th>
@@ -326,7 +326,7 @@
                     </th>
                     <th
                       scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                      class="px-4 py-4 text-right text-sm font-semibold text-white"
                     >
                       TEER bonded
                     </th>
@@ -348,7 +348,7 @@
                       {{ index + 1 }}
                     </td>
                     <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-right"
                     >
                       {{ formatBigDecimalBalance(entry[2]) }}
                     </td>
@@ -358,7 +358,7 @@
                       {{ entry[0] }}
                     </td>
                     <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-right"
                     >
                       {{ formatBigDecimalBalance(entry[1]) }}
                     </td>
@@ -769,7 +769,6 @@ onMounted(async () => {
 .rounded-table thead th {
   /* Header background color */
   padding: 15px;
-  text-align: left;
   color: #ffffff;
   /* Lighter text for header */
   font-weight: bold;
@@ -798,12 +797,6 @@ onMounted(async () => {
   /* Top-right corner */
   border-bottom-right-radius: 10px;
   /* Bottom-right corner */
-}
-
-.rounded-table tbody tr td:nth-child(3),
-.rounded-table tbody tr td:nth-child(4) {
-  text-align: left;
-  /* Align text to the right for points and prize */
 }
 
 .rounded-table tbody tr td .icon {

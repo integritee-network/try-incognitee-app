@@ -516,7 +516,7 @@
                     </th>
                     <th
                       scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                      class="px-4 py-4 text-right text-sm font-semibold text-white"
                     >
                       TEERdays
                     </th>
@@ -528,13 +528,13 @@
                     </th>
                     <th
                       scope="col"
-                      class="px-4 py-4 text-left text-sm font-semibold text-white"
+                      class="px-4 py-4 text-right text-sm font-semibold text-white"
                     >
                       TEER bonded
                     </th>
                   </tr>
                 </thead>
-                <tbody class="text-left">
+                <tbody>
                   <tr
                     v-for="(entry, index) in allBonds.slice(0, 10)"
                     :key="index"
@@ -542,7 +542,7 @@
                       'bg-gray-700': index % 2 === 0, // Jede zweite Zeile grau
                       'bg-gray-800': index % 2 !== 0, // Jede andere Zeile dunkelgrau
                     }"
-                    class="rounded-lg shadow text-left"
+                    class="rounded-lg shadow"
                   >
                     <td
                       class="whitespace-nowrap px-4 py-4 text-sm font-medium text-white text-left"
@@ -550,7 +550,7 @@
                       {{ index + 1 }}
                     </td>
                     <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-right"
                     >
                       {{ formatBigDecimalBalance(entry[2]) }}
                     </td>
@@ -560,7 +560,7 @@
                       {{ entry[0] }}
                     </td>
                     <td
-                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
+                      class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-right"
                     >
                       {{ formatBigDecimalBalance(entry[1]) }}
                     </td>
@@ -1134,7 +1134,6 @@ const closeChooseWalletOverlay = () => {
 .rounded-table thead th {
   /* Header background color */
   padding: 15px;
-  text-align: left;
   color: #ffffff;
   /* Lighter text for header */
   font-weight: bold;
@@ -1167,7 +1166,6 @@ const closeChooseWalletOverlay = () => {
 
 .rounded-table tbody tr td:nth-child(3),
 .rounded-table tbody tr td:nth-child(4) {
-  text-align: left;
   /* Align text to the right for points and prize */
 }
 

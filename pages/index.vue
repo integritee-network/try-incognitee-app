@@ -1075,7 +1075,7 @@ import {
   isLive,
 } from "@/lib/environmentConfig";
 import ObtainTokenOverlay from "@/components/ui/ObtainTokenOverlay.vue";
-import { formatDecimalBalance } from "@/store/account";
+import { formatDecimalBalance } from "@/helpers/numbers";
 import {
   INCOGNITEE_GTN_GUESS_FEE,
   INCOGNITEE_SHIELDING_FEE_FRACTION,
@@ -1498,90 +1498,91 @@ watch(pollCounter, async () => {
 
 watch(
   () => accountStore.getAddress,
-  async () => {
-    //todo! only reinitialize if account changes
-    if (api?.isReady) {
-      //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
-      return;
-    }
-
-    const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
-    console.log(
-      "trying to init api at " + chainConfigs[shieldingTarget.value].api,
-    );
-    api = await ApiPromise.create({ provider: wsProvider });
-    await api.isReady;
-    accountStore.setExistentialDeposit(
-      BigInt(api.consts.balances.existentialDeposit),
-    );
-    accountStore.setDecimals(Number(api.registry.chainDecimals));
-    accountStore.setSS58Format(Number(api.registry.chainSS58));
-    accountStore.setSymbol(String(api.registry.chainTokens));
-    console.log(
-      "api-reported genesis hash for shielding target: " +
-        api.genesisHash.toHex().toString(),
-    );
-    systemHealth.setShieldingTargetApiGenesisHashHex(
-      api.genesisHash.toHex().toString(),
-    );
-    api.rpc.chain.subscribeNewHeads((lastHeader) => {
-      systemHealth.observeShieldingTargetBlockNumber(
-        lastHeader.number.toNumber(),
-      );
-    });
-    faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
-      "ADDRESS",
-      accountStore.getAddress,
-    );
-    console.log("faucet url: " + faucetUrl.value);
-    if (accountStore.hasInjector) {
-      const currentQuery = { ...router.currentRoute.value.query };
-      currentQuery.address = accountStore.getAddress;
-      currentQuery.seed = undefined;
-      router.push({
-        query: currentQuery,
-      });
-    }
-    if (accountStore.getAddress === "none") {
-      console.log("skipping account subscription. no address");
-      return;
-    }
-    api.query.system.account(
-      accountStore.getAddress,
-      ({
-        data: {
-          free: currentFree,
-          reserved: currentReserved,
-          frozen: currentFrozen,
-        },
-      }) => {
-        console.log(
-          "shielding-target balance: free=" +
-            currentFree +
-            " reserved=" +
-            currentReserved +
-            " frozen=" +
-            currentFrozen,
-        );
-        accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
-        accountStore.setBalanceReserved(
-          BigInt(currentReserved),
-          shieldingTarget.value,
-        );
-        accountStore.setBalanceFrozen(
-          BigInt(currentFrozen),
-          shieldingTarget.value,
-        );
-        isFetchingShieldingTargetBalance.value = false;
-      },
-    );
-    // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
-    fetchIncogniteeBalance().then(() =>
-      console.log("fetched incognitee balance"),
-    );
-  },
+  async () => subscribeWhatsReady(),
 );
 
+const subscribeWhatsReady = async () => {
+  //todo! only reinitialize if account changes
+  if (api?.isReady) {
+    //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
+    return;
+  }
+
+  const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+  console.log(
+    "trying to init api at " + chainConfigs[shieldingTarget.value].api,
+  );
+  api = await ApiPromise.create({ provider: wsProvider });
+  await api.isReady;
+  accountStore.setExistentialDeposit(
+    BigInt(api.consts.balances.existentialDeposit),
+  );
+  accountStore.setDecimals(Number(api.registry.chainDecimals));
+  accountStore.setSS58Format(Number(api.registry.chainSS58));
+  accountStore.setSymbol(String(api.registry.chainTokens));
+  console.log(
+    "api-reported genesis hash for shielding target: " +
+      api.genesisHash.toHex().toString(),
+  );
+  systemHealth.setShieldingTargetApiGenesisHashHex(
+    api.genesisHash.toHex().toString(),
+  );
+  api.rpc.chain.subscribeNewHeads((lastHeader) => {
+    systemHealth.observeShieldingTargetBlockNumber(
+      lastHeader.number.toNumber(),
+    );
+  });
+  faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
+    "ADDRESS",
+    accountStore.getAddress,
+  );
+  console.log("faucet url: " + faucetUrl.value);
+  if (accountStore.hasInjector) {
+    const currentQuery = { ...router.currentRoute.value.query };
+    currentQuery.address = accountStore.getAddress;
+    currentQuery.seed = undefined;
+    router.push({
+      query: currentQuery,
+    });
+  }
+  if (accountStore.getAddress === "none") {
+    console.log("skipping account subscription. no address");
+    return;
+  }
+  api.query.system.account(
+    accountStore.getAddress,
+    ({
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
+      console.log(
+        "shielding-target balance: free=" +
+          currentFree +
+          " reserved=" +
+          currentReserved +
+          " frozen=" +
+          currentFrozen,
+      );
+      accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceReserved(
+        BigInt(currentReserved),
+        shieldingTarget.value,
+      );
+      accountStore.setBalanceFrozen(
+        BigInt(currentFrozen),
+        shieldingTarget.value,
+      );
+      isFetchingShieldingTargetBalance.value = false;
+    },
+  );
+  // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
+  fetchIncogniteeBalance().then(() =>
+    console.log("fetched incognitee balance"),
+  );
+};
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
     .writeText(accountStore.getAddress)
@@ -1628,6 +1629,7 @@ onMounted(async () => {
       );
     }
   } else {
+    subscribeWhatsReady();
     openChooseWalletOverlay();
   }
 });

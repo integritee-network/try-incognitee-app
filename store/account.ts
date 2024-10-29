@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
-import { ChainId } from "~/configs/chains";
+import { ChainId } from "@/configs/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
+import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -153,17 +154,3 @@ export const useAccount = defineStore("account", {
     },
   },
 });
-
-const divideBigIntToFloat = (dividend: BigInt, divisor: number): number => {
-  const integerPart = Number(dividend / BigInt(divisor));
-  const fractionalPart = Number(dividend % BigInt(divisor)) / divisor;
-  return integerPart + fractionalPart;
-};
-
-export const formatDecimalBalance = (balance: number): string => {
-  return balance.toLocaleString("de-CH", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 3,
-    thousandsSeparator: "'",
-  });
-};

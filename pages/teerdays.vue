@@ -325,7 +325,7 @@
             <div
               class="flex items-baseline text-2xl font-semibold text-incognitee-green"
             >
-              {{ summaryTeerBonded.toFixed(2) }}
+              {{ formatBigDecimalBalance(summaryTeerBonded) }}
             </div>
           </dd>
         </div>
@@ -351,7 +351,7 @@
             <div
               class="flex items-baseline text-2xl font-semibold text-incognitee-green"
             >
-              {{ summaryTeerDays.toFixed(2) }}
+              {{ formatBigDecimalBalance(summaryTeerDays) }}
             </div>
           </dd>
         </div>
@@ -552,7 +552,7 @@
                     <td
                       class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
                     >
-                      {{ entry[2].toFixed(2) }}
+                      {{ formatBigDecimalBalance(entry[2]) }}
                     </td>
                     <td
                       class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
@@ -562,7 +562,7 @@
                     <td
                       class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
                     >
-                      {{ entry[1].toFixed(2) }}
+                      {{ formatBigDecimalBalance(entry[1]) }}
                     </td>
                   </tr>
                 </tbody>
@@ -631,7 +631,8 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAccount, formatDecimalBalance } from "@/store/account.ts";
+import { useAccount } from "@/store/account.ts";
+import { formatDecimalBalance } from "@/helpers/numbers";
 import { useSystemHealth } from "@/store/systemHealth.ts";
 import { ChainId, chainConfigs } from "@/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
@@ -647,6 +648,8 @@ import {
 import { nextTick } from "vue";
 import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
+import { formatBigDecimalBalance } from "@/helpers/numbers.ts";
+
 const activeAccordion = ref(null);
 
 const toggleAccordion = (index) => {

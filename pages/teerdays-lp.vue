@@ -131,7 +131,7 @@
             <div
               class="flex items-baseline text-2xl font-semibold text-incognitee-green"
             >
-              {{ summaryTeerBonded.toFixed(2) }}
+              {{ formatBigDecimalBalance(summaryTeerBonded) }}
             </div>
           </dd>
         </div>
@@ -157,7 +157,7 @@
             <div
               class="flex items-baseline text-2xl font-semibold text-incognitee-green"
             >
-              {{ summaryTeerDays.toFixed(2) }}
+              {{ formatBigDecimalBalance(summaryTeerDays) }}
             </div>
           </dd>
         </div>
@@ -350,7 +350,7 @@
                     <td
                       class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
                     >
-                      {{ entry[2].toFixed(2) }}
+                      {{ formatBigDecimalBalance(entry[2]) }}
                     </td>
                     <td
                       class="wallet-address whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
@@ -360,7 +360,7 @@
                     <td
                       class="whitespace-nowrap px-4 py-4 text-sm text-gray-300 text-left"
                     >
-                      {{ entry[1].toFixed(2) }}
+                      {{ formatBigDecimalBalance(entry[1]) }}
                     </td>
                   </tr>
                 </tbody>
@@ -658,6 +658,7 @@ import { Bond } from "@/lib/teerDays";
 import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { definePageMeta } from "#imports";
+import { formatBigDecimalBalance } from "@/helpers/numbers.ts";
 
 // don't use header and footer. plain layout with just a logo in the top left corner
 definePageMeta({

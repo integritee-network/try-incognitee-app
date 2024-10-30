@@ -770,15 +770,16 @@
             class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3"
           >
             <dl class="flex flex-wrap">
+              <!-- round info -->
               <div class="w-full flex justify-between px-6 pt-3">
                 <div class="flex-auto text-left mb-4 md:mb-0">
                   <dt
                     class="text-sm text-left font-semibold leading-6 text-gray-300"
                   >
-                    Winnings
+                    Prize
                   </dt>
                   <dd
-                    class="mt-1 text-left text-base font-semibold leading-6 text-white"
+                    class="mt-1 text-left text-base font-semibold leading-6 text-white mr-1"
                   >
                     {{
                       formatDecimalBalance(
@@ -801,7 +802,9 @@
                   </dd>
                 </div>
               </div>
+              <!-- last round lucky number -->
               <div
+                v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
                 class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3"
               >
                 <div class="flex-auto text-left mb-4 md:mb-0">
@@ -831,11 +834,11 @@
                   </dd>
                 </div>
               </div>
-
+              <!-- last round winners -->
               <div
+                v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
                 class="mt-3 flex flex-col w-full flex-none gap-y-4 border-t border-gray-700 px-6 pt-3"
               >
-                <!-- Last weeks lucky number -->
                 <div class="text-sm font-semibold leading-6 text-gray-300">
                   Last lucky winners
                 </div>
@@ -886,14 +889,6 @@
               style="border-color: #24ad7c"
               placeholder="guess"
             />
-
-            <!-- Fee description below input, right-aligned -->
-            <div class="text-left right-0">
-              <span class="text-xs text-gray-400"
-                >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
-                {{ accountStore.getSymbol }} for Incognitee</span
-              >
-            </div>
           </div>
 
           <!-- Submit Button -->
@@ -906,6 +901,13 @@
               Submit
             </button>
           </div>
+        </div>
+        <!-- Fee description below input, right-aligned -->
+        <div class="text-left right-0 mb-0">
+          <span class="text-xs text-gray-400"
+            >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span
+          >
         </div>
       </form>
     </div>

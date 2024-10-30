@@ -12,13 +12,10 @@
       @mouseover="teerHover = true"
       @mouseleave="teerHover = false"
       @click="handleTeerClick"
+      title="Integritee Network"
     >
       <TEER class="w-[30px] h-[30px]" />
       <p class="text-xs">TEER</p>
-      <span
-        class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >soon</span
-      >
       <div class="ribbon red"><span>beta</span></div>
     </div>
 
@@ -32,9 +29,10 @@
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
       @click="handlePasClick"
+      title="Paseo Testnet"
     >
       <Paseo class="w-[30px] h-[30px]" />
-      <p class="text-xs">PAS<br />PASEO</p>
+      <p class="text-xs">PAS</p>
       <div class="ribbon blue"><span>test</span></div>
     </div>
 
@@ -42,13 +40,11 @@
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative"
       @click="openAssetsInfo"
+      title="USDC on Asset Hub"
     >
       <USDC class="w-[30px] h-[30px]" />
       <p class="text-xs">USDC</p>
-      <span
-        class="inline-flex items-center rounded-lg bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-600"
-        >soon</span
-      >
+      <div class="ribbon gray"><span>soon</span></div>
     </div>
   </div>
 </template>
@@ -145,5 +141,9 @@ const handlePasClick = () => {
 
 .ribbon.blue span {
   background-color: var(--integritee-blue);
+}
+
+.ribbon.gray span {
+  background-color: var(--integritee-gray);
 }
 </style>

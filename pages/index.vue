@@ -59,7 +59,7 @@
             class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
           >
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openShieldOverlay"
             >
               <svg
@@ -79,7 +79,7 @@
               <p class="text-xs">Shield</p>
             </div>
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openFaucetOverlay"
               v-if="faucetUrl"
             >
@@ -100,7 +100,7 @@
               <p class="text-xs">Faucet</p>
             </div>
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openObtainTokenOverlay"
               v-else
             >
@@ -126,8 +126,9 @@
       <div v-else>
         <!-- Private Balance Content -->
         <div class="text-white mb-6 text-center">
-          <h3 class="text-sm mb-3" @click="openPrivacyInfo">
-            Private Balance ⓘ
+          <h3 class="text-sm mb-3">
+            Private Balance
+            <span @click="openPrivacyInfo" class="cursor-pointer">ⓘ</span>
           </h3>
           <div v-if="isFetchingIncogniteeBalance" class="spinner"></div>
           <div v-if="disableGetter">
@@ -149,7 +150,7 @@
             class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
           >
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openPrivateSendOverlay"
             >
               <svg
@@ -170,7 +171,7 @@
             </div>
 
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openReceiveOverlay"
             >
               <svg
@@ -191,7 +192,7 @@
             </div>
 
             <div
-              class="flex flex-col items-center text-center"
+              class="flex flex-col items-center text-center cursor-pointer"
               @click="openUnshieldOverlay"
             >
               <svg

@@ -9,26 +9,13 @@
         <div class="flex items-center gap-4">
           <!-- gap-4 steuert den Abstand zwischen den Elementen -->
           <!-- Network health text and health indicator -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 ml-1 mr-1">
             <!-- gap-2 für den Abstand zwischen Network Health und Indikator -->
             <HealthIndicator />
           </div>
 
           <!-- SVG icon -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 12.75H3M21 9.75h-4.5M3 12.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v5.25m-18 0h18m-18 0V16.5A2.25 2.25 0 0 0 5.25 18.75h13.5A2.25 2.25 0 0 0 21 16.5v-3.75"
-            />
-          </svg>
+          <div v-if="accountStore.getAddress !== 'none'"></div>
 
           <!-- Address and Connect Wallet button -->
           <div
@@ -43,11 +30,25 @@
                 Connect Wallet
               </button>
             </div>
-            <div v-else>
-              <span class="hidden md:inline">{{
+            <div v-else class="flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M21 12.75H3M21 9.75h-4.5M3 12.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v5.25m-18 0h18m-18 0V16.5A2.25 2.25 0 0 0 5.25 18.75h13.5A2.25 2.25 0 0 0 21 16.5v-3.75"
+                />
+              </svg>
+              <span class="hidden md:inline ml-1 mt-0.5">{{
                 accountStore.getAddress
               }}</span>
-              <span class="inline md:hidden">{{
+              <span class="inline md:hidden ml-1 mt-0.5">{{
                 accountStore.getShortAddress
               }}</span>
             </div>

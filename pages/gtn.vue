@@ -42,7 +42,7 @@
         </p>
         <!-- Countdown Timer -->
         <div
-          class="flex flex-wrap justify-between border-gray-700 pt-2 sm:grid sm:grid-cols-4"
+          class="flex flex-wrap justify-between border-gray-700 pt-2 sm:grid sm:grid-cols-4 lg:mb-20"
         >
           <div class="flex flex-col items-center">
             <dt class="text-sm font-semibold leading-6 text-gray-400">Days</dt>

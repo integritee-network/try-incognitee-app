@@ -1,11 +1,21 @@
 <template>
-  <CampaignBanner
-    v-if="enableActions"
-    :onClick="openGuessTheNumberOverlay"
+  <WarningBanner
+    v-if="
+      isProd && accountStore.getAddress !== 'none' && !accountStore.hasInjector
+    "
     :isMobile="isMobile"
-    textMobile="Guess-The-Number"
-    textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+    textMobile="This is a temporary voucher with low security. Please use a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
+    textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
   />
+  <div v-else>
+    <CampaignBanner
+      v-if="enableActions"
+      :onClick="openGuessTheNumberOverlay"
+      :isMobile="isMobile"
+      textMobile="Guess-The-Number"
+      textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+    />
+  </div>
 
   <InfoBanner
     v-if="!enableActions"
@@ -1088,6 +1098,7 @@ import {
   INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
 import { useSystemHealth } from "@/store/systemHealth";
+import WarningBanner from "@/components/ui/WarningBanner.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1602,6 +1613,15 @@ const subscribeWhatsReady = async () => {
   promises.push(p2);
 
   await Promise.all(promises);
+
+  if (accountStore.getDecimalBalanceTransferable(shieldingTarget.value) === 0) {
+    if (
+      accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) > 0
+    ) {
+      console.log("account has funds on incognitee. selecting private tab");
+      selectTab("private");
+    }
+  }
 };
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
@@ -1650,6 +1670,9 @@ onMounted(async () => {
     }
   } else {
     openChooseWalletOverlay();
+  }
+  if (accountStore.getAddress !== "none") {
+    // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
 });

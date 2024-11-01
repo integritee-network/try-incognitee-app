@@ -411,6 +411,7 @@ a {
   --integritee-blue: #1845b9;
   --integritee-green: #24ad7c;
   --integritee-red: #ff4d4d;
+  --integritee-yellow: #ffdb4d;
   --integritee-gray: #696868;
 }
 
@@ -428,6 +429,10 @@ a {
 
 .incognitee-green {
   background: var(--integritee-green);
+}
+
+.incognitee-yellow {
+  background: var(--integritee-yellow);
 }
 
 .incognitee-border-gradient {

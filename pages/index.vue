@@ -1107,7 +1107,7 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
-import { useSystemHealth } from "@/store/systemHealth";
+import { useSystemHealth, Health } from "@/store/systemHealth";
 import WarningBanner from "@/components/ui/WarningBanner.vue";
 
 const router = useRouter();
@@ -1151,7 +1151,12 @@ const selectTab = (tab) => {
 };
 
 const submitSendForm = () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closePrivateSendOverlay();
   sendPrivately();
@@ -1165,19 +1170,34 @@ const submitShieldForm = async () => {
     );
     return;
   }
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeShieldOverlay();
   await shield();
 };
 const submitUnshieldForm = async () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeUnshieldOverlay();
   await unshield();
 };
 const submitGuessForm = async () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeGuessTheNumberOverlay();
   await submitGuess();

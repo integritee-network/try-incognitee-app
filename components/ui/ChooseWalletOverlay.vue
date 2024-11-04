@@ -1,8 +1,9 @@
 <template>
   <OverlayDialog :show="show" :close="close" title="Access Your Wallet!">
     <div class="mt-2">
-      <p class="text-sm text-gray-400">How would you like to connect?</p>
       <div v-if="hasCreateTestingAccountFn" class="mt-4">
+        <p class="text-sm text-gray-400">How would you like to connect?</p>
+        <br />
         <button
           @click="createTestingAccount"
           class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"

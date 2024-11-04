@@ -469,6 +469,13 @@
       Unshielding is the process of moving funds from your private balance on
       Incognitee to publicly visible (naked) L1.
     </p>
+    <div v-if="shieldingLimit < Infinity">
+      <p class="text-sm text-gray-400 text-left my-4">
+        During beta phase, you can only shield up to
+        {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
+        current private balance on incognitee.
+      </p>
+    </div>
     <form class="mt-5" @submit.prevent="submitUnshieldForm">
       <div class="flex flex-col">
         <label
@@ -572,9 +579,12 @@
         step="0.1"
         :min="1.1"
         :max="
-          accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-          accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-          0.1
+          Math.min(
+            accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+              0.1,
+            shieldingLimit,
+          )
         "
         required
         class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"

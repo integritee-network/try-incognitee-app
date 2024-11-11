@@ -1,8 +1,9 @@
 <template>
-  <OverlayDialog :show="show" :close="close" title="Access Your Wallet!">
+  <OverlayDialog :show="show" :close="closeProxy" title="Access Your Wallet!">
     <div class="mt-2">
-      <p class="text-sm text-gray-400">How would you like to connect?</p>
       <div v-if="hasCreateTestingAccountFn" class="mt-4">
+        <p class="text-sm text-gray-400">How would you like to connect?</p>
+        <br />
         <button
           @click="createTestingAccount"
           class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
@@ -127,6 +128,15 @@ const props = defineProps({
 const hasCreateTestingAccountFn = computed(
   () => typeof props.createTestingAccount === "function",
 );
+
+// even if the same account stays selected and the overlay is manually closed
+// we need to call onExtensionAccountChange. otherwise the balance poll will wait forever
+const closeProxy = () => {
+  if (selectedExtensionAccount.value) {
+    props.onExtensionAccountChange(selectedExtensionAccount.value);
+  }
+  props.close();
+};
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
   if (selectedAddress) {

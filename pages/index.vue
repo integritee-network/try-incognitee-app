@@ -1,11 +1,21 @@
 <template>
-  <CampaignBanner
-    v-if="enableActions"
-    :onClick="openGuessTheNumberOverlay"
+  <WarningBanner
+    v-if="
+      isProd && accountStore.getAddress !== 'none' && !accountStore.hasInjector
+    "
     :isMobile="isMobile"
-    textMobile="Guess-The-Number"
-    textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+    textMobile="This is a temporary voucher with low security. Please use a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
+    textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
   />
+  <div v-else>
+    <CampaignBanner
+      v-if="enableActions"
+      :onClick="openGuessTheNumberOverlay"
+      :isMobile="isMobile"
+      textMobile="Guess-The-Number"
+      textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
+    />
+  </div>
 
   <InfoBanner
     v-if="!enableActions"
@@ -941,6 +951,13 @@
       Unshielding is the process of moving funds from your private balance on
       Incognitee to publicly visible (naked) L1.
     </p>
+    <div v-if="shieldingLimit < Infinity">
+      <p class="text-sm text-gray-400 text-left my-4">
+        During beta phase, you can only shield up to
+        {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
+        current private balance on incognitee.
+      </p>
+    </div>
     <form class="mt-5" @submit.prevent="submitUnshieldForm">
       <div class="flex flex-col">
         <label
@@ -1044,9 +1061,12 @@
         step="0.1"
         :min="1.1"
         :max="
-          accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-          accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-          0.1
+          Math.min(
+            accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+              0.1,
+            shieldingLimit,
+          )
         "
         required
         class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -1588,7 +1608,8 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
 } from "../configs/incognitee";
-import { useSystemHealth } from "@/store/systemHealth";
+import { useSystemHealth, Health } from "@/store/systemHealth";
+import WarningBanner from "@/components/ui/WarningBanner.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -1631,7 +1652,12 @@ const selectTab = (tab) => {
 };
 
 const submitSendForm = () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closePrivateSendOverlay();
   sendPrivately();
@@ -1645,19 +1671,34 @@ const submitShieldForm = async () => {
     );
     return;
   }
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeShieldOverlay();
   await shield();
 };
 const submitUnshieldForm = async () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeUnshieldOverlay();
   await unshield();
 };
 const submitGuessForm = async () => {
-  // Handle the form submission here
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
   openStatusOverlay();
   closeGuessTheNumberOverlay();
   await submitGuess();
@@ -2103,6 +2144,15 @@ const subscribeWhatsReady = async () => {
   promises.push(p2);
 
   await Promise.all(promises);
+
+  if (accountStore.getDecimalBalanceTransferable(shieldingTarget.value) === 0) {
+    if (
+      accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) > 0
+    ) {
+      console.log("account has funds on incognitee. selecting private tab");
+      selectTab("private");
+    }
+  }
 };
 const copyOwnAddressToClipboard = () => {
   navigator.clipboard
@@ -2151,6 +2201,9 @@ onMounted(async () => {
     }
   } else {
     openChooseWalletOverlay();
+  }
+  if (accountStore.getAddress !== "none") {
+    // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
 });

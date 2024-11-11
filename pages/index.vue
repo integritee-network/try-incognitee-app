@@ -1,38 +1,19 @@
 <template>
-  <CampaignBanner
-    v-if="enableActions"
-    :onClick="openGuessTheNumberOverlay"
-    :isMobile="isMobile"
-    textMobile="Guess-The-Number"
-    textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes."
-  />
+  <CampaignBanner v-if="enableActions" :onClick="openGuessTheNumberOverlay" :isMobile="isMobile"
+    textMobile="Guess-The-Number" textDesktop="Join the Guess-The-Number Campaign and win some juicy prizes." />
 
-  <InfoBanner
-    v-if="!enableActions"
-    :isMobile="isMobile"
-    textMobile="This page is not yet live for mainnet"
-    textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
-  />
+  <InfoBanner v-if="!enableActions" :isMobile="isMobile" textMobile="This page is not yet live for mainnet"
+    textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet" />
 
-  <InfoBanner
-    v-if="!enableActions"
-    :isMobile="isMobile"
-    textMobile="Looking for <a href='/teerdays'>TEERdays</a>?"
-    textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
-  />
+  <InfoBanner v-if="!enableActions" :isMobile="isMobile" textMobile="Looking for <a href='/teerdays'>TEERdays</a>?"
+    textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>" />
 
   <div class="mt-4"></div>
 
-  <NetworkSelector
-    :openAssetsInfo="openAssetsInfo"
-    :selectedNetwork="shieldingTarget"
-  />
+  <NetworkSelector :openAssetsInfo="openAssetsInfo" :selectedNetwork="shieldingTarget" />
 
-  <div class="container">
-    <PublicPrivateBalanceSwitcher
-      :selectTab="selectTab"
-      :currentTab="currentTab"
-    />
+  <div>
+    <PublicPrivateBalanceSwitcher :selectTab="selectTab" :currentTab="currentTab" />
 
     <BalanceInteractorContainer>
       <div v-if="currentTab === 'public'">
@@ -45,78 +26,37 @@
             <div class="text-4xl font-semibold" v-else>
               {{
                 formatDecimalBalance(
-                  accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                  accountStore.getDecimalBalanceTransferable(shieldingTarget)
                 )
               }}
               <span class="text-sm font-semibold">{{
                 accountStore.getSymbol
-              }}</span>
+                }}</span>
             </div>
           </div>
         </div>
         <div class="mt-5">
-          <div
-            class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
-          >
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openShieldOverlay"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
-                />
+          <div class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md">
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openShieldOverlay">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
               </svg>
               <p class="text-xs">Shield</p>
             </div>
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openFaucetOverlay"
-              v-if="faucetUrl"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                />
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openFaucetOverlay"
+              v-if="faucetUrl">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>
               <p class="text-xs">Faucet</p>
             </div>
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openObtainTokenOverlay"
-              v-else
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                />
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openObtainTokenOverlay" v-else>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>
               <p class="text-xs">Get {{ accountStore.getSymbol }}</p>
             </div>
@@ -135,84 +75,37 @@
             getter disabled. please reconnect your account and sign the getter
             request in your extension
           </div>
-          <div
-            v-if="!isFetchingIncogniteeBalance && !disableGetter"
-            class="text-4xl font-semibold"
-          >
+          <div v-if="!isFetchingIncogniteeBalance && !disableGetter" class="text-4xl font-semibold">
             {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
             <span class="text-sm font-semibold">{{
               accountStore.getSymbol
-            }}</span>
+              }}</span>
           </div>
         </div>
         <div class="mt-5">
-          <div
-            class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md"
-          >
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openPrivateSendOverlay"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
-                />
+          <div class="inner-box flex justify-around text-white py-2 bg-gray-800 rounded-md">
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openPrivateSendOverlay">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
               </svg>
               <p class="text-xs">Send</p>
             </div>
 
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openReceiveOverlay"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
-                />
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openReceiveOverlay">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" />
               </svg>
               <p class="text-xs">Receive</p>
             </div>
 
-            <div
-              class="flex flex-col items-center text-center cursor-pointer"
-              @click="openUnshieldOverlay"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6 mx-auto mb-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
+            <div class="flex flex-col items-center text-center cursor-pointer" @click="openUnshieldOverlay">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
               <p class="text-xs">Unshield</p>
             </div>
@@ -220,14 +113,208 @@
         </div>
       </div>
     </BalanceInteractorContainer>
+
+    <div class="mt-10 flex justify-between items-center">
+  <div v-if="currentTab === 'private'" class="title text-2xl font-bold tracking-tight text-white sm:text-2xl">
+    History
   </div>
+  <button v-if="currentTab === 'private'" @click="openViewMore" type="button"
+            class="btn btn_gradient inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ">
+            View more
+        </button>
+
+</div>
+
+
+
+  
+    <div class="mb-10">
+      <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
+      <div v-if="currentTab === 'private'" class="flex-1 overflow-y-auto bg-gray-900 mt-5 rounded-md">
+        <table class="w-full whitespace-nowrap text-left">
+          <tbody class="divide-y divide-white/10">
+            <tr class="flex justify-between">
+              <!-- Linksbündige Zelle mit Icon, Text und "New"-Badge -->
+              <td class="flex items-center gap-x-4 py-4 pl-4 pr-8 text-left sm:pl-6 lg:pl-8">
+                <!-- Pfeil-SVG für Incoming Transfer -->
+
+                <svg viewBox="0 0 24 24" fill="currentColor" class="size-5 text-gray-400">
+                  <path fill-rule="evenodd"
+                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z"
+                    clip-rule="evenodd" />
+                </svg>
+
+                <div class="flex flex-col">
+                  <div class="flex items-start gap-x-3">
+                    <div class="text-sm font-medium text-white">
+                      Incoming Transfer
+                    </div>
+                    <!-- "New" Badge für Desktop und grüner Punkt für Mobile -->
+                    <div
+                      class="hidden sm:block rounded-md bg-green-700 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
+                      New
+                    </div>
+                    <div class="sm:hidden rounded-full bg-green-500 w-2 h-2"></div>
+                    <!-- Grüner Punkt für mobile Ansicht -->
+                  </div>
+                  <div class="wallet-address mt-1 text-xs text-gray-500 whitespace-nowrap">
+                    2Pm7Rdfjansfjkabgh435346bdfasdf
+                  </div>
+                </div>
+              </td>
+
+              <!-- Rechtsbündige Zelle für TEER Betrag und Datum -->
+              <td class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8">
+                <div class="text-sm font-medium text-white">+ 100 TEER</div>
+                <time class="mt-1 text-xs text-gray-500">24.08.2024 15:00</time>
+              </td>
+              <td class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8">
+                <!-- Desktop Ansicht -->
+                <button @click="openMessages" type="button"
+                  class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                  Note
+                </button>
+              </td>
+            </tr>
+
+            <!-- Weitere Zeile als Beispiel -->
+            <tr class="flex justify-between">
+              <!-- Linksbündige Zelle mit Icon, Text und "New"-Badge -->
+              <td class="flex items-center gap-x-4 py-4 pl-4 pr-8 text-left sm:pl-6 lg:pl-8">
+                <!-- Pfeil-SVG für Submit Guess -->
+                <svg viewBox="0 0 20 20" fill="currentColor" class="h-6 w-5 text-gray-400">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-.75-4.75a.75.75 0 0 0 1.5 0V8.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L6.2 9.74a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
+                    clip-rule="evenodd" />
+                </svg>
+
+                <div class="flex flex-col">
+                  <div class="flex items-start gap-x-3">
+                    <div class="text-sm font-medium text-white">
+                      Submit Guess
+                    </div>
+                    <!-- "New" Badge für Desktop und grüner Punkt für Mobile -->
+                    <div
+                      class="hidden sm:block rounded-md bg-green-700 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20">
+                      New
+                    </div>
+                    <div class="sm:hidden rounded-full bg-green-500 w-2 h-2"></div>
+                    <!-- Grüner Punkt für mobile Ansicht -->
+                  </div>
+                  <div class="wallet-address mt-1 text-xs text-gray-500 whitespace-nowrap">
+                    2Pm7Rdfjansfjkabgh435346bdfasdf
+                  </div>
+                </div>
+              </td>
+
+              <!-- Rechtsbündige Zelle für TEER Betrag und Datum -->
+              <td class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8">
+                <div class="text-sm font-medium text-white">- 0.1 TEER</div>
+                <time class="mt-1 text-xs text-gray-500">24.08.2024 15:00</time>
+              </td>
+              <td class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8">
+                <!-- Desktop Ansicht -->
+                <button @click="openMessages" type="button"
+                  class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                  Note
+                </button>
+              </td>
+            </tr>
+
+            <tr class="flex justify-between">
+              <td class="flex justify-between py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
+                <div class="flex items-center gap-x-4">
+                  <svg class="h-6 w-5 flex-none text-gray-400 sm:block" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true" data-slot="icon">
+                    <path fill-rule="evenodd"
+                      d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-.75-4.75a.75.75 0 0 0 1.5 0V8.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L6.2 9.74a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  <div class="flex-auto">
+                    <div class="flex items-start gap-x-3">
+                      <div id="addressnumber" class="text-sm/6 font-medium text-white">
+                        Unshield​​
+                      </div>
+                    </div>
+                    <div class="wallet-address mt-1 text-xs/5 text-gray-500 whitespace-nowrap">
+                      2Pm7Rdfjansfjkabgh435346bdfasdf​
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8">
+                <div class="text-sm font-medium text-white">- 5.1 TEER</div>
+                <time class="mt-1 text-xs text-gray-500">24.08.2024 15:00</time>
+              </td>
+
+              <td class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8">
+                <!-- Desktop Ansicht -->
+                <button @click="openMessages" type="button"
+                  class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+                  Note
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="my-20"></div>
+  <!-- Messages Info Overlay -->
+  <OverlayDialog :show="showMessages" :close="closeMessages" title="Message details">
+    <div class="mt-5">
+      <p class="text-sm text-gray-400 text-left my-4">
+        Hier sollte eine kurze Beschreibung reinkommen. Zwei Zeilen sehen gut
+        aus!
+      </p>
+    </div>
+
+    <div class="my-5">
+      <!-- Label and available balance -->
+      <div class="flex justify-between items-center">
+        <label for="sendAmount" class="text-sm font-medium leading-6 text-white">Sender</label>
+      </div>
+
+      <!-- Input field -->
+      <div>
+        <input id="senderAddress" type="text" disabled placeholder="2Pm7Rdfjansfjkabgh435346bdfasdf"
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 placeholder-gray-500 border border-transparent truncate-input pr-12" />
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <!-- Label and available balance -->
+      <div class="flex justify-between items-center">
+        <label for="sendAmount" class="text-sm font-medium leading-6 text-white">Receiver</label>
+      </div>
+
+      <!-- Input field -->
+      <div>
+        <input id="recipientAddress" type="text" disabled placeholder="2Pm7Rdfjansfjkabgh435346bdfasdf"
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 placeholder-gray-500 border border-transparent truncate-input pr-12" />
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="flex flex-col">
+      <label for="recipientAddress" class="text-sm font-medium leading-6 text-white text-left">Message</label>
+      <div class="relative flex items-center rounded-lg">
+        <textarea id="messages" rows="4" ref="messageTextarea" name="messages" disabled placeholder="Hi what's up ..."
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 placeholder-gray-500 border border-transparent truncate-input pr-12"></textarea>
+      </div>
+    </div>
+
+    <div class="w-full mt-8 bg-gray-800">
+      <button type="button"
+        class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm">
+        Delete
+      </button>
+    </div>
+  </OverlayDialog>
 
   <!-- Assets Info -->
-  <OverlayDialog
-    :show="showAssetsInfo"
-    :close="closeAssetsInfo"
-    title="Other Assets"
-  >
+  <OverlayDialog :show="showAssetsInfo" :close="closeAssetsInfo" title="Other Assets">
     <div class="mt-2">
       <p class="text-sm text-gray-400 mt-4 text-left">
         Incognitee is capable of shielding any fungible asset on any
@@ -240,22 +327,139 @@
       </p>
     </div>
     <div class="w-full mt-8 bg-gray-800">
-      <button
-        type="button"
+      <button type="button"
         class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-        @click="closeAssetsInfo"
-      >
+        @click="closeAssetsInfo">
         Got it!
       </button>
     </div>
   </OverlayDialog>
 
+<!-- View more -->
+<OverlayDialog :show="showViewMore" :close="closeViewMore" title="View More">
+  <div class="w-full  mx-auto">
+    <table class="w-full whitespace-nowrap text-left mt-5">
+      <tbody class="divide-y divide-white/10">
+        <tr class="flex justify-between items-center">
+          <!-- Linksbündige Zelle mit Icon, Text und "New"-Badge -->
+          <td class="flex items-center gap-x-2 py-3  text-left flex-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5 text-gray-400">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <div class="text-sm font-medium text-white">Incoming Transfer</div>
+                <div class="rounded-full bg-green-500 w-2 h-2"></div>
+              </div>
+              <div class="walletdesktop-address mt-0.5 text-xs text-gray-500 truncate">
+                2Pm7Rdfjansfjkabgh435346bdfasdf
+              </div>
+            </div>
+          </td>
+
+          <!-- Rechtsbündige Zelle für TEER Betrag und Datum -->
+          <td class="flex flex-col items-end py-3 pr-4 text-right text-xs text-white flex-shrink-0">
+            <div class="text-sm font-medium text-white">+ 100 TEER</div>
+            <time class="text-xs text-gray-500">24.08.2024 15:00</time>
+          </td>
+        </tr>
+
+        <!-- Wiederholung für weitere Zeilen -->
+        <tr class="flex justify-between items-center">
+          <td class="flex items-center gap-x-2 py-3 text-left flex-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5 text-gray-400">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <div class="text-sm font-medium text-white">Incoming Transfer</div>
+                <div class="rounded-full bg-green-500 w-2 h-2"></div>
+              </div>
+              <div class="walletdesktop-address mt-0.5 text-xs text-gray-500 truncate">
+                2Pm7Rdfjansfjkabgh435346bdfasdf
+              </div>
+            </div>
+          </td>
+          <td class="flex flex-col items-end py-3 pr-4 text-right text-xs text-white flex-shrink-0">
+            <div class="text-sm font-medium text-white">+ 100 TEER</div>
+            <time class="text-xs text-gray-500">24.08.2024 15:00</time>
+          </td>
+        </tr>
+
+        <tr class="flex justify-between items-center">
+          <td class="flex items-center gap-x-2 py-3 text-left flex-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5 text-gray-400">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <div class="text-sm font-medium text-white">Incoming Transfer</div>
+                <div class="rounded-full bg-green-500 w-2 h-2"></div>
+              </div>
+              <div class="walletdesktop-address mt-0.5 text-xs text-gray-500 truncate">
+                2Pm7Rdfjansfjkabgh435346bdfasdf
+              </div>
+            </div>
+          </td>
+          <td class="flex flex-col items-end py-3 pr-4 text-right text-xs text-white flex-shrink-0">
+            <div class="text-sm font-medium text-white">+ 100 TEER</div>
+            <time class="text-xs text-gray-500">24.08.2024 15:00</time>
+          </td>
+        </tr>
+        <tr class="flex justify-between items-center">
+          <td class="flex items-center gap-x-2 py-3  text-left flex-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5 text-gray-400">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <div class="text-sm font-medium text-white">Incoming Transfer</div>
+                <div class="rounded-full bg-green-500 w-2 h-2"></div>
+              </div>
+              <div class="walletdesktop-address mt-0.5 text-xs text-gray-500 truncate">
+                2Pm7Rdfjansfjkabgh435346bdfasdf
+              </div>
+            </div>
+          </td>
+          <td class="flex flex-col items-end py-3 pr-4 text-right text-xs text-white flex-shrink-0">
+            <div class="text-sm font-medium text-white">+ 100 TEER</div>
+            <time class="text-xs text-gray-500">24.08.2024 15:00</time>
+          </td>
+        </tr>
+        <tr class="flex justify-between items-center">
+          <td class="flex items-center gap-x-2 py-3  text-left flex-1">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5 text-gray-400">
+              <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z" clip-rule="evenodd" />
+            </svg>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <div class="text-sm font-medium text-white">Incoming Transfer</div>
+                <div class="rounded-full bg-green-500 w-2 h-2"></div>
+              </div>
+              <div class="walletdesktop-address mt-0.5 text-xs text-gray-500 truncate">
+                2Pm7Rdfjansfjkabgh435346bdfasdf
+              </div>
+            </div>
+          </td>
+          <td class="flex flex-col items-end py-3 pr-4 text-right text-xs text-white ">
+            <div class="text-sm font-medium text-white">+ 100 TEER</div>
+            <time class="text-xs text-gray-500">24.08.2024 15:00</time>
+          </td>
+        </tr>
+
+        <!-- Weitere Zeilen für Wiederholungen -->
+      </tbody>
+    </table>
+  </div>
+</OverlayDialog>
+
+
+
+
+
+
   <!-- Privacy Info -->
-  <OverlayDialog
-    :show="showPrivacyInfo"
-    :close="closePrivacyInfo"
-    title="On Privacy"
-  >
+  <OverlayDialog :show="showPrivacyInfo" :close="closePrivacyInfo" title="On Privacy">
     <div class="mt-2">
       <p class="text-sm text-gray-400 mt-4 text-justify">
         Incognitee enhances your privacy while dealing with digital assets. But
@@ -272,8 +476,7 @@
         is revealed as is your balance.
       </p>
       <p class="text-sm text-gray-400 text-justify my-4">
-        <NuxtLink to="https://incognitee.io" class="color_blue"
-          >Incognitee
+        <NuxtLink to="https://incognitee.io" class="color_blue">Incognitee
         </NuxtLink>
         is a privacy enhancing technology that allows you to shield your assets
         and transfer them privately. This means that you can send tokens to
@@ -282,15 +485,11 @@
         either. This is achieved by using a technology called
         <NuxtLink
           to="https://docs.integritee.network/2-integritee-network/2.7-privacy-technology-trusted-execution-environments"
-          class="color_blue"
-          >trusted execution environments (TEE)
+          class="color_blue">trusted execution environments (TEE)
         </NuxtLink>
         . The TEEs we use are a hardware feature of server CPU's called
         <i>Intel SGX</i>. In addition, the
-        <NuxtLink
-          to="https://docs.integritee.network/2-integritee-network"
-          class="color_blue"
-          >Integritee Network
+        <NuxtLink to="https://docs.integritee.network/2-integritee-network" class="color_blue">Integritee Network
         </NuxtLink>
         , a Polkadot parachain, performs independent, decentralized remote
         attestation of TEEs. Moreover, it gives finality to Incognitee sidechain
@@ -313,22 +512,16 @@
       </p>
     </div>
     <div class="mt-5 sm:mt-6">
-      <button
-        type="button"
+      <button type="button"
         class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-        @click="closePrivacyInfo"
-      >
+        @click="closePrivacyInfo">
         Got it!
       </button>
     </div>
   </OverlayDialog>
 
   <!-- Shielding -->
-  <OverlayDialog
-    :show="showShieldOverlay"
-    :close="closeShieldOverlay"
-    title="Shielding"
-  >
+  <OverlayDialog :show="showShieldOverlay" :close="closeShieldOverlay" title="Shielding">
     <p class="text-sm text-gray-400 text-left my-4">
       Shielding is the process of moving naked, publicly visible balance on L1
       to your private wallet on Incognitee.
@@ -340,48 +533,29 @@
         current private balance on incognitee.
       </p>
     </div>
-    <form
-      @submit.prevent="submitShieldForm"
-      class="flex-grow flex flex-col justify-between"
-    >
+    <form @submit.prevent="submitShieldForm" class="flex-grow flex flex-col justify-between">
       <div>
         <div class="flex justify-between items-center mt-4">
-          <label
-            for="sendAmount"
-            class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
-          >
+          <label for="sendAmount" class="text-sm font-medium leading-6 text-white">{{ accountStore.getSymbol }}
+            Amount</label>
 
-          <span class="text-xs text-gray-400"
-            >Available for shielding: {{ computedShieldingMax.toFixed(3) }}
-            {{ accountStore.getSymbol }}</span
-          >
+          <span class="text-xs text-gray-400">Available for shielding: {{ computedShieldingMax.toFixed(3) }}
+            {{ accountStore.getSymbol }}</span>
         </div>
-        <input
-          id="shieldAmount"
-          v-model="shieldAmount"
-          type="number"
-          step="1"
-          :min="1"
-          :max="computedShieldingMax"
+        <input id="shieldAmount" v-model="shieldAmount" type="number" step="1" :min="1" :max="computedShieldingMax"
           required
           class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
-          style="border-color: #24ad7c"
-        />
+          style="border-color: #24ad7c" />
         <div class="text-right">
-          <span class="text-xs text-gray-400"
-            >Fee: ~16 m{{ accountStore.getSymbol }} for L1,
+          <span class="text-xs text-gray-400">Fee: ~16 m{{ accountStore.getSymbol }} for L1,
             {{ formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100) }}%
-            for Incognitee</span
-          >
+            for Incognitee</span>
         </div>
       </div>
       <div class="bottom-0 left-0 w-full mt-8 bg-gray-800">
-        <button
-          type="submit"
+        <button type="submit"
           class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-          @click="submitShieldForm"
-        >
+          @click="submitShieldForm">
           Shield
         </button>
       </div>
@@ -389,11 +563,7 @@
   </OverlayDialog>
 
   <!-- Faucet -->
-  <OverlayDialog
-    :show="showFaucetOverlay"
-    :close="closeFaucetOverlay"
-    title="Drip Faucet"
-  >
+  <OverlayDialog :show="showFaucetOverlay" :close="closeFaucetOverlay" title="Drip Faucet">
     <p class="text-sm text-gray-400 text-left my-4">
       The Paseo Faucet grants you PAS tokens every day. Just copy-paste your
       address and solve a CAPTCHA to get free PAS tokens
@@ -401,29 +571,15 @@
 
     <div class="flex flex-col mt-5">
       <div class="relative flex items-center rounded-lg">
-        <input
-          id="accountAddress"
-          type="text"
-          :value="accountStore.getAddress"
-          readonly
+        <input id="accountAddress" type="text" :value="accountStore.getAddress" readonly
           class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-          style="border-color: #24ad7c"
-        />
+          style="border-color: #24ad7c" />
         <div class="absolute right-3 flex space-x-2">
           <div @click="copyOwnAddressToClipboard" class="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
             </svg>
           </div>
         </div>
@@ -432,103 +588,53 @@
 
     <div class="mt-5 sm:mt-6">
       <a :href="faucetUrl" target="_blank">
-        <button
-          type="button"
-          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm"
-        >
+        <button type="button"
+          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-3 mt-8 text-sm font-semibold text-white shadow-sm">
           Get free PAS tokens from faucet
         </button>
       </a>
     </div>
   </OverlayDialog>
 
-  <ObtainTokenOverlay
-    :withdraw-to-address="accountStore.getAddress"
-    :token-symbol="accountStore.getSymbol"
-    :close="closeObtainTokenOverlay"
-    :show="showObtainTokenOverlay"
-  />
+  <ObtainTokenOverlay :withdraw-to-address="accountStore.getAddress" :token-symbol="accountStore.getSymbol"
+    :close="closeObtainTokenOverlay" :show="showObtainTokenOverlay" />
 
   <!-- Unshield -->
-  <OverlayDialog
-    :show="showUnshieldOverlay && !showScanOverlay"
-    :close="closeUnshieldOverlay"
-    title="Unshield"
-  >
+  <OverlayDialog :show="showUnshieldOverlay && !showScanOverlay" :close="closeUnshieldOverlay" title="Unshield">
     <p class="text-sm text-gray-400 text-left my-4">
       Unshielding is the process of moving funds from your private balance on
       Incognitee to publicly visible (naked) L1.
     </p>
     <form class="mt-5" @submit.prevent="submitUnshieldForm">
       <div class="flex flex-col">
-        <label
-          for="recipientAddress"
-          class="text-sm font-medium leading-6 text-white text-left"
-          >Recipient</label
-        >
+        <label for="recipientAddress" class="text-sm font-medium leading-6 text-white text-left">Recipient</label>
         <div class="relative flex items-center rounded-lg">
           <div class="absolute left-3 flex items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6 text-white"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="h-6 w-6 text-white">
+              <path stroke-linecap="round" stroke-linejoin="round"
                 d="M11.9889 0L0.0222883 5.99115L0 18.0089L12.0111 24L23.9778 18.0089L24 5.99115L11.9889 0ZM11.9055 2.93685L15.012 4.49375V7.60754L11.9055 9.16444L8.79902 7.60754V4.49375L11.9055 2.93685ZM5.66099 6.0491L8.76754 7.606V10.7198L5.66099 12.2767L8.76749 13.8336V16.9489L5.66093 18.5058L2.55438 16.9489V13.8336L5.66087 12.2767L2.55438 10.7198V7.606L5.66087 6.0491H5.66099ZM18.1278 6.0491L21.2343 7.606V10.7198L18.1279 12.2767L21.2344 13.8336V16.9489L18.1279 18.5058L15.0214 16.9489V13.8336L18.1279 12.2767L15.0214 10.7198V7.606L18.1278 6.0491ZM11.9055 9.16928L15.012 10.7262V13.84L11.913 15.3937L15.012 16.9457V20.0611L11.9055 21.618L8.79902 20.0611V16.9457L11.898 15.3937L8.79902 13.84V10.7262L11.9055 9.16928H11.9055Z"
-                fill="white"
-              />
+                fill="white" />
             </svg>
           </div>
-          <input
-            id="recipientAddress"
-            v-model="recipientAddress"
-            type="text"
-            required
-            placeholder="Recipient"
+          <input id="recipientAddress" v-model="recipientAddress" type="text" required placeholder="Recipient"
             class="w-full text-sm rounded-lg flex-grow pl-12 py-2 pr-20 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-            style="border-color: #24ad7c"
-          />
+            style="border-color: #24ad7c" />
           <div class="absolute right-3 flex space-x-2">
             <div @click="setRecipientAddressToSelf" class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6 text-white"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="h-6 w-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
               </svg>
             </div>
             <div @click="openScanOverlay" class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6 text-white"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="h-6 w-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
               </svg>
             </div>
           </div>
@@ -544,45 +650,27 @@
       </p>
 
       <div class="flex justify-between items-center mt-5">
-        <label
-          for="unshieldAmount"
-          class="text-sm font-medium leading-6 text-white"
-          >{{ accountStore.getSymbol }} Amount</label
-        >
+        <label for="unshieldAmount" class="text-sm font-medium leading-6 text-white">{{ accountStore.getSymbol }}
+          Amount</label>
 
-        <span class="text-xs text-gray-400"
-          >Available private balance:
-          {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
-        >
+        <span class="text-xs text-gray-400">Available private balance:
+          {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span>
       </div>
-      <input
-        id="unshieldAmount"
-        v-model="unshieldAmount"
-        type="number"
-        step="0.1"
-        :min="1.1"
-        :max="
-          accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-          accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-          0.1
-        "
-        required
+      <input id="unshieldAmount" v-model="unshieldAmount" type="number" step="0.1" :min="1.1" :max="accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+        accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+        0.1
+        " required
         class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
-        style="border-color: #24ad7c"
-      />
+        style="border-color: #24ad7c" />
       <!-- Fee description -->
       <div class="text-right">
-        <span class="text-xs text-gray-400"
-          >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
-          {{ accountStore.getSymbol }} for Incognitee</span
-        >
+        <span class="text-xs text-gray-400">Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
+          {{ accountStore.getSymbol }} for Incognitee</span>
       </div>
 
       <div class="mt-8 w-full bg-gray-800">
-        <button
-          type="submit"
-          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-        >
+        <button type="submit"
+          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm">
           Unshield
         </button>
       </div>
@@ -590,11 +678,7 @@
   </OverlayDialog>
 
   <!-- Receive -->
-  <OverlayDialog
-    :show="showReceiveOverlay"
-    :close="closeReceiveOverlay"
-    title="Receive"
-  >
+  <OverlayDialog :show="showReceiveOverlay" :close="closeReceiveOverlay" title="Receive">
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
         Share your address with the sender. You can either have them scan this
@@ -606,35 +690,19 @@
     </div>
 
     <div class="flex flex-col mt-5">
-      <div
-        class="w-full mt-5 mb-2 text-sm font-medium leading-6 text-white font-semibold"
-      >
+      <div class="w-full mt-5 mb-2 text-sm font-medium leading-6 text-white font-semibold">
         Your address:
       </div>
       <div class="relative flex items-center rounded-lg">
-        <input
-          id="accountAddress"
-          type="text"
-          :value="accountStore.getAddress"
-          readonly
+        <input id="accountAddress" type="text" :value="accountStore.getAddress" readonly
           class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-          style="border-color: #24ad7c"
-        />
+          style="border-color: #24ad7c" />
         <div class="absolute right-3 flex space-x-2">
           <div @click="copyOwnAddressToClipboard" class="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
             </svg>
           </div>
         </div>
@@ -643,11 +711,8 @@
   </OverlayDialog>
 
   <!-- Send Privately -->
-  <OverlayDialog
-    :show="showPrivateSendOverlay && !showScanOverlay"
-    :close="closePrivateSendOverlay"
-    title="Send Privately"
-  >
+  <OverlayDialog :show="showPrivateSendOverlay && !showScanOverlay" :close="closePrivateSendOverlay"
+    title="Send Privately">
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
         Sending privately means that only you and the recipient know who sent
@@ -656,41 +721,19 @@
     </div>
     <form class="mt-5" @submit.prevent="submitSendForm">
       <div class="flex flex-col">
-        <label
-          for="recipientAddress"
-          class="text-sm font-medium leading-6 text-white text-left"
-          >Recipient</label
-        >
+        <label for="recipientAddress" class="text-sm font-medium leading-6 text-white text-left">Recipient</label>
         <div class="relative flex items-center rounded-lg">
-          <input
-            id="recipientAddress"
-            v-model="recipientAddress"
-            type="text"
-            required
+          <input id="recipientAddress" v-model="recipientAddress" type="text" required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
-            style="border-color: #24ad7c"
-            placeholder="Recipient"
-          />
+            style="border-color: #24ad7c" placeholder="Recipient" />
           <div class="absolute right-3 flex space-x-2">
             <div @click="openScanOverlay" class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-6 w-6 text-white"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="h-6 w-6 text-white">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
               </svg>
             </div>
           </div>
@@ -699,52 +742,42 @@
       <div class="mt-10">
         <!-- Label and available balance -->
         <div class="flex justify-between items-center">
-          <label
-            for="sendAmount"
-            class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
-          >
+          <label for="sendAmount" class="text-sm font-medium leading-6 text-white">{{ accountStore.getSymbol }}
+            Amount</label>
 
-          <span class="text-xs text-gray-400"
-            >Available private balance:
-            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
-          >
+          <span class="text-xs text-gray-400">Available private balance:
+            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span>
         </div>
 
         <!-- Input field -->
         <div>
-          <input
-            id="sendAmount"
-            v-model="sendAmount"
-            type="number"
-            step="0.01"
-            :min="0.1"
-            :max="
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-              0.1
-            "
-            required
+          <input id="sendAmount" v-model="sendAmount" type="number" step="0.01" :min="0.1" :max="accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+            accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+            0.1
+            " required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
-            style="border-color: #24ad7c"
-            placeholder="Amount"
-          />
+            style="border-color: #24ad7c" placeholder="Amount" />
         </div>
 
         <!-- Fee description -->
         <div class="text-right">
-          <span class="text-xs text-gray-400"
-            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
-            {{ accountStore.getSymbol }} for Incognitee</span
-          >
+          <span class="text-xs text-gray-400">Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="flex flex-col">
+        <label for="recipientAddress" class="text-sm font-medium leading-6 text-white text-left">Message</label>
+        <div class="relative flex items-center rounded-lg">
+          <textarea id="messages" rows="2" ref="messageTextarea" name="messages" placeholder="Enter your message here"
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"></textarea>
         </div>
       </div>
 
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
-        <button
-          type="submit"
-          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-        >
+        <button type="submit"
+          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm">
           Transfer
         </button>
       </div>
@@ -752,11 +785,7 @@
   </OverlayDialog>
 
   <!-- Guess The Number -->
-  <OverlayDialog
-    :show="showGuessTheNumberOverlay"
-    :close="closeGuessTheNumberOverlay"
-    title="Guess The Number"
-  >
+  <OverlayDialog :show="showGuessTheNumberOverlay" :close="closeGuessTheNumberOverlay" title="Guess The Number">
     <div class="my-3 text-gray-300 text-sm text-center">
       <p>
         Guess a number between 0-10000 and win a weekly giveaway! You can place
@@ -767,25 +796,19 @@
     <div class="mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-1 gap-6 items-start">
         <div>
-          <div
-            class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3"
-          >
+          <div class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3">
             <dl class="flex flex-wrap">
               <!-- round info -->
               <div class="w-full flex justify-between px-6 pt-3">
                 <div class="flex-auto text-left mb-4 md:mb-0">
-                  <dt
-                    class="text-sm text-left font-semibold leading-6 text-gray-300"
-                  >
+                  <dt class="text-sm text-left font-semibold leading-6 text-gray-300">
                     Prize
                   </dt>
-                  <dd
-                    class="mt-1 text-left text-base font-semibold leading-6 text-white mr-1"
-                  >
+                  <dd class="mt-1 text-left text-base font-semibold leading-6 text-white mr-1">
                     {{
                       formatDecimalBalance(
                         guessTheNumberInfo?.winnings /
-                          Math.pow(10, accountStore.decimals),
+                        Math.pow(10, accountStore.decimals)
                       )
                     }}
                     {{ accountStore.getSymbol }}
@@ -804,29 +827,20 @@
                 </div>
               </div>
               <!-- last round lucky number -->
-              <div
-                v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
-                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3"
-              >
+              <div v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
+                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3">
                 <div class="flex-auto text-left mb-4 md:mb-0">
-                  <dt
-                    class="text-sm text-left font-semibold leading-6 text-gray-300"
-                  >
+                  <dt class="text-sm text-left font-semibold leading-6 text-gray-300">
                     Last lucky number
                   </dt>
-                  <dd
-                    class="mt-1 text-left text-base font-semibold leading-6 text-white"
-                  >
+                  <dd class="mt-1 text-left text-base font-semibold leading-6 text-white">
                     {{
                       guessTheNumberInfo?.maybe_last_lucky_number ?? "unknown"
                     }}
                   </dd>
                 </div>
 
-                <div
-                  v-if="guessTheNumberInfo?.maybe_last_winning_distance > 0"
-                  class="flex-auto text-right"
-                >
+                <div v-if="guessTheNumberInfo?.maybe_last_winning_distance > 0" class="flex-auto text-right">
                   <dt class="text-sm font-semibold leading-6 text-gray-300">
                     Last winning distance
                   </dt>
@@ -836,19 +850,14 @@
                 </div>
               </div>
               <!-- last round winners -->
-              <div
-                v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
-                class="mt-3 flex flex-col w-full flex-none gap-y-4 border-t border-gray-700 px-6 pt-3"
-              >
+              <div v-if="guessTheNumberInfo?.maybe_last_lucky_number.isSome"
+                class="mt-3 flex flex-col w-full flex-none gap-y-4 border-t border-gray-700 px-6 pt-3">
                 <div class="text-sm font-semibold leading-6 text-gray-300">
                   Last lucky winners
                 </div>
 
                 <!-- Winner's address displayed under the last lucky number -->
-                <div
-                  class="text-sm leading-6 text-gray-400"
-                  v-html="gtnWinners"
-                />
+                <div class="text-sm leading-6 text-gray-400" v-html="gtnWinners" />
               </div>
             </dl>
           </div>
@@ -859,56 +868,38 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
-        INCOGNITEE_GTN_GUESS_FEE
-      "
-      class="mb-4"
-    >
+    <div v-if="
+      accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
+      INCOGNITEE_GTN_GUESS_FEE
+    " class="mb-4">
       <form class="" @submit.prevent="submitGuessForm">
         <!-- Label for the input -->
         <div class="flex justify-between mb-2">
-          <label for="guess" class="text-sm font-medium leading-6 text-white"
-            >Enter your guess</label
-          >
+          <label for="guess" class="text-sm font-medium leading-6 text-white">Enter your guess</label>
         </div>
 
         <!-- Flex container for input and button -->
         <div class="flex items-center space-x-4">
           <!-- Guess Input Field -->
           <div class="flex-grow relative">
-            <input
-              id="guess"
-              v-model="guess"
-              type="number"
-              step="1"
-              :min="0"
-              :max="10000"
-              required
+            <input id="guess" v-model="guess" type="number" step="1" :min="0" :max="10000" required
               class="w-full text-sm rounded-lg bg-cool-900 text-white placeholder-gray-500 border border-green-500"
-              style="border-color: #24ad7c"
-              placeholder="guess"
-            />
+              style="border-color: #24ad7c" placeholder="guess" />
           </div>
 
           <!-- Submit Button -->
           <div class="flex items-center justify-center">
-            <button
-              type="submit"
+            <button type="submit"
               class="btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-              style="margin-left: auto; margin-right: auto"
-            >
+              style="margin-left: auto; margin-right: auto">
               Submit
             </button>
           </div>
         </div>
         <!-- Fee description below input, right-aligned -->
         <div class="text-left right-0 mb-0">
-          <span class="text-xs text-gray-400"
-            >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
-            {{ accountStore.getSymbol }} for Incognitee</span
-          >
+          <span class="text-xs text-gray-400">Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span>
         </div>
       </form>
     </div>
@@ -916,18 +907,11 @@
       <div class="rounded-md bg-yellow-50 p-4">
         <div class="flex">
           <div class="flex-shrink-0">
-            <svg
-              class="h-5 w-5 text-yellow-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-              data-slot="icon"
-            >
-              <path
-                fill-rule="evenodd"
+            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+              data-slot="icon">
+              <path fill-rule="evenodd"
                 d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
           </div>
           <div class="ml-3">
@@ -946,50 +930,28 @@
   </OverlayDialog>
 
   <!-- Scan QR -->
-  <OverlayDialog
-    :show="showScanOverlay"
-    :close="closeScanOverlay"
-    title="Scan recipient's QR code"
-  >
+  <OverlayDialog :show="showScanOverlay" :close="closeScanOverlay" title="Scan recipient's QR code">
     <div class="mt-6 qrcode-container">
       <qrcode-stream @detect="onDecode"></qrcode-stream>
     </div>
   </OverlayDialog>
 
   <!-- New Wallet -->
-  <OverlayDialog
-    :show="showNewWalletOverlay"
-    :close="closeNewWalletOverlay"
-    title="New Wallet!"
-  >
+  <OverlayDialog :show="showNewWalletOverlay" :close="closeNewWalletOverlay" title="New Wallet!">
     <div class="mt-2">
       <p class="text-sm text-gray-400">We have created a new wallet for you.</p>
 
       <div class="flex flex-col mt-5">
         <div class="relative flex items-center rounded-lg">
-          <input
-            id="accountAddress"
-            type="text"
-            :value="accountStore.getAddress"
-            readonly
+          <input id="accountAddress" type="text" :value="accountStore.getAddress" readonly
             class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-            style="border-color: #24ad7c"
-          />
+            style="border-color: #24ad7c" />
           <div class="absolute right-3 flex space-x-2">
             <div @click="copyOwnAddressToClipboard" class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
               </svg>
             </div>
           </div>
@@ -997,10 +959,8 @@
       </div>
       <div class="mt-5">
         <a :href="faucetUrl" target="_blank">
-          <button
-            type="button"
-            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
-          >
+          <button type="button"
+            class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm">
             Get free {{ accountStore.getSymbol }} tokens from faucet
           </button>
         </a>
@@ -1022,19 +982,11 @@
   </OverlayDialog>
 
   <!-- Choose Wallet -->
-  <ChooseWalletOverlay
-    :show="showChooseWalletOverlay"
-    :close="closeChooseWalletOverlay"
+  <ChooseWalletOverlay :show="showChooseWalletOverlay" :close="closeChooseWalletOverlay"
     :createTestingAccount="isProd ? undefined : createTestingAccount"
-    :onExtensionAccountChange="onExtensionAccountChange"
-    :showTrustedGetterHint="true"
-  />
+    :onExtensionAccountChange="onExtensionAccountChange" :showTrustedGetterHint="true" />
 
-  <StatusOverlay
-    :tx-status="txStatus"
-    :show="showStatusOverlay"
-    :close="closeStatusOverlay"
-  />
+  <StatusOverlay :tx-status="txStatus" :show="showStatusOverlay" :close="closeStatusOverlay" />
 </template>
 
 <script setup lang="ts">
@@ -1111,7 +1063,7 @@ const faucetUrl = ref(null);
 const forceLive = ref(false);
 
 const isProd = computed(
-  () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
+  () => chainConfigs[shieldingTarget.value].faucetUrl === undefined
 );
 const onExtensionAccountChange = async (selectedAddress) => {
   dropSubscriptions();
@@ -1140,7 +1092,7 @@ const submitShieldForm = async () => {
   // fixme: why is this necessary? it seems computed max will not be enforced otherwise
   if (shieldAmount.value > computedShieldingMax.value) {
     alert(
-      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`,
+      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`
     );
     return;
   }
@@ -1195,13 +1147,12 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
-          ]),
+          ])
         );
-        const message = `${error.section}.${error.name}${
-          Array.isArray(error.docs)
+        const message = `${error.section}.${error.name}${Array.isArray(error.docs)
             ? `(${error.docs.join("")})`
             : error.docs || ""
-        }`;
+          }`;
 
         errorInfo = `${message}`;
         console.log(`Error-info::${JSON.stringify(error)}`);
@@ -1212,7 +1163,7 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
       console.log(
-        `✅ Transaction successful with status: ${status} hash: ${txHash}`,
+        `✅ Transaction successful with status: ${status} hash: ${txHash}`
       );
     }
   });
@@ -1277,10 +1228,10 @@ const unshield = async () => {
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`
   );
 
   await incogniteeStore.api
@@ -1294,13 +1245,13 @@ const unshield = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) =>
       handleTopResult(
         result,
-        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
-      ),
+        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds"
+      )
     )
     .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
@@ -1313,10 +1264,10 @@ const sendPrivately = async () => {
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`
   );
 
   await incogniteeStore.api
@@ -1330,7 +1281,7 @@ const sendPrivately = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
     .catch((err) => handleTopError(err));
@@ -1343,10 +1294,10 @@ const submitGuess = async () => {
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending guess ${guess.value} from ${account.address} privately to incognitee`,
+    `sending guess ${guess.value} from ${account.address} privately to incognitee`
   );
 
   await incogniteeStore.api
@@ -1358,7 +1309,7 @@ const submitGuess = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) => handleTopResult(result, "😀 Guess submission successful"))
     .catch((err) => handleTopError(err));
@@ -1378,7 +1329,7 @@ const fetchIncogniteeBalance = async () => {
 
   if (disableGetter.value == true) {
     console.log(
-      "[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again...",
+      "[fetchIncogniteeBalance] getter disabled. reconnect your account to enable again..."
     );
     return;
   }
@@ -1390,14 +1341,14 @@ const fetchIncogniteeBalance = async () => {
     if (!getterMap[accountStore.account]) {
       if (injector) {
         console.debug(
-          `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
+          `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`
         );
       }
       getterMap[accountStore.account] =
         await incogniteeStore.api.accountInfoGetter(
           accountStore.account,
           incogniteeStore.shard,
-          { signer: injector?.signer },
+          { signer: injector?.signer }
         );
     } else {
       console.debug(`fetching incognitee balance&nonce using cached getter`);
@@ -1417,15 +1368,15 @@ const fetchIncogniteeBalance = async () => {
     .send()
     .then((accountInfo) => {
       console.debug(
-        `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
+        `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`
       );
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
-        incogniteeSidechain.value,
+        incogniteeSidechain.value
       );
       accountStore.setNonce(
         Number(accountInfo.nonce),
-        incogniteeSidechain.value,
+        incogniteeSidechain.value
       );
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
@@ -1441,7 +1392,7 @@ const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("fetch guess the number info");
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
-    incogniteeStore.shard,
+    incogniteeStore.shard
   );
   await getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
@@ -1454,7 +1405,7 @@ const gtnWinners = computed(() => {
     const winners = [];
     for (const winner of guessTheNumberInfo.value.last_winners) {
       winners.push(
-        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
+        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "..."
       );
     }
     return winners.join("<br>");
@@ -1468,7 +1419,7 @@ const fetchNetworkStatus = async () => {
     const p = api.rpc.chain.getFinalizedHead().then((head) => {
       api.rpc.chain.getBlock(head).then((block) => {
         console.log(
-          `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+          `finalized L1 block number, according to L1 api: ${block.block.header.number}`
         );
       });
     });
@@ -1477,7 +1428,7 @@ const fetchNetworkStatus = async () => {
   if (!incogniteeStore.apiReady) return;
   console.debug("fetch network status info");
   const getter = incogniteeStore.api.parentchainsInfoGetter(
-    incogniteeShard.value,
+    incogniteeShard.value
   );
   const p2 = getter.send().then((info) => {
     console.debug(`parentchains info: ${info}`);
@@ -1510,7 +1461,7 @@ watch(pollCounter, async () => {
 
 watch(
   () => accountStore.getAddress,
-  async () => await subscribeWhatsReady(),
+  async () => await subscribeWhatsReady()
 );
 
 const subscribeWhatsReady = async () => {
@@ -1522,33 +1473,33 @@ const subscribeWhatsReady = async () => {
 
   const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
   console.log(
-    "trying to init api at " + chainConfigs[shieldingTarget.value].api,
+    "trying to init api at " + chainConfigs[shieldingTarget.value].api
   );
   api = await ApiPromise.create({ provider: wsProvider });
   await api.isReady;
   accountStore.setExistentialDeposit(
-    BigInt(api.consts.balances.existentialDeposit),
+    BigInt(api.consts.balances.existentialDeposit)
   );
   accountStore.setDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainTokens));
   console.log(
     "api-reported genesis hash for shielding target: " +
-      api.genesisHash.toHex().toString(),
+    api.genesisHash.toHex().toString()
   );
   systemHealth.setShieldingTargetApiGenesisHashHex(
-    api.genesisHash.toHex().toString(),
+    api.genesisHash.toHex().toString()
   );
 
   // await is quick as we only subscribe
   await api.rpc.chain.subscribeNewHeads((lastHeader) => {
     systemHealth.observeShieldingTargetBlockNumber(
-      lastHeader.number.toNumber(),
+      lastHeader.number.toNumber()
     );
   });
   faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
     "ADDRESS",
-    accountStore.getAddress,
+    accountStore.getAddress
   );
   console.log("faucet url: " + faucetUrl.value);
   if (accountStore.hasInjector) {
@@ -1576,28 +1527,28 @@ const subscribeWhatsReady = async () => {
     }) => {
       console.log(
         "shielding-target balance: free=" +
-          currentFree +
-          " reserved=" +
-          currentReserved +
-          " frozen=" +
-          currentFrozen,
+        currentFree +
+        " reserved=" +
+        currentReserved +
+        " frozen=" +
+        currentFrozen
       );
       accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
       accountStore.setBalanceReserved(
         BigInt(currentReserved),
-        shieldingTarget.value,
+        shieldingTarget.value
       );
       accountStore.setBalanceFrozen(
         BigInt(currentFrozen),
-        shieldingTarget.value,
+        shieldingTarget.value
       );
       isFetchingShieldingTargetBalance.value = false;
-    },
+    }
   );
   promises.push(p1);
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   const p2 = fetchIncogniteeBalance().then(() =>
-    console.log("fetched incognitee balance"),
+    console.log("fetched incognitee balance")
   );
   promises.push(p2);
 
@@ -1608,8 +1559,8 @@ const copyOwnAddressToClipboard = () => {
     .writeText(accountStore.getAddress)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
-      ),
+        "copied your account address to clipboard. Please paste it into the address field on the faucet."
+      )
     );
 };
 
@@ -1619,7 +1570,7 @@ onMounted(async () => {
   loadEnv();
   incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
-    incogniteeShard.value,
+    incogniteeShard.value
   );
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
@@ -1640,12 +1591,12 @@ onMounted(async () => {
     try {
       accountStore.setAccount(injectedAddress.toString());
       accountStore.setInjector(
-        await injectorForAddress(accountStore.getAddress),
+        await injectorForAddress(accountStore.getAddress)
       );
     } catch (e) {
       console.warn("could not load injected account" + e);
       alert(
-        "could not find selected address in extensions. Have you enabled your extensions?",
+        "could not find selected address in extensions. Have you enabled your extensions?"
       );
     }
   } else {
@@ -1700,13 +1651,21 @@ const computedShieldingMax = computed(() => {
     0,
     Math.min(
       shieldingLimit.value -
-        accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
+      accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
       accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
-        accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
-        0.1,
-    ),
+      accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
+      0.1
+    )
   );
 });
+
+const showMessages = ref(false);
+const openMessages = () => {
+  showMessages.value = true;
+};
+const closeMessages = () => {
+  showMessages.value = false;
+};
 
 const showAssetsInfo = ref(false);
 const openAssetsInfo = () => {
@@ -1714,6 +1673,14 @@ const openAssetsInfo = () => {
 };
 const closeAssetsInfo = () => {
   showAssetsInfo.value = false;
+};
+
+const showViewMore = ref(false);
+const openViewMore = () => {
+  showViewMore.value = true;
+};
+const closeViewMore = () => {
+  showViewMore.value = false;
 };
 
 const showPrivacyInfo = ref(false);
@@ -1758,7 +1725,7 @@ const openShieldOverlay = () => {
     return;
   }
   shieldAmount.value = Math.floor(
-    Math.min(shieldAmount.value, computedShieldingMax.value),
+    Math.min(shieldAmount.value, computedShieldingMax.value)
   );
   showShieldOverlay.value = true;
 };
@@ -1797,7 +1764,7 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value)),
+    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value))
   );
   showUnshieldOverlay.value = true;
 };
@@ -1822,13 +1789,13 @@ const openPrivateSendOverlay = () => {
     return;
   }
   console.debug(
-    `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`,
+    `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`
   );
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,
-      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1,
-    ),
+      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1
+    )
   );
   showPrivateSendOverlay.value = true;
 };
@@ -1844,7 +1811,7 @@ const openGuessTheNumberOverlay = () => {
     return;
   }
   console.log(
-    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`,
+    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`
   );
   fetchGuessTheNumberInfo();
   showGuessTheNumberOverlay.value = true;
@@ -1902,13 +1869,60 @@ const enableActions = computed(() => {
 </script>
 
 <style scoped>
+.wallet-address {
+  display: block;
+  white-space: nowrap;
+  /* Verhindert Zeilenumbruch */
+  overflow: hidden;
+  /* Versteckt überlaufenden Text */
+  text-overflow: ellipsis;
+  /* Zeigt '...' bei zu langem Text an */
+}
+
+/* Für mobile Bildschirme (max-width: 640px) */
+@media (max-width: 640px) {
+  .wallet-address {
+    max-width: 10ch;
+    /* Zeigt nur die ersten 5 Zeichen */
+  }
+}
+
+/* Für größere Bildschirme (ab 641px) */
+@media (min-width: 641px) {
+  .wallet-address {
+    max-width: none;
+    /* Zeigt die komplette Adresse an */
+  }
+}
+
+.walletdesktop-address {
+  display: block;
+  white-space: nowrap;
+  /* Verhindert Zeilenumbruch */
+  overflow: hidden;
+  /* Versteckt überlaufenden Text */
+  text-overflow: ellipsis;
+  /* Zeigt '...' bei zu langem Text an */
+  max-width: 10ch;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  resize: none;
+  /* Verhindert manuelles Ändern der Größe */
+}
+
 .currency-box {
   position: relative;
-  outline: none; /* Keine Outline standardmäßig */
+  outline: none;
+  /* Keine Outline standardmäßig */
 }
 
 .currency-box:hover {
-  outline: 2px solid var(--incognitee-green); /* Verwende outline statt border */
+  outline: 2px solid var(--incognitee-green);
+  /* Verwende outline statt border */
 }
 
 .text-overflow {
@@ -1936,19 +1950,28 @@ const enableActions = computed(() => {
 }
 
 h1 {
-  font-size: 1em; /* Adjust as needed */
-  font-weight: bold; /* Makes the text bold */
-  color: #999; /* Change color as needed */
-  text-align: center; /* Centers the text */
-  margin-bottom: 20px; /* Adds space below the heading */
+  font-size: 1em;
+  /* Adjust as needed */
+  font-weight: bold;
+  /* Makes the text bold */
+  color: #999;
+  /* Change color as needed */
+  text-align: center;
+  /* Centers the text */
+  margin-bottom: 20px;
+  /* Adds space below the heading */
 }
 
 hr {
   border: none;
-  border-top: 1px #222; /* Change color as needed */
-  color: #111; /* Change color as needed */
-  background-color: #333; /* Change color as needed */
-  height: 1px; /* Adjust as needed */
+  border-top: 1px #222;
+  /* Change color as needed */
+  color: #111;
+  /* Change color as needed */
+  background-color: #333;
+  /* Change color as needed */
+  height: 1px;
+  /* Adjust as needed */
 }
 
 .qrcode-container {
@@ -1960,29 +1983,39 @@ hr {
 
 .form-container input {
   background-color: #333;
-  color: #fff; /* You might want to change the text color to ensure it's readable against the dark background */
+  color: #fff;
+  /* You might want to change the text color to ensure it's readable against the dark background */
 }
 
 .form-container input#amount {
-  font-size: 2em; /* Make the font size twice as large */
-  text-align: center; /* Center the text */
-  width: 50%; /* Reduce the width by 50% */
+  font-size: 2em;
+  /* Make the font size twice as large */
+  text-align: center;
+  /* Center the text */
+  width: 50%;
+  /* Reduce the width by 50% */
 }
 
 .spinner {
-  border: 2px solid #f3f3f3; /* Light grey */
-  border-top: 2px solid #3498db; /* Blue */
+  border: 2px solid #f3f3f3;
+  /* Light grey */
+  border-top: 2px solid #3498db;
+  /* Blue */
   border-radius: 50%;
-  width: 1em; /* Adjust the size here */
-  height: 1em; /* Adjust the size here */
+  width: 1em;
+  /* Adjust the size here */
+  height: 1em;
+  /* Adjust the size here */
   animation: spin 2s linear infinite;
-  vertical-align: middle; /* Align with the text */
+  vertical-align: middle;
+  /* Align with the text */
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

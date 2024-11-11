@@ -230,6 +230,8 @@
         </div>
       </div>
     </BalanceInteractorContainer>
+
+    <PrivateTxHistory :show="currentTab === 'private'" />
   </div>
 
   <!-- Assets Info -->
@@ -1061,6 +1063,7 @@
 import NetworkSelector from "@/components/ui/NetworkSelector.vue";
 import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
 import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
+import PrivateTxHistory from "@/components/ui/PrivateTxHistory.vue";
 import StatusOverlay from "@/components/ui/StatusOverlay.vue";
 import ChooseWalletOverlay from "@/components/ui/ChooseWalletOverlay.vue";
 import { computed } from "vue";
@@ -1084,7 +1087,6 @@ import Qrcode from "vue-qrcode";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
-import { formatMoment } from "@/helpers/date";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import CampaignBanner from "~/components/ui/CampaignBanner.vue";
 import {
@@ -1128,7 +1130,6 @@ const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
-const noteBucketsInfo = ref(null);
 const scanResult = ref("No QR code data yet");
 const faucetUrl = ref(null);
 const forceLive = ref(false);
@@ -1492,85 +1493,6 @@ const fetchGuessTheNumberInfo = async () => {
   });
 };
 
-const fetchNoteBucketsInfo = async () => {
-  if (!incogniteeStore.apiReady) return;
-  console.log("fetch note buckets info");
-  const getter = incogniteeStore.api.noteBucketsInfoGetter(
-    incogniteeStore.shard,
-  );
-  await getter.send().then((info) => {
-    console.log(`note buckets info: ${info}`);
-    noteBucketsInfo.value = info;
-  });
-};
-
-const fetchIncogniteeNotes = async () => {
-  if (!incogniteeStore.apiReady) return;
-  if (!accountStore.account) return;
-
-  if (disableGetter.value == true) {
-    console.log(
-      "[fetchIncogniteeNotes] getter disabled. reconnect your account to enable again...",
-    );
-    return;
-  }
-  const mapKey = "notesFor:" + accountStore.account;
-  const injector = accountStore.hasInjector ? accountStore.injector : null;
-  const bucket_id = noteBucketsInfo.value?.last.unwrap().index
-  try {
-    if (!getterMap[mapKey]) {
-      if (injector) {
-        console.debug(
-          `fetching incognitee notes needs signing in extension: ${injector.name}`,
-        );
-      }
-
-      getterMap[mapKey] =
-        await incogniteeStore.api.notesForTrustedGetter(
-          accountStore.account,
-          bucket_id,
-          incogniteeStore.shard,
-          { signer: injector?.signer },
-        );
-    } else {
-      console.debug(`fetching incognitee notes using cached getter`);
-    }
-  } catch (e) {
-    // this will be the case if we click on cancel in the extension popup.
-    console.error(e);
-    disableGetter.value = true;
-    return;
-  }
-
-  await getterMap[mapKey]
-    .send()
-    .then((notes) => {
-      console.log(
-        `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucket_id}:`,
-      );
-      for (const note of notes) {
-        console.log(`note: ${note}`);
-        if (note.note.isSuccessfulTrustedCall) {
-          const call = incogniteeStore.api.createType("IntegriteeTrustedCall", note.note.asSuccessfulTrustedCall);
-          if (call.isBalanceShield) {
-            console.log(`[${formatMoment(note.timestamp.toNumber())}] balance shield: ${call.asBalanceShield}`);
-          } else if (call.isBalanceUnshield) {
-            console.log(`balance unshield: ${call.asBalanceUnshield}`);
-          } else if (call.isBalanceTransfer) {
-            console.log(`balance transfer: ${call.asBalanceTransfer}`);
-          } else if (call.isGuessTheNumber) {
-            console.log(`guess the number: ${call.asGuessTheNumber}`);
-          } else {
-            console.log(`unknown call: ${call}`);
-          }
-        }
-      }
-    })
-    .catch((err) => {
-      console.error(`[fetchIncogniteeNotes] error ${err}`);
-    });
-};
-
 const gtnWinners = computed(() => {
   if (guessTheNumberInfo.value) {
     const winners = [];
@@ -1752,7 +1674,6 @@ onMounted(async () => {
     chainConfigs[incogniteeSidechain.value].api,
     incogniteeShard.value,
   );
-  await fetchNoteBucketsInfo();
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;
@@ -1959,7 +1880,6 @@ const openPrivateSendOverlay = () => {
   console.debug(
     `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`,
   );
-  fetchIncogniteeNotes();
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,

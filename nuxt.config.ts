@@ -87,6 +87,7 @@ export default defineNuxtConfig({
     "/teerdays-lp": { ssr: false },
     "/referral": { ssr: false },
     "/referraltc": { ssr: false },
+    "/messages": { ssr: false },
   },
   imports: {
     autoImport: false,

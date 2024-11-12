@@ -309,19 +309,20 @@ const fetchIncogniteeNotes = async () => {
         `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucket_id}:`,
       );
       for (const note of notes) {
-        console.log(`note: ${note}`);
         if (note.note.isSuccessfulTrustedCall) {
           const call = incogniteeStore.api.createType("IntegriteeTrustedCall", note.note.asSuccessfulTrustedCall);
           if (call.isBalanceShield) {
             console.log(`[${formatMoment(note.timestamp.toNumber())}] balance shield: ${call.asBalanceShield}`);
           } else if (call.isBalanceUnshield) {
-            console.log(`balance unshield: ${call.asBalanceUnshield}`);
+            console.log(`[${formatMoment(note.timestamp.toNumber())}] balance unshield: ${call.asBalanceUnshield}`);
           } else if (call.isBalanceTransfer) {
-            console.log(`balance transfer: ${call.asBalanceTransfer}`);
+            console.log(`[${formatMoment(note.timestamp.toNumber())}] balance transfer: ${call.asBalanceTransfer}`);
+          } else if (call.isBalanceTransferWithNote) {
+            console.log(`[${formatMoment(note.timestamp.toNumber())}] balance transfer with note: ${call.asBalanceTransferWithNote}`);
           } else if (call.isGuessTheNumber) {
-            console.log(`guess the number: ${call.asGuessTheNumber}`);
+            console.log(`[${formatMoment(note.timestamp.toNumber())}] guess the number: ${call.asGuessTheNumber}`);
           } else {
-            console.log(`unknown call: ${call}`);
+            console.log(`[${formatMoment(note.timestamp.toNumber())}] unknown call: ${call}`);
           }
         }
       }

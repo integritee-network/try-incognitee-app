@@ -762,6 +762,27 @@
         </div>
       </div>
 
+      <!-- Messages -->
+      <div class="flex flex-col">
+        <label
+          for="paymentNote"
+          class="text-sm font-medium leading-6 text-white text-left"
+          >Note</label
+        >
+        <div class="relative flex items-center rounded-lg">
+          <textarea
+            id="messages"
+            v-model="sendPrivateNote"
+            rows="2"
+            ref="messageTextarea"
+            name="messages"
+            placeholder="Enter a private note for the recipient"
+            :maxlength=140
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
+          ></textarea>
+        </div>
+      </div>
+
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
         <button
           type="submit"
@@ -1126,6 +1147,7 @@ const isSignerBusy = ref(false);
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
+const sendPrivateNote = ref("");
 const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const guess = ref(null);
@@ -1355,12 +1377,20 @@ const sendPrivately = async () => {
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
+
+  const encoder = new TextEncoder();
+  const byteLength = encoder.encode(sendPrivateNote.value).length;
+  // fixme: https://github.com/encointer/encointer-js/issues/123
+  if (byteLength > 161) { alert("Note is too long when encoded to UTF-8. Please keep it under 162 bytes."); return; }
+  const note = sendPrivateNote.value.length > 0
+    ? sendPrivateNote.value
+    : null;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -1371,6 +1401,7 @@ const sendPrivately = async () => {
       accountStore.getAddress,
       recipientAddress.value,
       amount,
+      note,
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,

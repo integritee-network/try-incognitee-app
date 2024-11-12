@@ -231,7 +231,10 @@
       </div>
     </BalanceInteractorContainer>
 
-    <PrivateTxHistory :show="currentTab === 'private'" />
+    <PrivateTxHistory
+      :show="currentTab === 'private'"
+      ref="privateTxHistoryRef"
+    />
   </div>
 
   <!-- Assets Info -->
@@ -1138,6 +1141,7 @@ const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+const privateTxHistoryRef = ref(null);
 const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
@@ -1742,6 +1746,7 @@ onMounted(async () => {
     // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
+  await privateTxHistoryRef.value?.updateNotes();
 });
 
 onUnmounted(() => {

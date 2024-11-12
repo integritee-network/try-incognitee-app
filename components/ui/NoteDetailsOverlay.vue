@@ -12,9 +12,7 @@
       </div>
       <div v-if="note.amount" class="text-sm font-medium text-white">
         {{ note.direction === NoteDirection.Incoming ? "+" : "-" }}
-        {{
-          divideBigIntToFloat(note.amount, 10 ** accountStore.getDecimals)
-        }}
+        {{ divideBigIntToFloat(note.amount, 10 ** accountStore.getDecimals) }}
         TEER
       </div>
       <div

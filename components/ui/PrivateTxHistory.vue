@@ -122,6 +122,9 @@
         </tbody>
       </table>
     </div>
+    <div class="mt-5 flex justify-center text-gray-500">
+      <button @click="fetchOlderBucket">fetch older events</button>
+    </div>
     <!-- this is necessary to avoid the footer overlapping the text -->
     <br /><br /><br /><br /><br /><br /><br />
   </div>
@@ -134,7 +137,7 @@
 
 <script setup lang="ts">
 import { formatMoment, formatDate } from "@/helpers/date";
-import { ref, defineProps } from "vue";
+import { ref, defineProps, defineExpose } from "vue";
 import { useIncognitee } from "@/store/incognitee.ts";
 import { useAccount } from "@/store/account.ts";
 import { Note, NoteDirection } from "@/lib/notes";
@@ -149,14 +152,40 @@ const getterMap: { [address: string]: any } = {};
 const disableGetter = ref(false);
 const noteBucketsInfo = ref(null);
 const allNotes = ref<Note[]>([]);
+const firstNoteBucketIndexFetched = ref(null);
+
+let lastAccount = null;
+let lastBucketIndex = null;
 
 const props = defineProps({
   show: {
     type: Boolean,
     required: true,
   },
+  update: {
+    type: Function,
+    required: true,
+  },
 });
 
+defineExpose({
+  updateNotes: async () => {
+    console.log("updateNotes called");
+    if (accountStore.account !== lastAccount) {
+      console.log("account changed, purging note history...");
+      allNotes.value = [];
+    }
+    lastAccount = accountStore.account;
+    await fetchNoteBucketsInfo();
+    if (noteBucketsInfo.value?.last.unwrap().index <= lastBucketIndex) {
+      console.log("bucket didn't change");
+    } else {
+      lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index;
+      console.log("lastBucketIndex=" + lastBucketIndex);
+    }
+    await fetchIncogniteeNotes(lastBucketIndex);
+  },
+});
 const fetchNoteBucketsInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("fetch note buckets info");
@@ -169,7 +198,7 @@ const fetchNoteBucketsInfo = async () => {
   });
 };
 
-const fetchIncogniteeNotes = async () => {
+const fetchIncogniteeNotes = async (bucketIndex: number) => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
 
@@ -179,9 +208,8 @@ const fetchIncogniteeNotes = async () => {
     );
     return;
   }
-  const mapKey = "notesFor:" + accountStore.account;
+  const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
   const injector = accountStore.hasInjector ? accountStore.injector : null;
-  const bucket_id = noteBucketsInfo.value?.last.unwrap().index;
   try {
     if (!getterMap[mapKey]) {
       if (injector) {
@@ -192,7 +220,7 @@ const fetchIncogniteeNotes = async () => {
 
       getterMap[mapKey] = await incogniteeStore.api.notesForTrustedGetter(
         accountStore.account,
-        bucket_id,
+        bucketIndex,
         incogniteeStore.shard,
         { signer: injector?.signer },
       );
@@ -210,9 +238,8 @@ const fetchIncogniteeNotes = async () => {
     .send()
     .then((notes) => {
       console.log(
-        `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucket_id}:`,
+        `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucketIndex}:`,
       );
-      allNotes.value = [];
       for (const note of notes) {
         if (note.note.isSuccessfulTrustedCall) {
           const call = incogniteeStore.api.createType(
@@ -336,11 +363,42 @@ const fetchIncogniteeNotes = async () => {
     .catch((err) => {
       console.error(`[fetchIncogniteeNotes] error ${err}`);
     });
+  allNotes.value = removeDups(allNotes.value);
   // sort descending by timestamp
   allNotes.value = allNotes.value.sort(
     (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
   );
   console.log(allNotes.value);
+  if (
+    firstNoteBucketIndexFetched.value !== null &&
+    firstNoteBucketIndexFetched.value <= bucketIndex
+  ) {
+    console.log("first note bucket fetched didn't change");
+  } else {
+    console.log("first note bucket fetched is now " + bucketIndex);
+    firstNoteBucketIndexFetched.value = bucketIndex;
+  }
+};
+
+const fetchOlderBucket = async () => {
+  console.log(
+    "fetchOlderBuckets before index " + firstNoteBucketIndexFetched.value,
+  );
+  const index = firstNoteBucketIndexFetched.value - 1;
+  await fetchIncogniteeNotes(index);
+  firstNoteBucketIndexFetched.value = index;
+};
+
+const removeDups = (notes: Note[]): Note[] => {
+  const uniqueNotes = new Set<string>();
+  return notes.filter((note) => {
+    const uniqueIdentifier = `${note.timestamp.getTime()}-${note.account}`;
+    if (!uniqueNotes.has(uniqueIdentifier)) {
+      uniqueNotes.add(uniqueIdentifier);
+      return true;
+    }
+    return false;
+  });
 };
 
 const showNote = ref<Note>(null);

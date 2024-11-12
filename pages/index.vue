@@ -38,7 +38,7 @@
     :selectedNetwork="shieldingTarget"
   />
 
-  <div class="container">
+  <div>
     <PublicPrivateBalanceSwitcher
       :selectTab="selectTab"
       :currentTab="currentTab"
@@ -777,7 +777,7 @@
             ref="messageTextarea"
             name="messages"
             placeholder="Enter a private note for the recipient"
-            :maxlength=140
+            :maxlength="140"
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
           ></textarea>
         </div>
@@ -1381,10 +1381,13 @@ const sendPrivately = async () => {
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;
   // fixme: https://github.com/encointer/encointer-js/issues/123
-  if (byteLength > 161) { alert("Note is too long when encoded to UTF-8. Please keep it under 162 bytes."); return; }
-  const note = sendPrivateNote.value.length > 0
-    ? sendPrivateNote.value
-    : null;
+  if (byteLength > 161) {
+    alert(
+      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes.",
+    );
+    return;
+  }
+  const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],

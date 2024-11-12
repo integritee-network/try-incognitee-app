@@ -48,6 +48,9 @@ export const useAccount = defineStore("account", {
     getSymbol({ symbol }): string {
       return symbol;
     },
+    getDecimals({ decimals }): number {
+      return decimals;
+    },
     hasInjector({ injector }): boolean {
       return injector != null;
     },

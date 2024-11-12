@@ -9,3 +9,7 @@ export const parse = (date: string) => {
 export function formatMoment(moment: number): string {
   return format(new Date(moment), DATETIME_FORMAT);
 }
+
+export function formatDate(moment: number): string {
+  return format(new Date(moment), DATETIME_FORMAT);
+}

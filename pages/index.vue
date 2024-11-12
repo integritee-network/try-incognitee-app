@@ -38,7 +38,7 @@
     :selectedNetwork="shieldingTarget"
   />
 
-  <div class="container">
+  <div>
     <PublicPrivateBalanceSwitcher
       :selectTab="selectTab"
       :currentTab="currentTab"
@@ -230,6 +230,11 @@
         </div>
       </div>
     </BalanceInteractorContainer>
+
+    <PrivateTxHistory
+      :show="currentTab === 'private'"
+      ref="privateTxHistoryRef"
+    />
   </div>
 
   <!-- Assets Info -->
@@ -760,6 +765,27 @@
         </div>
       </div>
 
+      <!-- Messages -->
+      <div class="flex flex-col">
+        <label
+          for="paymentNote"
+          class="text-sm font-medium leading-6 text-white text-left"
+          >Note</label
+        >
+        <div class="relative flex items-center rounded-lg">
+          <textarea
+            id="messages"
+            v-model="sendPrivateNote"
+            rows="2"
+            ref="messageTextarea"
+            name="messages"
+            placeholder="Enter a private note for the recipient"
+            :maxlength="140"
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
+          ></textarea>
+        </div>
+      </div>
+
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
         <button
           type="submit"
@@ -1061,6 +1087,7 @@
 import NetworkSelector from "@/components/ui/NetworkSelector.vue";
 import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
 import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
+import PrivateTxHistory from "@/components/ui/PrivateTxHistory.vue";
 import StatusOverlay from "@/components/ui/StatusOverlay.vue";
 import ChooseWalletOverlay from "@/components/ui/ChooseWalletOverlay.vue";
 import { computed } from "vue";
@@ -1114,6 +1141,7 @@ const router = useRouter();
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+const privateTxHistoryRef = ref(null);
 const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
@@ -1123,6 +1151,7 @@ const isSignerBusy = ref(false);
 const txStatus = ref("");
 const recipientAddress = ref("");
 const sendAmount = ref(1.0);
+const sendPrivateNote = ref("");
 const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const guess = ref(null);
@@ -1272,6 +1301,8 @@ const handleTopResult = (result, successMsg?) => {
         txStatus.value =
           "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
+      //update history to see successfuly action immediately
+      privateTxHistoryRef.value?.updateNotes();
       return;
     }
     if (result.status.isInvalid) {
@@ -1352,12 +1383,23 @@ const sendPrivately = async () => {
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
+
+  const encoder = new TextEncoder();
+  const byteLength = encoder.encode(sendPrivateNote.value).length;
+  // fixme: https://github.com/encointer/encointer-js/issues/123
+  if (byteLength > 161) {
+    alert(
+      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes.",
+    );
+    return;
+  }
+  const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -1368,6 +1410,7 @@ const sendPrivately = async () => {
       accountStore.getAddress,
       recipientAddress.value,
       amount,
+      note,
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
@@ -1667,7 +1710,7 @@ onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
   loadEnv();
-  incogniteeStore.initializeApi(
+  await incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
     incogniteeShard.value,
   );
@@ -1705,6 +1748,7 @@ onMounted(async () => {
     // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
+  await privateTxHistoryRef.value?.updateNotes();
 });
 
 onUnmounted(() => {

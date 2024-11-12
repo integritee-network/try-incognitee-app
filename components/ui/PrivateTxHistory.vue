@@ -3,22 +3,8 @@
     <div class="title text-2xl font-bold tracking-tight text-white sm:text-2xl">
       History
     </div>
-    <button
-      @click="fetchNoteBucketsInfo"
-      type="button"
-      class="btn btn_gradient inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-    >
-      fetch buckets
-    </button>
-    <button
-      @click="fetchIncogniteeNotes"
-      type="button"
-      class="btn btn_gradient inline-flex items-center gap-x-1.5 rounded-md px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-    >
-      fetch notes
-    </button>
   </div>
-  <div class="mb-10">
+  <div v-if="show" class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
     <div v-if="show" class="flex-1 overflow-y-auto bg-gray-900 mt-5 rounded-md">
       <table class="w-full whitespace-nowrap text-left">
@@ -123,7 +109,10 @@
       </table>
     </div>
     <div class="mt-5 flex justify-center text-gray-500">
-      <button @click="fetchOlderBucket">fetch older events</button>
+      <button @click="fetchOlderBucket">
+        fetch more events
+        {{ accountStore.hasInjector ? "(needs signature)" : "" }}
+      </button>
     </div>
     <!-- this is necessary to avoid the footer overlapping the text -->
     <br /><br /><br /><br /><br /><br /><br />
@@ -183,7 +172,7 @@ defineExpose({
       lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index;
       console.log("lastBucketIndex=" + lastBucketIndex);
     }
-    await fetchIncogniteeNotes(lastBucketIndex);
+    await fetchIncogniteeNotes(lastBucketIndex, true);
   },
 });
 const fetchNoteBucketsInfo = async () => {
@@ -198,7 +187,10 @@ const fetchNoteBucketsInfo = async () => {
   });
 };
 
-const fetchIncogniteeNotes = async (bucketIndex: number) => {
+const fetchIncogniteeNotes = async (
+  bucketIndex: number,
+  skip_if_signer_needed: boolean,
+) => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
 
@@ -213,11 +205,17 @@ const fetchIncogniteeNotes = async (bucketIndex: number) => {
   try {
     if (!getterMap[mapKey]) {
       if (injector) {
-        console.debug(
-          `fetching incognitee notes needs signing in extension: ${injector.name}`,
-        );
+        if (skip_if_signer_needed) {
+          console.log(
+            "skipping automated fetchIncogniteeNotes because signer is needed",
+          );
+          return;
+        } else {
+          console.debug(
+            `fetching incognitee notes needs signing in extension: ${injector.name}`,
+          );
+        }
       }
-
       getterMap[mapKey] = await incogniteeStore.api.notesForTrustedGetter(
         accountStore.account,
         bucketIndex,
@@ -318,7 +316,7 @@ const fetchIncogniteeNotes = async (bucketIndex: number) => {
             const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
             if (from === accountStore.getAddress) {
               allNotes.value.push({
-                category: "Outgoing Transfer*",
+                category: "Outgoing Transfer",
                 direction: NoteDirection.Outgoing,
                 account: to,
                 amount: BigInt(typedCall[2]),
@@ -381,10 +379,10 @@ const fetchIncogniteeNotes = async (bucketIndex: number) => {
 };
 
 const fetchOlderBucket = async () => {
-  console.log(
-    "fetchOlderBuckets before index " + firstNoteBucketIndexFetched.value,
-  );
-  const index = firstNoteBucketIndexFetched.value - 1;
+  const index = firstNoteBucketIndexFetched.value
+    ? firstNoteBucketIndexFetched.value - 1
+    : lastBucketIndex;
+  console.log("fetchOlderBuckets : " + firstNoteBucketIndexFetched.value);
   await fetchIncogniteeNotes(index);
   firstNoteBucketIndexFetched.value = index;
 };

@@ -151,10 +151,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  update: {
-    type: Function,
-    required: true,
-  },
 });
 
 defineExpose({

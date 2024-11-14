@@ -46,8 +46,10 @@ const props = defineProps({
     required: true,
   },
   note: {
-    type: Note,
-    required: true,
+    type: Object,
+    required: false,
+    default: null,
+    validator: (value) => value === null || value instanceof Note,
   },
 });
 </script>

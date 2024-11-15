@@ -11,7 +11,9 @@ export const useNotes = defineStore("notes", {
       );
     },
     getFinancialNotes() {
-      return this.getSortedNotes.filter((note) => note.amount > 0);
+      return this.getSortedNotes.filter(
+        (note) => (note.amount > 0) | note.category.includes("Guess"),
+      );
     },
     getMessages() {
       return this.getSortedNotes.filter(

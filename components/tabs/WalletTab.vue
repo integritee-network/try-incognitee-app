@@ -231,7 +231,10 @@
       </div>
     </BalanceInteractorContainer>
 
-    <PrivateTxHistory :show="currentTab === 'private'" />
+    <PrivateTxHistory
+      :show="currentTab === 'private'"
+      :fetchOlderBucket="props.fetchOlderBucket"
+    />
   </div>
 
   <!-- Assets Info -->
@@ -1575,6 +1578,10 @@ const props = defineProps({
     validator: (value) => value === null || value instanceof ApiPromise,
   },
   updateNotes: {
+    type: Function,
+    required: true,
+  },
+  fetchOlderBucket: {
     type: Function,
     required: true,
   },

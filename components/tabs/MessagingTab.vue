@@ -93,12 +93,13 @@ import { formatDecimalBalance } from "~/helpers/numbers";
 import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { defineProps, ref } from "vue";
+import { defineProps, ref, watch } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
+import { useInterval } from "@vueuse/core";
 
 const recipientAddress = ref("");
 const sendPrivateNote = ref("");
@@ -106,6 +107,12 @@ const txStatus = ref("");
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+
+const pollCounter = useInterval(2000);
+watch(pollCounter, async () => {
+  console.debug("polling for new incognitee notes");
+  await props.updateNotes();
+});
 const submitSendForm = () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(

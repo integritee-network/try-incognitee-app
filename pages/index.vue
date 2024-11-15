@@ -10,6 +10,7 @@
       :disableGetter="disableGetter"
       ref="walletTabRef"
       :updateNotes="updateNotes"
+      :fetchOlderBucket="fetchOlderBucket"
     />
   </div>
   <div v-else-if="activeApp === 'messaging'">

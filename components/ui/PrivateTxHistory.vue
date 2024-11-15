@@ -141,6 +141,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  fetchOlderBucket: {
+    type: Function,
+    required: true,
+  },
 });
 
 const showNote = ref<Note>(null);

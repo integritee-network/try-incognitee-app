@@ -4,7 +4,7 @@
       :show="true"
       :isProd="isProd"
       :isMobile="isMobile"
-      :api="api"
+      :api="shieldingTargetApi"
       :isFetchingShieldingTargetBalance="isFetchingShieldingTargetBalance"
       :isFetchingIncogniteeBalance="isFetchingIncogniteeBalance"
       :disableGetter="disableGetter"
@@ -15,6 +15,7 @@
   <div v-else-if="activeApp === 'messaging'"><MessagingTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
+  <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>
   <!-- New Wallet -->
   <OverlayDialog
     :show="showNewWalletOverlay"
@@ -129,6 +130,7 @@ import { Note, NoteDirection } from "~/lib/notes";
 import MessagingTab from "~/components/ui/MessagingTab.vue";
 import SwapTab from "~/components/ui/SwapTab.vue";
 import GovTab from "~/components/ui/GovTab.vue";
+import TeerDaysTab from "~/components/ui/TeerDaysTab.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -144,7 +146,7 @@ const disableGetter = ref(false);
 const activeApp = ref("wallet");
 const faucetUrl = ref(null);
 const forceLive = ref(false);
-const api = ref<ApiPromise | null>(null);
+const shieldingTargetApi = ref<ApiPromise | null>(null);
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
 );
@@ -230,14 +232,16 @@ const fetchIncogniteeBalance = async () => {
 
 const fetchNetworkStatus = async () => {
   const promises = [];
-  if (api.value?.isReady) {
-    const p = api.value.rpc.chain.getFinalizedHead().then((head) => {
-      api.value.rpc.chain.getBlock(head).then((block) => {
-        console.log(
-          `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
-        );
+  if (shieldingTargetApi.value?.isReady) {
+    const p = shieldingTargetApi.value.rpc.chain
+      .getFinalizedHead()
+      .then((head) => {
+        shieldingTargetApi.value.rpc.chain.getBlock(head).then((block) => {
+          console.log(
+            `finalized L1 block number, according to L1 api: ${block.block.header.number}`,
+          );
+        });
       });
-    });
     promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
@@ -522,7 +526,7 @@ watch(
 
 const subscribeWhatsReady = async () => {
   //todo! only reinitialize if account changes
-  if (api.value?.isReady) {
+  if (shieldingTargetApi.value?.isReady) {
     //console.log("skipping api init. It seems the ShieldingTarget api is already subscribed to balance changes");
     return;
   }
@@ -531,24 +535,28 @@ const subscribeWhatsReady = async () => {
   console.log(
     "trying to init api at " + chainConfigs[shieldingTarget.value].api,
   );
-  api.value = await ApiPromise.create({ provider: wsProvider });
-  await api.value.isReady;
+  shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
+  await shieldingTargetApi.value.isReady;
   accountStore.setExistentialDeposit(
-    BigInt(api.value.consts.balances.existentialDeposit),
+    BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
   );
-  accountStore.setDecimals(Number(api.value.registry.chainDecimals));
-  accountStore.setSS58Format(Number(api.value.registry.chainSS58));
-  accountStore.setSymbol(String(api.value.registry.chainTokens));
+  accountStore.setDecimals(
+    Number(shieldingTargetApi.value.registry.chainDecimals),
+  );
+  accountStore.setSS58Format(
+    Number(shieldingTargetApi.value.registry.chainSS58),
+  );
+  accountStore.setSymbol(String(shieldingTargetApi.value.registry.chainTokens));
   console.log(
     "api-reported genesis hash for shielding target: " +
-      api.value.genesisHash.toHex().toString(),
+      shieldingTargetApi.value.genesisHash.toHex().toString(),
   );
   systemHealth.setShieldingTargetApiGenesisHashHex(
-    api.value.genesisHash.toHex().toString(),
+    shieldingTargetApi.value.genesisHash.toHex().toString(),
   );
 
   // await is quick as we only subscribe
-  await api.value.rpc.chain.subscribeNewHeads((lastHeader) => {
+  await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
     systemHealth.observeShieldingTargetBlockNumber(
       lastHeader.number.toNumber(),
     );
@@ -572,7 +580,7 @@ const subscribeWhatsReady = async () => {
   }
 
   const promises = [];
-  const p1 = api.value.query.system.account(
+  const p1 = shieldingTargetApi.value.query.system.account(
     accountStore.getAddress,
     ({
       data: {
@@ -627,6 +635,10 @@ const switchToGov = () => {
   activeApp.value = "gov";
 };
 
+const switchToTeerDays = () => {
+  activeApp.value = "teerdays";
+};
+
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
@@ -640,12 +652,18 @@ onMounted(async () => {
   eventBus.on("switchToMessaging", switchToMessaging);
   eventBus.on("switchToSwap", switchToSwap);
   eventBus.on("switchToGov", switchToGov);
-  const seedHex = router.currentRoute.value.query.seed;
+  eventBus.on("switchToTeerDays", switchToTeerDays);
+
   const injectedAddress = router.currentRoute.value.query.address;
   if (router.currentRoute.value.query.forceLive) {
     forceLive.value = true;
     console.log("forcing live status to true");
   }
+  const initActiveApp = router.currentRoute.value.query.app;
+  if (initActiveApp) {
+    activeApp.value = initActiveApp;
+  }
+  const seedHex = router.currentRoute.value.query.seed;
   if (seedHex) {
     console.log("found seed in url: " + seedHex);
     await cryptoWaitReady().then(() => {
@@ -682,8 +700,8 @@ onUnmounted(() => {
 
 const dropSubscriptions = () => {
   console.log("dropping subscriptions");
-  api.value?.disconnect();
-  api.value = null;
+  shieldingTargetApi.value?.disconnect();
+  shieldingTargetApi.value = null;
   isFetchingIncogniteeBalance.value = true;
   disableGetter.value = false;
   accountStore.setInjector(null);

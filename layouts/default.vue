@@ -131,15 +131,11 @@
                   <div
                     v-if="accountStore.getSymbol === 'TEER'"
                     class="flex flex-col items-center justify-center text-center"
+                    @click="emitSwitchToTeerDays"
                   >
-                    <nuxt-link
-                      :to="{ path: '/teerdays', query: $route.query }"
-                      class="flex flex-col items-center justify-center"
-                    >
-                      <TEERdays class="w-6 h-6 mb-2" />
-                      <!-- Make TEERdays icon the same size as others -->
-                      <p class="text-xs cursor-pointer">TEERDays</p>
-                    </nuxt-link>
+                    <TEERdays class="w-6 h-6 mb-2" />
+                    <!-- Make TEERdays icon the same size as others -->
+                    <p class="text-xs cursor-pointer">TEERDays</p>
                   </div>
                   <div
                     class="flex flex-col items-center text-center"
@@ -202,6 +198,10 @@ const emitSwitchToSwap = () => {
 
 const emitSwitchToGov = () => {
   eventBus.emit("switchToGov");
+};
+
+const emitSwitchToTeerDays = () => {
+  eventBus.emit("switchToTeerDays");
 };
 </script>
 

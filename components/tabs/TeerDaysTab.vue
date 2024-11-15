@@ -631,24 +631,24 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAccount } from "@/store/account.ts";
-import { formatDecimalBalance } from "@/helpers/numbers";
-import { useSystemHealth } from "@/store/systemHealth.ts";
-import { ChainId, chainConfigs } from "@/configs/chains.ts";
+import { useAccount } from "~/store/account.ts";
+import { formatDecimalBalance } from "~/helpers/numbers";
+import { useSystemHealth } from "~/store/systemHealth.ts";
+import { ChainId, chainConfigs } from "~/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
-import { eventBus } from "@/helpers/eventBus";
-import { loadEnv, integriteeNetwork, isLive } from "@/lib/environmentConfig";
-import { Bond, PendingUnlock } from "@/lib/teerDays";
+import { eventBus } from "~/helpers/eventBus";
+import { loadEnv, integriteeNetwork, isLive } from "~/lib/environmentConfig";
+import { Bond, PendingUnlock } from "~/lib/teerDays";
 import {
   extensionAccounts,
   connectExtension,
   injectorForAddress,
-} from "@/lib/signerExtensionUtils";
+} from "~/lib/signerExtensionUtils";
 import { nextTick } from "vue";
-import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
+import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
-import { formatBigDecimalBalance } from "@/helpers/numbers.ts";
+import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
 
 const activeAccordion = ref(null);
 
@@ -677,8 +677,8 @@ const checkIfMobile = () => {
 };
 const dropSubscriptions = async () => {
   console.log("dropping subscriptions");
-  api?.disconnect();
-  api = null;
+  integriteeNetworkApi?.disconnect();
+  integriteeNetworkApi = null;
   accountStore.setInjector(null);
   isFetchingTeerBalance.value = false;
 };
@@ -699,7 +699,7 @@ const onExtensionAccountChange = async (selectedAddress) => {
     console.log("skipping api init. no address");
     return;
   }
-  await api.query.system.account(
+  await integriteeNetworkApi.query.system.account(
     accountStore.getAddress,
     ({
       data: {
@@ -719,7 +719,7 @@ const onExtensionAccountChange = async (selectedAddress) => {
       isFetchingTeerBalance.value = false;
     },
   );
-  await api.query.teerDays.teerDayBonds(
+  await integriteeNetworkApi.query.teerDays.teerDayBonds(
     accountStore.getAddress,
     ({ value: bond }) => {
       if (bond.value) {
@@ -748,7 +748,7 @@ const onExtensionAccountChange = async (selectedAddress) => {
       }
     },
   );
-  await api.query.teerDays.pendingUnlock(
+  await integriteeNetworkApi.query.teerDays.pendingUnlock(
     accountStore.getAddress,
     ({ value: timestamp_amount }) => {
       console.log("TEER pending unlock:" + timestamp_amount);
@@ -826,17 +826,17 @@ const connect = () => {
     });
 };
 
-let api: ApiPromise | null = null;
+let integriteeNetworkApi: ApiPromise | null = null;
 
 const subscribeToTeerDayStats = async () => {
   const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
   console.log(
     "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
   );
-  api = await ApiPromise.create({ provider: wsProvider });
-  accountStore.setDecimals(Number(api.registry.chainDecimals));
-  accountStore.setSS58Format(Number(api.registry.chainSS58));
-  accountStore.setSymbol(String(api.registry.chainTokens));
+  integriteeNetworkApi = await ApiPromise.create({ provider: wsProvider });
+  accountStore.setDecimals(Number(integriteeNetworkApi.registry.chainDecimals));
+  accountStore.setSS58Format(Number(integriteeNetworkApi.registry.chainSS58));
+  accountStore.setSymbol(String(integriteeNetworkApi.registry.chainTokens));
   if (accountStore.hasInjector) {
     router.push({
       query: { address: accountStore.getAddress },
@@ -845,45 +845,47 @@ const subscribeToTeerDayStats = async () => {
   console.log("api initialized");
   allBonds.value = [];
   cryptoWaitReady().then(() => {
-    api.query.teerDays.teerDayBonds.entries().then((entries) => {
-      entries.forEach(([key, maybeBond]) => {
-        //console.debug(key.args + " " + maybeBond);
-        let account = key.args[0];
-        let lastUpdated = new Date(0);
-        let bond = maybeBond.unwrap();
-        lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
-        let mybond = new Bond(
-          bond.value / Math.pow(10, accountStore.decimals),
-          lastUpdated,
-          bond.accumulatedTokentime /
-            Math.pow(10, accountStore.decimals) /
-            86400 /
-            1000,
+    integriteeNetworkApi.query.teerDays.teerDayBonds
+      .entries()
+      .then((entries) => {
+        entries.forEach(([key, maybeBond]) => {
+          //console.debug(key.args + " " + maybeBond);
+          let account = key.args[0];
+          let lastUpdated = new Date(0);
+          let bond = maybeBond.unwrap();
+          lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
+          let mybond = new Bond(
+            bond.value / Math.pow(10, accountStore.decimals),
+            lastUpdated,
+            bond.accumulatedTokentime /
+              Math.pow(10, accountStore.decimals) /
+              86400 /
+              1000,
+          );
+          mybond.updateTeerDays();
+          //console.debug(mybond);
+          allBonds.value.push([
+            account,
+            mybond.teerBonded,
+            mybond.accumulatedTeerDays,
+            42,
+          ]);
+        });
+        // sort descending by value
+        allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
+        //console.debug(allBonds.value);
+        summaryTeerBonded.value = allBonds.value.reduce(
+          (acc, val) => acc + val[1],
+          0,
         );
-        mybond.updateTeerDays();
-        //console.debug(mybond);
-        allBonds.value.push([
-          account,
-          mybond.teerBonded,
-          mybond.accumulatedTeerDays,
-          42,
-        ]);
+        summaryTeerDays.value = allBonds.value.reduce(
+          (acc, val) => acc + val[2],
+          0,
+        );
+        summaryHolders.value = allBonds.value.length;
+        //console.log(summaryHolders.value);
       });
-      // sort descending by value
-      allBonds.value = allBonds.value.sort((a, b) => b[2] - a[2]);
-      //console.debug(allBonds.value);
-      summaryTeerBonded.value = allBonds.value.reduce(
-        (acc, val) => acc + val[1],
-        0,
-      );
-      summaryTeerDays.value = allBonds.value.reduce(
-        (acc, val) => acc + val[2],
-        0,
-      );
-      summaryHolders.value = allBonds.value.length;
-      //console.log(summaryHolders.value);
-    });
-    api.rpc.chain.subscribeNewHeads((lastHeader) => {
+    integriteeNetworkApi.rpc.chain.subscribeNewHeads((lastHeader) => {
       systemHealth.observeIntegriteeBlockNumber(lastHeader.number.toNumber());
     });
   });
@@ -918,7 +920,7 @@ const bondAmount = () => {
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
     if (currentBond.value?.getTeerBonded() > 0) {
-      api.tx.teerDays
+      integriteeNetworkApi.tx.teerDays
         .bondExtra(amount)
         .signAndSend(
           accountStore.getAddress,
@@ -927,7 +929,7 @@ const bondAmount = () => {
         )
         .catch(txErrHandlerIntegritee);
     } else {
-      api.tx.teerDays
+      integriteeNetworkApi.tx.teerDays
         .bond(amount)
         .signAndSend(
           accountStore.getAddress,
@@ -947,7 +949,7 @@ const unbondAmount = () => {
   txStatus.value = "⌛ Unbonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    api.tx.teerDays
+    integriteeNetworkApi.tx.teerDays
       .unbond(amount)
       .signAndSend(
         accountStore.getAddress,
@@ -965,7 +967,7 @@ const withdrawUnbonded = () => {
     "⌛ Withdrawing. Please sign the transaction in your wallet.";
   openStatusOverlay();
   web3FromAddress(accountStore.getAddress).then((injector) => {
-    api.tx.teerDays
+    integriteeNetworkApi.tx.teerDays
       .withdrawUnbonded()
       .signAndSend(
         accountStore.getAddress,
@@ -1024,7 +1026,7 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
       // Decode the error
       if (dispatchError.isModule) {
         const mod = dispatchError.asModule;
-        const error = api.registry.findMetaError(
+        const error = integriteeNetworkApi.registry.findMetaError(
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),

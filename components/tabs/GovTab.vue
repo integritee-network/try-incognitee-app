@@ -43,10 +43,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// Import your components and add your setup logic here
-</script>
-
 <style scoped>
 h1 {
   font-size: 2em; /* Adjust as needed */

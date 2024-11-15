@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="mt-10 flex">
-        <a href="/teerdays" target="_blank">
+        <a href="/?app=teerdays" target="_blank">
           <button
             class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white mr-5"
           >
@@ -655,7 +655,7 @@ import { chainConfigs } from "@/configs/chains.ts";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { loadEnv, integriteeNetwork } from "@/lib/environmentConfig";
 import { Bond } from "@/lib/teerDays";
-import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
+import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { definePageMeta } from "#imports";
 import { formatBigDecimalBalance } from "@/helpers/numbers.ts";

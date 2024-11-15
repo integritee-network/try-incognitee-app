@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import OverlayDialog from "@/components/ui/OverlayDialog.vue";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { defineProps } from "vue";
 
 const props = defineProps({

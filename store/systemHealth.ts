@@ -86,11 +86,11 @@ export const useSystemHealth = defineStore("system-health", {
         shieldingTargetLastBlockNumber?.value -
         shieldingTargetImportedBlockNumber?.value;
       let importHealth;
-      if (lag <= 6) {
+      if (lag <= 12) {
         importHealth = Health.Healthy;
-      } else if (lag < 12) {
+      } else if (lag < 24) {
         importHealth = Health.Warning;
-      } else if (lag >= 12) {
+      } else if (lag >= 24) {
         importHealth = Health.Critical;
       } else {
         importHealth = Health.Unknown;

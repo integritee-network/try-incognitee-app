@@ -35,7 +35,7 @@
 import { computed, ref } from "vue";
 import { useSystemHealth, Health } from "@/store/systemHealth.ts";
 import { useRouter } from "vue-router";
-import HealthDetailsOverlay from "@/components/ui/HealthDetailsOverlay.vue";
+import HealthDetailsOverlay from "~/components/overlays/HealthDetailsOverlay.vue";
 
 const systemHealth = useSystemHealth();
 const router = useRouter();

@@ -27,12 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import OverlayDialog from "@/components/ui/OverlayDialog.vue";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { defineProps } from "vue";
-import { Note, NoteDirection } from "@/lib/notes";
-import { formatMoment, formatDate } from "@/helpers/date";
+import { Note, NoteDirection } from "~/lib/notes";
+import { formatDate } from "~/helpers/date";
 import { divideBigIntToFloat } from "~/helpers/numbers";
-import { useAccount } from "@/store/account.ts";
+import { useAccount } from "~/store/account.ts";
 
 const accountStore = useAccount();
 
@@ -46,8 +46,10 @@ const props = defineProps({
     required: true,
   },
   note: {
-    type: Note,
-    required: true,
+    type: Object,
+    required: false,
+    default: null,
+    validator: (value) => value === null || value instanceof Note,
   },
 });
 </script>

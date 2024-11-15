@@ -6,10 +6,10 @@ export const parse = (date: string) => {
   return format(parseString(date), DATE_FORMAT);
 };
 
-export function formatMoment(moment: number): string {
-  return format(new Date(moment), DATETIME_FORMAT);
+export function formatMoment(moment: number | null): string {
+  return moment ? format(new Date(moment), DATETIME_FORMAT) : "undefined";
 }
 
-export function formatDate(moment: number): string {
-  return format(new Date(moment), DATETIME_FORMAT);
+export function formatDate(date: Date): string {
+  return format(new Date(date), DATETIME_FORMAT);
 }

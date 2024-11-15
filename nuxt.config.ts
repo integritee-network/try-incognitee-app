@@ -82,7 +82,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/": { ssr: false },
-    "/teerdays": { ssr: false },
     "/gtn": { ssr: false },
     "/teerdays-lp": { ssr: false },
     "/referral": { ssr: false },

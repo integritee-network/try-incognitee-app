@@ -1035,6 +1035,7 @@ import { TypeRegistry, u32 } from "@polkadot/types";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
+import { useNotes } from "~/store/notes";
 import StatusOverlay from "~/components/ui/StatusOverlay.vue";
 import {
   shieldingTarget,
@@ -1050,6 +1051,7 @@ import { formatMoment } from "@/helpers/date";
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+const noteStore = useNotes();
 
 const privateTxHistoryRef = ref(null);
 const isSignerBusy = ref(false);
@@ -1067,7 +1069,7 @@ const faucetUrl = ref(null);
 const selectTab = (tab) => {
   currentTab.value = tab;
   if (tab === "private") {
-    privateTxHistoryRef.value?.updateNotes();
+    props.updateNotes();
   }
 };
 
@@ -1089,7 +1091,7 @@ defineExpose({
       "ADDRESS",
       accountStore.getAddress,
     );
-    await privateTxHistoryRef.value?.updateNotes();
+    props.updateNotes();
   },
 });
 const submitSendForm = () => {
@@ -1208,7 +1210,7 @@ const handleTopResult = (result, successMsg?) => {
           "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
       //update history to see successfuly action immediately
-      privateTxHistoryRef.value?.updateNotes();
+      props.updateNotes();
       return;
     }
     if (result.status.isInvalid) {
@@ -1578,6 +1580,10 @@ const props = defineProps({
     required: false,
     default: null,
     validator: (value) => value === null || value instanceof ApiPromise,
+  },
+  updateNotes: {
+    type: Function,
+    required: true,
   },
 });
 

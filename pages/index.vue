@@ -8,6 +8,7 @@
     :isFetchingIncogniteeBalance="isFetchingIncogniteeBalance"
     :disableGetter="disableGetter"
     ref="walletTabRef"
+    :updateNotes="updateNotes"
   />
 
   <!-- New Wallet -->
@@ -98,6 +99,7 @@ import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
 import {
   cryptoWaitReady,
+  encodeAddress,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
@@ -117,6 +119,9 @@ import {
   isLive,
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
+import { useNotes } from "~/store/notes";
+import { formatMoment } from "~/helpers/date";
+import { Note, NoteDirection } from "~/lib/notes";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -254,6 +259,247 @@ const fetchNetworkStatus = async () => {
   promises.push(p2);
 
   await Promise.all(promises);
+};
+
+const noteBucketsInfo = ref(null);
+const firstNoteBucketIndexFetched = ref(null);
+let lastAccount = null;
+let lastBucketIndex = null;
+const noteStore = useNotes();
+const updateNotes = async () => {
+  console.log("updateNotes called");
+  if (accountStore.account !== lastAccount) {
+    console.log("account changed, purging note history...");
+    noteStore.purgeAll();
+  }
+  lastAccount = accountStore.account;
+  await fetchNoteBucketsInfo();
+  if (noteBucketsInfo.value?.last.unwrap().index <= lastBucketIndex) {
+    console.log("bucket didn't change");
+  } else {
+    lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index;
+    console.log("lastBucketIndex=" + lastBucketIndex);
+  }
+  await fetchIncogniteeNotes(lastBucketIndex, true);
+};
+const fetchNoteBucketsInfo = async () => {
+  if (!incogniteeStore.apiReady) return;
+  console.log("fetch note buckets info");
+  const getter = incogniteeStore.api.noteBucketsInfoGetter(
+    incogniteeStore.shard,
+  );
+  await getter.send().then((info) => {
+    console.log(`note buckets info: ${info}`);
+    noteBucketsInfo.value = info;
+  });
+};
+const fetchOlderBucket = async () => {
+  const index = firstNoteBucketIndexFetched.value
+    ? firstNoteBucketIndexFetched.value - 1
+    : lastBucketIndex;
+  console.log("fetchOlderBuckets : " + firstNoteBucketIndexFetched.value);
+  await fetchIncogniteeNotes(index);
+  firstNoteBucketIndexFetched.value = index;
+};
+
+const fetchIncogniteeNotes = async (
+  bucketIndex: number,
+  skip_if_signer_needed: boolean,
+) => {
+  if (!incogniteeStore.apiReady) return;
+  if (!accountStore.account) return;
+
+  if (disableGetter.value == true) {
+    console.log(
+      "[fetchIncogniteeNotes] getter disabled. reconnect your account to enable again...",
+    );
+    return;
+  }
+  const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
+  const injector = accountStore.hasInjector ? accountStore.injector : null;
+  try {
+    if (!getterMap[mapKey]) {
+      if (injector) {
+        if (skip_if_signer_needed) {
+          console.log(
+            "skipping automated fetchIncogniteeNotes because signer is needed",
+          );
+          return;
+        } else {
+          console.debug(
+            `fetching incognitee notes needs signing in extension: ${injector.name}`,
+          );
+        }
+      }
+      getterMap[mapKey] = await incogniteeStore.api.notesForTrustedGetter(
+        accountStore.account,
+        bucketIndex,
+        incogniteeStore.shard,
+        { signer: injector?.signer },
+      );
+    } else {
+      console.debug(`fetching incognitee notes using cached getter`);
+    }
+  } catch (e) {
+    // this will be the case if we click on cancel in the extension popup.
+    console.error(e);
+    disableGetter.value = true;
+    return;
+  }
+
+  await getterMap[mapKey]
+    .send()
+    .then((notes) => {
+      console.debug(
+        `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucketIndex}:`,
+      );
+      for (const note of notes) {
+        if (note.note.isSuccessfulTrustedCall) {
+          const call = incogniteeStore.api.createType(
+            "IntegriteeTrustedCall",
+            note.note.asSuccessfulTrustedCall,
+          );
+          if (call.isBalanceShield) {
+            const typedCall = call.asBalanceShield;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] balance shield: ${typedCall}`,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            noteStore.addNote(
+              new Note(
+                "Shield",
+                NoteDirection.Incoming,
+                to,
+                BigInt(typedCall[2]),
+                new Date(note.timestamp?.toNumber()),
+                null,
+              ),
+            );
+          } else if (call.isBalanceUnshield) {
+            const typedCall = call.asBalanceUnshield;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] balance unshield: ${typedCall}`,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            noteStore.addNote(
+              new Note(
+                "Unshield",
+                NoteDirection.Outgoing,
+                to,
+                BigInt(typedCall[2]),
+                new Date(note.timestamp?.toNumber()),
+                null,
+              ),
+            );
+          } else if (call.isBalanceTransfer) {
+            const typedCall = call.asBalanceTransfer;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer: ${typedCall}`,
+            );
+            const from = encodeAddress(
+              typedCall[0],
+              accountStore.getSs58Format,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            if (from === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Outgoing Transfer",
+                  NoteDirection.Outgoing,
+                  to,
+                  BigInt(typedCall[2]),
+                  new Date(note.timestamp?.toNumber()),
+                  null,
+                ),
+              );
+            } else if (to === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Incoming Transfer",
+                  NoteDirection.Incoming,
+                  from,
+                  BigInt(typedCall[2]),
+                  new Date(note.timestamp?.toNumber()),
+                  null,
+                ),
+              );
+            } else {
+              console.error(
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+              );
+            }
+          } else if (call.isBalanceTransferWithNote) {
+            const typedCall = call.asBalanceTransferWithNote;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer with note: ${typedCall}`,
+            );
+            const from = encodeAddress(
+              typedCall[0],
+              accountStore.getSs58Format,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            if (from === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Outgoing Transfer",
+                  NoteDirection.Outgoing,
+                  to,
+                  BigInt(typedCall[2]),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[3].toString(),
+                ),
+              );
+            } else if (to === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Incoming Transfer",
+                  NoteDirection.Incoming,
+                  from,
+                  BigInt(typedCall[2]),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[3].toString(),
+                ),
+              );
+            } else {
+              console.error(
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+              );
+            }
+          } else if (call.isGuessTheNumber) {
+            const typedCall = call.asGuessTheNumber.asGuess;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] guess the number: ${typedCall}`,
+            );
+            noteStore.addNote(
+              new Note(
+                `Submit Guess (${typedCall[1]})`,
+                NoteDirection.None,
+                null,
+                null,
+                new Date(note.timestamp?.toNumber()),
+                null,
+              ),
+            );
+          } else {
+            console.error(
+              `[${formatMoment(note.timestamp?.toNumber())}] unknown call: ${call}`,
+            );
+          }
+        }
+      }
+    })
+    .catch((err) => {
+      console.error(`[fetchIncogniteeNotes] error ${err}`);
+    });
+  if (
+    firstNoteBucketIndexFetched.value !== null &&
+    firstNoteBucketIndexFetched.value <= bucketIndex
+  ) {
+    console.log("first note bucket fetched didn't change");
+  } else {
+    console.log("first note bucket fetched is now " + bucketIndex);
+    firstNoteBucketIndexFetched.value = bucketIndex;
+  }
 };
 
 const pollCounter = useInterval(2000);

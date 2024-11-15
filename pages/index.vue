@@ -86,12 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import NetworkSelector from "@/components/ui/NetworkSelector.vue";
-import PublicPrivateBalanceSwitcher from "@/components/ui/PublicPrivateBalanceSwitcher.vue";
-import BalanceInteractorContainer from "@/components/ui/BalanceInteractorContainer.vue";
-import PrivateTxHistory from "@/components/ui/PrivateTxHistory.vue";
 import WalletTab from "@/components/ui/WalletTab.vue";
-import StatusOverlay from "@/components/ui/StatusOverlay.vue";
 import ChooseWalletOverlay from "@/components/ui/ChooseWalletOverlay.vue";
 import { computed } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
@@ -101,8 +96,6 @@ import OverlayDialog from "@/components/ui/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
-import { encodeAddress } from "@polkadot/util-crypto";
-import { TypeRegistry, u32 } from "@polkadot/types";
 import {
   cryptoWaitReady,
   mnemonicGenerate,
@@ -110,35 +103,20 @@ import {
 } from "@polkadot/util-crypto";
 import { useInterval } from "@vueuse/core";
 import { onUnmounted, onMounted, ref, watch } from "vue";
-import Qrcode from "vue-qrcode";
-import { QrcodeStream } from "vue-qrcode-reader";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
-import InfoBanner from "~/components/ui/InfoBanner.vue";
-import CampaignBanner from "~/components/ui/CampaignBanner.vue";
 import {
-  extensionAccounts,
   connectExtension,
   injectorForAddress,
 } from "@/lib/signerExtensionUtils";
 import {
   loadEnv,
   shieldingTarget,
-  shieldingLimit,
   incogniteeSidechain,
   incogniteeShard,
   isLive,
 } from "@/lib/environmentConfig";
-import ObtainTokenOverlay from "@/components/ui/ObtainTokenOverlay.vue";
-import { formatDecimalBalance } from "@/helpers/numbers";
-import {
-  INCOGNITEE_GTN_GUESS_FEE,
-  INCOGNITEE_SHIELDING_FEE_FRACTION,
-  INCOGNITEE_TX_FEE,
-  INCOGNITEE_UNSHIELDING_FEE,
-} from "../configs/incognitee";
-import { useSystemHealth, Health } from "@/store/systemHealth";
-import WarningBanner from "@/components/ui/WarningBanner.vue";
+import { useSystemHealth } from "@/store/systemHealth";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -499,34 +477,14 @@ const checkIfMobile = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
 
-
 const enableActions = computed(() => {
   return isLive.value || forceLive.value;
 });
 </script>
 
 <style scoped>
-.currency-box {
-  position: relative;
-  outline: none; /* Keine Outline standardmäßig */
-}
-
-.currency-box:hover {
-  outline: 2px solid var(--incognitee-green); /* Verwende outline statt border */
-}
-
-.text-overflow {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .border-green-500 {
   border-color: #24ad7c;
-}
-
-.bg-gray-800 {
-  background-color: #1f2937;
 }
 
 .text-white {
@@ -555,13 +513,6 @@ hr {
   height: 1px; /* Adjust as needed */
 }
 
-.qrcode-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
 .form-container input {
   background-color: #333;
   color: #fff; /* You might want to change the text color to ensure it's readable against the dark background */
@@ -571,16 +522,6 @@ hr {
   font-size: 2em; /* Make the font size twice as large */
   text-align: center; /* Center the text */
   width: 50%; /* Reduce the width by 50% */
-}
-
-.spinner {
-  border: 2px solid #f3f3f3; /* Light grey */
-  border-top: 2px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 1em; /* Adjust the size here */
-  height: 1em; /* Adjust the size here */
-  animation: spin 2s linear infinite;
-  vertical-align: middle; /* Align with the text */
 }
 
 @keyframes spin {

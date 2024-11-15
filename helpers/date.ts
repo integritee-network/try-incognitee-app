@@ -6,7 +6,7 @@ export const parse = (date: string) => {
   return format(parseString(date), DATE_FORMAT);
 };
 
-export function formatMoment(moment: number| null): string {
+export function formatMoment(moment: number | null): string {
   return moment ? format(new Date(moment), DATETIME_FORMAT) : "undefined";
 }
 

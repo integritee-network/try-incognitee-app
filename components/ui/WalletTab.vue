@@ -844,7 +844,9 @@
                   </dt>
                   <dd class="mt-1 text-base font-semibold leading-6 text-white">
                     {{
-                      formatMoment(guessTheNumberInfo?.next_round_timestamp.toNumber())
+                      formatMoment(
+                        guessTheNumberInfo?.next_round_timestamp.toNumber(),
+                      )
                     }}
                   </dd>
                 </div>
@@ -1035,11 +1037,9 @@ import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import StatusOverlay from "~/components/ui/StatusOverlay.vue";
 import {
-  loadEnv,
   shieldingTarget,
   shieldingLimit,
   incogniteeSidechain,
-  incogniteeShard,
   isLive,
 } from "@/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
@@ -1587,21 +1587,6 @@ const enableActions = computed(() => {
 </script>
 
 <style scoped>
-.currency-box {
-  position: relative;
-  outline: none; /* Keine Outline standardmäßig */
-}
-
-.currency-box:hover {
-  outline: 2px solid var(--incognitee-green); /* Verwende outline statt border */
-}
-
-.text-overflow {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .border-green-500 {
   border-color: #24ad7c;
 }

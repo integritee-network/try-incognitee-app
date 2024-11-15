@@ -138,7 +138,7 @@
                       <p class="text-xs cursor-pointer">TEERDays</p>
                     </nuxt-link>
                   </div>
-                                    <div class="flex flex-col items-center text-center">
+                  <div class="flex flex-col items-center text-center">
                     <nuxt-link :to="{ path: '/', query: $route.query }">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

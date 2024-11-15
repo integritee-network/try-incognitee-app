@@ -32,7 +32,9 @@
           class="flex items-center gap-x-4 py-4 pl-4 pr-8 text-left sm:pl-6 lg:pl-8 bg-gray-900"
         >
           <div class="flex flex-col">
-            <div class="text-sm font-medium text-gray-500">You</div>
+            <div class="text-sm font-medium text-gray-500">
+              You to {{ note.account }}
+            </div>
             <div
               class="wallet-address mt-1 text-xs text-white whitespace-nowrap"
             >

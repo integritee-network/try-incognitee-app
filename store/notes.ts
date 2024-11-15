@@ -11,10 +11,12 @@ export const useNotes = defineStore("notes", {
       );
     },
     getFinancialNotes() {
-      return this.getSortedNotes().filter((note) => note.amount > 0);
+      return this.getSortedNotes.filter((note) => note.amount > 0);
     },
     getMessages() {
-      return this.getSortedNotes().filter((note) => note.amount === 0);
+      return this.getSortedNotes.filter(
+        (note) => note.note?.length > 0 && !(note.amount > 0),
+      );
     },
   },
   actions: {

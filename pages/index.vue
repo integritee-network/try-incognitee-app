@@ -12,7 +12,9 @@
       :updateNotes="updateNotes"
     />
   </div>
-  <div v-else-if="activeApp === 'messaging'"><MessagingTab /></div>
+  <div v-else-if="activeApp === 'messaging'">
+    <MessagingTab :isMobile="isMobile" :updateNotes="updateNotes" />
+  </div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
   <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>

@@ -46,7 +46,7 @@
     </div>
     <div class="mt-5 flex justify-center text-gray-500">
       <button @click="fetchOlderBucket">
-        fetch more events
+        fetch more messages
         {{ accountStore.hasInjector ? "(needs signature)" : "" }}
       </button>
     </div>

@@ -60,7 +60,7 @@
       <label
         for="paymentNote"
         class="text-sm font-medium leading-6 text-white text-left"
-        >Note</label
+        >Message</label
       >
       <div class="relative flex items-center rounded-lg">
         <textarea
@@ -83,9 +83,16 @@
         type="submit"
         class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
       >
-        Send
+        Send Privately
       </button>
     </div>
+    <p>
+      <i
+        >please be aware that message retention time does not guarantee
+        delivery. Messages are automatically purged in FIFO manner when the
+        buffer limit is reached</i
+      >
+    </p>
     <div>{{ txStatus }}</div>
   </form>
   <PrivateMessageHistory :show="true" />

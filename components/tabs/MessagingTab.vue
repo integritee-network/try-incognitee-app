@@ -40,6 +40,19 @@
           </div>
         </div>
       </div>
+      <ul
+        v-if="filteredLut.length"
+        class="mt-10 absolute bg-white border border-gray-300 bg-gray-400 rounded-lg mt-1 w-full z-10"
+      >
+        <li
+          v-for="entry in filteredLut.slice(0, 5)"
+          :key="entry.address"
+          @click="selectAddress(entry.address)"
+          class="cursor-pointer p-2 hover:bg-gray-200"
+        >
+          {{ entry.username }}
+        </li>
+      </ul>
     </div>
 
     <!-- Messages -->
@@ -56,7 +69,9 @@
           rows="2"
           ref="messageTextarea"
           name="messages"
+          required
           placeholder="Enter a private note for the recipient"
+          :minlength="1"
           :maxlength="140"
           class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
         ></textarea>
@@ -89,17 +104,16 @@
 <script setup lang="ts">
 import PrivateMessageHistory from "~/components/ui/PrivateMessageHistory.vue";
 import { incogniteeSidechain } from "~/lib/environmentConfig";
-import { formatDecimalBalance } from "~/helpers/numbers";
 import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { defineProps, ref, watch } from "vue";
+import { defineProps, ref, watch, computed } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
-import { ApiPromise } from "@polkadot/api";
 import { useInterval } from "@vueuse/core";
+import { encodeAddress } from "@polkadot/util-crypto";
 
 const recipientAddress = ref("");
 const sendPrivateNote = ref("");
@@ -113,6 +127,41 @@ watch(pollCounter, async () => {
   console.debug("polling for new incognitee notes");
   await props.updateNotes();
 });
+
+const lut = ref([
+  {
+    username: "alice",
+    address: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+  },
+  {
+    username: "bob",
+    address: "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+  },
+  {
+    username: "charlie",
+    address: "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+  },
+  {
+    username: "tester",
+    address: "5F4m4au63SbgSdRoF5wPetF9VQaNDDN9kfqQNre9py3x6Smy",
+  },
+  {
+    username: "tester2",
+    address: "5DqArikbjsXqZq2UfSRENBrMg3Eadhu2bhdi4M4dGjKtnYwd",
+  },
+]);
+
+const filteredLut = computed(() => {
+  if (!recipientAddress.value) return [];
+  return lut.value.filter((entry) =>
+    entry.username.toLowerCase().includes(recipientAddress.value.toLowerCase()),
+  );
+});
+
+const selectAddress = (address: string) => {
+  recipientAddress.value = encodeAddress(address, accountStore.getSs58Format);
+};
+
 const submitSendForm = () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
@@ -128,6 +177,13 @@ const sendPrivately = async () => {
   txStatus.value = "⌛ sending message privately on incognitee";
   const amount = BigInt(0);
   const account = accountStore.account;
+  if (
+    accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) <
+    3 * INCOGNITEE_TX_FEE
+  ) {
+    alert("Insufficient balance");
+    return;
+  }
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;
   // fixme: https://github.com/encointer/encointer-js/issues/123

@@ -231,10 +231,7 @@
       </div>
     </BalanceInteractorContainer>
 
-    <PrivateTxHistory
-      :show="currentTab === 'private'"
-      ref="privateTxHistoryRef"
-    />
+    <PrivateTxHistory :show="currentTab === 'private'" />
   </div>
 
   <!-- Assets Info -->
@@ -1035,7 +1032,6 @@ import { TypeRegistry, u32 } from "@polkadot/types";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
-import { useNotes } from "~/store/notes";
 import StatusOverlay from "~/components/ui/StatusOverlay.vue";
 import {
   shieldingTarget,
@@ -1051,9 +1047,6 @@ import { formatMoment } from "@/helpers/date";
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
-const noteStore = useNotes();
-
-const privateTxHistoryRef = ref(null);
 const isSignerBusy = ref(false);
 const sendAmount = ref(1.0);
 const sendPrivateNote = ref("");

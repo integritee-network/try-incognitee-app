@@ -1,16 +1,20 @@
 <template>
-  <WalletTab
-    :show="true"
-    :isProd="isProd"
-    :isMobile="isMobile"
-    :api="api"
-    :isFetchingShieldingTargetBalance="isFetchingShieldingTargetBalance"
-    :isFetchingIncogniteeBalance="isFetchingIncogniteeBalance"
-    :disableGetter="disableGetter"
-    ref="walletTabRef"
-    :updateNotes="updateNotes"
-  />
-
+  <div v-if="activeApp === 'wallet'">
+    <WalletTab
+      :show="true"
+      :isProd="isProd"
+      :isMobile="isMobile"
+      :api="api"
+      :isFetchingShieldingTargetBalance="isFetchingShieldingTargetBalance"
+      :isFetchingIncogniteeBalance="isFetchingIncogniteeBalance"
+      :disableGetter="disableGetter"
+      ref="walletTabRef"
+      :updateNotes="updateNotes"
+    />
+  </div>
+  <div v-else-if="activeApp === 'messaging'"><MessagingTab /></div>
+  <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
+  <div v-else-if="activeApp === 'gov'"><GovTab /></div>
   <!-- New Wallet -->
   <OverlayDialog
     :show="showNewWalletOverlay"
@@ -122,6 +126,9 @@ import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
+import MessagingTab from "~/components/ui/MessagingTab.vue";
+import SwapTab from "~/components/ui/SwapTab.vue";
+import GovTab from "~/components/ui/GovTab.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -134,7 +141,7 @@ const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
-
+const activeApp = ref("wallet");
 const faucetUrl = ref(null);
 const forceLive = ref(false);
 const api = ref<ApiPromise | null>(null);
@@ -604,6 +611,22 @@ const subscribeWhatsReady = async () => {
   walletTabRef.value?.onWalletInfoInitialized();
 };
 
+const switchToWallet = () => {
+  activeApp.value = "wallet";
+};
+
+const switchToMessaging = () => {
+  activeApp.value = "messaging";
+};
+
+const switchToSwap = () => {
+  activeApp.value = "swap";
+};
+
+const switchToGov = () => {
+  activeApp.value = "gov";
+};
+
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
@@ -613,6 +636,10 @@ onMounted(async () => {
     incogniteeShard.value,
   );
   eventBus.on("addressClicked", openChooseWalletOverlay);
+  eventBus.on("switchToWallet", switchToWallet);
+  eventBus.on("switchToMessaging", switchToMessaging);
+  eventBus.on("switchToSwap", switchToSwap);
+  eventBus.on("switchToGov", switchToGov);
   const seedHex = router.currentRoute.value.query.seed;
   const injectedAddress = router.currentRoute.value.query.address;
   if (router.currentRoute.value.query.forceLive) {

@@ -30,7 +30,7 @@
 import OverlayDialog from "@/components/ui/OverlayDialog.vue";
 import { defineProps } from "vue";
 import { Note, NoteDirection } from "@/lib/notes";
-import { formatMoment, formatDate } from "@/helpers/date";
+import { formatDate } from "@/helpers/date";
 import { divideBigIntToFloat } from "~/helpers/numbers";
 import { useAccount } from "@/store/account.ts";
 

@@ -498,21 +498,7 @@ const isMobile = ref(false);
 const checkIfMobile = () => {
   isMobile.value = window.matchMedia("(max-width: 768px)").matches;
 };
-const formatTimestamp = (timestamp: number | null) => {
-  if (!timestamp) return "undefined";
-  console.log("formatting epoch: " + timestamp);
-  const date = new Date(timestamp.toNumber());
-  const options: Intl.DateTimeFormatOptions = {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZoneName: "short",
-  };
-  return new Intl.DateTimeFormat("de-CH", options).format(date);
-};
+
 
 const enableActions = computed(() => {
   return isLive.value || forceLive.value;

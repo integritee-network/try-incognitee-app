@@ -243,20 +243,20 @@ const fetchIncogniteeNotes = async (
           if (call.isBalanceShield) {
             const typedCall = call.asBalanceShield;
             console.log(
-              `[${formatMoment(note.timestamp.toNumber())}] balance shield: ${typedCall}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] balance shield: ${typedCall}`,
             );
             allNotes.value.push({
               category: "Shield",
               direction: NoteDirection.Incoming,
               account: typedCall[1],
               amount: BigInt(typedCall[2]),
-              timestamp: new Date(note.timestamp.toNumber()),
+              timestamp: new Date(note.timestamp?.toNumber()),
               note: null,
             });
           } else if (call.isBalanceUnshield) {
             const typedCall = call.asBalanceUnshield;
             console.log(
-              `[${formatMoment(note.timestamp.toNumber())}] balance unshield: ${typedCall}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] balance unshield: ${typedCall}`,
             );
             const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
             allNotes.value.push({
@@ -264,13 +264,13 @@ const fetchIncogniteeNotes = async (
               direction: NoteDirection.Outgoing,
               account: to,
               amount: BigInt(typedCall[2]),
-              timestamp: new Date(note.timestamp.toNumber()),
+              timestamp: new Date(note.timestamp?.toNumber()),
               note: null,
             });
           } else if (call.isBalanceTransfer) {
             const typedCall = call.asBalanceTransfer;
             console.log(
-              `[${formatMoment(note.timestamp.toNumber())}] balance transfer: ${typedCall}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer: ${typedCall}`,
             );
             const from = encodeAddress(
               typedCall[0],
@@ -283,7 +283,7 @@ const fetchIncogniteeNotes = async (
                 direction: NoteDirection.Outgoing,
                 account: to,
                 amount: BigInt(typedCall[2]),
-                timestamp: new Date(note.timestamp.toNumber()),
+                timestamp: new Date(note.timestamp?.toNumber()),
                 note: null,
               });
             } else if (to === accountStore.getAddress) {
@@ -292,18 +292,18 @@ const fetchIncogniteeNotes = async (
                 direction: NoteDirection.Incoming,
                 account: from,
                 amount: BigInt(typedCall[2]),
-                timestamp: new Date(note.timestamp.toNumber()),
+                timestamp: new Date(note.timestamp?.toNumber()),
                 note: null,
               });
             } else {
               console.error(
-                `[${formatMoment(note.timestamp.toNumber())}] unknown relation to transfer: ${typedCall}`,
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
               );
             }
           } else if (call.isBalanceTransferWithNote) {
             const typedCall = call.asBalanceTransferWithNote;
             console.log(
-              `[${formatMoment(note.timestamp.toNumber())}] balance transfer with note: ${typedCall}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer with note: ${typedCall}`,
             );
             const from = encodeAddress(
               typedCall[0],
@@ -316,7 +316,7 @@ const fetchIncogniteeNotes = async (
                 direction: NoteDirection.Outgoing,
                 account: to,
                 amount: BigInt(typedCall[2]),
-                timestamp: new Date(note.timestamp.toNumber()),
+                timestamp: new Date(note.timestamp?.toNumber()),
                 note: typedCall[3].toString(),
               });
             } else if (to === accountStore.getAddress) {
@@ -325,30 +325,30 @@ const fetchIncogniteeNotes = async (
                 direction: NoteDirection.Incoming,
                 account: from,
                 amount: BigInt(typedCall[2]),
-                timestamp: new Date(note.timestamp.toNumber()),
+                timestamp: new Date(note.timestamp?.toNumber()),
                 note: typedCall[3].toString(),
               });
             } else {
               console.error(
-                `[${formatMoment(note.timestamp.toNumber())}] unknown relation to transfer: ${typedCall}`,
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
               );
             }
           } else if (call.isGuessTheNumber) {
             const typedCall = call.asGuessTheNumber.asGuess;
             console.log(
-              `[${formatMoment(note.timestamp.toNumber())}] guess the number: ${typedCall}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] guess the number: ${typedCall}`,
             );
             allNotes.value.push({
               category: `Submit Guess (${typedCall[1]})`,
               direction: NoteDirection.None,
               account: null,
               amount: null,
-              timestamp: new Date(note.timestamp.toNumber()),
+              timestamp: new Date(note.timestamp?.toNumber()),
               note: null,
             });
           } else {
             console.error(
-              `[${formatMoment(note.timestamp.toNumber())}] unknown call: ${call}`,
+              `[${formatMoment(note.timestamp?.toNumber())}] unknown call: ${call}`,
             );
           }
         }
@@ -386,7 +386,7 @@ const fetchOlderBucket = async () => {
 const removeDups = (notes: Note[]): Note[] => {
   const uniqueNotes = new Set<string>();
   return notes.filter((note) => {
-    const uniqueIdentifier = `${note.timestamp.getTime()}-${note.account}`;
+    const uniqueIdentifier = `${note.timestamp?.getTime()}-${note.account}`;
     if (!uniqueNotes.has(uniqueIdentifier)) {
       uniqueNotes.add(uniqueIdentifier);
       return true;

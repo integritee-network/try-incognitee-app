@@ -844,7 +844,7 @@
                   </dt>
                   <dd class="mt-1 text-base font-semibold leading-6 text-white">
                     {{
-                      formatTimestamp(guessTheNumberInfo?.next_round_timestamp)
+                      formatMoment(guessTheNumberInfo?.next_round_timestamp.toNumber())
                     }}
                   </dd>
                 </div>
@@ -1045,6 +1045,7 @@ import {
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
+import { formatMoment } from "@/helpers/date";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

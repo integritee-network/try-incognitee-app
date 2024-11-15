@@ -1018,11 +1018,11 @@ import {
 import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";
 import CampaignBanner from "~/components/ui/CampaignBanner.vue";
-import ObtainTokenOverlay from "~/components/ui/ObtainTokenOverlay.vue";
+import ObtainTokenOverlay from "~/components/overlays/ObtainTokenOverlay.vue";
 import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import PublicPrivateBalanceSwitcher from "~/components/ui/PublicPrivateBalanceSwitcher.vue";
-import OverlayDialog from "~/components/ui/OverlayDialog.vue";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import Qrcode from "vue-qrcode";
 import BalanceInteractorContainer from "~/components/ui/BalanceInteractorContainer.vue";
 import PrivateTxHistory from "~/components/ui/PrivateTxHistory.vue";
@@ -1032,17 +1032,17 @@ import { TypeRegistry, u32 } from "@polkadot/types";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
-import StatusOverlay from "~/components/ui/StatusOverlay.vue";
+import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import {
   shieldingTarget,
   shieldingLimit,
   incogniteeSidechain,
   isLive,
-} from "@/lib/environmentConfig";
+} from "~/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
-import { formatMoment } from "@/helpers/date";
+import { formatMoment } from "~/helpers/date";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

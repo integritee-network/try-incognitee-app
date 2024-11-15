@@ -109,14 +109,14 @@
 </template>
 
 <script setup lang="ts">
-import OverlayDialog from "@/components/ui/OverlayDialog.vue";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { computed, defineProps, ref, watch } from "vue";
-import { Health, useSystemHealth } from "@/store/systemHealth";
+import { Health, useSystemHealth } from "~/store/systemHealth";
 import { useInterval } from "@vueuse/core";
 import { useRouter } from "vue-router";
-import { useIncognitee } from "@/store/incognitee.ts";
-import { chainConfigs } from "@/configs/chains.ts";
-import { shieldingTarget, incogniteeShard } from "@/lib/environmentConfig";
+import { useIncognitee } from "~/store/incognitee.ts";
+import { chainConfigs } from "~/configs/chains.ts";
+import { shieldingTarget, incogniteeShard } from "~/lib/environmentConfig";
 
 const router = useRouter();
 const systemHealth = useSystemHealth();

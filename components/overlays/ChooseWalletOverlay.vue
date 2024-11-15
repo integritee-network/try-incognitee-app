@@ -95,10 +95,10 @@ import {
   connectExtension,
   extensionAccounts,
   injectorForAddress,
-} from "@/lib/signerExtensionUtils";
-import OverlayDialog from "@/components/ui/OverlayDialog.vue";
+} from "~/lib/signerExtensionUtils";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { defineProps, computed, ref, watch } from "vue";
-import { useAccount } from "@/store/account.ts";
+import { useAccount } from "~/store/account.ts";
 
 const accountStore = useAccount();
 const selectedExtensionAccount = ref("");

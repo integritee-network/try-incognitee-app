@@ -631,24 +631,24 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, onUnmounted, computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useAccount } from "@/store/account.ts";
-import { formatDecimalBalance } from "@/helpers/numbers";
-import { useSystemHealth } from "@/store/systemHealth.ts";
-import { ChainId, chainConfigs } from "@/configs/chains.ts";
+import { useAccount } from "~/store/account.ts";
+import { formatDecimalBalance } from "~/helpers/numbers";
+import { useSystemHealth } from "~/store/systemHealth.ts";
+import { ChainId, chainConfigs } from "~/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
-import { eventBus } from "@/helpers/eventBus";
-import { loadEnv, integriteeNetwork, isLive } from "@/lib/environmentConfig";
-import { Bond, PendingUnlock } from "@/lib/teerDays";
+import { eventBus } from "~/helpers/eventBus";
+import { loadEnv, integriteeNetwork, isLive } from "~/lib/environmentConfig";
+import { Bond, PendingUnlock } from "~/lib/teerDays";
 import {
   extensionAccounts,
   connectExtension,
   injectorForAddress,
-} from "@/lib/signerExtensionUtils";
+} from "~/lib/signerExtensionUtils";
 import { nextTick } from "vue";
-import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
+import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
-import { formatBigDecimalBalance } from "@/helpers/numbers.ts";
+import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
 
 const activeAccordion = ref(null);
 

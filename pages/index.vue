@@ -92,13 +92,13 @@
 </template>
 
 <script setup lang="ts">
-import WalletTab from "@/components/ui/WalletTab.vue";
-import ChooseWalletOverlay from "@/components/ui/ChooseWalletOverlay.vue";
+import WalletTab from "~/components/tabs/WalletTab.vue";
+import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import { computed } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
-import OverlayDialog from "@/components/ui/OverlayDialog.vue";
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
@@ -127,10 +127,10 @@ import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
-import MessagingTab from "~/components/ui/MessagingTab.vue";
-import SwapTab from "~/components/ui/SwapTab.vue";
-import GovTab from "~/components/ui/GovTab.vue";
-import TeerDaysTab from "~/components/ui/TeerDaysTab.vue";
+import MessagingTab from "~/components/tabs/MessagingTab.vue";
+import SwapTab from "~/components/tabs/SwapTab.vue";
+import GovTab from "~/components/tabs/GovTab.vue";
+import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
 
 const router = useRouter();
 const accountStore = useAccount();

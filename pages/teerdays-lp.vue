@@ -655,7 +655,7 @@ import { chainConfigs } from "@/configs/chains.ts";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { loadEnv, integriteeNetwork } from "@/lib/environmentConfig";
 import { Bond } from "@/lib/teerDays";
-import ChooseWalletOverlay from "~/components/ui/ChooseWalletOverlay.vue";
+import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { definePageMeta } from "#imports";
 import { formatBigDecimalBalance } from "@/helpers/numbers.ts";

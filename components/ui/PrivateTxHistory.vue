@@ -131,7 +131,7 @@ import { useAccount } from "@/store/account.ts";
 import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
-import NoteDetailsOverlay from "@/components/ui/NoteDetailsOverlay.vue";
+import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 
 const accountStore = useAccount();
 const noteStore = useNotes();

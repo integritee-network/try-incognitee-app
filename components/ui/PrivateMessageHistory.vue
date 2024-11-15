@@ -18,7 +18,7 @@
         >
           <div class="flex flex-col">
             <div class="text-sm font-medium text-gray-500">
-              From: {{ note.account }}
+              From: {{ note.account }} at {{ formatDate(note.timestamp) }}
             </div>
             <div
               class="wallet-address mt-1 text-xs text-white whitespace-nowrap"
@@ -33,7 +33,7 @@
         >
           <div class="flex flex-col">
             <div class="text-sm font-medium text-gray-500">
-              You to {{ note.account }}
+              You to {{ note.account }} at {{ formatDate(note.timestamp) }}
             </div>
             <div
               class="wallet-address mt-1 text-xs text-white whitespace-nowrap"

@@ -16,6 +16,7 @@ module.exports = {
       colors: {
         "incognitee-green": "#24AD7C",
         "incognitee-blue": "#11111A",
+        "incognitee-brightblue": "#1845b9",
       },
     },
   },

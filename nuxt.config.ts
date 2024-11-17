@@ -88,6 +88,8 @@ export default defineNuxtConfig({
     "/referral": { ssr: false },
     "/referraltc": { ssr: false },
     "/messages": { ssr: false },
+    "/apps": { ssr: false },
+    "/vouchers": { ssr: false },
   },
   imports: {
     autoImport: false,

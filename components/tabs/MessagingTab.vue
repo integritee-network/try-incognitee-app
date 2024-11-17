@@ -121,6 +121,7 @@ import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useInterval } from "@vueuse/core";
 import { encodeAddress } from "@polkadot/util-crypto";
+import identities from "@/lib/polkadotPeopleIdentites"
 
 const recipientAddress = ref("");
 const sendPrivateNote = ref("");
@@ -135,32 +136,10 @@ watch(pollCounter, async () => {
   await props.updateNotes();
 });
 
-const lut = ref([
-  {
-    username: "alice",
-    address: "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
-  },
-  {
-    username: "bob",
-    address: "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
-  },
-  {
-    username: "charlie",
-    address: "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
-  },
-  {
-    username: "tester",
-    address: "5F4m4au63SbgSdRoF5wPetF9VQaNDDN9kfqQNre9py3x6Smy",
-  },
-  {
-    username: "tester2",
-    address: "5DqArikbjsXqZq2UfSRENBrMg3Eadhu2bhdi4M4dGjKtnYwd",
-  },
-]);
 
 const filteredLut = computed(() => {
   if (!recipientAddress.value) return [];
-  return lut.value.filter((entry) =>
+  return identities.filter((entry) =>
     entry.username.toLowerCase().includes(recipientAddress.value.toLowerCase()),
   );
 });

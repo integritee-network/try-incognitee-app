@@ -5,23 +5,42 @@
       <!-- Sidebar -->
       <div class="md:w-1/3 bg-gray-800 border-r border-gray-700 flex flex-col">
         <div class="px-4 py-4 flex items-center justify-between">
-          <div class="title text-2xl font-bold tracking-tight text-white sm:text-2xl">
+          <div
+            class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
+          >
             Messages
           </div>
         </div>
         <!-- Recipient Address Input -->
         <div class="relative flex items-center rounded-lg px-4 py-2">
-          <input id="recipientAddress" v-model="recipientAddress" type="text" required
+          <input
+            id="recipientAddress"
+            v-model="recipientAddress"
+            type="text"
+            required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input pr-12"
-            placeholder="Recipient" />
+            placeholder="Recipient"
+          />
           <div class="absolute right-6 flex space-x-2">
             <div @click="openScanOverlay" class="cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="h-6 w-6 text-white">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 text-white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                />
               </svg>
             </div>
           </div>
@@ -30,8 +49,14 @@
         <div class="overflow-y-auto flex-1">
           <div class="space-y-1 px-4">
             <!-- Active Message -->
-            <div v-for="(chat, index) in noteStore.getMessages" :key="index" class="relative flex items-center">
-              <div class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer">
+            <div
+              v-for="(chat, index) in noteStore.getMessages"
+              :key="index"
+              class="relative flex items-center"
+            >
+              <div
+                class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
+              >
                 <div class="flex justify-between items-center">
                   <!-- Wallet-Adresse des Versenders -->
                   <p class="wallet-address text-sm font-bold text-white">
@@ -40,7 +65,7 @@
                   <!-- Timestamp der letzten Nachricht -->
                   <span class="text-xs text-gray-400">{{
                     formatDate(chat.timestamp)
-                    }}</span>
+                  }}</span>
                 </div>
                 <!-- Letzte Nachricht im Chat-Verlauf -->
                 <p class="text-gray-400 text-xs line-clamp-2 mt-1">
@@ -55,7 +80,9 @@
       <!-- Chat window -->
       <div class="md:w-2/2 bg-gray-900 flex flex-col">
         <!-- Header -->
-        <div class="px-4 py-4 flex justify-between items-center border-b border-gray-700">
+        <div
+          class="px-4 py-4 flex justify-between items-center border-b border-gray-700"
+        >
           <h2 class="text-lg font-bold">Chat</h2>
         </div>
         <!-- Chat Messages -->
@@ -65,14 +92,25 @@
         <!-- Input Box -->
         <div class="border-t border-gray-700">
           <div class="flex items-center bg-gray-800 px-4 py-2">
-            <textarea id="messages" v-model="sendPrivateNote" rows="1" name="messages" required
+            <textarea
+              id="messages"
+              v-model="sendPrivateNote"
+              rows="1"
+              name="messages"
+              required
               placeholder="Enter a private note for the recipient"
-              class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"></textarea>
-            <button type="submit" class="ml-4 text-gray-400 hover:text-gray-300">
+              class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
+            ></textarea>
+            <button
+              type="submit"
+              class="ml-4 text-gray-400 hover:text-gray-300"
+            >
               <svg viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                <path fill-rule="evenodd"
+                <path
+                  fill-rule="evenodd"
                   d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
-                  clip-rule="evenodd" />
+                  clip-rule="evenodd"
+                />
               </svg>
             </button>
           </div>
@@ -80,11 +118,18 @@
           <div class="border-l-4 border-yellow-400 bg-gray-700 p-4">
             <div class="flex">
               <div class="shrink-0">
-                <svg class="size-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                  data-slot="icon">
-                  <path fill-rule="evenodd"
+                <svg
+                  class="size-5 text-yellow-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  data-slot="icon"
+                >
+                  <path
+                    fill-rule="evenodd"
                     d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-                    clip-rule="evenodd" />
+                    clip-rule="evenodd"
+                  />
                 </svg>
               </div>
               <div class="ml-3">
@@ -102,31 +147,48 @@
   </div>
 
   <!-- Scan QR -->
-  <OverlayDialog :show="showScanOverlay" :close="closeScanOverlay" title="Scan recipient's QR code">
+  <OverlayDialog
+    :show="showScanOverlay"
+    :close="closeScanOverlay"
+    title="Scan recipient's QR code"
+  >
     <div class="mt-6 qrcode-container">
       <qrcode-stream @detect="onDecode"></qrcode-stream>
     </div>
   </OverlayDialog>
 
   <!-- Global notification live region -->
-  <div v-if="showNotification" aria-live="assertive"
-    class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6">
+  <div
+    v-if="showNotification"
+    aria-live="assertive"
+    class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+  >
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
       <!-- Notification panel -->
       <div
-        class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition transform ease-out duration-300">
+        class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition transform ease-out duration-300"
+      >
         <div class="p-4">
           <div class="flex items-center">
             <div class="flex w-0 flex-1 justify-between">
               <div class="text-black">{{ txStatus }}</div>
             </div>
             <div class="ml-4 flex shrink-0">
-              <button @click="closeNotification" type="button"
-                class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              <button
+                @click="closeNotification"
+                type="button"
+                class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
                 <span class="sr-only">Close</span>
-                <svg class="size-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <svg
+                  class="size-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
                   <path
-                    d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                    d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"
+                  />
                 </svg>
               </button>
             </div>
@@ -208,7 +270,7 @@ watch(pollCounter, async () => {
 const filteredLut = computed(() => {
   if (!recipientAddress.value) return [];
   return identities.filter((entry) =>
-    entry.username.toLowerCase().includes(recipientAddress.value.toLowerCase())
+    entry.username.toLowerCase().includes(recipientAddress.value.toLowerCase()),
   );
 });
 
@@ -219,7 +281,7 @@ const selectAddress = (address: string) => {
 const submitSendForm = () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
     );
     return;
   }
@@ -243,17 +305,17 @@ const sendPrivately = async () => {
   // fixme: https://github.com/encointer/encointer-js/issues/123
   if (byteLength > 161) {
     alert(
-      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes."
+      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes.",
     );
     return;
   }
   const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value]
+    accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending message from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`
+    `sending message from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -268,7 +330,7 @@ const sendPrivately = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      }
+      },
     )
     .then((result) => handleTopResult(result, "😀 message sent successfully"))
     .catch((err) => handleTopError(err));

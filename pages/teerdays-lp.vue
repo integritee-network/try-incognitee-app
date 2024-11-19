@@ -740,13 +740,19 @@ onMounted(async () => {
   white-space: nowrap; /* Verhindert Zeilenumbruch */
   overflow: hidden; /* Versteckt überlaufenden Text */
   text-overflow: ellipsis; /* Zeigt '...' bei zu langem Text an */
-  max-width: 10ch; /* Maximale Länge: 10 Zeichen */
+}
+
+/* Für mobile Bildschirme (max-width: 640px) */
+@media (max-width: 640px) {
+  .wallet-address {
+    max-width: 10ch; /* Zeigt nur die ersten 5 Zeichen */
+  }
 }
 
 /* Für größere Bildschirme (ab 641px) */
 @media (min-width: 641px) {
   .wallet-address {
-    max-width: 10ch; /* Begrenze auch hier auf 10 Zeichen */
+    max-width: none; /* Zeigt die komplette Adresse an */
   }
 }
 

@@ -1,48 +1,111 @@
 <template>
-  <div class="bg-gray-900 text-white max-h-[650px] flex">
-    <!-- Form starts here -->
-    <form class="flex" @submit.prevent="submitSendForm">
-      <!-- Sidebar -->
-      <div class="md:w-1/3 bg-gray-800 border-r border-gray-700 flex flex-col">
-        <div class="px-4 py-4 flex items-center justify-between">
-          <div class="title text-2xl font-bold tracking-tight text-white sm:text-2xl">
-            Messages
+ <div>
+    <!-- Overlay Start -->
+    <div
+      v-if="showStartOverlay"
+      class="fixed inset-0 bg-gray-[#000000bd] bg-opacity-75 flex items-center justify-center z-50"
+    >
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md shadow-lg max-w-lg">
+        <div class="flex items-start">
+          <div class="shrink-0">
+            <svg
+              class="size-5 text-yellow-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-yellow-700">
+              Please be aware that message retention time does not guarantee delivery. Messages are automatically purged in FIFO manner when the buffer limit is reached
+            </p>
+          </div>
+          <div class="ml-auto">
+            <button
+              @click="closeStartOverlay"
+              class="text-yellow-400 hover:text-yellow-600 focus:outline-none"
+              aria-label="Close"
+            >
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Overlay End -->
+
+<div class="bg-gray-900 text-white max-h-[650px] flex mt-10">
+    <!-- Form starts here -->
+    <form class="flex w-full" @submit.prevent="submitSendForm">
+      <!-- Sidebar -->
+      <div
+        :class="{
+          'w-full': isMobile && !showChatDetail, /* Mobile: Sidebar im Vollbild */
+          'hidden': isMobile && showChatDetail, /* Mobile: Sidebar versteckt */
+          'md:w-1/3': !isMobile, /* Desktop: Sidebar nimmt 1/3 ein */
+        }"
+        class="bg-gray-800 border-r border-gray-700 flex flex-col"
+      >
+      <div class="px-4 py-4 flex items-center justify-between">
+  <!-- Linksbündiger Titel -->
+  <div class="title text-2xl font-bold tracking-tight text-white sm:text-2xl">
+    Chats
+  </div>
+
+  <!-- Rechtsbündiges "Neue Nachricht" Icon -->
+<!-- Button zum Öffnen des Overlays -->
+<button
+  @click="openAddNewMessageOverlay"
+  class="text-gray-400 rounded"
+>
+  <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+  </svg>
+  <span class="sr-only">Add new message</span>
+</button>
+</div>
         <!-- Recipient Address Input -->
         <div class="relative flex items-center rounded-lg px-4 py-2">
-          <input id="recipientAddress" v-model="recipientAddress" type="text" required
-            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input pr-12"
-            placeholder="Recipient" />
-          <div class="absolute right-6 flex space-x-2">
-            <div @click="openScanOverlay" class="cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="h-6 w-6 text-white">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" />
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z" />
-              </svg>
-            </div>
-          </div>
+          <input
+            id="search"
+            v-model="search"
+            type="text"
+            class="w-full text-sm rounded-lg flex-grow bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input"
+            placeholder="Search..."
+          />
         </div>
         <!-- Message List -->
         <div class="overflow-y-auto flex-1">
           <div class="space-y-1 px-4">
-            <!-- Active Message -->
-            <div v-for="(chat, index) in noteStore.getMessages" :key="index" class="relative flex items-center">
-              <div class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer">
+            <div
+              v-for="(chat, index) in noteStore.getMessages"
+              :key="index"
+              class="relative flex items-center"
+            >
+              <div
+                class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
+                @click="openChat(chat)"
+              >
                 <div class="flex justify-between items-center">
-                  <!-- Wallet-Adresse des Versenders -->
                   <p class="wallet-address text-sm font-bold text-white">
                     {{ chat.account }}
                   </p>
-                  <!-- Timestamp der letzten Nachricht -->
                   <span class="text-xs text-gray-400">{{
                     formatDate(chat.timestamp)
-                    }}</span>
+                  }}</span>
                 </div>
-                <!-- Letzte Nachricht im Chat-Verlauf -->
                 <p class="text-gray-400 text-xs line-clamp-2 mt-1">
                   {{ chat.note }}
                 </p>
@@ -53,50 +116,65 @@
       </div>
 
       <!-- Chat window -->
-      <div class="md:w-2/2 bg-gray-900 flex flex-col">
+      <div
+        :class="{
+          'w-full': isMobile && showChatDetail, /* Mobile: Chat im Vollbild */
+          'hidden': isMobile && !showChatDetail, /* Mobile: Chat versteckt */
+          'md:w-2/3': !isMobile, /* Desktop: Chat nimmt 2/3 ein */
+        }"
+        class="bg-gray-900 flex flex-col"
+      >
         <!-- Header -->
         <div class="px-4 py-4 flex justify-between items-center border-b border-gray-700">
-          <h2 class="text-lg font-bold">Chat</h2>
+          <button
+            v-if="isMobile"
+            @click="closeChat"
+            class="text-white text-sm font-medium"
+          >
+            ← Back
+          </button>
+          <h2 class="text-lg font-bold">WalletDress</h2>
         </div>
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto">
           <PrivateMessageHistory :show="true" />
         </div>
-        <!-- Input Box -->
-        <div class="border-t border-gray-700">
-          <div class="flex items-center bg-gray-800 px-4 py-2">
-            <textarea id="messages" v-model="sendPrivateNote" rows="1" name="messages" required
-              placeholder="Enter a private note for the recipient"
-              class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"></textarea>
-            <button type="submit" class="ml-4 text-gray-400 hover:text-gray-300">
-              <svg viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                <path fill-rule="evenodd"
-                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
-                  clip-rule="evenodd" />
-              </svg>
-            </button>
-          </div>
+<!-- Input Box -->
+<div class="border-t border-gray-700">
+  <div class="flex items-center bg-gray-800 px-4 py-2">
+    <!-- Input mit Counter -->
+    <div class="relative w-full">
+      <textarea
+        id="messages"
+        v-model="sendPrivateNote"
+        rows="1"
+        maxlength="140"
+        name="messages"
+        required
+        placeholder="Enter message"
+        class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
+      ></textarea>
+      <!-- Zeichen-Counter -->
+      <div class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 text-xs">
+        {{ sendPrivateNote.length }}/140
+      </div>
+    </div>
+    <!-- Senden-Button -->
+    <button
+      type="submit"
+      class="ml-4 text-gray-400 hover:text-gray-300 flex-shrink-0"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+        <path
+          fill-rule="evenodd"
+          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+  </div>
+</div>
 
-          <div class="border-l-4 border-yellow-400 bg-gray-700 p-4">
-            <div class="flex">
-              <div class="shrink-0">
-                <svg class="size-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
-                  data-slot="icon">
-                  <path fill-rule="evenodd"
-                    d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-                    clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div class="ml-3">
-                <p class="text-xs text-yellow-400">
-                  Please be aware that message retention time does not guarantee
-                  delivery. Messages are automatically purged in FIFO manner
-                  when the buffer limit is reached
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </form>
   </div>
@@ -107,6 +185,46 @@
       <qrcode-stream @detect="onDecode"></qrcode-stream>
     </div>
   </OverlayDialog>
+
+    <!-- New Message -->
+    <OverlayDialog :show="showAddNewMessageOverlay" :close="closeAddNewMessageOverlay" title="New Chat">
+          <!-- Recipient Address Input -->
+          <div class="relative flex items-center rounded-lg py-5 pb-20">
+          <input
+            id="recipientAddress"
+            v-model="recipientAddress"
+            type="text"
+            required
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input pr-12"
+            placeholder="Search address"
+          />
+          <div class="absolute right-6 flex space-x-2">
+            <div @click="openScanOverlay" class="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 text-white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+  </OverlayDialog>
+
+  
 
   <!-- Global notification live region -->
   <div v-if="showNotification" aria-live="assertive"
@@ -135,6 +253,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -143,7 +262,7 @@ import { incogniteeSidechain } from "~/lib/environmentConfig";
 import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { defineProps, ref, watch, computed } from "vue";
+import { defineProps, ref, watch, computed, onMounted } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
@@ -156,6 +275,59 @@ import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+
+// Control overlay visibility
+const showStartOverlay = ref(true);
+
+// Close overlay function
+const closeStartOverlay = () => {
+  showStartOverlay.value = false;
+};
+
+// Ensure overlay is shown on reload
+onMounted(() => {
+  showStartOverlay.value = true;
+});
+
+
+
+
+// Reaktive Variable für das Overlay
+const showAddNewMessageOverlay = ref(false);
+
+// Öffnen des Overlays
+const openAddNewMessageOverlay = () => {
+  showAddNewMessageOverlay.value = true;
+};
+
+// Schließen des Overlays
+const closeAddNewMessageOverlay = () => {
+  showAddNewMessageOverlay.value = false;
+};
+
+
+const isMobile = ref(window.innerWidth < 768);
+const showChatDetail = ref(false);
+
+const openChat = (chat) => {
+  showChatDetail.value = true;
+};
+
+const closeChat = () => {
+  showChatDetail.value = false;
+};
+
+window.addEventListener("resize", () => {
+  isMobile.value = window.innerWidth < 768;
+});
+
+// Reaktive Variable für die Steuerung des Banners
+const showMsgBanner = ref(true);
+
+// Funktion zum Schließen des Banners
+const dismissMsgBanner = () => {
+  showMsgBanner.value = false; // Verstecke das Banner
+};
 
 const noteStore = useNotes();
 
@@ -330,9 +502,57 @@ const props = defineProps({
     required: true,
   },
 });
+// Reactive variable for the input text
+const inputText = ref("");
 </script>
 
 <style scoped>
+textarea {
+  resize: none; /* Disable resizing for better layout control */
+}
+
+.relative {
+  position: relative; /* Ensure the counter is positioned relative to the input */
+}
+.bg-opacity-75 {
+  background-color: rgba(0, 0, 0, 0.828);
+}
+
+.fixed {
+  z-index: 50; /* Ensure overlay is on top */
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+/* Für Webkit-basierte Browser (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 5px; /* Breite der Scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #1f293700; /* Hintergrund des Tracks */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4b556300; /* Farbe der Scrollbar */
+  border-radius: 6px; /* Runde Ecken */
+  border: 3px solid #1f2937; /* Abstand zur Scrollspur */
+}
+
+/* Für Firefox */
+* {
+  scrollbar-width: thin; /* Dünne Scrollbar */
+  scrollbar-color: #4b5563 #1f293700; /* Daumen- und Trackfarben */
+}
+
+/* Optional: Hover-Effekt auf der Scrollbar */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6b7280; /* Hover-Farbe der Scrollbar */
+}
+
+
+
 .wallet-address {
   display: block;
   white-space: nowrap;

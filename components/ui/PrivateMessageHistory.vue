@@ -1,10 +1,10 @@
 <template>
   <div v-if="show" class="flex justify-between items-center"></div>
-  <div v-if="show" class="mb-10">
+  <div class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
-    <div v-if="show" class="flex-1 overflow-y-auto bg-gray-900 rounded-md">
+    <div ref="chatWindow" class="flex-1 overflow-y-auto bg-gray-900 rounded-md">
       <div
-        v-for="(note, index) in noteStore.getMessages"
+        v-for="(note, index) in noteStore.getMessagesWith(counterparty)"
         :key="index"
         class="py-2 px-4"
       >
@@ -16,7 +16,7 @@
             <div
               class="wallet-address text-right text-xs mb-1 font-medium text-gray-500"
             >
-              {{ note.account }}
+              you
             </div>
             <div class="bg-blue-500 text-white rounded-lg px-4 py-2 max-w-xs">
               {{ note.note }}
@@ -46,12 +46,6 @@
         </div>
       </div>
     </div>
-    <div class="mt-5 flex justify-center text-gray-500">
-      <button @click="fetchOlderBucket">
-        fetch more messages
-        {{ accountStore.hasInjector ? "(needs signature)" : "" }}
-      </button>
-    </div>
   </div>
   <NoteDetailsOverlay
     :show="showViewMore"
@@ -62,11 +56,10 @@
 
 <script setup lang="ts">
 import { formatDate } from "@/helpers/date";
-import { ref, defineProps, defineExpose } from "vue";
+import { ref, defineProps, onMounted, watch, nextTick } from "vue";
 import { useAccount } from "@/store/account.ts";
 import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
-import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 
 const accountStore = useAccount();
@@ -77,7 +70,23 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  counterparty: {
+    type: String,
+    required: true,
+  },
 });
+const chatWindow = ref(null);
+
+watch(
+  () => noteStore.getMessagesWith(props.counterparty),
+  async () => {
+    await nextTick();
+    if (chatWindow.value) {
+      console.log("scrolling to bottom");
+      chatWindow.value.scrollTop = chatWindow.value.scrollHeight;
+    }
+  },
+);
 
 const showNote = ref<Note>(null);
 const showViewMore = ref(false);

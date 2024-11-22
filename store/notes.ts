@@ -20,10 +20,16 @@ export const useNotes = defineStore("notes", {
         (note) => (note.amount > 0) | note.category.includes("Guess"),
       );
     },
-    getMessages() {
-      return this.getSortedNotesNewestLast.filter(
-        (note) => note.note?.length > 0 && !(note.amount > 0),
-      );
+    getConversationCounterparties() {
+      const latestNotes = new Map<string, Note>();
+      this.getSortedNotesNewestLast.forEach((note) => {
+        if (note.note?.length > 0 && !(note.amount > 0)) {
+          latestNotes.set(note.account, note);
+        }
+      });
+      return Array.from(latestNotes.values())
+        .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+        .map((note) => note.account);
     },
   },
   actions: {
@@ -40,6 +46,14 @@ export const useNotes = defineStore("notes", {
     },
     purgeAll() {
       this.notes.clear();
+    },
+    getMessagesWith(counterparty: string) {
+      return this.getSortedNotesNewestLast.filter(
+        (note) =>
+          note.note?.length > 0 &&
+          !(note.amount > 0) &&
+          note.account === counterparty,
+      );
     },
   },
 });

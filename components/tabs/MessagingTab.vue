@@ -52,49 +52,49 @@
 
     <div class="bg-gray-900 text-white max-h-[650px] flex mt-10">
       <!-- Form starts here -->
-      <form class="flex w-full" @submit.prevent="submitSendForm">
-        <!-- Sidebar -->
-        <div
-          :class="{
-            'w-full':
-              isMobile && !showChatDetail /* Mobile: Sidebar im Vollbild */,
-            hidden: isMobile && showChatDetail /* Mobile: Sidebar versteckt */,
-            'md:w-1/3': !isMobile /* Desktop: Sidebar nimmt 1/3 ein */,
-          }"
-          class="bg-gray-800 border-r border-gray-700 flex flex-col"
-        >
-          <div class="px-4 py-4 flex items-center justify-between">
-            <!-- Linksbündiger Titel -->
-            <div
-              class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
-            >
-              Chats
-            </div>
 
-            <!-- Rechtsbündiges "Neue Nachricht" Icon -->
-            <!-- Button zum Öffnen des Overlays -->
-            <button
-              @click="openNewRecipientOverlay"
-              class="text-gray-400 rounded"
-            >
-              <svg
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                />
-              </svg>
-              <span class="sr-only">Start ne chat</span>
-            </button>
+      <!-- Sidebar -->
+      <div
+        :class="{
+          'w-full':
+            isMobile && !showChatDetail /* Mobile: Sidebar im Vollbild */,
+          hidden: isMobile && showChatDetail /* Mobile: Sidebar versteckt */,
+          'md:w-1/3': !isMobile /* Desktop: Sidebar nimmt 1/3 ein */,
+        }"
+        class="bg-gray-800 border-r border-gray-700 flex flex-col"
+      >
+        <div class="px-4 py-4 flex items-center justify-between">
+          <!-- Linksbündiger Titel -->
+          <div
+            class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
+          >
+            Chats
           </div>
-          <!-- Recipient Address Input -->
-          <!--
+
+          <!-- Rechtsbündiges "Neue Nachricht" Icon -->
+          <!-- Button zum Öffnen des Overlays -->
+          <button
+            @click="openNewRecipientOverlay"
+            class="text-gray-400 rounded"
+          >
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <span class="sr-only">Start ne chat</span>
+          </button>
+        </div>
+        <!-- Recipient Address Input -->
+        <!--
           <div class="relative flex items-center rounded-lg px-4 py-2">
             <input
               id="search"
@@ -105,72 +105,83 @@
             />
           </div>
           -->
-          <!-- Message List -->
-          <div class="overflow-y-auto flex-1">
-            <div class="space-y-1 px-4">
+        <!-- Message List -->
+        <div class="overflow-y-auto flex-1">
+          <div class="space-y-1 px-4">
+            <div
+              v-for="(
+                counterparty, index
+              ) in noteStore.getConversationCounterparties"
+              :key="index"
+              class="relative flex items-center"
+            >
               <div
-                v-for="(chat, index) in noteStore.getMessages"
-                :key="index"
-                class="relative flex items-center"
+                class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
+                @click="openChat(counterparty)"
               >
-                <div
-                  class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
-                  @click="openChat(chat)"
-                >
-                  <div class="flex justify-between items-center">
-                    <p class="wallet-address text-sm font-bold text-white">
-                      {{ chat.account }}
-                    </p>
-                    <span class="text-xs text-gray-400">{{
-                      formatDate(chat.timestamp)
-                    }}</span>
-                  </div>
-                  <p class="text-gray-400 text-xs line-clamp-2 mt-1">
-                    {{ chat.note }}
+                <div class="flex justify-between items-center">
+                  <p class="wallet-address text-sm font-bold text-white">
+                    {{ counterparty }}
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Chat window -->
+      <!-- Chat window -->
+      <div
+        :class="{
+          'w-full': isMobile && showChatDetail /* Mobile: Chat im Vollbild */,
+          hidden: isMobile && !showChatDetail /* Mobile: Chat versteckt */,
+          'md:w-2/3': !isMobile /* Desktop: Chat nimmt 2/3 ein */,
+        }"
+        class="bg-gray-900 flex flex-col"
+      >
+        <!-- Header -->
         <div
-          :class="{
-            'w-full': isMobile && showChatDetail /* Mobile: Chat im Vollbild */,
-            hidden: isMobile && !showChatDetail /* Mobile: Chat versteckt */,
-            'md:w-2/3': !isMobile /* Desktop: Chat nimmt 2/3 ein */,
-          }"
-          class="bg-gray-900 flex flex-col"
+          class="px-4 py-4 flex justify-between items-center border-b border-gray-700"
         >
-          <!-- Header -->
-          <div
-            class="px-4 py-4 flex justify-between items-center border-b border-gray-700"
+          <button
+            v-if="isMobile"
+            @click="closeChat"
+            class="text-white text-sm font-medium"
           >
-            <button
-              v-if="isMobile"
-              @click="closeChat"
-              class="text-white text-sm font-medium"
-            >
-              ← Back
+            ← Back
+          </button>
+          <h2 class="text-lg font-bold">
+            {{
+              recipientValid(conversationAddress)
+                ? "Conversation with " + conversationAddress
+                : "Conversation"
+            }}
+          </h2>
+        </div>
+        <!-- Chat Messages -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="mt-5 flex justify-center text-gray-500">
+            <button @click="fetchOlderBucket">
+              fetch more messages
+              {{ accountStore.hasInjector ? "(needs signature)" : "" }}
             </button>
-            <h2 class="text-lg font-bold">WalletDress</h2>
           </div>
-          <!-- Chat Messages -->
-          <div class="flex-1 overflow-y-auto">
-            <PrivateMessageHistory :show="true" />
-          </div>
-          <!-- Input Box -->
-          <div class="border-t border-gray-700">
-            <div class="flex items-center bg-gray-800 px-4 py-2">
-              <!-- Input mit Counter -->
+          <PrivateMessageHistory
+            :show="true"
+            :counterparty="conversationAddress"
+          />
+        </div>
+        <!-- Input Box -->
+        <div class="border-t border-gray-700">
+          <div class="flex items-center bg-gray-800 px-4 py-2">
+            <form class="flex w-full" @submit.prevent="submitSendForm">
               <div class="relative w-full">
                 <textarea
-                  id="messages"
+                  id="newMessage"
                   v-model="sendPrivateNote"
                   rows="1"
                   maxlength="140"
-                  name="messages"
+                  name="newMessage"
                   required
                   placeholder="Enter message"
                   class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
@@ -195,10 +206,10 @@
                   />
                 </svg>
               </button>
-            </div>
+            </form>
           </div>
         </div>
-      </form>
+      </div>
     </div>
 
     <!-- Scan QR -->
@@ -216,14 +227,14 @@
     <OverlayDialog
       :show="showNewRecipientOverlay"
       :close="closeNewRecipientOverlay"
-      title="New Chat"
+      title="Chat With"
     >
       <!-- Recipient Address Input -->
       <div class="flex flex-col gap-4 container mb-4">
         <div class="relative flex items-center rounded-lg mt-10">
           <input
-            id="recipientAddress"
-            v-model="recipientAddress"
+            id="conversationAddress"
+            v-model="conversationAddress"
             type="text"
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
@@ -353,7 +364,7 @@ const showNewRecipientOverlay = ref(false);
 
 // Öffnen des Overlays
 const openNewRecipientOverlay = () => {
-  recipientAddress.value = "";
+  conversationAddress.value = "";
   showNewRecipientOverlay.value = true;
 };
 
@@ -365,7 +376,8 @@ const closeNewRecipientOverlay = () => {
 const isMobile = ref(window.innerWidth < 768);
 const showChatDetail = ref(false);
 
-const openChat = (chat) => {
+const openChat = (counterparty) => {
+  conversationAddress.value = counterparty;
   showChatDetail.value = true;
 };
 
@@ -397,7 +409,7 @@ const closeViewMore = () => {
   showViewMore.value = false;
 };
 
-const recipientAddress = ref("");
+const conversationAddress = ref("");
 const sendPrivateNote = ref("");
 const txStatus = ref("");
 const accountStore = useAccount();
@@ -430,30 +442,46 @@ const closeNotification = () => {
 const pollCounter = useInterval(2000);
 watch(pollCounter, async () => {
   console.debug("polling for new incognitee notes");
-  await props.updateNotes();
+  try {
+    await props.updateNotes();
+  } catch (error) {
+    console.warn("error fetching incognitee notes: " + error);
+  }
 });
 
 const filteredLut = computed(() => {
-  if (!recipientAddress.value) return [];
+  if (!conversationAddress.value) return [];
   return identities.filter((entry) =>
-    entry.username.toLowerCase().includes(recipientAddress.value.toLowerCase()),
+    entry.username
+      .toLowerCase()
+      .includes(conversationAddress.value.toLowerCase()),
   );
 });
 
 const selectAddress = (address: string) => {
-  recipientAddress.value = encodeAddress(address, accountStore.getSs58Format);
+  conversationAddress.value = encodeAddress(
+    address,
+    accountStore.getSs58Format,
+  );
   closeNewRecipientOverlay();
 };
 
+const recipientValid = (recipient: string): boolean => {
+  try {
+    decodeAddress(recipient);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 // Watcher to close overlay when a valid address is entered
-watch(recipientAddress, (newAddress) => {
-  if (showNewRecipientOverlay.value) {
-    try {
-      decodeAddress(newAddress);
-      closeNewRecipientOverlay();
-    } catch (error) {
-      // Invalid address, do nothing
-    }
+watch(conversationAddress, (newAddress) => {
+  if (showNewRecipientOverlay.value && recipientValid(newAddress)) {
+    conversationAddress.value = encodeAddress(
+      conversationAddress.value,
+      accountStore.getSs58Format,
+    );
+    closeNewRecipientOverlay();
   }
 });
 
@@ -494,7 +522,7 @@ const sendPrivately = async () => {
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending message from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
+    `sending message from ${account.address} privately to ${conversationAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -503,7 +531,7 @@ const sendPrivately = async () => {
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
       accountStore.getAddress,
-      recipientAddress.value,
+      conversationAddress.value,
       amount,
       note,
       {
@@ -548,7 +576,7 @@ const scanResult = ref("No QR code data yet");
 const onDecode = (decodeResult) => {
   console.log("QR scan decoded: " + decodeResult[0].rawValue);
   scanResult.value = decodeResult[0].rawValue;
-  recipientAddress.value = decodeResult[0].rawValue;
+  conversationAddress.value = decodeResult[0].rawValue;
   closeScanOverlay();
 };
 const showScanOverlay = ref(false);
@@ -567,6 +595,10 @@ const props = defineProps({
     required: true,
   },
   updateNotes: {
+    type: Function,
+    required: true,
+  },
+  fetchOlderBucket: {
     type: Function,
     required: true,
   },

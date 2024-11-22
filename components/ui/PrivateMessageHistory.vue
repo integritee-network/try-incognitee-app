@@ -9,7 +9,7 @@
         class="py-2 px-4"
       >
         <div
-          v-if="note.direction === NoteDirection.Incoming"
+          v-if="note.direction === NoteDirection.Outgoing"
           class="flex justify-end"
         >
           <div class="flex flex-col">
@@ -27,7 +27,7 @@
           </div>
         </div>
         <div
-          v-if="note.direction === NoteDirection.Outgoing"
+          v-if="note.direction === NoteDirection.Incoming"
           class="flex justify-start"
         >
           <div class="flex flex-col">

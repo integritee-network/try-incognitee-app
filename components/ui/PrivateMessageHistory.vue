@@ -3,10 +3,19 @@
   <div v-if="show" class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
     <div v-if="show" class="flex-1 overflow-y-auto bg-gray-900 rounded-md">
-      <div v-for="(note, index) in noteStore.getMessages" :key="index" class="py-2 px-4">
-        <div v-if="note.direction === NoteDirection.Incoming" class="flex justify-end">
+      <div
+        v-for="(note, index) in noteStore.getMessages"
+        :key="index"
+        class="py-2 px-4"
+      >
+        <div
+          v-if="note.direction === NoteDirection.Incoming"
+          class="flex justify-end"
+        >
           <div class="flex flex-col">
-            <div class="wallet-address text-right text-xs mb-1 font-medium text-gray-500">
+            <div
+              class="wallet-address text-right text-xs mb-1 font-medium text-gray-500"
+            >
               {{ note.account }}
             </div>
             <div class="bg-blue-500 text-white rounded-lg px-4 py-2 max-w-xs">
@@ -14,12 +23,17 @@
             </div>
             <span class="mt-1 text-xs text-right text-gray-500">{{
               formatDate(note.timestamp)
-              }}</span>
+            }}</span>
           </div>
         </div>
-        <div v-if="note.direction === NoteDirection.Outgoing" class="flex justify-start">
+        <div
+          v-if="note.direction === NoteDirection.Outgoing"
+          class="flex justify-start"
+        >
           <div class="flex flex-col">
-            <div class="wallet-address text-right text-xs mb-1 font-medium text-gray-500">
+            <div
+              class="wallet-address text-right text-xs mb-1 font-medium text-gray-500"
+            >
               {{ note.account }}
             </div>
             <div class="bg-white text-black rounded-lg px-4 py-2 max-w-xs">
@@ -27,7 +41,7 @@
             </div>
             <span class="mt-1 text-xs text-right text-gray-500">{{
               formatDate(note.timestamp)
-              }}</span>
+            }}</span>
           </div>
         </div>
       </div>
@@ -39,7 +53,11 @@
       </button>
     </div>
   </div>
-  <NoteDetailsOverlay :show="showViewMore" :note="showNote" :close="closeViewMore" />
+  <NoteDetailsOverlay
+    :show="showViewMore"
+    :note="showNote"
+    :close="closeViewMore"
+  />
 </template>
 
 <script setup lang="ts">

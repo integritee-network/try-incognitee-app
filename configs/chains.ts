@@ -27,7 +27,7 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
   },
   [ChainId.PaseoRelay]: {
     name: "Paseo Relay",
-    api:"wss://paseo.dotters.network",
+    api: "wss://paseo.dotters.network",
     //api: "wss://rpc.ibp.network/paseo",
     faucetUrl: "https://faucet.polkadot.io/",
     //faucetUrl: "https://substratefaucet.xyz/paseo/ADDRESS"

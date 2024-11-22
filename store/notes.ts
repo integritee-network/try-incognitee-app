@@ -5,18 +5,23 @@ export const useNotes = defineStore("notes", {
     notes: new Set<Note>(),
   }),
   getters: {
-    getSortedNotes() {
+    getSortedNotesNewestFirst() {
       return Array.from(this.notes).sort(
         (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
       );
     },
+    getSortedNotesNewestLast() {
+      return Array.from(this.notes).sort(
+        (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+      );
+    },
     getFinancialNotes() {
-      return this.getSortedNotes.filter(
+      return this.getSortedNotesNewestFirst.filter(
         (note) => (note.amount > 0) | note.category.includes("Guess"),
       );
     },
     getMessages() {
-      return this.getSortedNotes.filter(
+      return this.getSortedNotesNewestLast.filter(
         (note) => note.note?.length > 0 && !(note.amount > 0),
       );
     },

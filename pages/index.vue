@@ -14,7 +14,11 @@
     />
   </div>
   <div v-else-if="activeApp === 'messaging'">
-    <MessagingTab :isMobile="isMobile" :updateNotes="updateNotes" />
+    <MessagingTab
+      :isMobile="isMobile"
+      :updateNotes="updateNotes"
+      :fetchOlderBucket="fetchOlderBucket"
+    />
   </div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>

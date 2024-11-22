@@ -74,7 +74,7 @@
             <!-- Rechtsbündiges "Neue Nachricht" Icon -->
             <!-- Button zum Öffnen des Overlays -->
             <button
-              @click="openAddNewMessageOverlay"
+              @click="openNewRecipientOverlay"
               class="text-gray-400 rounded"
             >
               <svg
@@ -90,10 +90,11 @@
                   d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                 />
               </svg>
-              <span class="sr-only">Add new message</span>
+              <span class="sr-only">Start ne chat</span>
             </button>
           </div>
           <!-- Recipient Address Input -->
+          <!--
           <div class="relative flex items-center rounded-lg px-4 py-2">
             <input
               id="search"
@@ -103,6 +104,7 @@
               placeholder="Search..."
             />
           </div>
+          -->
           <!-- Message List -->
           <div class="overflow-y-auto flex-1">
             <div class="space-y-1 px-4">
@@ -212,42 +214,60 @@
 
     <!-- New Message -->
     <OverlayDialog
-      :show="showAddNewMessageOverlay"
-      :close="closeAddNewMessageOverlay"
+      :show="showNewRecipientOverlay"
+      :close="closeNewRecipientOverlay"
       title="New Chat"
     >
       <!-- Recipient Address Input -->
-      <div class="relative flex items-center rounded-lg py-5 pb-20">
-        <input
-          id="recipientAddress"
-          v-model="recipientAddress"
-          type="text"
-          required
-          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input pr-12"
-          placeholder="Search address"
-        />
-        <div class="absolute right-6 flex space-x-2">
-          <div @click="openScanOverlay" class="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6 text-white"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
-              />
-            </svg>
+      <div class="flex flex-col gap-4 container mb-4">
+        <div class="relative flex items-center rounded-lg mt-10">
+          <input
+            id="recipientAddress"
+            v-model="recipientAddress"
+            type="text"
+            required
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
+            style="border-color: #24ad7c"
+            placeholder="Recipient"
+          />
+          <div class="absolute right-3 flex space-x-2">
+            <div @click="openScanOverlay" class="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6 text-white"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z"
+                />
+              </svg>
+            </div>
           </div>
+        </div>
+        <div class="relative flex items-center rounded-lg">
+          <ul
+            v-if="filteredLut.length"
+            class="mt-10 bg-white border border-gray-300 bg-gray-800 rounded-lg mt-1 w-full z-10"
+          >
+            <li
+              v-for="entry in filteredLut.slice(0, 5)"
+              :key="entry.address"
+              @click="selectAddress(entry.address)"
+              class="cursor-pointer p-2 hover:bg-gray-700"
+            >
+              {{ entry.username }}
+            </li>
+          </ul>
         </div>
       </div>
     </OverlayDialog>
@@ -307,7 +327,7 @@ import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useInterval } from "@vueuse/core";
-import { encodeAddress } from "@polkadot/util-crypto";
+import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import identities from "@/lib/polkadotPeopleIdentites";
 import { formatDate } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
@@ -316,7 +336,7 @@ import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 
 // Control overlay visibility
-const showStartOverlay = ref(true);
+const showStartOverlay = ref(false);
 
 // Close overlay function
 const closeStartOverlay = () => {
@@ -325,20 +345,21 @@ const closeStartOverlay = () => {
 
 // Ensure overlay is shown on reload
 onMounted(() => {
-  showStartOverlay.value = true;
+  showStartOverlay.value = false;
 });
 
 // Reaktive Variable für das Overlay
-const showAddNewMessageOverlay = ref(false);
+const showNewRecipientOverlay = ref(false);
 
 // Öffnen des Overlays
-const openAddNewMessageOverlay = () => {
-  showAddNewMessageOverlay.value = true;
+const openNewRecipientOverlay = () => {
+  recipientAddress.value = "";
+  showNewRecipientOverlay.value = true;
 };
 
 // Schließen des Overlays
-const closeAddNewMessageOverlay = () => {
-  showAddNewMessageOverlay.value = false;
+const closeNewRecipientOverlay = () => {
+  showNewRecipientOverlay.value = false;
 };
 
 const isMobile = ref(window.innerWidth < 768);
@@ -421,7 +442,20 @@ const filteredLut = computed(() => {
 
 const selectAddress = (address: string) => {
   recipientAddress.value = encodeAddress(address, accountStore.getSs58Format);
+  closeNewRecipientOverlay();
 };
+
+// Watcher to close overlay when a valid address is entered
+watch(recipientAddress, (newAddress) => {
+  if (showNewRecipientOverlay.value) {
+    try {
+      decodeAddress(newAddress);
+      closeNewRecipientOverlay();
+    } catch (error) {
+      // Invalid address, do nothing
+    }
+  }
+});
 
 const submitSendForm = () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {

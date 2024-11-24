@@ -8887,6 +8887,10 @@ const identities = [
     username: "Fabi",
     address: "14mR4xpU4BwYTTFNwMJ7KJ81yqNiNxGUFL4e3GxVsN27YNTE",
   },
+  {
+    username: "alex",
+    address: "14SjNAgP87dk3fLEPz3z75KPsw3Eya9XPeVyt2FpA6sqwaM7",
+  },
 ];
 
 export default identities;

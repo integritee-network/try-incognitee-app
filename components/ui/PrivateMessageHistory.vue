@@ -3,49 +3,38 @@
   <div class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
     <div ref="chatWindow" class="flex-1 overflow-y-auto bg-gray-900 rounded-md">
-      <div
-        v-for="(note, index) in noteStore.getMessagesWith(counterparty)"
-        :key="index"
-        class="py-2 px-4"
-      >
-        <div
-          v-if="note.direction === NoteDirection.Outgoing"
-          class="flex justify-end"
-        >
-          <div class="flex flex-col">
-            <div
-              class="wallet-address text-right text-xs mb-1 font-medium text-gray-500"
-            >
-              you
-            </div>
-            <div class="bg-blue-500 text-white rounded-lg px-4 py-2 max-w-xs">
-              {{ note.note }}
-            </div>
-            <span class="mt-1 text-xs text-right text-gray-500">{{
-              formatDate(note.timestamp)
-            }}</span>
-          </div>
-        </div>
-        <div
-          v-if="note.direction === NoteDirection.Incoming"
-          class="flex justify-start"
-        >
-          <div class="flex flex-col">
-            <div
-              class="wallet-address text-right text-xs mb-1 font-medium text-gray-500"
-            >
-              {{ note.account }}
-            </div>
-            <div class="bg-white text-black rounded-lg px-4 py-2 max-w-xs">
-              {{ note.note }}
-            </div>
-            <span class="mt-1 text-xs text-right text-gray-500">{{
-              formatDate(note.timestamp)
-            }}</span>
-          </div>
-        </div>
+  <div
+    v-for="(note, index) in noteStore.getMessagesWith(counterparty)"
+    :key="index"
+    class="py-2 px-4"
+  >
+    <!-- Ausgehende Nachrichten -->
+    <div v-if="note.direction === NoteDirection.Outgoing" class="chat chat-end">
+      <div class="chat-header text-xs text-gray-500">You</div>
+      <div class="chat-bubble message-box max-w-xs shadow-md bg-blue-500 text-white">
+        {{ note.note }}
+      </div>
+      <div class="chat-footer text-xs text-gray-500">
+        {{ formatDate(note.timestamp) }}
       </div>
     </div>
+
+    <!-- Eingehende Nachrichten -->
+    <div v-if="note.direction === NoteDirection.Incoming" class="chat chat-start">
+      <div class="chat-header wallet-address text-xs text-gray-500">
+        {{ note.account }}
+      </div>
+      <div class="chat-bubble message-box max-w-xs shadow-md  bg-white text-black">
+        {{ note.note }}
+      </div>
+      <div class="chat-footer text-xs text-gray-500">
+        {{ formatDate(note.timestamp) }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
   </div>
   <NoteDetailsOverlay
     :show="showViewMore"
@@ -100,6 +89,11 @@ const closeViewMore = () => {
 </script>
 
 <style scoped>
+.message-box {
+  word-wrap: break-word; /* Zeilenumbrüche an Wörtern erzwingen */
+  overflow-wrap: break-word; /* Alternative für neuere Browser */
+  white-space: normal; /* Automatische Zeilenumbrüche erlauben */
+}
 .wallet-address {
   display: block;
   white-space: nowrap;

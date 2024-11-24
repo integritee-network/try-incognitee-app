@@ -19,5 +19,25 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("daisyui"),
+  ],
+  daisyui: {
+    themes: [
+      {
+        incognitee: {
+          primary: "#24AD7C",
+          secondary: "#11111A",
+          accent: "#24AD7C",
+          neutral: "#1C1C1C", // Hintergrundfarbe
+          "base-100": "#11111A", // Setze Schwarz oder die gewünschte Farbe
+          info: "#2563eb",
+          success: "#16a34a",
+          warning: "#facc15",
+          error: "#dc2626",
+        },
+      },
+    ],
+  },
 };

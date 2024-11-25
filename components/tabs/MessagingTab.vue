@@ -108,7 +108,17 @@
         <!-- Message List -->
         <div class="overflow-y-auto flex-1">
           <div class="space-y-1 px-4">
-            <!-- Chat Items -->
+            <div v-if="isInitializing" class="spinner"></div>
+            <div
+              v-if="noteStore.getConversationCounterparties.length === 0"
+              class="mt-5 flex justify-center text-gray-500"
+            >
+              <button @click="fetchOlderBucket">
+                query recent chats
+                {{ accountStore.hasInjector ? "(needs signature)" : "" }}
+              </button>
+              <div v-if="isUpdatingNotes" class="spinner"></div>
+            </div>
             <div
               v-for="(
                 counterparty, index
@@ -117,35 +127,41 @@
               class="relative flex items-center"
             >
               <div
-                class="flex-1 p-3 pl-5 rounded-lg hover:bg-gray-500 cursor-pointer transition duration-300"
+                class="flex-1 p-3 pl-5 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
                 :class="{
-                  'bg-gray-700':
-                    counterparty !== conversationAddress /* Standard-Chats */,
-                  'bg-gray-500':
-                    counterparty ===
-                    conversationAddress /* Ausgewählter Chat */,
+                  'bg-gray-700': counterparty !== conversationAddress,
+                  'bg-gray-500': counterparty === conversationAddress,
                 }"
                 @click="openChat(counterparty)"
               >
                 <div class="flex justify-between items-center">
-                  <!-- Wallet-Adresse -->
-                  <p class="wallet-address text-sm font-bold">
+                  <div v-if="maybeUsername(counterparty)">
+                    <div class="wallet-address text-sm font-bold text-white">
+                      {{ maybeUsername(counterparty) }}
+                    </div>
+                    <p class="wallet-address text-xs text-gray-400">
+                      {{ counterparty }}
+                    </p>
+                  </div>
+                  <div
+                    v-else
+                    class="wallet-address text-sm font-bold text-white"
+                  >
                     {{ counterparty }}
-                  </p>
-                  <!-- Placeholder für Timestamp -->
-                  <span class="text-xs text-gray-300">
+                  </div>
+                  <!--<span class="text-xs text-gray-300">
                     {{
                       formatDate(
                         noteStore.getMessagesWith(counterparty)?.[0]
                           ?.timestamp || "",
                       )
                     }}
-                  </span>
+                  </span>-->
                 </div>
                 <!-- Letzte Nachricht -->
-                <p class="text-gray-300 text-xs line-clamp-2 mt-1">
+                <!--<p class="text-gray-300 text-xs line-clamp-2 mt-1">
                   {{ noteStore.getMessagesWith(counterparty)?.[0]?.note || "" }}
-                </p>
+                </p>-->
               </div>
             </div>
           </div>
@@ -172,23 +188,44 @@
           >
             ← Back
           </button>
-          <h2 class="wallet-address text-lg font-bold">
+          <h2 class="text-lg font-bold">
             {{
               recipientValid(conversationAddress)
-                ? "Chat with " + conversationAddress
+                ? "Chat with " +
+                  (maybeUsername(conversationAddress) || "") +
+                  " " +
+                  conversationAddress.slice(0, 12) + "..."
                 : "Chat"
             }}
           </h2>
         </div>
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto">
-          <div class="mt-5 flex justify-center text-gray-500">
-            <button @click="fetchOlderBucket">
-              fetch more messages
-              {{ accountStore.hasInjector ? "(needs signature)" : "" }}
-            </button>
+          <div
+            v-if="eventHorizon"
+            class="mt-5 flex justify-center text-gray-500"
+          >
+            <i
+              >messages before {{ formatMoment(eventHorizon) }} have been purged
+              from Incognitee state</i
+            >
           </div>
-
+          <div
+            v-if="unfetchedBucketsCount > 0"
+            class="mt-5 flex justify-center text-gray-500"
+          >
+            <button @click="fetchOlderBucket">
+              query more messages
+              {{
+                accountStore.hasInjector
+                  ? "(needs signature in extension)"
+                  : ""
+              }}: fetch older bucket
+              {{ bucketsCount - unfetchedBucketsCount }} /
+              {{ bucketsCount }}
+            </button>
+            <div v-if="isUpdatingNotes" class="spinner"></div>
+          </div>
           <PrivateMessageHistory
             :show="true"
             :counterparty="conversationAddress"
@@ -362,20 +399,11 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import { useInterval } from "@vueuse/core";
 import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import identities from "@/lib/polkadotPeopleIdentites";
-import { formatDate } from "@/helpers/date";
+import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
-
-onMounted(() => {
-  const counterparties = noteStore.getConversationCounterparties;
-  if (counterparties.length > 0) {
-    const firstCounterparty = counterparties[0];
-    conversationAddress.value = firstCounterparty;
-    showChatDetail.value = true;
-  }
-});
 
 // Control overlay visibility
 const showStartOverlay = ref(false);
@@ -446,6 +474,7 @@ const txStatus = ref("");
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+const isInitializing = ref(true);
 
 // txStatus (Statusmeldung) und showNotification (Kontrolle der Anzeige)
 
@@ -475,8 +504,25 @@ watch(pollCounter, async () => {
   console.debug("polling for new incognitee notes");
   try {
     await props.updateNotes();
+    isInitializing.value = false;
+    if (
+      conversationAddress.value === "" &&
+      showNewRecipientOverlay.value === false &&
+      noteStore.getConversationCounterparties.length > 0
+    ) {
+      conversationAddress.value = noteStore.getConversationCounterparties[0];
+      showChatDetail.value = true;
+    }
   } catch (error) {
     console.warn("error fetching incognitee notes: " + error);
+  }
+});
+
+watch(isInitializing, () => {
+  const counterparties = noteStore.getConversationCounterparties;
+  if (counterparties.length > 0) {
+    conversationAddress.value = counterparties[0];
+    showChatDetail.value = true;
   }
 });
 
@@ -488,6 +534,11 @@ const filteredLut = computed(() => {
       .includes(conversationAddress.value.toLowerCase()),
   );
 });
+
+const maybeUsername = (address: string) => {
+  const entry = identities.find((entry) => entry.address === address);
+  return entry?.username;
+};
 
 const selectAddress = (address: string) => {
   conversationAddress.value = encodeAddress(
@@ -507,6 +558,7 @@ const recipientValid = (recipient: string): boolean => {
 };
 // Watcher to close overlay when a valid address is entered
 watch(conversationAddress, (newAddress) => {
+  console.log("eventHorizon is " + props.eventHorizon);
   if (showNewRecipientOverlay.value && recipientValid(newAddress)) {
     conversationAddress.value = encodeAddress(
       conversationAddress.value,
@@ -523,7 +575,6 @@ const submitSendForm = () => {
     );
     return;
   }
-
   sendPrivately();
 
   // Reset the input field
@@ -633,10 +684,20 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  isUpdatingNotes: {
+    type: Boolean,
+    required: true,
+  },
   fetchOlderBucket: {
     type: Function,
     required: true,
   },
+  eventHorizon: {
+    type: Number,
+    required: true,
+  },
+  bucketsCount: { type: Number, required: true },
+  unfetchedBucketsCount: { type: Number, required: true },
 });
 // Reactive variable for the input text
 const inputText = ref("");

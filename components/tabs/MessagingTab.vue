@@ -108,43 +108,48 @@
         <!-- Message List -->
         <div class="overflow-y-auto flex-1">
           <div class="space-y-1 px-4">
-  <!-- Chat Items -->
-  <div
-    v-for="(counterparty, index) in noteStore.getConversationCounterparties"
-    :key="index"
-    class="relative flex items-center"
-  >
-    <div
-      class="flex-1 p-3 pl-5 rounded-lg  hover:bg-gray-500 cursor-pointer transition duration-300"
-      :class="{
-        'bg-gray-700': counterparty !== conversationAddress, /* Standard-Chats */
-        'bg-gray-500': counterparty === conversationAddress, /* Ausgewählter Chat */
-      }"
-      @click="openChat(counterparty)"
-    >
-      <div class="flex justify-between items-center">
-        <!-- Wallet-Adresse -->
-        <p class="wallet-address text-sm font-bold">
-          {{ counterparty }}
-        </p>
-        <!-- Placeholder für Timestamp -->
-        <span class="text-xs text-gray-300">
-          {{ formatDate(noteStore.getMessagesWith(counterparty)?.[0]?.timestamp || '') }}
-        </span>
-      </div>
-      <!-- Letzte Nachricht -->
-      <p class="text-gray-300 text-xs line-clamp-2 mt-1">
-        {{ noteStore.getMessagesWith(counterparty)?.[0]?.note || '' }}
-      </p>
-    </div>
-  </div>
-</div>
-
-</div>
-
-
-
-        
+            <!-- Chat Items -->
+            <div
+              v-for="(
+                counterparty, index
+              ) in noteStore.getConversationCounterparties"
+              :key="index"
+              class="relative flex items-center"
+            >
+              <div
+                class="flex-1 p-3 pl-5 rounded-lg hover:bg-gray-500 cursor-pointer transition duration-300"
+                :class="{
+                  'bg-gray-700':
+                    counterparty !== conversationAddress /* Standard-Chats */,
+                  'bg-gray-500':
+                    counterparty ===
+                    conversationAddress /* Ausgewählter Chat */,
+                }"
+                @click="openChat(counterparty)"
+              >
+                <div class="flex justify-between items-center">
+                  <!-- Wallet-Adresse -->
+                  <p class="wallet-address text-sm font-bold">
+                    {{ counterparty }}
+                  </p>
+                  <!-- Placeholder für Timestamp -->
+                  <span class="text-xs text-gray-300">
+                    {{
+                      formatDate(
+                        noteStore.getMessagesWith(counterparty)?.[0]
+                          ?.timestamp || "",
+                      )
+                    }}
+                  </span>
+                </div>
+                <!-- Letzte Nachricht -->
+                <p class="text-gray-300 text-xs line-clamp-2 mt-1">
+                  {{ noteStore.getMessagesWith(counterparty)?.[0]?.note || "" }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Chat window -->
@@ -183,7 +188,7 @@
               {{ accountStore.hasInjector ? "(needs signature)" : "" }}
             </button>
           </div>
-          
+
           <PrivateMessageHistory
             :show="true"
             :counterparty="conversationAddress"
@@ -247,10 +252,6 @@
       :close="closeNewRecipientOverlay"
       title="Chat With"
     >
-
-
-
-    
       <!-- Recipient Address Input -->
       <div class="flex flex-col gap-4 container mb-4">
         <div class="relative flex items-center rounded-lg mt-10">
@@ -288,7 +289,9 @@
         </div>
         <div v-if="filteredLut.length">
           <div class="text-sm font-bold mb-3">Select contact</div>
-          <ul class="z-10 text-sm max-h-60 w-full overflow-auto bg-gray-800 text-gray-400">
+          <ul
+            class="z-10 text-sm max-h-60 w-full overflow-auto bg-gray-800 text-gray-400"
+          >
             <li
               v-for="entry in filteredLut.slice(0, 5)"
               :key="entry.address"
@@ -299,11 +302,6 @@
             </li>
           </ul>
         </div>
-
-
-
-
-
       </div>
     </OverlayDialog>
 
@@ -374,11 +372,10 @@ onMounted(() => {
   const counterparties = noteStore.getConversationCounterparties;
   if (counterparties.length > 0) {
     const firstCounterparty = counterparties[0];
-    conversationAddress.value = firstCounterparty; 
-    showChatDetail.value = true; 
+    conversationAddress.value = firstCounterparty;
+    showChatDetail.value = true;
   }
 });
-
 
 // Control overlay visibility
 const showStartOverlay = ref(false);
@@ -528,11 +525,10 @@ const submitSendForm = () => {
   }
 
   sendPrivately();
-  
-  // Reset the input field
-  sendPrivateNote.value = ""; 
-};
 
+  // Reset the input field
+  sendPrivateNote.value = "";
+};
 
 const sendPrivately = async () => {
   console.log("sending message on incognitee");

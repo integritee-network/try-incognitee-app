@@ -56,15 +56,15 @@
         </div>
       </div>
     </header>
-      <!-- Main Content -->
-      <main class="main flex-grow overflow-auto">
+    <!-- Main Content -->
+    <main class="main flex-grow overflow-auto">
       <NuxtPage />
     </main>
     <footer class="footer bg-incognitee-blue">
       <nav class="footer-content container mx-auto">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10  w-full px-4 rounded justify-around z-20"
+            class="flex mt-10 fixed left-0 right-0 bottom-10 w-full px-4 rounded justify-around z-20"
           >
             <div class="container custom-border-gradient">
               <div class="inner-box">
@@ -168,7 +168,6 @@
         </div>
       </nav>
     </footer>
- 
   </div>
 </template>
 

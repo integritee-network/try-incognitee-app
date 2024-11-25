@@ -628,22 +628,47 @@ const subscribeWhatsReady = async () => {
 
 const switchToWallet = () => {
   activeApp.value = "wallet";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
 };
 
 const switchToMessaging = () => {
   activeApp.value = "messaging";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
 };
 
 const switchToSwap = () => {
   activeApp.value = "swap";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
 };
 
 const switchToGov = () => {
   activeApp.value = "gov";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
 };
 
 const switchToTeerDays = () => {
   activeApp.value = "teerdays";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
 };
 
 onMounted(async () => {

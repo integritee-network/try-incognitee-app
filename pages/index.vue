@@ -17,7 +17,11 @@
     <MessagingTab
       :isMobile="isMobile"
       :updateNotes="updateNotes"
+      :isUpdatingNotes="isUpdatingNotes"
       :fetchOlderBucket="fetchOlderBucket"
+      :eventHorizon="oldestMomentInNoteBuckets"
+      :bucketsCount="bucketsCount"
+      :unfetchedBucketsCount="unfetchedBucketsCount"
     />
   </div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
@@ -148,6 +152,7 @@ const walletTabRef = ref(null);
 const isFetchingShieldingTargetBalance = ref(true);
 const isFetchingIncogniteeBalance = ref(true);
 const isUpdatingIncogniteeBalance = ref(false);
+const isUpdatingNotes = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const activeApp = ref("wallet");
@@ -316,9 +321,36 @@ const fetchOlderBucket = async () => {
     ? firstNoteBucketIndexFetched.value - 1
     : lastBucketIndex;
   console.log("fetchOlderBuckets : " + firstNoteBucketIndexFetched.value);
+  isUpdatingNotes.value = true;
   await fetchIncogniteeNotes(index);
   firstNoteBucketIndexFetched.value = index;
+  isUpdatingNotes.value = false;
 };
+
+/// returns the date as moment before which all notes have been purged from sidechain state
+const oldestMomentInNoteBuckets = computed(() => {
+  console.log(
+    "oldest moment is " + noteBucketsInfo.value?.first.unwrap().begins_at,
+  );
+  return noteBucketsInfo.value?.first.unwrap().begins_at?.toNumber();
+});
+
+const bucketsCount = computed(() => {
+  if (!noteBucketsInfo.value) return 0;
+  return (
+    noteBucketsInfo.value.last.unwrap().index -
+    noteBucketsInfo.value.first.unwrap().index +
+    1
+  );
+});
+
+const unfetchedBucketsCount = computed(() => {
+  if (!noteBucketsInfo.value) return 0;
+  return (
+    firstNoteBucketIndexFetched.value -
+    noteBucketsInfo.value.first.unwrap().index
+  );
+});
 
 const fetchIncogniteeNotes = async (
   bucketIndex: number,

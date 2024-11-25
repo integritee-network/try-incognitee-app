@@ -117,6 +117,7 @@
                 query recent chats
                 {{ accountStore.hasInjector ? "(needs signature)" : "" }}
               </button>
+              <div v-if="isUpdatingNotes" class="spinner"></div>
             </div>
             <div
               v-for="(
@@ -174,11 +175,26 @@
         </div>
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto">
-          <div class="mt-5 flex justify-center text-gray-500">
+          <div
+            v-if="eventHorizon"
+            class="mt-5 flex justify-center text-gray-500"
+          >
+            <i
+              >messages before {{ formatMoment(eventHorizon) }} have been purged
+              from Incognitee state</i
+            >
+          </div>
+          <div
+            v-if="unfetchedBucketsCount > 0"
+            class="mt-5 flex justify-center text-gray-500"
+          >
             <button @click="fetchOlderBucket">
               query more messages
-              {{ accountStore.hasInjector ? "(needs signature)" : "" }}
+              {{ accountStore.hasInjector ? "(needs signature)" : "" }}: fetch
+              bucket {{ bucketsCount - unfetchedBucketsCount }} /
+              {{ bucketsCount }}
             </button>
+            <div v-if="isUpdatingNotes" class="spinner"></div>
           </div>
           <PrivateMessageHistory
             :show="true"
@@ -354,7 +370,7 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import { useInterval } from "@vueuse/core";
 import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import identities from "@/lib/polkadotPeopleIdentites";
-import { formatDate } from "@/helpers/date";
+import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
@@ -507,6 +523,7 @@ const recipientValid = (recipient: string): boolean => {
 };
 // Watcher to close overlay when a valid address is entered
 watch(conversationAddress, (newAddress) => {
+  console.log("eventHorizon is " + props.eventHorizon);
   if (showNewRecipientOverlay.value && recipientValid(newAddress)) {
     conversationAddress.value = encodeAddress(
       conversationAddress.value,
@@ -629,10 +646,20 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  isUpdatingNotes: {
+    type: Boolean,
+    required: true,
+  },
   fetchOlderBucket: {
     type: Function,
     required: true,
   },
+  eventHorizon: {
+    type: Number,
+    required: true,
+  },
+  bucketsCount: { type: Number, required: true },
+  unfetchedBucketsCount: { type: Number, required: true },
 });
 // Reactive variable for the input text
 const inputText = ref("");

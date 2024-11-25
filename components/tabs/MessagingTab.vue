@@ -433,7 +433,6 @@ const closeNewRecipientOverlay = () => {
   showNewRecipientOverlay.value = false;
 };
 
-const isMobile = ref(window.innerWidth < 768);
 const showChatDetail = ref(false);
 
 const openChat = (counterparty) => {
@@ -444,10 +443,6 @@ const openChat = (counterparty) => {
 const closeChat = () => {
   showChatDetail.value = false;
 };
-
-window.addEventListener("resize", () => {
-  isMobile.value = window.innerWidth < 768;
-});
 
 // Reaktive Variable für die Steuerung des Banners
 const showMsgBanner = ref(true);

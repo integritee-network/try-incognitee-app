@@ -135,9 +135,20 @@
                 @click="openChat(counterparty)"
               >
                 <div class="flex justify-between items-center">
-                  <p class="wallet-address text-sm font-bold text-white">
+                  <div v-if="maybeUsername(counterparty)">
+                    <div class="wallet-address text-sm font-bold text-white">
+                      {{ maybeUsername(counterparty) }}
+                    </div>
+                    <p class="wallet-address text-xs text-gray-400">
+                      {{ counterparty }}
+                    </p>
+                  </div>
+                  <div
+                    v-else
+                    class="wallet-address text-sm font-bold text-white"
+                  >
                     {{ counterparty }}
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -168,7 +179,10 @@
           <h2 class="text-lg font-bold">
             {{
               recipientValid(conversationAddress)
-                ? "Conversation with " + conversationAddress
+                ? "Conversation with " +
+                  (maybeUsername(conversationAddress) || "") +
+                  " " +
+                  conversationAddress
                 : "Conversation"
             }}
           </h2>
@@ -190,8 +204,12 @@
           >
             <button @click="fetchOlderBucket">
               query more messages
-              {{ accountStore.hasInjector ? "(needs signature)" : "" }}: fetch
-              bucket {{ bucketsCount - unfetchedBucketsCount }} /
+              {{
+                accountStore.hasInjector
+                  ? "(needs signature in extension)"
+                  : ""
+              }}: fetch older bucket
+              {{ bucketsCount - unfetchedBucketsCount }} /
               {{ bucketsCount }}
             </button>
             <div v-if="isUpdatingNotes" class="spinner"></div>
@@ -478,6 +496,7 @@ watch(pollCounter, async () => {
     isInitializing.value = false;
     if (
       conversationAddress.value === "" &&
+      showNewRecipientOverlay.value === false &&
       noteStore.getConversationCounterparties.length > 0
     ) {
       conversationAddress.value = noteStore.getConversationCounterparties[0];
@@ -504,6 +523,11 @@ const filteredLut = computed(() => {
       .includes(conversationAddress.value.toLowerCase()),
   );
 });
+
+const maybeUsername = (address: string) => {
+  const entry = identities.find((entry) => entry.address === address);
+  return entry?.username;
+};
 
 const selectAddress = (address: string) => {
   conversationAddress.value = encodeAddress(

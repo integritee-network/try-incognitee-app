@@ -108,6 +108,16 @@
         <!-- Message List -->
         <div class="overflow-y-auto flex-1">
           <div class="space-y-1 px-4">
+            <div v-if="isInitializing" class="spinner"></div>
+            <div
+              v-if="noteStore.getConversationCounterparties.length === 0"
+              class="mt-5 flex justify-center text-gray-500"
+            >
+              <button @click="fetchOlderBucket">
+                query recent chats
+                {{ accountStore.hasInjector ? "(needs signature)" : "" }}
+              </button>
+            </div>
             <div
               v-for="(
                 counterparty, index
@@ -116,7 +126,11 @@
               class="relative flex items-center"
             >
               <div
-                class="flex-1 p-3 pl-5 bg-gray-700 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
+                class="flex-1 p-3 pl-5 rounded-lg hover:text-black hover:bg-gray-600 cursor-pointer"
+                :class="{
+                  'bg-gray-700': counterparty !== conversationAddress,
+                  'bg-gray-500': counterparty === conversationAddress,
+                }"
                 @click="openChat(counterparty)"
               >
                 <div class="flex justify-between items-center">
@@ -162,7 +176,7 @@
         <div class="flex-1 overflow-y-auto">
           <div class="mt-5 flex justify-center text-gray-500">
             <button @click="fetchOlderBucket">
-              fetch more messages
+              query more messages
               {{ accountStore.hasInjector ? "(needs signature)" : "" }}
             </button>
           </div>
@@ -415,6 +429,7 @@ const txStatus = ref("");
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
+const isInitializing = ref(true);
 
 // txStatus (Statusmeldung) und showNotification (Kontrolle der Anzeige)
 
@@ -444,8 +459,24 @@ watch(pollCounter, async () => {
   console.debug("polling for new incognitee notes");
   try {
     await props.updateNotes();
+    isInitializing.value = false;
+    if (
+      conversationAddress.value === "" &&
+      noteStore.getConversationCounterparties.length > 0
+    ) {
+      conversationAddress.value = noteStore.getConversationCounterparties[0];
+      showChatDetail.value = true;
+    }
   } catch (error) {
     console.warn("error fetching incognitee notes: " + error);
+  }
+});
+
+watch(isInitializing, () => {
+  const counterparties = noteStore.getConversationCounterparties;
+  if (counterparties.length > 0) {
+    conversationAddress.value = counterparties[0];
+    showChatDetail.value = true;
   }
 });
 

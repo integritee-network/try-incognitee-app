@@ -149,7 +149,19 @@
                   >
                     {{ counterparty }}
                   </div>
+                  <!--<span class="text-xs text-gray-300">
+                    {{
+                      formatDate(
+                        noteStore.getMessagesWith(counterparty)?.[0]
+                          ?.timestamp || "",
+                      )
+                    }}
+                  </span>-->
                 </div>
+                <!-- Letzte Nachricht -->
+                <!--<p class="text-gray-300 text-xs line-clamp-2 mt-1">
+                  {{ noteStore.getMessagesWith(counterparty)?.[0]?.note || "" }}
+                </p>-->
               </div>
             </div>
           </div>
@@ -179,11 +191,12 @@
           <h2 class="text-lg font-bold">
             {{
               recipientValid(conversationAddress)
-                ? "Conversation with " +
+                ? "Chat with " +
                   (maybeUsername(conversationAddress) || "") +
                   " " +
-                  conversationAddress
-                : "Conversation"
+                  conversationAddress.slice(0, 12) +
+                  "..."
+                : "Chat"
             }}
           </h2>
         </div>
@@ -285,8 +298,7 @@
             v-model="conversationAddress"
             type="text"
             required
-            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
-            style="border-color: #24ad7c"
+            class="w-full text-sm rounded-lg py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue pr-12"
             placeholder="Recipient"
           />
           <div class="absolute right-3 flex space-x-2">
@@ -313,16 +325,16 @@
             </div>
           </div>
         </div>
-        <div class="relative flex items-center rounded-lg">
+        <div v-if="filteredLut.length">
+          <div class="text-sm font-bold mb-3">Select contact</div>
           <ul
-            v-if="filteredLut.length"
-            class="mt-10 bg-white border border-gray-300 bg-gray-800 rounded-lg mt-1 w-full z-10"
+            class="z-10 text-sm max-h-60 w-full overflow-auto bg-gray-800 text-gray-400"
           >
             <li
               v-for="entry in filteredLut.slice(0, 5)"
               :key="entry.address"
               @click="selectAddress(entry.address)"
-              class="cursor-pointer p-2 hover:bg-gray-700"
+              class="cursor-pointer rounded-md py-1 hover:text-white hover:bg-gray-700"
             >
               {{ entry.username }}
             </li>
@@ -565,6 +577,9 @@ const submitSendForm = () => {
     return;
   }
   sendPrivately();
+
+  // Reset the input field
+  sendPrivateNote.value = "";
 };
 
 const sendPrivately = async () => {

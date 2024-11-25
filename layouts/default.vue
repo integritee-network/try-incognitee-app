@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container layout">
     <header class="header bg-gray-800 text-white py-1">
       <div class="header-content mx-auto flex items-center justify-between">
         <!-- Logo -->
@@ -56,12 +56,15 @@
         </div>
       </div>
     </header>
-
-    <footer class="footer">
+    <!-- Main Content -->
+    <main class="main flex-grow overflow-auto">
+      <NuxtPage />
+    </main>
+    <footer class="footer bg-incognitee-blue">
       <nav class="footer-content container mx-auto">
         <div class="container">
           <div
-            class="flex mt-10 fixed left-0 right-0 bottom-10 mb-2 w-full px-4 rounded justify-around z-20"
+            class="flex mt-10 fixed left-0 right-0 bottom-10 w-full px-4 rounded justify-around z-20"
           >
             <div class="container custom-border-gradient">
               <div class="inner-box">
@@ -165,9 +168,6 @@
         </div>
       </nav>
     </footer>
-    <main class="main">
-      <NuxtPage />
-    </main>
   </div>
 </template>
 
@@ -219,7 +219,7 @@ const emitSwitchToTeerDays = () => {
 .header,
 .footer {
   background: #11111a;
-  width: 100%;
+  flex-shrink: 0;
 }
 
 .header,
@@ -242,9 +242,6 @@ const emitSwitchToTeerDays = () => {
 
 .main {
   flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   overflow-y: auto;
 }
 

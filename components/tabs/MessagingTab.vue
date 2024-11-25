@@ -194,7 +194,8 @@
                 ? "Chat with " +
                   (maybeUsername(conversationAddress) || "") +
                   " " +
-                  conversationAddress.slice(0, 12) + "..."
+                  conversationAddress.slice(0, 12) +
+                  "..."
                 : "Chat"
             }}
           </h2>

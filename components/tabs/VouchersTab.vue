@@ -19,6 +19,78 @@
     </button>
   </div>
 
+  <div
+    v-if="allVouchers?.length > 0"
+    class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
+  >
+    History
+
+    <button
+      @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
+      type="button"
+      class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+    >
+      forget all vouchers
+    </button>
+  </div>
+
+  <div class="flex-1 overflow-y-auto bg-gray-900 mt-5 rounded-md">
+    <table class="w-full whitespace-nowrap text-left">
+      <tbody class="divide-y divide-white/10">
+        <tr
+          v-for="(voucher, index) in allVouchers"
+          :key="index"
+          class="flex justify-between"
+        >
+          <!-- Linksbündige Zelle mit Icon, Text und "New"-Badge -->
+          <td
+            class="flex items-center gap-x-4 py-4 pl-4 pr-8 text-left sm:pl-6 lg:pl-8"
+          >
+            <div class="flex flex-col">
+              <div class="flex items-start gap-x-3">
+                <div class="text-sm font-medium text-white">
+                  {{ voucher.address }}
+                </div>
+              </div>
+              <div class="mt-1 text-xs text-gray-500">{{ voucher.note }}</div>
+            </div>
+          </td>
+
+          <!-- Rechtsbündige Zelle für TEER Betrag und Datum -->
+          <td
+            class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8"
+          >
+            <div class="text-sm font-medium text-white">
+              {{ voucher.amount }} {{ accountStore.getSymbol }}
+            </div>
+            <time class="mt-1 text-xs text-gray-500">{{
+              formatDate(voucher.timestamp)
+            }}</time>
+          </td>
+          <td
+            class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8"
+          >
+            <!-- Desktop Ansicht -->
+            <button
+              @click="showVoucher(voucher)"
+              type="button"
+              class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              Show
+            </button>
+            <button
+              @click="doForgetVoucherForShard(voucher, incogniteeStore?.shard)"
+              type="button"
+              class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <OverlayDialog
     :show="showCreateVoucher"
     :close="closeCreateVoucher"
@@ -112,7 +184,7 @@
       </p>
     </div>
     <div class="mt-5 flex justify-center items-center qrcode-container">
-      <qrcode :value="voucherUrl"></qrcode>
+      <qrcode :value="selectedVoucher?.url"></qrcode>
     </div>
 
     <div class="flex flex-col mt-5">
@@ -125,7 +197,7 @@
         <input
           id="voucherAddress"
           type="text"
-          :value="voucherUrl"
+          :value="selectedVoucher?.url"
           readonly
           class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
           style="border-color: #24ad7c"
@@ -161,9 +233,9 @@
 <script setup lang="ts">
 import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { computed, defineProps, ref, defineExpose } from "vue";
+import { watch, defineProps, ref, onMounted, defineExpose } from "vue";
 import Qrcode from "vue-qrcode";
-import { formatDecimalBalance } from "~/helpers/numbers";
+import { divideBigIntToFloat, formatDecimalBalance } from "~/helpers/numbers";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import {
@@ -172,6 +244,7 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
 } from "~/configs/incognitee";
+import { formatDate } from "@/helpers/date";
 import {
   shieldingTarget,
   shieldingLimit,
@@ -183,12 +256,20 @@ import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import {
   cryptoWaitReady,
+  encodeAddress,
   mnemonicGenerate,
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
 import { Keyring } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { useRouter } from "vue-router";
+import {
+  Voucher,
+  storeVoucher,
+  getStoredVouchers,
+  forgetAllVouchersForShard,
+  forgetVoucherForShard,
+} from "~/lib/voucherStorage";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -196,16 +277,10 @@ const systemHealth = useSystemHealth();
 const router = useRouter();
 
 const txStatus = ref("");
-const voucherSeedHex = ref(null);
+const selectedVoucher = ref(null);
 const sendAmount = ref(1.0);
 const sendPrivateNote = ref("");
-
-const voucherUrl = computed(() => {
-  const currentUrl = new URL(window.location.href);
-  currentUrl.searchParams.set("seed", voucherSeedHex.value);
-  currentUrl.searchParams.delete("app");
-  return currentUrl.toString();
-});
+const allVouchers = ref(null);
 
 const submitGenerateVoucherForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
@@ -219,12 +294,38 @@ const submitGenerateVoucherForm = async () => {
   await fundNewVoucher();
   openShareVoucher();
 };
+
+watch(selectedVoucher, () => {
+  if (selectedVoucher.value) {
+    updateVouchers();
+  }
+});
+const updateVouchers = () => {
+  allVouchers.value = getStoredVouchers(incogniteeStore.shard);
+};
+
+const showVoucher = (voucher) => {
+  selectedVoucher.value = voucher;
+  openShareVoucher();
+};
+
+const doForgetVoucherForShard = (voucher: Voucher, shard: string) => {
+  console.log("forgetting voucher: " + voucher + " for shard: " + shard);
+  forgetVoucherForShard(voucher, shard);
+  updateVouchers();
+};
+
+const doForgetAllVouchersForShard = (shard) => {
+  console.log("forgetting all vouchers for shard: " + shard);
+  forgetAllVouchersForShard(shard);
+  updateVouchers();
+};
+
 const fundNewVoucher = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ sending funds privately on incognitee";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
-  const voucherAddress = await generateNewVoucher();
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;
   // fixme: https://github.com/encointer/encointer-js/issues/123
@@ -239,8 +340,10 @@ const fundNewVoucher = async () => {
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
+  const voucher = await generateNewVoucher(amount, incogniteeStore.shard, note);
+  selectedVoucher.value = voucher;
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${voucherAddress} with nonce ${nonce} and note: ${note}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${voucher.address} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -249,7 +352,7 @@ const fundNewVoucher = async () => {
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
       accountStore.getAddress,
-      voucherAddress,
+      voucher.address,
       amount,
       note,
       {
@@ -262,7 +365,11 @@ const fundNewVoucher = async () => {
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
-const generateNewVoucher = async () => {
+const generateNewVoucher = async (
+  amount: BigInt,
+  shard: string,
+  note: string | null,
+): Voucher => {
   return cryptoWaitReady().then(() => {
     const generatedMnemonic = mnemonicGenerate();
     const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
@@ -270,11 +377,25 @@ const generateNewVoucher = async () => {
       name: "fresh",
     });
     const seed = mnemonicToMiniSecret(generatedMnemonic);
-    voucherSeedHex.value = u8aToHex(seed);
+    const voucherSeedHex = u8aToHex(seed);
     console.log(
-      `Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex.value}`,
+      `Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex}`,
     );
-    return newAccount.address;
+    const url = new URL(window.location.href);
+    url.searchParams.set("seed", voucherSeedHex);
+    url.searchParams.delete("app");
+    const voucher = new Voucher(
+      new Date(),
+      shard,
+      encodeAddress(newAccount.address, accountStore.getSs58Format),
+      voucherSeedHex,
+      url.toString(),
+      divideBigIntToFloat(amount, 10 ** accountStore.getDecimals),
+      note,
+    );
+    console.log("generated new voucher: " + voucher);
+    storeVoucher(voucher);
+    return voucher;
   });
 };
 const handleTopResult = (result, successMsg?) => {
@@ -326,9 +447,13 @@ const closeStatusOverlay = () => {
   showStatusOverlay.value = false;
 };
 
+onMounted(() => {
+  updateVouchers();
+});
+
 const copyVoucherUrlToClipboard = () => {
   navigator.clipboard
-    .writeText(voucherUrl.value)
+    .writeText(selectedVoucher.value?.url)
     .then(() =>
       alert(
         "copied your account address to clipboard. Please paste it into the address field on the faucet.",

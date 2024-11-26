@@ -24,6 +24,7 @@
       :unfetchedBucketsCount="unfetchedBucketsCount"
     />
   </div>
+  <div v-else-if="activeApp === 'vouchers'"><VouchersTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
   <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>
@@ -104,6 +105,7 @@
 
 <script setup lang="ts">
 import WalletTab from "~/components/tabs/WalletTab.vue";
+import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import { computed } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
@@ -694,6 +696,15 @@ const switchToGov = () => {
   });
 };
 
+const switchToVouchers = () => {
+  activeApp.value = "vouchers";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
+};
+
 const switchToTeerDays = () => {
   activeApp.value = "teerdays";
   const query = { ...router.currentRoute.value.query };
@@ -716,6 +727,7 @@ onMounted(async () => {
   eventBus.on("switchToMessaging", switchToMessaging);
   eventBus.on("switchToSwap", switchToSwap);
   eventBus.on("switchToGov", switchToGov);
+  eventBus.on("switchToVouchers", switchToVouchers);
   eventBus.on("switchToTeerDays", switchToTeerDays);
 
   const injectedAddress = router.currentRoute.value.query.address;

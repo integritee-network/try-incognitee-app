@@ -197,11 +197,12 @@
         <div class="flex-1 overflow-y-auto">
           <div
             v-if="eventHorizon"
-            class="mt-5 flex justify-center text-gray-500"
+            class="ml-5 mt-5 flex justify-center text-gray-500"
           >
             <i
               >messages before {{ formatMoment(eventHorizon) }} have been purged
-              from Incognitee state</i
+              from Incognitee state. more recent messages can be polled in
+              batches</i
             >
           </div>
           <div
@@ -214,8 +215,7 @@
                 accountStore.hasInjector
                   ? "(needs signature in extension)"
                   : ""
-              }}: fetch older bucket
-              {{ bucketsCount - unfetchedBucketsCount }} /
+              }}: fetch older batch {{ bucketsCount - unfetchedBucketsCount }} /
               {{ bucketsCount }}
             </button>
             <div v-if="isUpdatingNotes" class="spinner"></div>
@@ -226,7 +226,10 @@
           />
         </div>
         <!-- Input Box -->
-        <div class="border-t border-gray-700">
+        <div
+          v-if="recipientValid(conversationAddress)"
+          class="border-t border-gray-700"
+        >
           <div class="flex items-center bg-gray-800 px-4 py-2">
             <form class="flex w-full" @submit.prevent="submitSendForm">
               <div class="relative w-full">
@@ -423,6 +426,9 @@ const openNewRecipientOverlay = () => {
 
 // Schließen des Overlays
 const closeNewRecipientOverlay = () => {
+  if (conversationAddress.value.length > 0) {
+    showChatDetail.value = true;
+  }
   showNewRecipientOverlay.value = false;
 };
 

@@ -1,16 +1,28 @@
 <template>
   <NetworkSelector
-    :openAssetsInfo="()=>{}"
+    :openAssetsInfo="() => {}"
     :selectedNetwork="shieldingTarget"
   />
   <div class="text-center mt-10 mb-5">
     <span class="text-2xl font-black">Vouchers</span>
-    <p class="mt-2 text-sm text-gray-400">You can create  new vouchers to share tokens with your friends in seconds. Your friend doesn’t need an existing wallet.​</p>
-    <button @click="openCreateVoucher" type="button" class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm ">Create Voucher​</button>
+    <p class="mt-2 text-sm text-gray-400">
+      You can create new vouchers to share tokens with your friends in seconds.
+      Your friend doesn’t need an existing wallet.​
+    </p>
+    <button
+      @click="openCreateVoucher"
+      type="button"
+      class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+    >
+      Create Voucher​
+    </button>
   </div>
 
-  <OverlayDialog :show="showCreateVoucher && !showShareVoucher" :close="closeCreateVoucher"
-                 title="Create new Voucher">
+  <OverlayDialog
+    :show="showCreateVoucher && !showShareVoucher"
+    :close="closeCreateVoucher"
+    title="Create new Voucher"
+  >
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
         Sending privately means that only you and the recipient know who sent
@@ -18,49 +30,67 @@
       </p>
     </div>
     <form class="mt-5" @submit.prevent="submitSendForm">
-
       <div class="mt-10">
         <!-- Label and available balance -->
         <div class="flex justify-between items-center">
-          <label for="CreateVoucher" class="text-sm font-medium leading-6 text-white">{{ accountStore.getSymbol }}
-            Amount</label>
+          <label
+            for="CreateVoucher"
+            class="text-sm font-medium leading-6 text-white"
+            >{{ accountStore.getSymbol }} Amount</label
+          >
 
-          <span class="text-xs text-gray-400">Available private balance:
-            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span>
+          <span class="text-xs text-gray-400"
+            >Available private balance:
+            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
+          >
         </div>
 
         <!-- Input field -->
         <div>
-          <input id="sendAmount" v-model="sendAmount" type="number" step="0.01" :min="0.1" :max="accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-            accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-            0.1
-            " required
-                 class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input text-right"
-                 placeholder="Amount" />
+          <input
+            id="sendAmount"
+            v-model="sendAmount"
+            type="number"
+            step="0.01"
+            :min="0.1"
+            :max="
+              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+              0.1
+            "
+            required
+            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input text-right"
+            placeholder="Amount"
+          />
         </div>
 
         <!-- Fee description -->
         <div class="text-right">
-          <span class="text-xs text-gray-400">Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
-            {{ accountStore.getSymbol }} for Incognitee</span>
+          <span class="text-xs text-gray-400"
+            >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
+            {{ accountStore.getSymbol }} for Incognitee</span
+          >
         </div>
       </div>
       <!-- Messages -->
       <div class="relative flex items-center rounded-lg">
-          <textarea
-            id="messages"
-            v-model="sendPrivateNote"
-            rows="2"
-            ref="messageTextarea"
-            name="messages"
-            placeholder="Enter a private note for the recipient"
-            :maxlength="140"
-            class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
-          ></textarea>
+        <textarea
+          id="messages"
+          v-model="sendPrivateNote"
+          rows="2"
+          ref="messageTextarea"
+          name="messages"
+          placeholder="Enter a private note for the recipient"
+          :maxlength="140"
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
+        ></textarea>
       </div>
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
-        <button @click="submitGenerateVoucherForm" type="button"
-                class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm">
+        <button
+          @click="submitGenerateVoucherForm"
+          type="button"
+          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+        >
           Generate Voucher
         </button>
       </div>
@@ -68,7 +98,11 @@
   </OverlayDialog>
 
   <!-- share QR Voucher -->
-  <OverlayDialog :show="showShareVoucher" :close="closeShareVoucher" title="Share Voucher">
+  <OverlayDialog
+    :show="showShareVoucher"
+    :close="closeShareVoucher"
+    title="Share Voucher"
+  >
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
         Share your address with the sender. You can either have them scan this
@@ -80,19 +114,35 @@
     </div>
 
     <div class="flex flex-col mt-5">
-      <div class="w-full mt-5 mb-2 text-sm font-medium leading-6 text-white font-semibold">
+      <div
+        class="w-full mt-5 mb-2 text-sm font-medium leading-6 text-white font-semibold"
+      >
         Voucher URL:
       </div>
       <div class="relative flex items-center rounded-lg">
-        <input id="voucherAddress" type="text" :value="voucherUrl" readonly
-               class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-               style="border-color: #24ad7c" />
+        <input
+          id="voucherAddress"
+          type="text"
+          :value="voucherUrl"
+          readonly
+          class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
+          style="border-color: #24ad7c"
+        />
         <div class="absolute right-3 flex space-x-2">
           <div @click="copyVoucherUrlToClipboard" class="cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="size-6">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+              />
             </svg>
           </div>
         </div>
@@ -105,7 +155,6 @@
     :close="closeStatusOverlay"
   />
 </template>
-
 
 <script setup lang="ts">
 import NetworkSelector from "~/components/ui/NetworkSelector.vue";
@@ -127,12 +176,16 @@ import {
   incogniteeSidechain,
   isLive,
 } from "~/lib/environmentConfig";
-import {TypeRegistry, u32} from "@polkadot/types";
+import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
-import {Health, useSystemHealth} from "~/store/systemHealth";
-import {cryptoWaitReady, mnemonicGenerate, mnemonicToMiniSecret} from "@polkadot/util-crypto";
-import {Keyring} from "@polkadot/keyring";
-import {u8aToHex} from "@polkadot/util";
+import { Health, useSystemHealth } from "~/store/systemHealth";
+import {
+  cryptoWaitReady,
+  mnemonicGenerate,
+  mnemonicToMiniSecret,
+} from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import { u8aToHex } from "@polkadot/util";
 import { useRouter } from "vue-router";
 
 const accountStore = useAccount();
@@ -147,10 +200,10 @@ const sendPrivateNote = ref("");
 
 const voucherUrl = computed(() => {
   const currentUrl = new URL(window.location.href);
-  currentUrl.searchParams.set('seed', voucherSeedHex.value);
-  currentUrl.searchParams.delete('app');
+  currentUrl.searchParams.set("seed", voucherSeedHex.value);
+  currentUrl.searchParams.delete("app");
   return currentUrl.toString();
-})
+});
 
 const submitGenerateVoucherForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
@@ -161,7 +214,7 @@ const submitGenerateVoucherForm = async () => {
   }
   openStatusOverlay();
   await fundNewVoucher();
-  openShareVoucher()
+  openShareVoucher();
 };
 const fundNewVoucher = async () => {
   console.log("sending funds on incognitee");
@@ -215,9 +268,11 @@ const generateNewVoucher = async () => {
     });
     const seed = mnemonicToMiniSecret(generatedMnemonic);
     voucherSeedHex.value = u8aToHex(seed);
-    console.log(`Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex.value}`);
+    console.log(
+      `Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex.value}`,
+    );
     return newAccount.address;
-  })
+  });
 };
 const handleTopResult = (result, successMsg?) => {
   console.log("TOP result: " + result);

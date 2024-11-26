@@ -6,8 +6,9 @@
   <div class="text-center mt-10 mb-5">
     <span class="text-2xl font-black">Vouchers</span>
     <p class="mt-2 text-sm text-gray-400">
-      You can create new vouchers to share tokens with your friends in seconds.
-      Your friend doesn’t need an existing wallet.​
+      Here you can create new vouchers to share tokens with your friends in
+      seconds. Your friend doesn’t need an existing wallet but can redeem the
+      voucher to a secure wallet later at their convenience.
     </p>
     <button
       @click="openCreateVoucher"
@@ -19,14 +20,14 @@
   </div>
 
   <OverlayDialog
-    :show="showCreateVoucher && !showShareVoucher"
+    :show="showCreateVoucher"
     :close="closeCreateVoucher"
     title="Create new Voucher"
   >
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
-        Sending privately means that only you and the recipient know who sent
-        how much to whom.
+        We will create a new temporary keypair where you can transfer funds to.
+        In the next step, you'll be able to share your new voucher
       </p>
     </div>
     <form class="mt-5" @submit.prevent="submitSendForm">
@@ -105,11 +106,12 @@
   >
     <div class="mt-5">
       <p class="text-sm text-gray-400 text-left my-4">
-        Share your address with the sender. You can either have them scan this
-        QR code or send them a private message.
+        Share this voucher with your friend. You can either have them scan this
+        QR code or send them the link via private message. Make sure no one else
+        has access to this voucher as any holder can redeem the funds
       </p>
     </div>
-    <div class="mt-5 qrcode-container">
+    <div class="mt-5 flex justify-center items-center qrcode-container">
       <qrcode :value="voucherUrl"></qrcode>
     </div>
 
@@ -212,6 +214,7 @@ const submitGenerateVoucherForm = async () => {
     );
     return;
   }
+  closeCreateVoucher();
   openStatusOverlay();
   await fundNewVoucher();
   openShareVoucher();

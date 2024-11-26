@@ -55,12 +55,8 @@
 
       <!-- Sidebar -->
       <div
-        :class="{
-          'w-full':
-            isMobile && !showChatDetail /* Mobile: Sidebar im Vollbild */,
-          hidden: isMobile && showChatDetail /* Mobile: Sidebar versteckt */,
-          'md:w-1/3': !isMobile /* Desktop: Sidebar nimmt 1/3 ein */,
-        }"
+        v-if="!isMobile || !showChatDetail"
+        :class="isMobile ? 'w-full' : 'md:w-1/3'"
         class="bg-gray-800 border-r border-gray-700 flex flex-col"
       >
         <div class="px-4 py-4 flex items-center justify-between">
@@ -170,11 +166,8 @@
 
       <!-- Chat window -->
       <div
-        :class="{
-          'w-full': isMobile && showChatDetail /* Mobile: Chat im Vollbild */,
-          hidden: isMobile && !showChatDetail /* Mobile: Chat versteckt */,
-          'md:w-2/3': !isMobile /* Desktop: Chat nimmt 2/3 ein */,
-        }"
+        v-if="!isMobile || showChatDetail"
+        :class="isMobile ? 'w-full' : 'md:w-2/3'"
         class="bg-gray-900 flex flex-col"
       >
         <!-- Header -->

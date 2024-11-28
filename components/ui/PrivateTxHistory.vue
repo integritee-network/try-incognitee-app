@@ -68,7 +68,7 @@
                 <div
                   class="wallet-address mt-1 text-xs text-gray-500 whitespace-nowrap"
                 >
-                  {{ note.account }}
+                  {{ displayAccount(note.account) }}
                 </div>
               </div>
             </td>
@@ -126,15 +126,30 @@
 
 <script setup lang="ts">
 import { formatDate } from "@/helpers/date";
-import { ref, defineProps, defineExpose } from "vue";
+import { ref, defineProps, computed, defineExpose } from "vue";
 import { useAccount } from "@/store/account.ts";
 import { useNotes } from "@/store/notes.ts";
+import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+import { identities as polkadotPeopleIdentities } from "@/lib/polkadotPeopleIdentities";
+import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
+
+//const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
+const identityLut = wellKnownIdentities;
 
 const accountStore = useAccount();
 const noteStore = useNotes();
+
+const displayAccount = computed(() => (account: string) => {
+  if (account === accountStore.getAddress) {
+    return "You";
+  }
+  const pdotAddress = encodeAddress(account, 0);
+  const identity = identityLut.find((i) => i.address === pdotAddress);
+  return identity ? identity.username + " " + account : account;
+});
 
 const props = defineProps({
   show: {

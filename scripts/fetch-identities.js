@@ -1,4 +1,4 @@
-// run with node fetch-idenities.js
+// run in /scripts/ folder with node fetch-idenities.js
 
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 const fs = require("fs");
@@ -8,7 +8,7 @@ async function main() {
   const wsProvider = new WsProvider("wss://sys.ibp.network/people-polkadot");
   const api = await ApiPromise.create({ provider: wsProvider });
 
-  const outputFile = "../lib/polkadotPeopleIdentites.ts"; // Output TypeScript file
+  const outputFile = "../lib/polkadotPeopleIdentities.ts"; // Output TypeScript file
 
   console.log("Fetching accounts with registered identities...");
 
@@ -31,12 +31,12 @@ async function main() {
   }
 
   // Format LUT as TypeScript
-  const lutTs = `const identities = [\n${lut
+  const lutTs = `// this file is generated automatically by scripts/fetch-identities.js. do not edit\nexport const identities = [\n${lut
     .map(
       ({ username, address }) =>
         `  { username: "${username}", address: "${address}" },`,
     )
-    .join("\n")}\n];\n\nexport default identities;\n`;
+    .join("\n")}\n];\n`;
 
   // Write the LUT to a TypeScript file
   fs.writeFileSync(outputFile, lutTs);

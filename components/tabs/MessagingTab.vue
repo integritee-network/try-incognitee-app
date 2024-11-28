@@ -395,12 +395,15 @@ import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { useInterval } from "@vueuse/core";
 import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
-import identities from "@/lib/polkadotPeopleIdentites";
+import { identities as polkadotPeopleIdentities } from "@/lib/polkadotPeopleIdentities";
+import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+
+const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 
 // Control overlay visibility
 const showStartOverlay = ref(false);
@@ -523,15 +526,13 @@ watch(isInitializing, () => {
 
 const filteredLut = computed(() => {
   if (!conversationAddress.value) return [];
-  return identities.filter((entry) =>
-    entry.username
-      .toLowerCase()
-      .includes(conversationAddress.value.toLowerCase()),
+  return identityLut.filter((entry) =>
+    entry.username.includes(encodeAddress(conversationAddress.value, 1)),
   );
 });
 
 const maybeUsername = (address: string) => {
-  const entry = identities.find((entry) => entry.address === address);
+  const entry = identityLut.find((entry) => entry.address === address);
   return entry?.username;
 };
 

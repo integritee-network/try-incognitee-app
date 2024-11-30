@@ -7,8 +7,8 @@
     <span class="text-2xl font-black">Vouchers</span>
     <p class="mt-2 text-sm text-gray-400">
       Here you can create new vouchers to share tokens with your friends in
-      seconds. Your friend doesn’t need an existing wallet but can redeem the
-      voucher to a secure wallet later at their convenience.
+      seconds. <br />Your friend doesn’t need an existing wallet but can redeem
+      the voucher to a secure wallet later at their convenience.​
     </p>
     <button
       @click="openCreateVoucher"
@@ -21,16 +21,18 @@
 
   <div
     v-if="allVouchers?.length > 0"
-    class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
+    class="flex items-center justify-between text-2xl font-bold tracking-tight text-white sm:text-2xl"
   >
-    History
+    <!-- Linke Seite: Überschrift -->
+    <div>History</div>
 
+    <!-- Rechte Seite: Button -->
     <button
       @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
       type="button"
-      class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+      class="text-sm font-semibold text-incognitee-green"
     >
-      forget all vouchers
+      Clear all history
     </button>
   </div>
 
@@ -48,7 +50,7 @@
           >
             <div class="flex flex-col">
               <div class="flex items-start gap-x-3">
-                <div class="text-sm font-medium text-white">
+                <div class="text-sm font-medium text-white wallet-address">
                   {{ voucher.address }}
                 </div>
               </div>
@@ -68,23 +70,41 @@
             }}</time>
           </td>
           <td
-            class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8"
+            class="py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8"
           >
             <!-- Desktop Ansicht -->
-            <button
-              @click="showVoucher(voucher)"
-              type="button"
-              class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              Show
-            </button>
-            <button
-              @click="doForgetVoucherForShard(voucher, incogniteeStore?.shard)"
-              type="button"
-              class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              delete
-            </button>
+            <div class="flex items-center gap-4">
+              <svg
+                @click="showVoucher(voucher)"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-5"
+              >
+                <path
+                  d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z"
+                />
+              </svg>
+              <svg
+                @click="openDeleteModal(voucher)"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="size-5"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -94,6 +114,80 @@
     <!-- this is necessary to avoid the footer overlapping the text -->
     <br /><br /><br /><br /><br /><br /><br />
   </div>
+
+  <!-- Delete Popup -->
+  <div
+    v-if="isDeleteModalOpen"
+    class="relative z-10"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="fixed inset-0 bg-gray-500/75 transition-opacity"
+      aria-hidden="true"
+    ></div>
+
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+      <div
+        class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+      >
+        <div
+          class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+        >
+          <div class="sm:flex sm:items-start">
+            <div
+              class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-incognitee-gray sm:mx-0 sm:size-10"
+            >
+              <svg
+                class="size-6 text-green"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+                data-slot="icon"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                />
+              </svg>
+            </div>
+            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <h3 class="text-base font-semibold text-white" id="modal-title">
+                Forget voucher
+              </h3>
+              <div class="mt-2">
+                <p class="text-sm text-gray-500">
+                  You are only clearing the entry, funds remain on the address
+                  and are accessible via this link
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+            <button
+              @click="confirmDeleteVoucher"
+              type="button"
+              class="inline-flex w-full justify-center rounded-md bg-incognitee-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-blau sm:ml-3 sm:w-auto"
+            >
+              Forget
+            </button>
+            <button
+              @click="closeDeleteModal"
+              type="button"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <OverlayDialog
     :show="showCreateVoucher"
     :close="closeCreateVoucher"
@@ -158,7 +252,7 @@
           name="messages"
           placeholder="Enter a private note for the recipient"
           :maxlength="140"
-          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input"
         ></textarea>
       </div>
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
@@ -202,8 +296,7 @@
           type="text"
           :value="selectedVoucher?.url"
           readonly
-          class="w-full text-sm rounded-lg flex-grow pr-14 py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input"
-          style="border-color: #24ad7c"
+          class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input pr-12"
         />
         <div class="absolute right-3 flex space-x-2">
           <div @click="copyVoucherUrlToClipboard" class="cursor-pointer">
@@ -284,6 +377,32 @@ const selectedVoucher = ref(null);
 const sendAmount = ref(1.0);
 const sendPrivateNote = ref("");
 const allVouchers = ref(null);
+
+// State for modal visibility
+const isDeleteModalOpen = ref(false);
+
+// Variable to store the current voucher to be deleted
+let voucherToDelete = ref(null);
+
+// Function to open the modal
+function openDeleteModal(voucher) {
+  voucherToDelete.value = voucher; // Set the current voucher to delete
+  isDeleteModalOpen.value = true; // Open the modal
+}
+
+// Function to close the modal
+function closeDeleteModal() {
+  voucherToDelete.value = null; // Clear the voucher to delete
+  isDeleteModalOpen.value = false; // Close the modal
+}
+
+// Function to confirm deletion
+function confirmDeleteVoucher() {
+  if (voucherToDelete.value) {
+    doForgetVoucherForShard(voucherToDelete.value, incogniteeStore?.shard); // Call the deletion function
+    closeDeleteModal(); // Close the modal after deletion
+  }
+}
 
 const submitGenerateVoucherForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
@@ -477,6 +596,27 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.wallet-address {
+  display: block;
+  white-space: nowrap;
+  /* Verhindert Zeilenumbruch */
+  overflow: hidden;
+  /* Versteckt überlaufenden Text */
+  text-overflow: ellipsis;
+  /* Zeigt '...' bei zu langem Text an */
+  max-width: 10ch;
+  /* Maximale Länge: 10 Zeichen */
+}
+
+/* Für größere Bildschirme (ab 641px) */
+@media (min-width: 641px) {
+  .wallet-address {
+    max-width: 15ch;
+    /* Begrenze auch hier auf 10 Zeichen */
+  }
+}
+
 .walletdesktop-address {
   display: block;
   white-space: nowrap;

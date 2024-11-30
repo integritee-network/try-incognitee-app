@@ -4,7 +4,7 @@
   >
     <!-- TEER Box -->
     <div
-      class="currency-box gap-2 p-3 basis-1/3 relative"
+      class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
       :class="{
         'border-incognitee-green':
           teerHover || selectedNetwork === ChainId.IntegriteeKusama,
@@ -21,7 +21,7 @@
 
     <!-- PAS PASEO Box -->
     <div
-      class="currency-box gap-2 p-3 basis-1/3 relative"
+      class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
       :class="{
         'border-incognitee-green':
           pasHover || selectedNetwork === ChainId.PaseoRelay,
@@ -38,7 +38,7 @@
 
     <!-- USDC Box -->
     <div
-      class="currency-box gap-2 p-3 basis-1/3 relative"
+      class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
       @click="openAssetsInfo"
       title="USDC on Asset Hub"
     >

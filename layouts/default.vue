@@ -142,6 +142,7 @@
                     <p class="text-xs cursor-pointer">TEERDays</p>
                   </div>
                   <div
+                    v-if="accountStore.getSymbol === 'PAS'"
                     class="flex flex-col items-center cursor-pointer text-center"
                     @click="emitSwitchToMessaging"
                   >

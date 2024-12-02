@@ -93,6 +93,87 @@
     </div>
   </OverlayDialog>
 
+  <!-- AddSessionProxy -->
+  <OverlayDialog
+    :show="showAuthorizeSessionOverlay"
+    :close="closeAuthorizeSessionOverlay"
+    title="Session Authorization"
+  >
+    <div class="mt-2">
+      <p class="text-sm text-gray-400">
+        For a smooth experience with minimal signing interaction we recommend
+        that your authorize a session key
+      </p>
+
+      <div class="flex flex-col mt-5">
+        <form @submit.prevent="handleSubmit">
+          <label>Select an option:</label>
+          <div class="radio-group mt-5">
+            <input
+              type="radio"
+              id="readBalance"
+              value="ReadBalance"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="readBalance">allow reading balance</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="readAll"
+              value="ReadAll"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="readAll">full read access</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="nonTransfer"
+              value="NonTransfer"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="nonTransfer">allow non-transfer actions</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="any"
+              value="Any"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="any">allow all actions</label>
+          </div>
+
+          <p class="text-sm text-gray-400">
+            If this is your personal machine, we recommend to persist a session
+            key in browser storage
+          </p>
+          <div class="mt-2">
+            <input
+              type="checkbox"
+              id="persistSession"
+              v-model="persistSessionProxy"
+            />
+            <label for="persistSession"
+            >Persist session key in browser storage</label
+            >
+          </div>
+          <p class="text-sm text-gray-400">
+            the signer extension will pop up and ask you to sign this request
+          </p>
+
+          <button
+            type="submit"
+            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          >
+            Authorize
+          </button>
+        </form>
+      </div>
+    </div>
+  </OverlayDialog>
+
   <!-- Choose Wallet -->
   <ChooseWalletOverlay
     :show="showChooseWalletOverlay"
@@ -164,6 +245,9 @@ const shieldingTargetApi = ref<ApiPromise | null>(null);
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
 );
+const selectedSessionProxyRole = ref("NonTransfer");
+const persistSessionProxy = ref(false);
+
 const onExtensionAccountChange = async (selectedAddress) => {
   dropSubscriptions();
   console.log("user selected extension account:", selectedAddress);
@@ -201,7 +285,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.accountInfoGetter(
+        await incogniteeStore.api.accountInfoAndSessionProxiesGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -222,10 +306,13 @@ const fetchIncogniteeBalance = async () => {
 
   await getterMap[accountStore.account]
     .send()
-    .then((accountInfo) => {
+    .then((accountInfoAndSessionProxies) => {
+      const accountInfo = accountInfoAndSessionProxies.account_info;
+      const proxies = accountInfoAndSessionProxies.session_proxies;
       console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
+      console.debug(`session proxies: ${proxies}`);
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
         incogniteeSidechain.value,
@@ -237,6 +324,10 @@ const fetchIncogniteeBalance = async () => {
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
+      if (proxies.length == 0 && accountStore.hasInjector) {
+        openAuthorizeSessionOverlay();
+      }
+      openAuthorizeSessionOverlay();
     })
     .catch((err) => {
       console.error(`[fetchIncogniteeBalance] error ${err}`);
@@ -590,7 +681,7 @@ const subscribeWhatsReady = async () => {
   accountStore.setSymbol(String(shieldingTargetApi.value.registry.chainTokens));
   console.log(
     "api-reported genesis hash for shielding target: " +
-      shieldingTargetApi.value.genesisHash.toHex().toString(),
+    shieldingTargetApi.value.genesisHash.toHex().toString(),
   );
   systemHealth.setShieldingTargetApiGenesisHashHex(
     shieldingTargetApi.value.genesisHash.toHex().toString(),
@@ -624,19 +715,19 @@ const subscribeWhatsReady = async () => {
   const p1 = shieldingTargetApi.value.query.system.account(
     accountStore.getAddress,
     ({
-      data: {
-        free: currentFree,
-        reserved: currentReserved,
-        frozen: currentFrozen,
-      },
-    }) => {
+       data: {
+         free: currentFree,
+         reserved: currentReserved,
+         frozen: currentFrozen,
+       },
+     }) => {
       console.log(
         "shielding-target balance: free=" +
-          currentFree +
-          " reserved=" +
-          currentReserved +
-          " frozen=" +
-          currentFrozen,
+        currentFree +
+        " reserved=" +
+        currentReserved +
+        " frozen=" +
+        currentFrozen,
       );
       accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
       accountStore.setBalanceReserved(
@@ -822,6 +913,17 @@ const closeNewWalletOverlay = () => {
   showNewWalletOverlay.value = false;
 };
 
+const showAuthorizeSessionOverlay = ref(false);
+const openAuthorizeSessionOverlay = () => {
+  if (!enableActions.value) {
+    console.error("network not live");
+    return;
+  }
+  showAuthorizeSessionOverlay.value = true;
+};
+const closeAuthorizeSessionOverlay = () => {
+  showAuthorizeSessionOverlay.value = false;
+};
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
   if (!enableActions.value) {
@@ -898,5 +1000,15 @@ hr {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 10px;
 }
 </style>

@@ -28,7 +28,7 @@
 
     <!-- Rechte Seite: Button -->
     <button
-      @click="openDeleteModal(voucher)"
+      @click="openDeleteModal('all')"
       type="button"
       class="text-sm font-semibold hover:text-incognitee-green"
     >
@@ -179,12 +179,12 @@
             </div>
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
               <h3 class="text-base font-semibold text-white" id="modal-title">
-                Forget voucher
+                Forget voucher(s)
               </h3>
               <div class="mt-2">
                 <p class="text-sm text-gray-500">
                   You are only clearing the entry, funds remain on the address
-                  and are accessible via this link
+                  and are accessible via the link if you shared or saved it
                 </p>
               </div>
             </div>
@@ -194,7 +194,7 @@
           </div>
           <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <button
-              @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
+              @click="doForgetVoucher()"
               type="button"
               class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
             >
@@ -347,24 +347,14 @@
 <script setup lang="ts">
 import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { watch, defineProps, ref, onMounted, defineExpose } from "vue";
+import { watch, ref, onMounted } from "vue";
 import Qrcode from "vue-qrcode";
 import { divideBigIntToFloat, formatDecimalBalance } from "~/helpers/numbers";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
-import {
-  INCOGNITEE_GTN_GUESS_FEE,
-  INCOGNITEE_SHIELDING_FEE_FRACTION,
-  INCOGNITEE_TX_FEE,
-  INCOGNITEE_UNSHIELDING_FEE,
-} from "~/configs/incognitee";
+import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { formatDate } from "@/helpers/date";
-import {
-  shieldingTarget,
-  shieldingLimit,
-  incogniteeSidechain,
-  isLive,
-} from "~/lib/environmentConfig";
+import { shieldingTarget, incogniteeSidechain } from "~/lib/environmentConfig";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { Health, useSystemHealth } from "~/store/systemHealth";
@@ -400,10 +390,10 @@ const allVouchers = ref(null);
 const isDeleteModalOpen = ref(false);
 
 // Variable to store the current voucher to be deleted
-let voucherToDelete = ref(null);
+let voucherToDelete = ref<Voucher | string>(null);
 
 // Function to open the modal
-function openDeleteModal(voucher) {
+function openDeleteModal(voucher: Voucher | string) {
   voucherToDelete.value = voucher; // Set the current voucher to delete
   isDeleteModalOpen.value = true; // Open the modal
 }
@@ -412,14 +402,6 @@ function openDeleteModal(voucher) {
 function closeDeleteModal() {
   voucherToDelete.value = null; // Clear the voucher to delete
   isDeleteModalOpen.value = false; // Close the modal
-}
-
-// Function to confirm deletion
-function confirmDeleteVoucher() {
-  if (voucherToDelete.value) {
-    doForgetVoucherForShard(voucherToDelete.value, incogniteeStore?.shard); // Call the deletion function
-    closeDeleteModal(); // Close the modal after deletion
-  }
 }
 
 const submitGenerateVoucherForm = async () => {
@@ -449,16 +431,19 @@ const showVoucher = (voucher) => {
   openShareVoucher();
 };
 
-const doForgetVoucherForShard = (voucher: Voucher, shard: string) => {
-  console.log("forgetting voucher: " + voucher + " for shard: " + shard);
-  forgetVoucherForShard(voucher, shard);
-  updateVouchers();
-  closeDeleteModal();
-};
-
-const doForgetAllVouchersForShard = (shard) => {
-  console.log("forgetting all vouchers for shard: " + shard);
-  forgetAllVouchersForShard(shard);
+const doForgetVoucher = () => {
+  if (voucherToDelete.value === "all") {
+    console.log("forgetting all vouchers for shard: " + incogniteeStore.shard);
+    forgetAllVouchersForShard(incogniteeStore.shard);
+  } else {
+    console.log(
+      "forgetting voucher: " +
+        voucherToDelete.value?.address +
+        " for shard: " +
+        incogniteeStore.shard,
+    );
+    forgetVoucherForShard(voucherToDelete.value, incogniteeStore.shard);
+  }
   updateVouchers();
   closeDeleteModal();
 };

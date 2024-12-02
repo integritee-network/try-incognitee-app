@@ -13,7 +13,7 @@
     <button
       @click="openCreateVoucher"
       type="button"
-      class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+      class="my-10 bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
     >
       Create Voucher​
     </button>
@@ -28,9 +28,9 @@
 
     <!-- Rechte Seite: Button -->
     <button
-      @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
+    @click="openDeleteModal(voucher)"
       type="button"
-      class="text-sm font-semibold text-incognitee-green"
+      class="text-sm font-semibold  hover:text-incognitee-green"
     >
       Clear all history
     </button>
@@ -78,7 +78,7 @@
                 @click="showVoucher(voucher)"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="size-5"
+                class="size-5 cursor-pointer"
               >
                 <path
                   d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z"
@@ -96,7 +96,7 @@
                 @click="openDeleteModal(voucher)"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="size-5"
+                class="size-5 cursor-pointer"
               >
                 <path
                   fill-rule="evenodd"
@@ -115,78 +115,99 @@
     <br /><br /><br /><br /><br /><br /><br />
   </div>
 
-  <!-- Delete Popup -->
+<!-- Delete Popup -->
+<div
+  v-if="isDeleteModalOpen"
+  class="relative z-10"
+  aria-labelledby="modal-title"
+  role="dialog"
+  aria-modal="true"
+>
   <div
-    v-if="isDeleteModalOpen"
-    class="relative z-10"
-    aria-labelledby="modal-title"
-    role="dialog"
-    aria-modal="true"
-  >
-    <div
-      class="fixed inset-0 bg-gray-500/75 transition-opacity"
-      aria-hidden="true"
-    ></div>
+    class="fixed inset-0 bg-gray-500/75 transition-opacity"
+    aria-hidden="true"
+  ></div>
 
-    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div
+      class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+    >
       <div
-        class="flex min-h-full items-start justify-center p-4 text-center sm:items-center sm:p-0"
+        class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
       >
-        <div
-          class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+        <!-- Close Button (X) -->
+        <button
+          @click="closeDeleteModal"
+          type="button"
+          class="absolute top-3 right-3 text-white bg-transparent hover:text-gray-300"
         >
-          <div class="sm:flex sm:items-start">
-            <div
-              class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-incognitee-gray sm:mx-0 sm:size-10"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <div class="sm:flex sm:items-start">
+          <div
+            class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-incognitee-gray sm:mx-0 sm:size-10"
+          >
+            <svg
+              class="size-6 text-green"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              aria-hidden="true"
+              data-slot="icon"
             >
-              <svg
-                class="size-6 text-green"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                aria-hidden="true"
-                data-slot="icon"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
-                />
-              </svg>
-            </div>
-            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-              <h3 class="text-base font-semibold text-white" id="modal-title">
-                Forget voucher
-              </h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">
-                  You are only clearing the entry, funds remain on the address
-                  and are accessible via this link
-                </p>
-              </div>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+              />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+            <h3 class="text-base font-semibold text-white" id="modal-title">
+              Forget voucher
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                You are only clearing the entry, funds remain on the address
+                and are accessible via this link
+              </p>
             </div>
           </div>
-          <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-            <button
-              @click="confirmDeleteVoucher"
-              type="button"
-              class="inline-flex w-full justify-center rounded-md bg-incognitee-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-blau sm:ml-3 sm:w-auto"
-            >
-              Forget
-            </button>
-            <button
-              @click="closeDeleteModal"
-              type="button"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-            >
-              Cancel
-            </button>
-          </div>
+        </div>
+        <div class="relative group">
+          <div class="relative inline-block group">
+</div>
+
+</div>
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
+            type="button"
+            class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
+          >
+            Forget
+          </button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 
   <OverlayDialog
     :show="showCreateVoucher"
@@ -259,7 +280,7 @@
         <button
           @click="submitGenerateVoucherForm"
           type="button"
-          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+          class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
         >
           Generate Voucher
         </button>
@@ -435,12 +456,14 @@ const doForgetVoucherForShard = (voucher: Voucher, shard: string) => {
   console.log("forgetting voucher: " + voucher + " for shard: " + shard);
   forgetVoucherForShard(voucher, shard);
   updateVouchers();
+  closeDeleteModal(); 
 };
 
 const doForgetAllVouchersForShard = (shard) => {
   console.log("forgetting all vouchers for shard: " + shard);
   forgetAllVouchersForShard(shard);
   updateVouchers();
+  closeDeleteModal(); 
 };
 
 const fundNewVoucher = async () => {
@@ -585,6 +608,56 @@ const copyVoucherUrlToClipboard = () => {
 </script>
 
 <style scoped>
+.btn {
+  transition: 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(30px);
+
+  @include sm {
+    font-size: $sm_pDef;
+    padding: 12px 18px;
+    border-radius: 10px;
+  }
+
+  &_gradient {
+    background: linear-gradient(84.58deg, #24ad7c 0%, #1845b9 100%);
+
+    &:before {
+      position: absolute;
+      content: "";
+      inset: 0;
+      background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.15),
+          rgba(255, 255, 255, 0.15)
+        ),
+        linear-gradient(84.58deg, rgb(36, 173, 124) 0%, rgb(24, 69, 185) 100%);
+      transition: opacity 0.25s ease;
+      opacity: 0;
+      border-radius: 12px;
+      z-index: -1;
+
+      @include sm {
+        border-radius: 10px;
+      }
+    }
+
+    &:hover {
+      &:before {
+        opacity: 1;
+        box-shadow: 0px 0px 20px 0px rgba(36, 173, 124, 0.65);
+      }
+    }
+  }
+
+  &_border {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+  }
+}
 /* Entfernt die Pfeile für Eingabefelder in Webkit-basierten Browsern wie Chrome und Safari */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

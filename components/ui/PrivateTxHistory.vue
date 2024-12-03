@@ -85,7 +85,7 @@
                     10 ** accountStore.getDecimals,
                   )
                 }}
-                TEER
+                {{accountStore.getSymbol }}
               </div>
               <time class="mt-1 text-xs text-gray-500">{{
                 formatDate(note.timestamp)

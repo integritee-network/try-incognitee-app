@@ -217,7 +217,7 @@
         In the next step, you'll be able to share your new voucher
       </p>
     </div>
-    <form class="mt-5" @submit.prevent="submitSendForm">
+    <form class="mt-5" @submit.prevent="submitGenerateVoucherForm">
       <div class="mt-10">
         <!-- Label and available balance -->
         <div class="flex justify-between items-center">
@@ -275,8 +275,7 @@
       </div>
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
         <button
-          @click="submitGenerateVoucherForm"
-          type="button"
+          type="submit"
           class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
         >
           Generate Voucher

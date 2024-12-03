@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="show">
     <!-- Overlay Start -->
     <div
       v-if="showStartOverlay"
@@ -672,6 +672,10 @@ const closeScanOverlay = () => {
 };
 
 const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true,
+  },
   isMobile: {
     type: Boolean,
     required: true,

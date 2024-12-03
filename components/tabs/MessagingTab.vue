@@ -527,7 +527,7 @@ watch(isInitializing, () => {
 const filteredLut = computed(() => {
   if (!conversationAddress.value) return [];
   return identityLut.filter((entry) =>
-    entry.username.includes(encodeAddress(conversationAddress.value, 1)),
+    entry.username.includes(conversationAddress.value),
   );
 });
 

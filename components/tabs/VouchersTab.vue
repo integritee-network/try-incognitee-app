@@ -241,10 +241,15 @@
             type="number"
             step="0.01"
             :min="0.1"
-            :max="Math.max(0,
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-              0.1)
+            :max="
+              Math.max(
+                0,
+                accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+                  accountStore.getDecimalExistentialDeposit(
+                    incogniteeSidechain,
+                  ) -
+                  0.1,
+              )
             "
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input text-right"

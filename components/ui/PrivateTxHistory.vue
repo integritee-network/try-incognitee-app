@@ -4,110 +4,81 @@
       History
     </div>
   </div>
-  <div v-if="show" class="mb-10">
-    <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
-    <div v-if="show" class="flex-1 overflow-y-auto bg-gray-900 mt-5 rounded-md">
-      <table class="w-full whitespace-nowrap text-left">
-        <tbody class="divide-y divide-white/10">
-          <tr
-            v-for="(note, index) in noteStore.getFinancialNotes"
-            :key="index"
-            class="flex justify-between"
-          >
-            <!-- Linksbündige Zelle mit Icon, Text und "New"-Badge -->
-            <td
-              class="flex items-center gap-x-4 py-4 pl-4 pr-8 text-left sm:pl-6 lg:pl-8"
-            >
-              <!-- Pfeil-SVG für Incoming Transfer -->
-              <div v-if="note.direction === NoteDirection.Incoming">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-5 text-gray-400"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div v-else>
-                <svg
-                  class="h-6 w-5 flex-none text-gray-400 sm:block"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  data-slot="icon"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-.75-4.75a.75.75 0 0 0 1.5 0V8.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L6.2 9.74a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div class="flex flex-col">
-                <div class="flex items-start gap-x-3">
-                  <div class="text-sm font-medium text-white">
-                    {{ note.category }}
-                  </div>
-                  <!-- "New" Badge für Desktop und grüner Punkt für Mobile -->
-                  <!--
-                <div
-                  class="hidden sm:block rounded-md bg-green-700 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-green-600/20"
-                >
-                  New
-                </div>
-                <div
-                  class="sm:hidden rounded-full bg-green-500 w-2 h-2"
-                ></div>
-                -->
-                  <!-- Grüner Punkt für mobile Ansicht -->
-                </div>
-                <div
-                  class="wallet-address mt-1 text-xs text-gray-500 whitespace-nowrap"
-                >
-                  {{ displayAccount(note.account) }}
-                </div>
-              </div>
-            </td>
 
-            <!-- Rechtsbündige Zelle für TEER Betrag und Datum -->
-            <td
-              class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8"
-            >
-              <div v-if="note.amount" class="text-sm font-medium text-white">
-                {{ note.direction === NoteDirection.Incoming ? "+" : "-" }}
-                {{
-                  divideBigIntToFloat(
-                    note.amount,
-                    10 ** accountStore.getDecimals,
-                  )
-                }}
-                TEER
-              </div>
-              <time class="mt-1 text-xs text-gray-500">{{
-                formatDate(note.timestamp)
-              }}</time>
-            </td>
-            <td
-              class="hidden py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8"
-            >
-              <div v-if="note.note?.length > 0">
-                <button
-                  @click="openViewMore(note)"
-                  type="button"
-                  class="hidden sm:inline btn btn_gradient rounded sm:px-2 sm:py-1 text-xs font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-                >
-                  Note
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="mb-10">
+    <div v-if="show" class="mt-6 overflow-hidden bg-gray-900 rounded-md">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+          <table class="w-full text-left">
+            <tbody>
+              <tr v-for="(note, index) in noteStore.getFinancialNotes" :key="index">
+                <td class="relative py-5 pr-6">
+                  <div class="flex gap-x-6">
+                    <div v-if="note.direction === NoteDirection.Incoming">
+                      <svg viewBox="0 0 24 24" fill="currentColor" class="size-5 text-gray-400">
+                        <path fill-rule="evenodd"
+                          d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-.53 14.03a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V8.25a.75.75 0 0 0-1.5 0v5.69l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3Z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div v-else>
+                      <svg class="h-6 w-5 flex-none text-gray-400 sm:block" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true" data-slot="icon">
+                        <path fill-rule="evenodd"
+                          d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm-.75-4.75a.75.75 0 0 0 1.5 0V8.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L6.2 9.74a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
+                          clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                    <div class="flex-auto">
+                      <div class="flex items-start gap-x-3">
+                        <div class="text-sm/6 font-medium text-white">
+                          {{ note.category }}
+                        </div>
+                      </div>
+                      <div class="mt-1 text-xs/5 text-gray-500 wallet-address whitespace-nowrap">
+                        {{ displayAccount(note.account) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="absolute right-full bottom-0 h-px w-screen bg-gray-50/20"></div>
+                  <div class="absolute bottom-0 left-0 h-px w-screen bg-gray-50/20"></div>
+                </td>
+                <td class="py-5 pr-6 sm:table-cell">
+                  <div v-if="note.amount" class="text-sm/6 font-medium text-white">
+                    {{ note.direction === NoteDirection.Incoming ? "+" : "-" }}
+                    {{
+                      divideBigIntToFloat(
+                        note.amount,
+                        10 ** accountStore.getDecimals
+                      )
+                    }}
+                    TEER
+                  </div>
+                  <time class="mt-1 text-xs/5 text-gray-500">{{
+                    formatDate(note.timestamp)
+                    }}</time>
+                </td>
+                <td class="py-5 text-right">
+                  <div v-if="note.note?.length > 0" class="flex justify-end">
+                    <svg @click="openViewMore(note)" viewBox="0 0 24 24" fill="currentColor"
+                      class="size-5 cursor-pointer">
+                      <path d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z" />
+                      <path fill-rule="evenodd"
+                        d="M5.625 1.5H9a3.75 3.75 0 0 1 3.75 3.75v1.875c0 1.036.84 1.875 1.875 1.875H16.5a3.75 3.75 0 0 1 3.75 3.75v7.875c0 1.035-.84 1.875-1.875 1.875H5.625a1.875 1.875 0 0 1-1.875-1.875V3.375c0-1.036.84-1.875 1.875-1.875Zm6 16.5c.66 0 1.277-.19 1.797-.518l1.048 1.048a.75.75 0 0 0 1.06-1.06l-1.047-1.048A3.375 3.375 0 1 0 11.625 18Z"
+                        clip-rule="evenodd" />
+                      <path
+                        d="M14.25 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 16.5 7.5h-1.875a.375.375 0 0 1-.375-.375V5.25Z" />
+                    </svg>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
+  </div>
+  <div v-if="show" class="mb-10">
     <div class="mt-5 flex justify-center text-gray-500">
       <button @click="fetchOlderBucket">
         fetch more events
@@ -117,11 +88,7 @@
     <!-- this is necessary to avoid the footer overlapping the text -->
     <br /><br /><br /><br /><br /><br /><br />
   </div>
-  <NoteDetailsOverlay
-    :show="showViewMore"
-    :note="showNote"
-    :close="closeViewMore"
-  />
+  <NoteDetailsOverlay :show="showViewMore" :note="showNote" :close="closeViewMore" />
 </template>
 
 <script setup lang="ts">

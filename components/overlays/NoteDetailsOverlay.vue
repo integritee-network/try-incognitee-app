@@ -3,7 +3,9 @@
     <div class="mx-auto mt-5">
       <div class="grid grid-cols-1 md:grid-cols-1 gap-6 items-start">
         <div>
-          <div class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3">
+          <div
+            class="rounded-lg bg-gray-800 shadow-sm ring-1 ring-gray-700 pb-3"
+          >
             <dl class="flex flex-wrap">
               <!-- Kategorie und Zeit -->
               <div class="w-full flex justify-between px-6 pt-3">
@@ -27,35 +29,44 @@
               </div>
 
               <!-- Richtung und Konto -->
-              <div class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3">
+              <div
+                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3"
+              >
                 <div class="flex-auto text-left">
                   <dt class="text-sm font-semibold leading-6 text-gray-300">
                     {{
                       note.direction === NoteDirection.Incoming ? "From" : "To"
                     }}
                   </dt>
-                  <dd class="mt-1 text-base font-semibold leading-6 text-white wallet-address">
+                  <dd
+                    class="mt-1 text-base font-semibold leading-6 text-white wallet-address"
+                  >
                     {{ note.account }}
                   </dd>
                 </div>
               </div>
 
               <!-- Betrag -->
-              <div class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3">
+              <div
+                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3"
+              >
                 <div class="flex-auto text-left">
                   <dt class="text-sm font-semibold leading-6 text-gray-300">
                     Amount
                   </dt>
-                  <dd class="mt-1 text-base font-semibold leading-6 text-white" :class="{
-                    'text-green-400':
-                      note.direction === NoteDirection.Incoming,
-                    'text-red-400': note.direction === NoteDirection.Outgoing,
-                  }">
+                  <dd
+                    class="mt-1 text-base font-semibold leading-6 text-white"
+                    :class="{
+                      'text-green-400':
+                        note.direction === NoteDirection.Incoming,
+                      'text-red-400': note.direction === NoteDirection.Outgoing,
+                    }"
+                  >
                     {{ note.direction === NoteDirection.Incoming ? "+" : "-" }}
                     {{
                       divideBigIntToFloat(
                         note.amount,
-                        10 ** accountStore.getDecimals
+                        10 ** accountStore.getDecimals,
                       )
                     }}
                     TEER
@@ -64,8 +75,10 @@
               </div>
 
               <!-- Notiz -->
-              <div v-if="note.note?.length > 0"
-                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3">
+              <div
+                v-if="note.note?.length > 0"
+                class="mt-3 flex w-full flex-none gap-x-4 border-t border-gray-700 px-6 pt-3"
+              >
                 <div class="flex-auto text-left">
                   <dt class="text-sm font-semibold leading-6 text-gray-300">
                     Note

@@ -1,7 +1,8 @@
 <template>
-  <div v-if="activeApp === 'wallet'">
+  <div>
+    <!-- wallet tab should always exist, just not be shown if inactive-->
     <WalletTab
-      :show="true"
+      :show="activeApp === 'wallet'"
       :isProd="isProd"
       :isMobile="isMobile"
       :api="shieldingTargetApi"
@@ -13,8 +14,10 @@
       :fetchOlderBucket="fetchOlderBucket"
     />
   </div>
-  <div v-else-if="activeApp === 'messaging'">
+  <!-- messgaing tab should always exist, just not be shown if inactive-->
+  <div>
     <MessagingTab
+      :show="activeApp === 'messaging'"
       :isMobile="isMobile"
       :updateNotes="updateNotes"
       :isUpdatingNotes="isUpdatingNotes"
@@ -24,7 +27,8 @@
       :unfetchedBucketsCount="unfetchedBucketsCount"
     />
   </div>
-  <div v-else-if="activeApp === 'vouchers'"><VouchersTab /></div>
+  <!-- all following tabs can be unmounted if unselected -->
+  <div v-if="activeApp === 'vouchers'"><VouchersTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
   <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>

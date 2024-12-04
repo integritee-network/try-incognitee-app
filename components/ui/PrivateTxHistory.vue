@@ -111,8 +111,6 @@
         </div>
       </div>
     </div>
-  </div>
-  <div v-if="show" class="mb-10">
     <div class="mt-5 flex justify-center text-gray-500">
       <button @click="fetchOlderBucket">
         fetch more events

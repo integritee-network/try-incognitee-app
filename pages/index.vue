@@ -201,7 +201,8 @@ import { useIncognitee } from "@/store/incognitee.ts";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
-import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { hexToU8a, isFunction, u8aToHex } from "@polkadot/util";
+import type { IKeyringPair } from "@polkadot/types/types";
 import {
   cryptoWaitReady,
   encodeAddress,
@@ -484,10 +485,24 @@ const fetchIncogniteeNotes = async (
     return;
   }
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
+  const sessionProxy = accountStore.sessionProxyForRole(
+    SessionProxyRole.ReadAny,
+  );
+  console.log("[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address);
   const injector = accountStore.hasInjector ? accountStore.injector : null;
+  console.log("[fetchIncogniteeNotes] injector: " + injector);
+  const signerArgs: any = {};
+  if (sessionProxy) {
+    console.log("is it a keypair? " + isFunction(sessionProxy.sign));
+    signerArgs.delegate = sessionProxy as IKeyringPair;
+  }
+  if (injector) {
+    signerArgs.signer = injector.signer;
+  }
+  console.log("[fetchIncogniteeNotes] args: " + JSON.stringify(signerArgs));
   try {
     if (!getterMap[mapKey]) {
-      if (injector) {
+      if (injector && sessionProxy == null) {
         if (skip_if_signer_needed) {
           console.log(
             "skipping automated fetchIncogniteeNotes because signer is needed",
@@ -503,7 +518,7 @@ const fetchIncogniteeNotes = async (
         accountStore.account,
         bucketIndex,
         incogniteeStore.shard,
-        { signer: injector?.signer },
+        signerArgs,
       );
     } else {
       console.debug(`fetching incognitee notes using cached getter`);

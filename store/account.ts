@@ -5,7 +5,10 @@ import type { InjectedExtension } from "@polkadot/extension-inject/types";
 import { ChainId } from "@/configs/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
-import { SessionProxyCredentials } from "@/lib/sessionProxyStorage.ts";
+import {
+  SessionProxyRole,
+  sessionProxyRoleOrder,
+} from "@/lib/sessionProxyStorage.ts";
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -64,11 +67,20 @@ export const useAccount = defineStore("account", {
         return sessionProxies[role] != null;
       };
     },
+    /// Returns the weakest session proxy which is authorized for at least the requested role
     sessionProxyForRole({
       sessionProxies,
     }): (role: SessionProxyRole) => AddressOrPair | null {
       return (role: SessionProxyRole): AddressOrPair | null => {
-        return sessionProxies[role];
+        const startIndex = sessionProxyRoleOrder.indexOf(role);
+        if (startIndex === -1) return null;
+        for (let i = startIndex; i < sessionProxyRoleOrder.length; i++) {
+          const currentRole = sessionProxyRoleOrder[i];
+          if (sessionProxies[currentRole]) {
+            return sessionProxies[currentRole];
+          }
+        }
+        return null;
       };
     },
     formatBalanceFree({ balanceFree, decimals }) {

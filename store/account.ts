@@ -5,6 +5,7 @@ import type { InjectedExtension } from "@polkadot/extension-inject/types";
 import { ChainId } from "@/configs/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
+import { SessionProxyCredentials } from "@/lib/sessionProxyStorage.ts";
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -12,6 +13,8 @@ export const useAccount = defineStore("account", {
     account: <AddressOrPair | null>null,
     // optional signer extension
     injector: <InjectedExtension | null>null,
+    // optional session proxy credentials
+    sessionProxies: <Record<SessionProxyRole, AddressOrPair>>{},
     // free balance per chain
     balanceFree: <Record<ChainId, BigInt>>{},
     // reserved balance per chain
@@ -53,6 +56,20 @@ export const useAccount = defineStore("account", {
     },
     hasInjector({ injector }): boolean {
       return injector != null;
+    },
+    hasSessionProxyForRole({
+      sessionProxies,
+    }): (role: SessionProxyRole) => boolean {
+      return (role: SessionProxyRole): boolean => {
+        return sessionProxies[role] != null;
+      };
+    },
+    sessionProxyForRole({
+      sessionProxies,
+    }): (role: SessionProxyRole) => AddressOrPair | null {
+      return (role: SessionProxyRole): AddressOrPair | null => {
+        return sessionProxies[role];
+      };
     },
     formatBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): string => {
@@ -122,6 +139,9 @@ export const useAccount = defineStore("account", {
     },
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
+    },
+    addSessionProxy(sessionProxy: AddressOrPair, role: SessionProxyRole) {
+      this.sessionProxies[role] = sessionProxy;
     },
     setBalanceFree(balance: BigInt, chain: ChainId) {
       this.balanceFree[chain] = balance;

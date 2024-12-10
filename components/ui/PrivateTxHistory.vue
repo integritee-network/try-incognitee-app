@@ -146,6 +146,9 @@ const displayAccount = computed(() => (account: string) => {
   if (account === accountStore.getAddress) {
     return "You";
   }
+  if (account == null) {
+    return "Unknown";
+  }
   const pdotAddress = encodeAddress(account, 0);
   const identity = identityLut.find((i) => i.address === pdotAddress);
   return identity ? identity.username + " " + account : account;

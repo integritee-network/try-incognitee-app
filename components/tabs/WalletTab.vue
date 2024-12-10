@@ -1046,6 +1046,7 @@ import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
 import { formatMoment } from "~/helpers/date";
+import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1345,6 +1346,9 @@ const submitGuess = async () => {
       guess.value,
       {
         signer: accountStore.injector?.signer,
+        delegate: accountStore.sessionProxyForRole(
+          SessionProxyRole.NonTransfer,
+        ),
         nonce: nonce,
       },
     )

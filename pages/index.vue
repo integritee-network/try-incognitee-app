@@ -194,7 +194,7 @@
 import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
-import { computed } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -209,7 +209,6 @@ import {
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
 import { useInterval } from "@vueuse/core";
-import { onUnmounted, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
 import {
@@ -217,16 +216,20 @@ import {
   injectorForAddress,
 } from "@/lib/signerExtensionUtils";
 import {
+  incogniteeShard,
+  incogniteeSidechain,
+  isLive,
   loadEnv,
   shieldingTarget,
-  incogniteeSidechain,
-  incogniteeShard,
-  isLive,
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
+import {
+  SessionProxyCredentials,
+  SessionProxyRole,
+} from "@/lib/sessionProxyStorage.ts";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
@@ -320,6 +323,11 @@ const fetchIncogniteeBalance = async () => {
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
       console.debug(`session proxies: ${proxies}`);
+      storeSessionProxies(proxies);
+      console.log(
+        "hasNonTransferProxy: " +
+          accountStore.hasSessionProxyForRole(SessionProxyRole.NonTransfer),
+      );
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
         incogniteeSidechain.value,
@@ -334,7 +342,7 @@ const fetchIncogniteeBalance = async () => {
       if (proxies.length == 0 && accountStore.hasInjector) {
         openAuthorizeSessionOverlay();
       }
-      openAuthorizeSessionOverlay();
+      //openAuthorizeSessionOverlay();
     })
     .catch((err) => {
       console.error(`[fetchIncogniteeBalance] error ${err}`);
@@ -342,6 +350,16 @@ const fetchIncogniteeBalance = async () => {
     });
 };
 
+const storeSessionProxies = (proxies) => {
+  for (const proxy of proxies) {
+    const localKeyring = new Keyring({ type: "sr25519" });
+    const account = localKeyring.addFromSeed(hexToU8a(proxy.seed.toString()));
+    accountStore.addSessionProxy(
+      account,
+      proxy.role.toString() as SessionProxyRole,
+    );
+  }
+};
 const fetchNetworkStatus = async () => {
   const promises = [];
   if (shieldingTargetApi.value?.isReady) {

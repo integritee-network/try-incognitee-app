@@ -488,18 +488,9 @@ const fetchIncogniteeNotes = async (
   const sessionProxy = accountStore.sessionProxyForRole(
     SessionProxyRole.ReadAny,
   );
-  console.log("[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address);
+  console.debug("[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address);
   const injector = accountStore.hasInjector ? accountStore.injector : null;
-  console.log("[fetchIncogniteeNotes] injector: " + injector);
-  const signerArgs: any = {};
-  if (sessionProxy) {
-    console.log("is it a keypair? " + isFunction(sessionProxy.sign));
-    signerArgs.delegate = sessionProxy as IKeyringPair;
-  }
-  if (injector) {
-    signerArgs.signer = injector.signer;
-  }
-  console.log("[fetchIncogniteeNotes] args: " + JSON.stringify(signerArgs));
+  console.debug("[fetchIncogniteeNotes] injector: " + injector);
   try {
     if (!getterMap[mapKey]) {
       if (injector && sessionProxy == null) {
@@ -518,7 +509,7 @@ const fetchIncogniteeNotes = async (
         accountStore.account,
         bucketIndex,
         incogniteeStore.shard,
-        signerArgs,
+        { delegate: sessionProxy, signer: injector?.signer },
       );
     } else {
       console.debug(`fetching incognitee notes using cached getter`);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="show">
     <!-- Overlay Start -->
     <div
       v-if="showStartOverlay"
@@ -527,7 +527,7 @@ watch(isInitializing, () => {
 const filteredLut = computed(() => {
   if (!conversationAddress.value) return [];
   return identityLut.filter((entry) =>
-    entry.username.includes(encodeAddress(conversationAddress.value, 1)),
+    entry.username.includes(conversationAddress.value),
   );
 });
 
@@ -672,6 +672,10 @@ const closeScanOverlay = () => {
 };
 
 const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true,
+  },
   isMobile: {
     type: Boolean,
     required: true,

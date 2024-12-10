@@ -13,7 +13,7 @@
     <button
       @click="openCreateVoucher"
       type="button"
-      class="my-10 btn btn_gradient rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+      class="my-10 bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
     >
       Create Voucher​
     </button>
@@ -28,9 +28,9 @@
 
     <!-- Rechte Seite: Button -->
     <button
-      @click="doForgetAllVouchersForShard(incogniteeStore.shard)"
+      @click="openDeleteModal('all')"
       type="button"
-      class="text-sm font-semibold text-incognitee-green"
+      class="text-sm font-semibold hover:text-incognitee-green"
     >
       Clear all history
     </button>
@@ -78,7 +78,7 @@
                 @click="showVoucher(voucher)"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="size-5"
+                class="size-5 cursor-pointer"
               >
                 <path
                   d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z"
@@ -96,7 +96,7 @@
                 @click="openDeleteModal(voucher)"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="size-5"
+                class="size-5 cursor-pointer"
               >
                 <path
                   fill-rule="evenodd"
@@ -135,6 +135,28 @@
         <div
           class="w-full relative transform overflow-hidden rounded-lg bg-gray-800 px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
         >
+          <!-- Close Button (X) -->
+          <button
+            @click="closeDeleteModal"
+            type="button"
+            class="absolute top-3 right-3 text-white bg-transparent hover:text-gray-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
           <div class="sm:flex sm:items-start">
             <div
               class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-incognitee-gray sm:mx-0 sm:size-10"
@@ -157,30 +179,26 @@
             </div>
             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
               <h3 class="text-base font-semibold text-white" id="modal-title">
-                Forget voucher
+                Forget voucher(s)
               </h3>
               <div class="mt-2">
                 <p class="text-sm text-gray-500">
                   You are only clearing the entry, funds remain on the address
-                  and are accessible via this link
+                  and are accessible via the link if you shared or saved it
                 </p>
               </div>
             </div>
           </div>
+          <div class="relative group">
+            <div class="relative inline-block group"></div>
+          </div>
           <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
             <button
-              @click="confirmDeleteVoucher"
+              @click="doForgetVoucher()"
               type="button"
-              class="inline-flex w-full justify-center rounded-md bg-incognitee-green px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-incognitee-blau sm:ml-3 sm:w-auto"
+              class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
             >
               Forget
-            </button>
-            <button
-              @click="closeDeleteModal"
-              type="button"
-              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-            >
-              Cancel
             </button>
           </div>
         </div>
@@ -199,7 +217,7 @@
         In the next step, you'll be able to share your new voucher
       </p>
     </div>
-    <form class="mt-5" @submit.prevent="submitSendForm">
+    <form class="mt-5" @submit.prevent="submitGenerateVoucherForm">
       <div class="mt-10">
         <!-- Label and available balance -->
         <div class="flex justify-between items-center">
@@ -224,9 +242,14 @@
             step="0.01"
             :min="0.1"
             :max="
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-              accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
-              0.1
+              Math.max(
+                0,
+                accountStore.getDecimalBalanceFree(incogniteeSidechain) -
+                  accountStore.getDecimalExistentialDeposit(
+                    incogniteeSidechain,
+                  ) -
+                  0.1,
+              )
             "
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue truncate-input text-right"
@@ -257,9 +280,8 @@
       </div>
       <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
         <button
-          @click="submitGenerateVoucherForm"
-          type="button"
-          class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
+          type="submit"
+          class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
         >
           Generate Voucher
         </button>
@@ -329,24 +351,14 @@
 <script setup lang="ts">
 import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { watch, defineProps, ref, onMounted, defineExpose } from "vue";
+import { watch, ref, onMounted } from "vue";
 import Qrcode from "vue-qrcode";
 import { divideBigIntToFloat, formatDecimalBalance } from "~/helpers/numbers";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
-import {
-  INCOGNITEE_GTN_GUESS_FEE,
-  INCOGNITEE_SHIELDING_FEE_FRACTION,
-  INCOGNITEE_TX_FEE,
-  INCOGNITEE_UNSHIELDING_FEE,
-} from "~/configs/incognitee";
+import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { formatDate } from "@/helpers/date";
-import {
-  shieldingTarget,
-  shieldingLimit,
-  incogniteeSidechain,
-  isLive,
-} from "~/lib/environmentConfig";
+import { shieldingTarget, incogniteeSidechain } from "~/lib/environmentConfig";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { Health, useSystemHealth } from "~/store/systemHealth";
@@ -382,10 +394,10 @@ const allVouchers = ref(null);
 const isDeleteModalOpen = ref(false);
 
 // Variable to store the current voucher to be deleted
-let voucherToDelete = ref(null);
+let voucherToDelete = ref<Voucher | string>(null);
 
 // Function to open the modal
-function openDeleteModal(voucher) {
+function openDeleteModal(voucher: Voucher | string) {
   voucherToDelete.value = voucher; // Set the current voucher to delete
   isDeleteModalOpen.value = true; // Open the modal
 }
@@ -394,14 +406,6 @@ function openDeleteModal(voucher) {
 function closeDeleteModal() {
   voucherToDelete.value = null; // Clear the voucher to delete
   isDeleteModalOpen.value = false; // Close the modal
-}
-
-// Function to confirm deletion
-function confirmDeleteVoucher() {
-  if (voucherToDelete.value) {
-    doForgetVoucherForShard(voucherToDelete.value, incogniteeStore?.shard); // Call the deletion function
-    closeDeleteModal(); // Close the modal after deletion
-  }
 }
 
 const submitGenerateVoucherForm = async () => {
@@ -431,16 +435,21 @@ const showVoucher = (voucher) => {
   openShareVoucher();
 };
 
-const doForgetVoucherForShard = (voucher: Voucher, shard: string) => {
-  console.log("forgetting voucher: " + voucher + " for shard: " + shard);
-  forgetVoucherForShard(voucher, shard);
+const doForgetVoucher = () => {
+  if (voucherToDelete.value === "all") {
+    console.log("forgetting all vouchers for shard: " + incogniteeStore.shard);
+    forgetAllVouchersForShard(incogniteeStore.shard);
+  } else {
+    console.log(
+      "forgetting voucher: " +
+        voucherToDelete.value?.address +
+        " for shard: " +
+        incogniteeStore.shard,
+    );
+    forgetVoucherForShard(voucherToDelete.value, incogniteeStore.shard);
+  }
   updateVouchers();
-};
-
-const doForgetAllVouchersForShard = (shard) => {
-  console.log("forgetting all vouchers for shard: " + shard);
-  forgetAllVouchersForShard(shard);
-  updateVouchers();
+  closeDeleteModal();
 };
 
 const fundNewVoucher = async () => {
@@ -585,6 +594,56 @@ const copyVoucherUrlToClipboard = () => {
 </script>
 
 <style scoped>
+.btn {
+  transition: 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(30px);
+
+  @include sm {
+    font-size: $sm_pDef;
+    padding: 12px 18px;
+    border-radius: 10px;
+  }
+
+  &_gradient {
+    background: linear-gradient(84.58deg, #24ad7c 0%, #1845b9 100%);
+
+    &:before {
+      position: absolute;
+      content: "";
+      inset: 0;
+      background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.15),
+          rgba(255, 255, 255, 0.15)
+        ),
+        linear-gradient(84.58deg, rgb(36, 173, 124) 0%, rgb(24, 69, 185) 100%);
+      transition: opacity 0.25s ease;
+      opacity: 0;
+      border-radius: 12px;
+      z-index: -1;
+
+      @include sm {
+        border-radius: 10px;
+      }
+    }
+
+    &:hover {
+      &:before {
+        opacity: 1;
+        box-shadow: 0px 0px 20px 0px rgba(36, 173, 124, 0.65);
+      }
+    }
+  }
+
+  &_border {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+  }
+}
 /* Entfernt die Pfeile für Eingabefelder in Webkit-basierten Browsern wie Chrome und Safari */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {

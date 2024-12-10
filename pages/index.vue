@@ -106,7 +106,7 @@
       </p>
 
       <div class="flex flex-col mt-5">
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="createSessionProxy">
           <label>Select an option:</label>
           <div class="radio-group mt-5">
             <input
@@ -120,8 +120,8 @@
           <div class="radio-group">
             <input
               type="radio"
-              id="readAll"
-              value="ReadAll"
+              id="readAny"
+              value="ReadAny"
               v-model="selectedSessionProxyRole"
             />
             <label for="readAll">full read access</label>
@@ -156,7 +156,7 @@
               v-model="persistSessionProxy"
             />
             <label for="persistSession"
-            >Persist session key in browser storage</label
+              >Persist session key in browser storage</label
             >
           </div>
           <p class="text-sm text-gray-400">
@@ -181,6 +181,12 @@
     :createTestingAccount="isProd ? undefined : createTestingAccount"
     :onExtensionAccountChange="onExtensionAccountChange"
     :showTrustedGetterHint="true"
+  />
+
+  <StatusOverlay
+    :tx-status="txStatus"
+    :show="showStatusOverlay"
+    :close="closeStatusOverlay"
   />
 </template>
 
@@ -225,6 +231,7 @@ import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
 import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
+import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -623,6 +630,25 @@ const fetchIncogniteeNotes = async (
                 null,
               ),
             );
+          } else if (call.isAddSessionProxy) {
+            const typedCall = call.asAddSessionProxy;
+            const proxy = encodeAddress(
+              typedCall[1],
+              accountStore.getSs58Format,
+            );
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] add session proxy: ${typedCall}`,
+            );
+            noteStore.addNote(
+              new Note(
+                `Add Session Proxy (${typedCall[2].role})`,
+                NoteDirection.None,
+                proxy,
+                null,
+                new Date(note.timestamp?.toNumber()),
+                null,
+              ),
+            );
           } else {
             console.error(
               `[${formatMoment(note.timestamp?.toNumber())}] unknown call: ${call}`,
@@ -681,7 +707,7 @@ const subscribeWhatsReady = async () => {
   accountStore.setSymbol(String(shieldingTargetApi.value.registry.chainTokens));
   console.log(
     "api-reported genesis hash for shielding target: " +
-    shieldingTargetApi.value.genesisHash.toHex().toString(),
+      shieldingTargetApi.value.genesisHash.toHex().toString(),
   );
   systemHealth.setShieldingTargetApiGenesisHashHex(
     shieldingTargetApi.value.genesisHash.toHex().toString(),
@@ -715,19 +741,19 @@ const subscribeWhatsReady = async () => {
   const p1 = shieldingTargetApi.value.query.system.account(
     accountStore.getAddress,
     ({
-       data: {
-         free: currentFree,
-         reserved: currentReserved,
-         frozen: currentFrozen,
-       },
-     }) => {
+      data: {
+        free: currentFree,
+        reserved: currentReserved,
+        frozen: currentFrozen,
+      },
+    }) => {
       console.log(
         "shielding-target balance: free=" +
-        currentFree +
-        " reserved=" +
-        currentReserved +
-        " frozen=" +
-        currentFrozen,
+          currentFree +
+          " reserved=" +
+          currentReserved +
+          " frozen=" +
+          currentFrozen,
       );
       accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
       accountStore.setBalanceReserved(
@@ -872,6 +898,89 @@ const dropSubscriptions = () => {
   isFetchingIncogniteeBalance.value = true;
   disableGetter.value = false;
   accountStore.setInjector(null);
+};
+
+const createSessionProxy = async () => {
+  if (!enableActions.value) {
+    console.error("network not live");
+    return;
+  }
+  txStatus.value = "creating session proxy....";
+  openStatusOverlay();
+  await cryptoWaitReady();
+  const generatedMnemonic = mnemonicGenerate();
+  const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+  const sessionProxy = localKeyring.addFromMnemonic(generatedMnemonic, {
+    name: "fresh",
+  });
+  const seed = mnemonicToMiniSecret(generatedMnemonic);
+  console.log(
+    "creating session proxy " +
+      sessionProxy.address +
+      " with role: " +
+      selectedSessionProxyRole.value +
+      " localStorage: " +
+      persistSessionProxy.value,
+  );
+  const injector = accountStore.hasInjector ? accountStore.injector : null;
+  const role = incogniteeStore.api.createType(
+    "SessionProxyRole",
+    selectedSessionProxyRole.value,
+  );
+  const now = new Date();
+  const expiryDate = new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000);
+  const expiry = Math.floor(expiryDate.getTime());
+  await incogniteeStore.api
+    .trustedAddSessionProxy(
+      accountStore.account,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      role,
+      sessionProxy.address,
+      expiry,
+      seed,
+      { signer: injector?.signer },
+    )
+    .then((result) => handleTopResult(result, "😀 session proxy r successful"))
+    .catch((err) => handleTopError(err));
+};
+
+const txStatus = ref("");
+const handleTopResult = (result, successMsg?) => {
+  console.log("TOP result: " + result);
+  if (result) {
+    if (result.status.isInSidechainBlock) {
+      if (successMsg) {
+        txStatus.value = successMsg;
+      } else {
+        txStatus.value =
+          "😀 included in sidechain block: " + result.status.asInSidechainBlock;
+      }
+      //update history to see successfuly action immediately
+      updateNotes();
+      return;
+    }
+    if (result.status.isInvalid) {
+      txStatus.value = "😞 Invalid (unspecified reason)";
+      return;
+    }
+  }
+  console.error(`unknown result: ${result}`);
+  txStatus.value = "😞 Unknown Result";
+};
+
+const handleTopError = (err) => {
+  console.error(`error: ${err}`);
+  txStatus.value = `😞 Submission Failed: ${err}`;
+};
+
+const showStatusOverlay = ref(false);
+const openStatusOverlay = () => {
+  showStatusOverlay.value = true;
+};
+const closeStatusOverlay = () => {
+  showStatusOverlay.value = false;
+  showAuthorizeSessionOverlay.value = false;
 };
 
 const createTestingAccount = async () => {

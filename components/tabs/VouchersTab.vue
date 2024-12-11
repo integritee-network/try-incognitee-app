@@ -378,6 +378,7 @@ import {
   forgetAllVouchersForShard,
   forgetVoucherForShard,
 } from "~/lib/voucherStorage";
+import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -488,6 +489,7 @@ const fundNewVoucher = async () => {
       note,
       {
         signer: accountStore.injector?.signer,
+        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
         nonce: nonce,
       },
     )

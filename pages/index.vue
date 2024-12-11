@@ -469,10 +469,12 @@ const bucketsCount = computed(() => {
 
 const unfetchedBucketsCount = computed(() => {
   if (!noteBucketsInfo.value) return 0;
-  return (
-    firstNoteBucketIndexFetched.value ? firstNoteBucketIndexFetched.value -
-    noteBucketsInfo.value.first.unwrap().index : noteBucketsInfo.value.last.unwrap().index - noteBucketsInfo.value.first.unwrap().index +1
-  );
+  return firstNoteBucketIndexFetched.value
+    ? firstNoteBucketIndexFetched.value -
+        noteBucketsInfo.value.first.unwrap().index
+    : noteBucketsInfo.value.last.unwrap().index -
+        noteBucketsInfo.value.first.unwrap().index +
+        1;
 });
 
 const fetchIncogniteeNotes = async (
@@ -492,7 +494,9 @@ const fetchIncogniteeNotes = async (
   const sessionProxy = accountStore.sessionProxyForRole(
     SessionProxyRole.ReadAny,
   );
-  console.debug("[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address);
+  console.debug(
+    "[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address,
+  );
   const injector = accountStore.hasInjector ? accountStore.injector : null;
   console.debug("[fetchIncogniteeNotes] injector: " + injector);
   try {
@@ -636,6 +640,43 @@ const fetchIncogniteeNotes = async (
                   BigInt(typedCall[2]),
                   new Date(note.timestamp?.toNumber()),
                   typedCall[3].toString(),
+                ),
+              );
+            } else {
+              console.error(
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+              );
+            }
+          } else if (call.isSendNote) {
+            const typedCall = call.asSendNote;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] send note: ${typedCall}`,
+            );
+            const from = encodeAddress(
+              typedCall[0],
+              accountStore.getSs58Format,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            if (from === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Outgoing Note",
+                  NoteDirection.Outgoing,
+                  to,
+                  BigInt(0),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[2].toString(),
+                ),
+              );
+            } else if (to === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Incoming Note",
+                  NoteDirection.Incoming,
+                  from,
+                  BigInt(0),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[2].toString(),
                 ),
               );
             } else {

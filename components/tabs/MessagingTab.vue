@@ -402,6 +402,7 @@ import { useNotes } from "@/store/notes.ts";
 import { Note, NoteDirection } from "@/lib/notes";
 import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 
@@ -580,7 +581,6 @@ const submitSendForm = () => {
 const sendPrivately = async () => {
   console.log("sending message on incognitee");
   txStatus.value = "⌛ sending message privately on incognitee";
-  const amount = BigInt(0);
   const account = accountStore.account;
   if (
     accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) <
@@ -608,16 +608,18 @@ const sendPrivately = async () => {
   );
 
   await incogniteeStore.api
-    .trustedBalanceTransfer(
+    .trustedSendNote(
       account,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
       accountStore.getAddress,
       conversationAddress.value,
-      amount,
       note,
       {
         signer: accountStore.injector?.signer,
+        delegate: accountStore.sessionProxyForRole(
+          SessionProxyRole.NonTransfer,
+        ),
         nonce: nonce,
       },
     )

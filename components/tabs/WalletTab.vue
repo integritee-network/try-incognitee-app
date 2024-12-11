@@ -1285,6 +1285,7 @@ const unshield = async () => {
       amount,
       {
         signer: accountStore.injector?.signer,
+        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
         nonce: nonce,
       },
     )
@@ -1333,6 +1334,7 @@ const sendPrivately = async () => {
       note,
       {
         signer: accountStore.injector?.signer,
+        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
         nonce: nonce,
       },
     )

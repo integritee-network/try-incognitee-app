@@ -13,43 +13,67 @@
         {{ INCOGNITEE_SESSION_PROXY_DEPOSIT }} {{ accountStore.getSymbol }} will
         be reserved.
       </p>
+      <!--<p>you currently have a session key with role {{ bestSessionProxyRole }}</p>-->
       <div class="flex flex-col mt-5">
-        <form @submit.prevent="createSessionProxy">
+        <form @submit.prevent="updateAuthorization">
           <label>Select an option:</label>
-          <div class="radio-group mt-5">
-            <input
-              type="radio"
-              id="readBalance"
-              value="ReadBalance"
-              v-model="selectedSessionProxyRole"
-            />
+          <div v-if="bestSessionProxyRole !== null" class="radio-group">
+            <div>
+              <input
+                type="radio"
+                id="noProxy"
+                value="NoProxy"
+                v-model="selectedSessionProxyRole"
+              />
+            </div>
+            <label for="noProxy">remove all authorizations</label>
+          </div>
+          <div class="radio-group">
+            <div v-if="'readBalance' !== bestSessionProxyRole">
+              <input
+                type="radio"
+                id="readBalance"
+                value="ReadBalance"
+                v-model="selectedSessionProxyRole"
+              />
+            </div>
+            <div v-else class="mr-4">✓</div>
             <label for="readBalance">allow reading balance</label>
           </div>
           <div class="radio-group">
-            <input
-              type="radio"
-              id="readAny"
-              value="ReadAny"
-              v-model="selectedSessionProxyRole"
-            />
+            <div v-if="'readAny' !== bestSessionProxyRole">
+              <input
+                type="radio"
+                id="readAny"
+                value="ReadAny"
+                v-model="selectedSessionProxyRole"
+              />
+            </div>
+            <div v-else class="mr-4">✓</div>
             <label for="readAny">full read access</label>
           </div>
           <div class="radio-group">
-            <input
-              type="radio"
-              id="nonTransfer"
-              value="NonTransfer"
-              v-model="selectedSessionProxyRole"
-            />
+            <div v-if="'nonTransfer' !== bestSessionProxyRole">
+              <input
+                type="radio"
+                id="nonTransfer"
+                value="NonTransfer"
+                v-model="selectedSessionProxyRole"
+              />
+            </div>
+            <div v-else class="mr-4">✓</div>
             <label for="nonTransfer">allow non-transfer actions</label>
           </div>
           <div class="radio-group">
-            <input
-              type="radio"
-              id="any"
-              value="Any"
-              v-model="selectedSessionProxyRole"
-            />
+            <div v-if="'any' !== bestSessionProxyRole">
+              <input
+                type="radio"
+                id="any"
+                value="Any"
+                v-model="selectedSessionProxyRole"
+              />
+            </div>
+            <div v-else class="mr-4">✓</div>
             <label for="any">allow all actions</label>
           </div>
           <!--
@@ -76,10 +100,10 @@
             type="submit"
             class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
           >
-            Authorize
+            Update Authorization
           </button>
         </form>
-        <div class="mt-5">
+        <div v-if="bestSessionProxyRole == null" class="mt-5">
           <button
             type="button"
             @click="close(true)"
@@ -99,7 +123,7 @@
 </template>
 <script setup lang="ts">
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps, ref } from "vue";
+import { defineProps, ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
 import {
   cryptoWaitReady,
@@ -118,6 +142,19 @@ import {
 const accountStore = useAccount();
 const selectedSessionProxyRole = ref("NonTransfer");
 const persistSessionProxy = ref(false);
+const bestSessionProxy = ref(null);
+const bestSessionProxyRole = ref(null);
+
+const updateAuthorization = async () => {
+  console.log(
+    "updating authorization from ",
+    bestSessionProxyRole,
+    " to ",
+    selectedSessionProxyRole.value,
+  );
+  createSessionProxy();
+};
+
 const createSessionProxy = async () => {
   if (!enableActions.value) {
     console.error("network not live");
@@ -213,6 +250,15 @@ const props = defineProps({
   },
 });
 
+watch(
+  () => props.show,
+  (show) => {
+    if (show) {
+      [bestSessionProxy.value, bestSessionProxyRole.value] =
+        accountStore.sessionProxyBest();
+    }
+  },
+);
 // even if the same account stays selected and the overlay is manually closed
 // we need to call onExtensionAccountChange. otherwise the balance poll will wait forever
 const closeProxy = () => {

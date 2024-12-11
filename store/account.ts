@@ -88,6 +88,20 @@ export const useAccount = defineStore("account", {
         return null;
       };
     },
+    /// Returns the most powerful session proxy
+    sessionProxyBest({
+      sessionProxies,
+    }): () => [AddressOrPair | null, SessionProxyRole | null] {
+      return (): [AddressOrPair | null, SessionProxyRole | null] => {
+        for (let i = sessionProxyRoleOrder.length - 1; i >= 0; i--) {
+          const currentRole = sessionProxyRoleOrder[i];
+          if (sessionProxies[currentRole]) {
+            return [sessionProxies[currentRole], currentRole];
+          }
+        }
+        return [null, null];
+      };
+    },
     formatBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): string => {
         if (!balanceFree[chain]) return "0.000";

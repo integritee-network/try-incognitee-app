@@ -110,12 +110,7 @@
     :createTestingAccount="isProd ? undefined : createTestingAccount"
     :onExtensionAccountChange="onExtensionAccountChange"
     :showTrustedGetterHint="true"
-  />
-
-  <StatusOverlay
-    :tx-status="txStatus"
-    :show="showStatusOverlay"
-    :close="closeStatusOverlay"
+    :changeSessionAuthorization="changeSessionProxies"
   />
 </template>
 
@@ -378,10 +373,9 @@ const fetchOlderBucket = async () => {
 
 /// returns the date as moment before which all notes have been purged from sidechain state
 const oldestMomentInNoteBuckets = computed(() => {
-  console.log(
-    "oldest moment is " + noteBucketsInfo.value?.first.unwrap().begins_at,
-  );
-  return noteBucketsInfo.value?.first.unwrap().begins_at?.toNumber();
+  const beginsAt = noteBucketsInfo.value?.first.unwrap().begins_at;
+  console.log("oldest moment is " + beginsAt?.toNumber());
+  return beginsAt ? beginsAt.toNumber() : NaN;
 });
 
 const bucketsCount = computed(() => {
@@ -895,13 +889,9 @@ const dropSubscriptions = () => {
   accountStore.setInjector(null);
 };
 
-const showStatusOverlay = ref(false);
-const openStatusOverlay = () => {
-  showStatusOverlay.value = true;
-};
-const closeStatusOverlay = () => {
-  showStatusOverlay.value = false;
-  showAuthorizeSessionOverlay.value = false;
+const changeSessionProxies = () => {
+  closeChooseWalletOverlay();
+  openAuthorizeSessionOverlay();
 };
 
 const createTestingAccount = async () => {

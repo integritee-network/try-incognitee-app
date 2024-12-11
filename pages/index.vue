@@ -98,85 +98,10 @@
   </OverlayDialog>
 
   <!-- AddSessionProxy -->
-  <OverlayDialog
+  <SessionProxiesOverlay
     :show="showAuthorizeSessionOverlay"
     :close="closeAuthorizeSessionOverlay"
-    title="Session Authorization"
-  >
-    <div class="mt-2">
-      <p class="text-sm text-gray-400">
-        For a smooth experience with minimal signing interaction we recommend
-        that your authorize a session key
-      </p>
-
-      <div class="flex flex-col mt-5">
-        <form @submit.prevent="createSessionProxy">
-          <label>Select an option:</label>
-          <div class="radio-group mt-5">
-            <input
-              type="radio"
-              id="readBalance"
-              value="ReadBalance"
-              v-model="selectedSessionProxyRole"
-            />
-            <label for="readBalance">allow reading balance</label>
-          </div>
-          <div class="radio-group">
-            <input
-              type="radio"
-              id="readAny"
-              value="ReadAny"
-              v-model="selectedSessionProxyRole"
-            />
-            <label for="readAll">full read access</label>
-          </div>
-          <div class="radio-group">
-            <input
-              type="radio"
-              id="nonTransfer"
-              value="NonTransfer"
-              v-model="selectedSessionProxyRole"
-            />
-            <label for="nonTransfer">allow non-transfer actions</label>
-          </div>
-          <div class="radio-group">
-            <input
-              type="radio"
-              id="any"
-              value="Any"
-              v-model="selectedSessionProxyRole"
-            />
-            <label for="any">allow all actions</label>
-          </div>
-
-          <p class="text-sm text-gray-400">
-            If this is your personal machine, we recommend to persist a session
-            key in browser storage
-          </p>
-          <div class="mt-2">
-            <input
-              type="checkbox"
-              id="persistSession"
-              v-model="persistSessionProxy"
-            />
-            <label for="persistSession"
-              >Persist session key in browser storage</label
-            >
-          </div>
-          <p class="text-sm text-gray-400">
-            the signer extension will pop up and ask you to sign this request
-          </p>
-
-          <button
-            type="submit"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-          >
-            Authorize
-          </button>
-        </form>
-      </div>
-    </div>
-  </OverlayDialog>
+  />
 
   <!-- Choose Wallet -->
   <ChooseWalletOverlay
@@ -198,6 +123,7 @@
 import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
+import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
@@ -205,8 +131,7 @@ import { useIncognitee } from "@/store/incognitee.ts";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
-import { hexToU8a, isFunction, u8aToHex } from "@polkadot/util";
-import type { IKeyringPair } from "@polkadot/types/types";
+import { hexToU8a, u8aToHex } from "@polkadot/util";
 import {
   cryptoWaitReady,
   encodeAddress,
@@ -231,10 +156,7 @@ import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
-import {
-  SessionProxyCredentials,
-  SessionProxyRole,
-} from "@/lib/sessionProxyStorage.ts";
+import { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
@@ -260,12 +182,11 @@ const shieldingTargetApi = ref<ApiPromise | null>(null);
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
 );
-const selectedSessionProxyRole = ref("NonTransfer");
-const persistSessionProxy = ref(false);
 
 const onExtensionAccountChange = async (selectedAddress) => {
   dropSubscriptions();
   console.log("user selected extension account:", selectedAddress);
+  accountStore.resetState();
   accountStore.setAccount(selectedAddress.toString());
   accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
   isUpdatingIncogniteeBalance.value = false;
@@ -344,7 +265,12 @@ const fetchIncogniteeBalance = async () => {
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
-      if (proxies.length == 0 && accountStore.hasInjector) {
+      if (
+        proxies.length == 0 &&
+        accountStore.hasInjector &&
+        !accountStore.hasDeclinedSessionProxy &&
+        accountStore.getDecimalBalanceFree(incogniteeSidechain.value) > 0
+      ) {
         openAuthorizeSessionOverlay();
       }
       //openAuthorizeSessionOverlay();
@@ -969,80 +895,6 @@ const dropSubscriptions = () => {
   accountStore.setInjector(null);
 };
 
-const createSessionProxy = async () => {
-  if (!enableActions.value) {
-    console.error("network not live");
-    return;
-  }
-  txStatus.value = "creating session proxy....";
-  openStatusOverlay();
-  await cryptoWaitReady();
-  const generatedMnemonic = mnemonicGenerate();
-  const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
-  const sessionProxy = localKeyring.addFromMnemonic(generatedMnemonic, {
-    name: "fresh",
-  });
-  const seed = mnemonicToMiniSecret(generatedMnemonic);
-  console.log(
-    "creating session proxy " +
-      sessionProxy.address +
-      " with role: " +
-      selectedSessionProxyRole.value +
-      " localStorage: " +
-      persistSessionProxy.value,
-  );
-  const injector = accountStore.hasInjector ? accountStore.injector : null;
-  const role = incogniteeStore.api.createType(
-    "SessionProxyRole",
-    selectedSessionProxyRole.value,
-  );
-  const now = new Date();
-  const expiryDate = new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000);
-  const expiry = Math.floor(expiryDate.getTime());
-  await incogniteeStore.api
-    .trustedAddSessionProxy(
-      accountStore.account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      role,
-      sessionProxy.address,
-      expiry,
-      seed,
-      { signer: injector?.signer },
-    )
-    .then((result) => handleTopResult(result, "😀 session proxy r successful"))
-    .catch((err) => handleTopError(err));
-};
-
-const txStatus = ref("");
-const handleTopResult = (result, successMsg?) => {
-  console.log("TOP result: " + result);
-  if (result) {
-    if (result.status.isInSidechainBlock) {
-      if (successMsg) {
-        txStatus.value = successMsg;
-      } else {
-        txStatus.value =
-          "😀 included in sidechain block: " + result.status.asInSidechainBlock;
-      }
-      //update history to see successfuly action immediately
-      updateNotes();
-      return;
-    }
-    if (result.status.isInvalid) {
-      txStatus.value = "😞 Invalid (unspecified reason)";
-      return;
-    }
-  }
-  console.error(`unknown result: ${result}`);
-  txStatus.value = "😞 Unknown Result";
-};
-
-const handleTopError = (err) => {
-  console.error(`error: ${err}`);
-  txStatus.value = `😞 Submission Failed: ${err}`;
-};
-
 const showStatusOverlay = ref(false);
 const openStatusOverlay = () => {
   showStatusOverlay.value = true;
@@ -1099,7 +951,10 @@ const openAuthorizeSessionOverlay = () => {
   }
   showAuthorizeSessionOverlay.value = true;
 };
-const closeAuthorizeSessionOverlay = () => {
+const closeAuthorizeSessionOverlay = (optout: boolean) => {
+  if (optout) {
+    accountStore.declineSessionProxy();
+  }
   showAuthorizeSessionOverlay.value = false;
 };
 const showChooseWalletOverlay = ref(false);
@@ -1178,15 +1033,5 @@ hr {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.radio-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.radio-group input[type="radio"] {
-  margin-right: 10px;
 }
 </style>

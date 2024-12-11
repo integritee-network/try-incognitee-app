@@ -18,6 +18,8 @@ export const useAccount = defineStore("account", {
     injector: <InjectedExtension | null>null,
     // optional session proxy credentials
     sessionProxies: <Record<SessionProxyRole, AddressOrPair>>{},
+    // remember if the user has declined creating a proxy
+    sessionProxyDeclined: <boolean>false,
     // free balance per chain
     balanceFree: <Record<ChainId, BigInt>>{},
     // reserved balance per chain
@@ -66,6 +68,9 @@ export const useAccount = defineStore("account", {
       return (role: SessionProxyRole): boolean => {
         return sessionProxies[role] != null;
       };
+    },
+    hasDeclinedSessionProxy({ sessionProxyDeclined }): boolean {
+      return sessionProxyDeclined;
     },
     /// Returns the weakest session proxy which is authorized for at least the requested role
     sessionProxyForRole({
@@ -146,11 +151,24 @@ export const useAccount = defineStore("account", {
     },
   },
   actions: {
+    /// call this when account changes to clear all account-related state
+    resetState() {
+      this.sessionProxyDeclined = false;
+      this.sessionProxies = {};
+      this.injector = null;
+      this.BalanceFree = {};
+      this.BalanceReserved = {};
+      this.BalanceFrozen = {};
+    },
     setAccount(account: AddressOrPair) {
       this.account = account;
     },
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
+    },
+    /// sticky decline for adding session proxies
+    declineSessionProxy() {
+      this.sessionProxyDeclined = true;
     },
     addSessionProxy(sessionProxy: AddressOrPair, role: SessionProxyRole) {
       this.sessionProxies[role] = sessionProxy;

@@ -1,0 +1,233 @@
+<template>
+  <OverlayDialog :show="show" :close="closeProxy" title="Session Authorization">
+    <div class="mt-2">
+      <p class="text-sm text-gray-400">
+        For a smooth experience with minimal signing interaction we recommend
+        that your authorize a session key. It will be cached confidentially on
+        Incognitee and loaded automatically on your next visit.
+      </p>
+      <p class="text-sm text-gray-400">
+        Registering a session key costs a fee of
+        {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
+        {{ accountStore.getSymbol }} and a deposit of
+        {{ INCOGNITEE_SESSION_PROXY_DEPOSIT }} {{ accountStore.getSymbol }} will
+        be reserved.
+      </p>
+      <div class="flex flex-col mt-5">
+        <form @submit.prevent="createSessionProxy">
+          <label>Select an option:</label>
+          <div class="radio-group mt-5">
+            <input
+              type="radio"
+              id="readBalance"
+              value="ReadBalance"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="readBalance">allow reading balance</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="readAny"
+              value="ReadAny"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="readAny">full read access</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="nonTransfer"
+              value="NonTransfer"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="nonTransfer">allow non-transfer actions</label>
+          </div>
+          <div class="radio-group">
+            <input
+              type="radio"
+              id="any"
+              value="Any"
+              v-model="selectedSessionProxyRole"
+            />
+            <label for="any">allow all actions</label>
+          </div>
+          <!--
+                    <p class="text-sm text-gray-400">
+                      If this is your personal machine, we recommend to persist a session
+                      key in browser storage. This will avoid the initial authentication
+                      signature in the extension when you visit this site.
+                    </p>
+                    <div class="mt-2">
+                      <input
+                        type="checkbox"
+                        id="persistSession"
+                        v-model="persistSessionProxy"
+                      />
+                      <label for="persistSession"
+                      >Persist session key in browser storage</label
+                      >
+                    </div>-->
+          <p class="text-sm text-gray-400 mb-5">
+            the signer extension will pop up and ask you to sign this request
+          </p>
+
+          <button
+            type="submit"
+            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          >
+            Authorize
+          </button>
+        </form>
+        <div class="mt-5">
+          <button
+            type="button"
+            @click="close(true)"
+            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          >
+            Continue Without Session Proxy
+          </button>
+        </div>
+      </div>
+    </div>
+  </OverlayDialog>
+  <StatusOverlay
+    :tx-status="txStatus"
+    :show="showStatusOverlay"
+    :close="closeStatusOverlay"
+  />
+</template>
+<script setup lang="ts">
+import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
+import { defineProps, ref } from "vue";
+import { useAccount } from "~/store/account.ts";
+import {
+  cryptoWaitReady,
+  mnemonicGenerate,
+  mnemonicToMiniSecret,
+} from "@polkadot/util-crypto";
+import { Keyring } from "@polkadot/keyring";
+import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
+import { formatDecimalBalance } from "~/helpers/numbers";
+import { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
+import {
+  INCOGNITEE_TX_FEE,
+  INCOGNITEE_SESSION_PROXY_DEPOSIT,
+} from "~/configs/incognitee";
+
+const accountStore = useAccount();
+const selectedSessionProxyRole = ref("NonTransfer");
+const persistSessionProxy = ref(false);
+const createSessionProxy = async () => {
+  if (!enableActions.value) {
+    console.error("network not live");
+    return;
+  }
+  txStatus.value = "creating session proxy....";
+  openStatusOverlay();
+  await cryptoWaitReady();
+  const generatedMnemonic = mnemonicGenerate();
+  const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+  const sessionProxy = localKeyring.addFromMnemonic(generatedMnemonic, {
+    name: "fresh",
+  });
+  const seed = mnemonicToMiniSecret(generatedMnemonic);
+  console.log(
+    "creating session proxy " +
+      sessionProxy.address +
+      " with role: " +
+      selectedSessionProxyRole.value +
+      " localStorage: " +
+      persistSessionProxy.value,
+  );
+  const injector = accountStore.hasInjector ? accountStore.injector : null;
+  const role = incogniteeStore.api.createType(
+    "SessionProxyRole",
+    selectedSessionProxyRole.value,
+  );
+  const now = new Date();
+  const expiryDate = new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000);
+  const expiry = Math.floor(expiryDate.getTime());
+  await incogniteeStore.api
+    .trustedAddSessionProxy(
+      accountStore.account,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      role,
+      sessionProxy.address,
+      expiry,
+      seed,
+      { signer: injector?.signer },
+    )
+    .then((result) => handleTopResult(result, "😀 session proxy r successful"))
+    .catch((err) => handleTopError(err));
+};
+
+const txStatus = ref("");
+const handleTopResult = (result, successMsg?) => {
+  console.log("TOP result: " + result);
+  if (result) {
+    if (result.status.isInSidechainBlock) {
+      if (successMsg) {
+        txStatus.value = successMsg;
+      } else {
+        txStatus.value =
+          "😀 included in sidechain block: " + result.status.asInSidechainBlock;
+      }
+      //update history to see successfuly action immediately
+      updateNotes();
+      return;
+    }
+    if (result.status.isInvalid) {
+      txStatus.value = "😞 Invalid (unspecified reason)";
+      return;
+    }
+  }
+  console.error(`unknown result: ${result}`);
+  txStatus.value = "😞 Unknown Result";
+};
+
+const handleTopError = (err) => {
+  console.error(`error: ${err}`);
+  txStatus.value = `😞 Submission Failed: ${err}`;
+};
+
+const showStatusOverlay = ref(false);
+const openStatusOverlay = () => {
+  showStatusOverlay.value = true;
+};
+const closeStatusOverlay = () => {
+  showStatusOverlay.value = false;
+  // close self
+  props.close();
+};
+
+const props = defineProps({
+  show: {
+    type: Boolean,
+    required: true,
+  },
+  close: {
+    type: Function,
+    required: true,
+  },
+});
+
+// even if the same account stays selected and the overlay is manually closed
+// we need to call onExtensionAccountChange. otherwise the balance poll will wait forever
+const closeProxy = () => {
+  props.close();
+};
+</script>
+
+<style>
+.radio-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 10px;
+}
+</style>

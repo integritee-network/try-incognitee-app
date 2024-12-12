@@ -81,9 +81,7 @@
           your currently selected account is {{ accountStore.getAddress }}
         </p>
         <div
-          v-if="
-            accountStore.hasSessionProxyForRole(SessionProxyRole.ReadBalance)
-          "
+          v-if="accountStore.sessionProxyForRole(SessionProxyRole.ReadBalance)"
           class="mt-10"
         >
           <button

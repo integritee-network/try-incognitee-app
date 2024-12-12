@@ -12,6 +12,7 @@
       ref="walletTabRef"
       :updateNotes="updateNotes"
       :fetchOlderBucket="fetchOlderBucket"
+      :enableActions="enableActions"
     />
   </div>
   <!-- messgaing tab should always exist, just not be shown if inactive-->
@@ -101,6 +102,8 @@
   <SessionProxiesOverlay
     :show="showAuthorizeSessionOverlay"
     :close="closeAuthorizeSessionOverlay"
+    :enableActions="enableActions"
+    :updateNotes="updateNotes"
   />
 
   <!-- Choose Wallet -->
@@ -156,7 +159,6 @@ import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
 import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
-import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -245,10 +247,6 @@ const fetchIncogniteeBalance = async () => {
       );
       console.debug(`session proxies: ${proxies}`);
       storeSessionProxies(proxies);
-      console.log(
-        "hasNonTransferProxy: " +
-          accountStore.hasSessionProxyForRole(SessionProxyRole.NonTransfer),
-      );
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
         incogniteeSidechain.value,
@@ -279,9 +277,11 @@ const fetchIncogniteeBalance = async () => {
 const storeSessionProxies = (proxies) => {
   for (const proxy of proxies) {
     const localKeyring = new Keyring({ type: "sr25519" });
-    const account = localKeyring.addFromSeed(hexToU8a(proxy.seed.toString()));
+    const seed = hexToU8a(proxy.seed.toString());
+    const account = localKeyring.addFromSeed(seed);
     accountStore.addSessionProxy(
       account,
+      seed,
       proxy.role.toString() as SessionProxyRole,
     );
   }
@@ -891,6 +891,7 @@ const dropSubscriptions = () => {
 
 const changeSessionProxies = () => {
   closeChooseWalletOverlay();
+  isUpdatingIncogniteeBalance.value = false;
   openAuthorizeSessionOverlay();
 };
 

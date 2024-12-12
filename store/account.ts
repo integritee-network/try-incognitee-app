@@ -18,6 +18,8 @@ export const useAccount = defineStore("account", {
     injector: <InjectedExtension | null>null,
     // optional session proxy credentials
     sessionProxies: <Record<SessionProxyRole, AddressOrPair>>{},
+    // optional session proxy minisecrets
+    sessionProxySeeds: <Record<AddressOrPair, Uint8Array>>{},
     // remember if the user has declined creating a proxy
     sessionProxyDeclined: <boolean>false,
     // free balance per chain
@@ -102,6 +104,13 @@ export const useAccount = defineStore("account", {
         return [null, null];
       };
     },
+    sessionProxySeed({
+      sessionProxySeeds,
+    }): (proxy: AddressOrPair) => Uint8Array {
+      return (proxy: AddressOrPair): Uint8Array => {
+        return sessionProxySeeds[proxy];
+      };
+    },
     formatBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): string => {
         if (!balanceFree[chain]) return "0.000";
@@ -184,8 +193,13 @@ export const useAccount = defineStore("account", {
     declineSessionProxy() {
       this.sessionProxyDeclined = true;
     },
-    addSessionProxy(sessionProxy: AddressOrPair, role: SessionProxyRole) {
+    addSessionProxy(
+      sessionProxy: AddressOrPair,
+      seed: Uint8Array,
+      role: SessionProxyRole,
+    ) {
       this.sessionProxies[role] = sessionProxy;
+      this.sessionProxySeeds[sessionProxy] = seed;
     },
     setBalanceFree(balance: BigInt, chain: ChainId) {
       this.balanceFree[chain] = balance;

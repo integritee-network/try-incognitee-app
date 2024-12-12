@@ -80,7 +80,12 @@
         <p class="text-sm text-gray-400 wrap-text">
           your currently selected account is {{ accountStore.getAddress }}
         </p>
-        <div class="mt-10">
+        <div
+          v-if="
+            accountStore.hasSessionProxyForRole(SessionProxyRole.ReadBalance)
+          "
+          class="mt-10"
+        >
           <button
             @click="changeSessionAuthorization"
             class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
@@ -115,9 +120,10 @@ import {
   extensionAccounts,
 } from "~/lib/signerExtensionUtils";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps, computed, ref, watch } from "vue";
+import { computed, defineProps, ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
 import { encodeAddress } from "@polkadot/util-crypto";
+import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const accountStore = useAccount();
 const currentExtensionAccount = ref("");

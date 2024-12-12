@@ -2,7 +2,7 @@
   <div v-if="show">
     <WarningBanner
       v-if="
-        isProd &&
+        accountStore.getSymbol === 'TEER' &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -25,13 +25,6 @@
       :isMobile="isMobile"
       textMobile="This page is not yet live for mainnet"
       textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
-    />
-
-    <InfoBanner
-      v-if="!enableActions"
-      :isMobile="isMobile"
-      textMobile="Looking for <a href='/teerdays'>TEERdays</a>?"
-      textDesktop="If you are looking for our TEERDAYS page, please follow <a href='/teerdays'>this link</a>"
     />
 
     <div class="mt-4"></div>
@@ -1061,6 +1054,7 @@ import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
 import { formatMoment } from "~/helpers/date";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
+import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1220,7 +1214,7 @@ const handleTopResult = (result, successMsg?) => {
         txStatus.value =
           "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
-      //update history to see successfuly action immediately
+      //update history to see successful action immediately
       props.updateNotes();
       return;
     }
@@ -1437,7 +1431,7 @@ const closePrivacyInfo = () => {
 
 const showObtainTokenOverlay = ref(false);
 const openObtainTokenOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1449,7 +1443,7 @@ const closeObtainTokenOverlay = () => {
 
 const showShieldOverlay = ref(false);
 const openShieldOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1464,7 +1458,7 @@ const closeShieldOverlay = () => {
 
 const showFaucetOverlay = ref(false);
 const openFaucetOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1476,7 +1470,7 @@ const closeFaucetOverlay = () => {
 
 const showUnshieldOverlay = ref(false);
 const openUnshieldOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1490,7 +1484,7 @@ const closeUnshieldOverlay = () => {
 };
 const showReceiveOverlay = ref(false);
 const openReceiveOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1501,7 +1495,7 @@ const closeReceiveOverlay = () => {
 };
 const showPrivateSendOverlay = ref(false);
 const openPrivateSendOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1523,7 +1517,7 @@ const closePrivateSendOverlay = () => {
 
 const showGuessTheNumberOverlay = ref(false);
 const openGuessTheNumberOverlay = () => {
-  if (!enableActions.value) {
+  if (!props?.enableActions) {
     console.error("network not live");
     return;
   }
@@ -1605,10 +1599,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-});
-
-const enableActions = computed(() => {
-  return isLive.value || forceLive.value;
+  enableActions: {
+    type: Boolean,
+    required: true,
+  },
 });
 </script>
 

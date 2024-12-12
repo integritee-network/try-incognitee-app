@@ -638,7 +638,7 @@ const handleTopResult = (result, successMsg?) => {
         txStatus.value =
           "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
-      //update history to see successfuly action immediately
+      //update history to see successful action immediately
       props.updateNotes();
       return;
     }

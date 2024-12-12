@@ -17,6 +17,7 @@
       <div class="flex flex-col mt-5">
         <form @submit.prevent="updateAuthorization">
           <label>Select an option:</label>
+          <!-- removing proxies not yet supported
           <div v-if="bestSessionProxyRole !== null" class="radio-group">
             <div>
               <input
@@ -27,7 +28,7 @@
               />
             </div>
             <label for="noProxy">remove all authorizations</label>
-          </div>
+          </div> -->
           <div class="radio-group">
             <div v-if="'readBalance' !== bestSessionProxyRole">
               <input
@@ -138,28 +139,53 @@ import {
   INCOGNITEE_TX_FEE,
   INCOGNITEE_SESSION_PROXY_DEPOSIT,
 } from "~/configs/incognitee";
+import { useIncognitee } from "~/store/incognitee";
+import { Health, useSystemHealth } from "~/store/systemHealth";
+import { TypeRegistry, u32 } from "@polkadot/types";
+import { incogniteeSidechain } from "~/lib/environmentConfig";
 
 const accountStore = useAccount();
+const incogniteeStore = useIncognitee();
+const systemHealth = useSystemHealth();
+
 const selectedSessionProxyRole = ref("NonTransfer");
 const persistSessionProxy = ref(false);
 const bestSessionProxy = ref(null);
 const bestSessionProxyRole = ref(null);
+const isSignerBusy = ref(false);
 
 const updateAuthorization = async () => {
+  if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
+    alert(
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+    );
+    return;
+  }
+  if (!props?.enableActions) {
+    console.error("network not live");
+    return;
+  }
   console.log(
     "updating authorization from ",
     bestSessionProxyRole,
     " to ",
     selectedSessionProxyRole.value,
   );
-  createSessionProxy();
+  if (bestSessionProxyRole.value === null) {
+    props?.close();
+    await createSessionProxy();
+  } else if (bestSessionProxyRole.value !== selectedSessionProxyRole.value) {
+    props?.close();
+    await modifySessionProxyRole(
+      bestSessionProxy.value,
+      selectedSessionProxyRole.value,
+    );
+  } else {
+    console.log("ignoring authorization update request: no change in role");
+  }
 };
 
 const createSessionProxy = async () => {
-  if (!enableActions.value) {
-    console.error("network not live");
-    return;
-  }
   txStatus.value = "creating session proxy....";
   openStatusOverlay();
   await cryptoWaitReady();
@@ -177,6 +203,10 @@ const createSessionProxy = async () => {
       " localStorage: " +
       persistSessionProxy.value,
   );
+  await addSessionProxyFromSeed(seed);
+};
+
+const addSessionProxyFromSeed = async (seed: Uint8Array) => {
   const injector = accountStore.hasInjector ? accountStore.injector : null;
   const role = incogniteeStore.api.createType(
     "SessionProxyRole",
@@ -185,6 +215,18 @@ const createSessionProxy = async () => {
   const now = new Date();
   const expiryDate = new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000);
   const expiry = Math.floor(expiryDate.getTime());
+  console.log(
+    "create session proxy " +
+      proxy.address +
+      " with role: " +
+      role +
+      " expiry update to: " +
+      expiry,
+  );
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
   await incogniteeStore.api
     .trustedAddSessionProxy(
       accountStore.account,
@@ -194,9 +236,57 @@ const createSessionProxy = async () => {
       sessionProxy.address,
       expiry,
       seed,
-      { signer: injector?.signer },
+      { signer: injector?.signer, nonce: nonce },
     )
-    .then((result) => handleTopResult(result, "😀 session proxy r successful"))
+    .then((result) =>
+      handleTopResult(result, "😀 session proxy registration successful"),
+    )
+    .catch((err) => handleTopError(err));
+};
+
+const modifySessionProxyRole = async (
+  proxy: AddressOrPair,
+  role: SessionProxyRole,
+) => {
+  if (isSignerBusy.value) {
+    // fixme! this is a hack. don't know why extension pops up twice without this
+    console.log("signer busy. aborting repeated attempt...");
+    return;
+  }
+  isSignerBusy.value = true;
+  txStatus.value = "modifying session proxy role....";
+  openStatusOverlay();
+  const injector = accountStore.hasInjector ? accountStore.injector : null;
+  const seed = accountStore.sessionProxySeed(proxy);
+  const now = new Date();
+  const expiryDate = new Date(now.getTime() + 40 * 24 * 60 * 60 * 1000);
+  const expiry = Math.floor(expiryDate.getTime());
+  console.log(
+    "modify session proxy " +
+      proxy.address +
+      " to role: " +
+      role +
+      " expiry update to: " +
+      expiry,
+  );
+  const nonce = new u32(
+    new TypeRegistry(),
+    accountStore.nonce[incogniteeSidechain.value],
+  );
+  await incogniteeStore.api
+    .trustedAddSessionProxy(
+      accountStore.account,
+      incogniteeStore.shard,
+      incogniteeStore.fingerprint,
+      role,
+      proxy.address,
+      expiry,
+      seed,
+      { signer: injector?.signer, nonce: nonce },
+    )
+    .then((result) =>
+      handleTopResult(result, "😀 session proxy registration successful"),
+    )
     .catch((err) => handleTopError(err));
 };
 
@@ -204,6 +294,7 @@ const txStatus = ref("");
 const handleTopResult = (result, successMsg?) => {
   console.log("TOP result: " + result);
   if (result) {
+    isSignerBusy.value = false;
     if (result.status.isInSidechainBlock) {
       if (successMsg) {
         txStatus.value = successMsg;
@@ -211,8 +302,8 @@ const handleTopResult = (result, successMsg?) => {
         txStatus.value =
           "😀 included in sidechain block: " + result.status.asInSidechainBlock;
       }
-      //update history to see successfuly action immediately
-      updateNotes();
+      //update history to see successful action immediately
+      props?.updateNotes();
       return;
     }
     if (result.status.isInvalid) {
@@ -248,14 +339,28 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  enableActions: {
+    type: Boolean,
+    required: true,
+  },
+  updateNotes: {
+    type: Function,
+    required: true,
+  },
 });
 
 watch(
   () => props.show,
   (show) => {
     if (show) {
+      isSignerBusy.value = false;
       [bestSessionProxy.value, bestSessionProxyRole.value] =
         accountStore.sessionProxyBest();
+      if (bestSessionProxyRole.value !== null) {
+        selectedSessionProxyRole.value = bestSessionProxyRole.value;
+      } else {
+        selectedSessionProxyRole.value = "NonTransfer";
+      }
     }
   },
 );

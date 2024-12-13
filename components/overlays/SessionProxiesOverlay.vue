@@ -207,6 +207,10 @@ const createSessionProxy = async () => {
 };
 
 const addSessionProxyFromSeed = async (seed: Uint8Array) => {
+  const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });
+  const sessionProxy = localKeyring.addFromSeed(seed, {
+    name: "fresh",
+  });
   const injector = accountStore.hasInjector ? accountStore.injector : null;
   const role = incogniteeStore.api.createType(
     "SessionProxyRole",
@@ -217,7 +221,7 @@ const addSessionProxyFromSeed = async (seed: Uint8Array) => {
   const expiry = Math.floor(expiryDate.getTime());
   console.log(
     "create session proxy " +
-      proxy.address +
+      sessionProxy.address +
       " with role: " +
       role +
       " expiry update to: " +

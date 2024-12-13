@@ -201,6 +201,10 @@ export const useAccount = defineStore("account", {
       this.sessionProxies[role] = sessionProxy;
       this.sessionProxySeeds[sessionProxy] = seed;
     },
+    removeProxyForRole(role: SessionProxyRole) {
+      delete this.sessionProxies[role];
+      delete this.sessionProxySeeds[role];
+    },
     setBalanceFree(balance: BigInt, chain: ChainId) {
       this.balanceFree[chain] = balance;
     },

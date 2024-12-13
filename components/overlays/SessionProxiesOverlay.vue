@@ -273,6 +273,9 @@ const modifySessionProxyRole = async (
       " expiry update to: " +
       expiry,
   );
+  // clear the cached proxy entry at old role. it will be added again with the new role
+  // at the next fetchIncogniteeBalance
+  accountStore.removeProxyForRole(bestSessionProxyRole.value);
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
@@ -360,6 +363,12 @@ watch(
       isSignerBusy.value = false;
       [bestSessionProxy.value, bestSessionProxyRole.value] =
         accountStore.sessionProxyBest();
+      console.log(
+        "best session proxy: ",
+        bestSessionProxy.value.address,
+        " role: ",
+        bestSessionProxyRole.value,
+      );
       if (bestSessionProxyRole.value !== null) {
         selectedSessionProxyRole.value = bestSessionProxyRole.value;
       } else {

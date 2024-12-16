@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col lg:flex-row container p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
+    class="flex flex-col lg:flex-row p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
   >
     <div
       class="flex w-full justify-between items-center"
@@ -9,8 +9,7 @@
       <!-- Live Badge -->
       <span
         class="rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Live</span
-      >
+        >Live</span>
 
       <!-- Mobile Version -->
       <p v-if="isMobile" class="flex-1 text-sm font-medium text-white mx-2">

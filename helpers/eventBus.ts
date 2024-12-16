@@ -1,5 +1,7 @@
 import mitt from "mitt";
 
-const eventBus = mitt();
+type Events = {
+  toggleSidebar: void;
+};
 
-export { eventBus };
+export const eventBus = mitt<Events>();

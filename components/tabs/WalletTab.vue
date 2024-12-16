@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show">
+  <div v-if="show" class="p-3">
     <WarningBanner
       v-if="
         isProd &&
@@ -10,7 +10,16 @@
       textMobile="This is a temporary voucher with low security. Please use a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
       textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
     />
+
     <div v-else>
+      <div class="mb-3">
+        <button
+          @click="eventBus.emit('toggleSidebar')"
+          class="lg:hidden text-white focus:outline-none text-2xl"
+        >
+          ☰
+        </button>
+      </div>
       <CampaignBanner
         v-if="enableActions"
         :onClick="openGuessTheNumberOverlay"
@@ -61,7 +70,7 @@
               <div class="text-4xl font-semibold" v-else>
                 {{
                   formatDecimalBalance(
-                    accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                    accountStore.getDecimalBalanceTransferable(shieldingTarget)
                   )
                 }}
                 <span class="text-sm font-semibold">{{
@@ -597,7 +606,7 @@
               accountStore.getDecimalBalanceFree(incogniteeSidechain) -
                 accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
                 0.1,
-              shieldingLimit,
+              shieldingLimit
             )
           "
           required
@@ -840,7 +849,7 @@
                       {{
                         formatDecimalBalance(
                           guessTheNumberInfo?.winnings /
-                            Math.pow(10, accountStore.decimals),
+                            Math.pow(10, accountStore.decimals)
                         )
                       }}
                       {{ accountStore.getSymbol }}
@@ -856,7 +865,7 @@
                     >
                       {{
                         formatMoment(
-                          guessTheNumberInfo?.next_round_timestamp.toNumber(),
+                          guessTheNumberInfo?.next_round_timestamp.toNumber()
                         )
                       }}
                     </dd>
@@ -1060,6 +1069,7 @@ import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
 import { formatMoment } from "~/helpers/date";
+import { eventBus } from "@/helpers/eventBus";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1099,7 +1109,7 @@ defineExpose({
     }
     faucetUrl.value = chainConfigs[shieldingTarget.value].faucetUrl?.replace(
       "ADDRESS",
-      accountStore.getAddress,
+      accountStore.getAddress
     );
     props.updateNotes();
   },
@@ -1107,7 +1117,7 @@ defineExpose({
 const submitSendForm = () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
     );
     return;
   }
@@ -1120,13 +1130,13 @@ const submitShieldForm = async () => {
   // fixme: why is this necessary? it seems computed max will not be enforced otherwise
   if (shieldAmount.value > computedShieldingMax.value) {
     alert(
-      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`,
+      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`
     );
     return;
   }
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
     );
     return;
   }
@@ -1137,7 +1147,7 @@ const submitShieldForm = async () => {
 const submitUnshieldForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
     );
     return;
   }
@@ -1148,7 +1158,7 @@ const submitUnshieldForm = async () => {
 const submitGuessForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
     );
     return;
   }
@@ -1183,7 +1193,7 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
           new Uint8Array([
             mod.index.toNumber(),
             bnFromHex(mod.error.toHex().slice(0, 4)).toNumber(),
-          ]),
+          ])
         );
         const message = `${error.section}.${error.name}${
           Array.isArray(error.docs)
@@ -1200,7 +1210,7 @@ const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
       txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
       console.log(
-        `✅ Transaction successful with status: ${status} hash: ${txHash}`,
+        `✅ Transaction successful with status: ${status} hash: ${txHash}`
       );
     }
   });
@@ -1268,10 +1278,10 @@ const unshield = async () => {
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`
   );
 
   await incogniteeStore.api
@@ -1285,13 +1295,13 @@ const unshield = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) =>
       handleTopResult(
         result,
-        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
-      ),
+        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds"
+      )
     )
     .catch((err) => handleTopError(err));
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
@@ -1308,17 +1318,17 @@ const sendPrivately = async () => {
   // fixme: https://github.com/encointer/encointer-js/issues/123
   if (byteLength > 161) {
     alert(
-      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes.",
+      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes."
     );
     return;
   }
   const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
+    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`
   );
 
   await incogniteeStore.api
@@ -1333,7 +1343,7 @@ const sendPrivately = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
     .catch((err) => handleTopError(err));
@@ -1345,10 +1355,10 @@ const submitGuess = async () => {
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value],
+    accountStore.nonce[incogniteeSidechain.value]
   );
   console.log(
-    `sending guess ${guess.value} from ${account.address} privately to incognitee`,
+    `sending guess ${guess.value} from ${account.address} privately to incognitee`
   );
 
   await incogniteeStore.api
@@ -1360,7 +1370,7 @@ const submitGuess = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      },
+      }
     )
     .then((result) => handleTopResult(result, "😀 Guess submission successful"))
     .catch((err) => handleTopError(err));
@@ -1370,7 +1380,7 @@ const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("fetch guess the number info");
   const getter = incogniteeStore.api.guessTheNumberInfoGetter(
-    incogniteeStore.shard,
+    incogniteeStore.shard
   );
   await getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
@@ -1383,7 +1393,7 @@ const gtnWinners = computed(() => {
     const winners = [];
     for (const winner of guessTheNumberInfo.value.last_winners) {
       winners.push(
-        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "...",
+        encodeAddress(winner, accountStore.getSs58Format).slice(0, 8) + "..."
       );
     }
     return winners.join("<br>");
@@ -1395,8 +1405,8 @@ const copyOwnAddressToClipboard = () => {
     .writeText(accountStore.getAddress)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
-      ),
+        "copied your account address to clipboard. Please paste it into the address field on the faucet."
+      )
     );
 };
 
@@ -1408,8 +1418,8 @@ const computedShieldingMax = computed(() => {
         accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
       accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
         accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
-        0.1,
-    ),
+        0.1
+    )
   );
 });
 
@@ -1448,7 +1458,7 @@ const openShieldOverlay = () => {
     return;
   }
   shieldAmount.value = Math.floor(
-    Math.min(shieldAmount.value, computedShieldingMax.value),
+    Math.min(shieldAmount.value, computedShieldingMax.value)
   );
   showShieldOverlay.value = true;
 };
@@ -1475,7 +1485,7 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value)),
+    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value))
   );
   showUnshieldOverlay.value = true;
 };
@@ -1500,13 +1510,13 @@ const openPrivateSendOverlay = () => {
     return;
   }
   console.debug(
-    `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`,
+    `openPrivateSendOverlay (scanoverlay=${showScanOverlay.value})`
   );
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,
-      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1,
-    ),
+      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1
+    )
   );
   showPrivateSendOverlay.value = true;
 };
@@ -1522,7 +1532,7 @@ const openGuessTheNumberOverlay = () => {
     return;
   }
   console.log(
-    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`,
+    `openGuessTheNumberOverlay (scanoverlay=${showScanOverlay.value})`
   );
   fetchGuessTheNumberInfo();
   showGuessTheNumberOverlay.value = true;

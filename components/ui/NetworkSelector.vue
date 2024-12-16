@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-row justify-between w-full text-center gap-4 container mb-4"
+    class="flex flex-row justify-between w-full text-center gap-4 mb-4"
   >
     <!-- TEER Box -->
     <div

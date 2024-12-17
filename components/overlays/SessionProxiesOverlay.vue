@@ -186,7 +186,7 @@ const updateAuthorization = async () => {
 };
 
 const createSessionProxy = async () => {
-  txStatus.value = "creating session proxy....";
+  txStatus.value = "Creating session proxy....";
   openStatusOverlay();
   await cryptoWaitReady();
   const generatedMnemonic = mnemonicGenerate();
@@ -258,7 +258,7 @@ const modifySessionProxyRole = async (
     return;
   }
   isSignerBusy.value = true;
-  txStatus.value = "modifying session proxy role....";
+  txStatus.value = "Modifying session proxy role....";
   openStatusOverlay();
   const injector = accountStore.hasInjector ? accountStore.injector : null;
   const seed = accountStore.sessionProxySeed(proxy);
@@ -316,12 +316,12 @@ const handleTopResult = (result, successMsg?) => {
     }
   }
   console.error(`unknown result: ${result}`);
-  txStatus.value = "😞 Unknown Result";
+  txStatus.value = "😞 Unknown result";
 };
 
 const handleTopError = (err) => {
   console.error(`error: ${err}`);
-  txStatus.value = `😞 Submission Failed: ${err}`;
+  txStatus.value = `😞 Submission failed: ${err}.`;
 };
 
 const showStatusOverlay = ref(false);

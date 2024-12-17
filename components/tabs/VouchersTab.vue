@@ -466,7 +466,7 @@ const doForgetVoucher = () => {
 
 const fundNewVoucher = async () => {
   console.log("sending funds on incognitee");
-  txStatus.value = "⌛ sending funds privately on incognitee";
+  txStatus.value = "⌛ Sending funds privately on incognitee.";
   const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
   const encoder = new TextEncoder();
@@ -555,16 +555,16 @@ const handleTopResult = (result, successMsg?) => {
       return;
     }
     if (result.status.isInvalid) {
-      txStatus.value = "😞 Invalid (unspecified reason)";
+      txStatus.value = "😞 Invalid (unspecified reason).";
       return;
     }
   }
   console.error(`unknown result: ${result}`);
-  txStatus.value = "😞 Unknown Result";
+  txStatus.value = "😞 Unknown result.";
 };
 const handleTopError = (err) => {
   console.error(`error: ${err}`);
-  txStatus.value = `😞 Submission Failed: ${err}`;
+  txStatus.value = `😞 Submission failed: ${err}.`;
 };
 
 const showShareVoucher = ref(false);

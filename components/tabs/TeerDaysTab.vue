@@ -1069,7 +1069,7 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
         // Other, CannotLookup, BadOrigin, no extra info
         errorInfo = dispatchError.toString();
       }
-      txStatus.value = `😞 Transaction Failed! ${section}.${method}::${errorInfo}`;
+      txStatus.value = `😞 Transaction failed! ${section}.${method}::${errorInfo}.`;
     } else if (section + ":" + method === "system:ExtrinsicSuccess") {
       txStatus.value = `❤️️ Transaction successful!`;
       // Close the overlay automatically after 5 seconds if successful
@@ -1079,7 +1079,7 @@ const txResHandlerIntegritee = ({ events = [], status, txHash }) => {
 };
 
 const txErrHandlerIntegritee = (err) => {
-  txStatus.value = `😞 Transaction Failed: ${err.toString()}`;
+  txStatus.value = `😞 Transaction failed: ${err.toString()}.`;
 };
 
 const showChooseWalletOverlay = ref(false);

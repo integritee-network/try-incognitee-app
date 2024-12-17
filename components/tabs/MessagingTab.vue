@@ -587,7 +587,7 @@ const submitSendForm = () => {
 
 const sendPrivately = async () => {
   console.log("sending message on incognitee");
-  txStatus.value = "⌛ sending message privately on incognitee";
+  txStatus.value = "⌛ Sending message privately on incognitee";
   const account = accountStore.account;
   if (
     accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) <
@@ -655,12 +655,12 @@ const handleTopResult = (result, successMsg?) => {
     }
   }
   console.error(`unknown result: ${result}`);
-  txStatus.value = "😞 Unknown Result";
+  txStatus.value = "😞 Unknown result";
 };
 
 const handleTopError = (err) => {
   console.error(`error: ${err}`);
-  txStatus.value = `😞 Submission Failed: ${err}`;
+  txStatus.value = `😞 Submission failed: ${err}.`;
 };
 
 const scanResult = ref("No QR code data yet");

@@ -154,7 +154,10 @@ import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
-import { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
+import {
+  SessionProxyRole,
+  sessionProxyRoleOrder,
+} from "@/lib/sessionProxyStorage.ts";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
@@ -275,16 +278,18 @@ const fetchIncogniteeBalance = async () => {
 };
 
 const storeSessionProxies = (proxies) => {
-  for (const proxy of proxies) {
-    const localKeyring = new Keyring({ type: "sr25519" });
-    const seed = hexToU8a(proxy.seed.toString());
-    const account = localKeyring.addFromSeed(seed);
-    accountStore.addSessionProxy(
-      account,
-      seed,
-      proxy.role.toString() as SessionProxyRole,
-    );
-  }
+  // Add the first entry for each role in proxies to the store
+  sessionProxyRoleOrder.forEach((role) => {
+    const proxy = proxies.find((p) => p.role.toString() === role);
+    if (proxy) {
+      const localKeyring = new Keyring({ type: "sr25519" });
+      const seed = hexToU8a(proxy.seed.toString());
+      const account = localKeyring.addFromSeed(seed);
+      accountStore.addSessionProxy(account, seed, role);
+    } else {
+      accountStore.removeProxyForRole(role);
+    }
+  });
 };
 const fetchNetworkStatus = async () => {
   const promises = [];

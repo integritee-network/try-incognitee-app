@@ -9,7 +9,8 @@
       <!-- Live Badge -->
       <span
         class="rounded-full incognitee-blue uppercase px-2 py-1 text-xs font-bold mr-3"
-        >Live</span>
+        >Live</span
+      >
 
       <!-- Mobile Version -->
       <p v-if="isMobile" class="flex-1 text-sm font-medium text-white mx-2">

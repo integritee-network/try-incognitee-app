@@ -2,7 +2,10 @@
   <div v-if="show" class="flex justify-between items-center"></div>
   <div class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
-    <div ref="chatWindow" class="flex-1 overflow-y-auto bg-incognitee-blue rounded-md">
+    <div
+      ref="chatWindow"
+      class="flex-1 overflow-y-auto bg-incognitee-blue rounded-md"
+    >
       <div
         v-for="(note, index) in noteStore.getMessagesWith(counterparty)"
         :key="index"

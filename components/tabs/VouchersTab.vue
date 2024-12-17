@@ -255,9 +255,9 @@
                   0,
                   accountStore.getDecimalBalanceFree(incogniteeSidechain) -
                     accountStore.getDecimalExistentialDeposit(
-                      incogniteeSidechain
+                      incogniteeSidechain,
                     ) -
-                    0.1
+                    0.1,
                 )
               "
               required
@@ -422,7 +422,7 @@ function closeDeleteModal() {
 const submitGenerateVoucherForm = async () => {
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {
     alert(
-      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again"
+      "Sidechain health currently can't be assessed. Please wait for a green health indicator and try again",
     );
     return;
   }
@@ -455,7 +455,7 @@ const doForgetVoucher = () => {
       "forgetting voucher: " +
         voucherToDelete.value?.address +
         " for shard: " +
-        incogniteeStore.shard
+        incogniteeStore.shard,
     );
     forgetVoucherForShard(voucherToDelete.value, incogniteeStore.shard);
   }
@@ -473,19 +473,19 @@ const fundNewVoucher = async () => {
   // fixme: https://github.com/encointer/encointer-js/issues/123
   if (byteLength > 161) {
     alert(
-      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes."
+      "Note is too long when encoded to UTF-8. Please keep it under 162 bytes.",
     );
     return;
   }
   const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   const nonce = new u32(
     new TypeRegistry(),
-    accountStore.nonce[incogniteeSidechain.value]
+    accountStore.nonce[incogniteeSidechain.value],
   );
   const voucher = await generateNewVoucher(amount, incogniteeStore.shard, note);
   selectedVoucher.value = voucher;
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${voucher.address} with nonce ${nonce} and note: ${note}`
+    `sending ${sendAmount.value} from ${account.address} privately to ${voucher.address} with nonce ${nonce} and note: ${note}`,
   );
 
   await incogniteeStore.api
@@ -500,7 +500,7 @@ const fundNewVoucher = async () => {
       {
         signer: accountStore.injector?.signer,
         nonce: nonce,
-      }
+      },
     )
     .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
     .catch((err) => handleTopError(err));
@@ -510,7 +510,7 @@ const fundNewVoucher = async () => {
 const generateNewVoucher = async (
   amount: BigInt,
   shard: string,
-  note: string | null
+  note: string | null,
 ): Voucher => {
   return cryptoWaitReady().then(() => {
     const generatedMnemonic = mnemonicGenerate();
@@ -521,7 +521,7 @@ const generateNewVoucher = async (
     const seed = mnemonicToMiniSecret(generatedMnemonic);
     const voucherSeedHex = u8aToHex(seed);
     console.log(
-      `Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex}`
+      `Voucher address: ${newAccount.address},  Private Key in Hex: ${voucherSeedHex}`,
     );
     const url = new URL(window.location.href);
     url.searchParams.set("seed", voucherSeedHex);
@@ -533,7 +533,7 @@ const generateNewVoucher = async (
       voucherSeedHex,
       url.toString(),
       divideBigIntToFloat(amount, 10 ** accountStore.getDecimals),
-      note
+      note,
     );
     console.log("generated new voucher: " + voucher);
     storeVoucher(voucher);
@@ -598,8 +598,8 @@ const copyVoucherUrlToClipboard = () => {
     .writeText(selectedVoucher.value?.url)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the faucet."
-      )
+        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
+      ),
     );
 };
 </script>

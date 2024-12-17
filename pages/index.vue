@@ -352,10 +352,12 @@ const bucketsCount = computed(() => {
 
 const unfetchedBucketsCount = computed(() => {
   if (!noteBucketsInfo.value) return 0;
-  return (
-    firstNoteBucketIndexFetched.value ? firstNoteBucketIndexFetched.value -
-    noteBucketsInfo.value.first.unwrap().index : noteBucketsInfo.value.last.unwrap().index - noteBucketsInfo.value.first.unwrap().index +1
-  );
+  return firstNoteBucketIndexFetched.value
+    ? firstNoteBucketIndexFetched.value -
+        noteBucketsInfo.value.first.unwrap().index
+    : noteBucketsInfo.value.last.unwrap().index -
+        noteBucketsInfo.value.first.unwrap().index +
+        1;
 });
 
 const fetchIncogniteeNotes = async (

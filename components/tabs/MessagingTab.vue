@@ -553,7 +553,8 @@ const filteredLut = computed(() => {
 });
 
 const maybeUsername = (address: string) => {
-  const entry = identityLut.find((entry) => entry.address === address);
+  const pdotAddress = encodeAddress(address, 0);
+  const entry = identityLut.find((entry) => entry.address === pdotAddress);
   return entry?.username;
 };
 

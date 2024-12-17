@@ -6,13 +6,8 @@ node_modules
 .output
 .env
 dist
-.DS_Store
 .idea
-assets/.DS_Store
-assets/img/.DS_Store
-components/.DS_Store
-public/.DS_Store
-public/img/.DS_Store
+**/.DS_Store
 
 # Yarn 3 files
 .pnp.*

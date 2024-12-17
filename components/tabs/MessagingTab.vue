@@ -176,6 +176,7 @@
         v-if="!isMobile || showChatDetail"
         :class="isMobile ? 'w-full' : 'md:w-2/3'"
         class="bg-incognitee-blue flex flex-col h-screen relative"
+        :style="{ height: chatWindowHeight }"
       >
         <!-- Header -->
         <div
@@ -419,9 +420,21 @@ const closeStartOverlay = () => {
   showStartOverlay.value = false;
 };
 
+const chatWindowHeight = ref("calc(100vh - 12rem)");
+
+const adjustChatWindowHeight = () => {
+  const viewportHeight = window.innerHeight;
+  chatWindowHeight.value = `${viewportHeight}px`;
+};
 // Ensure overlay is shown on reload
 onMounted(() => {
   showStartOverlay.value = false;
+  window.addEventListener("resize", adjustChatWindowHeight);
+  adjustChatWindowHeight();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", adjustChatWindowHeight);
 });
 
 // Reaktive Variable für das Overlay
@@ -593,6 +606,7 @@ const sendPrivately = async () => {
     accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) <
     3 * INCOGNITEE_TX_FEE
   ) {
+    txStatus.value = "";
     alert("Insufficient balance");
     return;
   }

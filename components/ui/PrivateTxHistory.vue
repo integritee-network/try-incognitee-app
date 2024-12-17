@@ -116,14 +116,12 @@
           </div>
         </div>
       </div>
-      <div class="mt-5 flex justify-center text-gray-500">
+      <div class="mt-5 flex text-xs font-bold justify-center text-white">
         <button @click="fetchOlderBucket">
-          fetch more events
+          Fetch more events
           {{ accountStore.hasInjector ? "(needs signature)" : "" }}
         </button>
       </div>
-      <!-- this is necessary to avoid the footer overlapping the text -->
-      <br /><br /><br /><br /><br /><br /><br />
     </div>
   </div>
   <NoteDetailsOverlay

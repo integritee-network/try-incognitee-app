@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col lg:flex-row container p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
+    class="flex flex-col lg:flex-row p-2 incognitee-bg items-center text-indigo-100 leading-none lg:rounded-full"
   >
     <div
       class="flex w-full justify-between items-center"

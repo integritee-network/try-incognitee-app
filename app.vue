@@ -1,7 +1,16 @@
 <script setup lang="ts"></script>
 
 <template>
-  <NuxtLayout />
+  <div>
+    <NuxtLoadingIndicator />
+
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+
+    <UNotifications />
+    <UModals />
+  </div>
 </template>
 
 <style lang="scss">

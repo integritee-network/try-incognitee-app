@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex flex-row justify-between w-full text-center gap-4 container mb-4"
-  >
+  <div class="flex flex-row justify-between w-full text-center gap-4 mb-4">
     <!-- TEER Box -->
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"

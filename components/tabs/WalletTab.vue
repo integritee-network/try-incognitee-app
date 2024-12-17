@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show">
+  <div v-if="show" class="p-3">
     <WarningBanner
       v-if="
         accountStore.getSymbol === 'TEER' &&
@@ -11,6 +11,14 @@
       textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
     />
     <div v-else>
+      <div class="mb-3">
+        <button
+          @click="eventBus.emit('toggleSidebar')"
+          class="lg:hidden text-white focus:outline-none text-2xl"
+        >
+          ☰
+        </button>
+      </div>
       <CampaignBanner
         v-if="enableActions"
         :onClick="openGuessTheNumberOverlay"
@@ -629,7 +637,11 @@
         </p>
       </div>
       <div class="mt-5 qrcode-container">
-        <qrcode :value="accountStore.getAddress"></qrcode>
+        <qrcode
+          :value="accountStore.getAddress"
+          :color="{ dark: '#000000', light: '#ffffff' }"
+          type="image/png"
+        ></qrcode>
       </div>
 
       <div class="flex flex-col mt-5">
@@ -1053,6 +1065,7 @@ import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
 import { formatMoment } from "~/helpers/date";
+import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
 

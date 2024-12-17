@@ -637,7 +637,11 @@
         </p>
       </div>
       <div class="mt-5 qrcode-container">
-        <qrcode :value="accountStore.getAddress"></qrcode>
+        <qrcode
+          :value="accountStore.getAddress"
+          :color="{ dark: '#000000', light: '#ffffff' }"
+          type="image/png"
+        ></qrcode>
       </div>
 
       <div class="flex flex-col mt-5">

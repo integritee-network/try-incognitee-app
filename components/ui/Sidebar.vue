@@ -215,14 +215,6 @@ const accountStore = useAccount();
 const emitEvent = (eventName: string) => {
   eventBus.emit(eventName);
 };
-
-// Props für Flexibilität
-defineProps({
-  textMobile: { type: String, required: false },
-  textDesktop: { type: String, required: false },
-  onClick: { type: Function, required: true },
-  isMobile: { type: Boolean, required: true },
-});
 </script>
 
 <style scoped>

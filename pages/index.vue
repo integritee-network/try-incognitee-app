@@ -12,6 +12,7 @@
       ref="walletTabRef"
       :updateNotes="updateNotes"
       :fetchOlderBucket="fetchOlderBucket"
+      :enableActions="enableActions"
     />
   </div>
   <!-- messgaing tab should always exist, just not be shown if inactive-->
@@ -97,6 +98,14 @@
     </div>
   </OverlayDialog>
 
+  <!-- AddSessionProxy -->
+  <SessionProxiesOverlay
+    :show="showAuthorizeSessionOverlay"
+    :close="closeAuthorizeSessionOverlay"
+    :enableActions="enableActions"
+    :updateNotes="updateNotes"
+  />
+
   <!-- Choose Wallet -->
   <ChooseWalletOverlay
     :show="showChooseWalletOverlay"
@@ -104,6 +113,7 @@
     :createTestingAccount="isProd ? undefined : createTestingAccount"
     :onExtensionAccountChange="onExtensionAccountChange"
     :showTrustedGetterHint="true"
+    :changeSessionAuthorization="changeSessionProxies"
   />
 </template>
 
@@ -111,7 +121,8 @@
 import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
-import { computed } from "vue";
+import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -126,7 +137,6 @@ import {
   mnemonicToMiniSecret,
 } from "@polkadot/util-crypto";
 import { useInterval } from "@vueuse/core";
-import { onUnmounted, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { eventBus } from "@/helpers/eventBus";
 import {
@@ -134,16 +144,17 @@ import {
   injectorForAddress,
 } from "@/lib/signerExtensionUtils";
 import {
+  incogniteeShard,
+  incogniteeSidechain,
+  isLive,
   loadEnv,
   shieldingTarget,
-  incogniteeSidechain,
-  incogniteeShard,
-  isLive,
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
 import { Note, NoteDirection } from "~/lib/notes";
+import { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
@@ -168,9 +179,11 @@ const shieldingTargetApi = ref<ApiPromise | null>(null);
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
 );
+
 const onExtensionAccountChange = async (selectedAddress) => {
   dropSubscriptions();
   console.log("user selected extension account:", selectedAddress);
+  accountStore.resetState();
   accountStore.setAccount(selectedAddress.toString());
   accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
   isUpdatingIncogniteeBalance.value = false;
@@ -205,7 +218,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.accountInfoGetter(
+        await incogniteeStore.api.accountInfoAndSessionProxiesGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -226,10 +239,14 @@ const fetchIncogniteeBalance = async () => {
 
   await getterMap[accountStore.account]
     .send()
-    .then((accountInfo) => {
+    .then((accountInfoAndSessionProxies) => {
+      const accountInfo = accountInfoAndSessionProxies.account_info;
+      const proxies = accountInfoAndSessionProxies.session_proxies;
       console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
+      console.debug(`session proxies: ${proxies}`);
+      storeSessionProxies(proxies);
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
         incogniteeSidechain.value,
@@ -241,6 +258,15 @@ const fetchIncogniteeBalance = async () => {
       isFetchingIncogniteeBalance.value = false;
       isUpdatingIncogniteeBalance.value = false;
       isChoosingAccount.value = false;
+      if (
+        proxies.length == 0 &&
+        accountStore.hasInjector &&
+        !accountStore.hasDeclinedSessionProxy &&
+        accountStore.getDecimalBalanceFree(incogniteeSidechain.value) > 0
+      ) {
+        openAuthorizeSessionOverlay();
+      }
+      //openAuthorizeSessionOverlay();
     })
     .catch((err) => {
       console.error(`[fetchIncogniteeBalance] error ${err}`);
@@ -248,6 +274,18 @@ const fetchIncogniteeBalance = async () => {
     });
 };
 
+const storeSessionProxies = (proxies) => {
+  for (const proxy of proxies) {
+    const localKeyring = new Keyring({ type: "sr25519" });
+    const seed = hexToU8a(proxy.seed.toString());
+    const account = localKeyring.addFromSeed(seed);
+    accountStore.addSessionProxy(
+      account,
+      seed,
+      proxy.role.toString() as SessionProxyRole,
+    );
+  }
+};
 const fetchNetworkStatus = async () => {
   const promises = [];
   if (shieldingTargetApi.value?.isReady) {
@@ -335,10 +373,9 @@ const fetchOlderBucket = async () => {
 
 /// returns the date as moment before which all notes have been purged from sidechain state
 const oldestMomentInNoteBuckets = computed(() => {
-  console.log(
-    "oldest moment is " + noteBucketsInfo.value?.first.unwrap().begins_at,
-  );
-  return noteBucketsInfo.value?.first.unwrap().begins_at?.toNumber();
+  const beginsAt = noteBucketsInfo.value?.first.unwrap().begins_at;
+  console.log("oldest moment is " + beginsAt?.toNumber());
+  return beginsAt ? beginsAt.toNumber() : NaN;
 });
 
 const bucketsCount = computed(() => {
@@ -374,10 +411,17 @@ const fetchIncogniteeNotes = async (
     return;
   }
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
+  const sessionProxy = accountStore.sessionProxyForRole(
+    SessionProxyRole.ReadAny,
+  );
+  console.debug(
+    "[fetchIncogniteeNotes] sessionProxy: " + sessionProxy?.address,
+  );
   const injector = accountStore.hasInjector ? accountStore.injector : null;
+  console.debug("[fetchIncogniteeNotes] injector: " + injector);
   try {
     if (!getterMap[mapKey]) {
-      if (injector) {
+      if (injector && sessionProxy == null) {
         if (skip_if_signer_needed) {
           console.log(
             "skipping automated fetchIncogniteeNotes because signer is needed",
@@ -393,7 +437,7 @@ const fetchIncogniteeNotes = async (
         accountStore.account,
         bucketIndex,
         incogniteeStore.shard,
-        { signer: injector?.signer },
+        { delegate: sessionProxy, signer: injector?.signer },
       );
     } else {
       console.debug(`fetching incognitee notes using cached getter`);
@@ -523,6 +567,43 @@ const fetchIncogniteeNotes = async (
                 `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
               );
             }
+          } else if (call.isSendNote) {
+            const typedCall = call.asSendNote;
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] send note: ${typedCall}`,
+            );
+            const from = encodeAddress(
+              typedCall[0],
+              accountStore.getSs58Format,
+            );
+            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
+            if (from === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Outgoing Note",
+                  NoteDirection.Outgoing,
+                  to,
+                  BigInt(0),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[2].toString(),
+                ),
+              );
+            } else if (to === accountStore.getAddress) {
+              noteStore.addNote(
+                new Note(
+                  "Incoming Note",
+                  NoteDirection.Incoming,
+                  from,
+                  BigInt(0),
+                  new Date(note.timestamp?.toNumber()),
+                  typedCall[2].toString(),
+                ),
+              );
+            } else {
+              console.error(
+                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+              );
+            }
           } else if (call.isGuessTheNumber) {
             const typedCall = call.asGuessTheNumber.asGuess;
             console.debug(
@@ -533,6 +614,25 @@ const fetchIncogniteeNotes = async (
                 `Submit Guess (${typedCall[1]})`,
                 NoteDirection.None,
                 null,
+                null,
+                new Date(note.timestamp?.toNumber()),
+                null,
+              ),
+            );
+          } else if (call.isAddSessionProxy) {
+            const typedCall = call.asAddSessionProxy;
+            const proxy = encodeAddress(
+              typedCall[1],
+              accountStore.getSs58Format,
+            );
+            console.debug(
+              `[${formatMoment(note.timestamp?.toNumber())}] add session proxy: ${typedCall}`,
+            );
+            noteStore.addNote(
+              new Note(
+                `Add Session Proxy (${typedCall[2].role})`,
+                NoteDirection.None,
+                proxy,
                 null,
                 new Date(note.timestamp?.toNumber()),
                 null,
@@ -789,6 +889,12 @@ const dropSubscriptions = () => {
   accountStore.setInjector(null);
 };
 
+const changeSessionProxies = () => {
+  closeChooseWalletOverlay();
+  isUpdatingIncogniteeBalance.value = false;
+  openAuthorizeSessionOverlay();
+};
+
 const createTestingAccount = async () => {
   await cryptoWaitReady().then(() => {
     dropSubscriptions();
@@ -828,6 +934,20 @@ const closeNewWalletOverlay = () => {
   showNewWalletOverlay.value = false;
 };
 
+const showAuthorizeSessionOverlay = ref(false);
+const openAuthorizeSessionOverlay = () => {
+  if (!enableActions.value) {
+    console.error("network not live");
+    return;
+  }
+  showAuthorizeSessionOverlay.value = true;
+};
+const closeAuthorizeSessionOverlay = (optout: boolean) => {
+  if (optout) {
+    accountStore.declineSessionProxy();
+  }
+  showAuthorizeSessionOverlay.value = false;
+};
 const showChooseWalletOverlay = ref(false);
 const openChooseWalletOverlay = () => {
   if (!enableActions.value) {

@@ -16,4 +16,16 @@ export const identities = [
     username: "Tester2",
     address: "13ueD4C3hvyagpap431WTPnNr4spEYCVv8gKr8gKDz88j9f5",
   },
+  {
+    username: "ExtensionTester1",
+    address: "1414CvA9uDs9tASKCizPo35JM2a1uWvHqAZtY9dWP45UGzj3",
+  },
+  {
+    username: "ExtensionTester2",
+    address: "12mU141fbeoK1N2zd5UEWLgWXfEEL1TAgCNCDe3yppMQy4JM",
+  },
+  {
+    username: "ExtensionTester3",
+    address: "15JmfZMWYeTEdBDCErte22Sup5FA6PMMkS9A3KeLkaf4a4HM",
+  },
 ];

@@ -5,6 +5,10 @@ import type { InjectedExtension } from "@polkadot/extension-inject/types";
 import { ChainId } from "@/configs/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
+import {
+  SessionProxyRole,
+  sessionProxyRoleOrder,
+} from "@/lib/sessionProxyStorage.ts";
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -12,6 +16,12 @@ export const useAccount = defineStore("account", {
     account: <AddressOrPair | null>null,
     // optional signer extension
     injector: <InjectedExtension | null>null,
+    // optional session proxy credentials
+    sessionProxies: <Record<SessionProxyRole, AddressOrPair>>{},
+    // optional session proxy minisecrets
+    sessionProxySeeds: <Record<AddressOrPair, Uint8Array>>{},
+    // remember if the user has declined creating a proxy
+    sessionProxyDeclined: <boolean>false,
     // free balance per chain
     balanceFree: <Record<ChainId, BigInt>>{},
     // reserved balance per chain
@@ -53,6 +63,53 @@ export const useAccount = defineStore("account", {
     },
     hasInjector({ injector }): boolean {
       return injector != null;
+    },
+    hasSessionProxyForRole({
+      sessionProxies,
+    }): (role: SessionProxyRole) => boolean {
+      return (role: SessionProxyRole): boolean => {
+        return sessionProxies[role] != null;
+      };
+    },
+    hasDeclinedSessionProxy({ sessionProxyDeclined }): boolean {
+      return sessionProxyDeclined;
+    },
+    /// Returns the weakest session proxy which is authorized for at least the requested role
+    sessionProxyForRole({
+      sessionProxies,
+    }): (role: SessionProxyRole) => AddressOrPair | null {
+      return (role: SessionProxyRole): AddressOrPair | null => {
+        const startIndex = sessionProxyRoleOrder.indexOf(role);
+        if (startIndex === -1) return null;
+        for (let i = startIndex; i < sessionProxyRoleOrder.length; i++) {
+          const currentRole = sessionProxyRoleOrder[i];
+          if (sessionProxies[currentRole]) {
+            return sessionProxies[currentRole];
+          }
+        }
+        return null;
+      };
+    },
+    /// Returns the most powerful session proxy
+    sessionProxyBest({
+      sessionProxies,
+    }): () => [AddressOrPair | null, SessionProxyRole | null] {
+      return (): [AddressOrPair | null, SessionProxyRole | null] => {
+        for (let i = sessionProxyRoleOrder.length - 1; i >= 0; i--) {
+          const currentRole = sessionProxyRoleOrder[i];
+          if (sessionProxies[currentRole]) {
+            return [sessionProxies[currentRole], currentRole];
+          }
+        }
+        return [null, null];
+      };
+    },
+    sessionProxySeed({
+      sessionProxySeeds,
+    }): (proxy: AddressOrPair) => Uint8Array {
+      return (proxy: AddressOrPair): Uint8Array => {
+        return sessionProxySeeds[proxy];
+      };
     },
     formatBalanceFree({ balanceFree, decimals }) {
       return (chain: ChainId): string => {
@@ -117,11 +174,36 @@ export const useAccount = defineStore("account", {
     },
   },
   actions: {
+    /// call this when account changes to clear all account-related state
+    resetState() {
+      this.sessionProxyDeclined = false;
+      this.sessionProxies = {};
+      this.injector = null;
+      this.BalanceFree = {};
+      this.BalanceReserved = {};
+      this.BalanceFrozen = {};
+    },
     setAccount(account: AddressOrPair) {
       this.account = account;
     },
     setInjector(injector: InjectedExtension) {
       this.injector = injector;
+    },
+    /// sticky decline for adding session proxies
+    declineSessionProxy() {
+      this.sessionProxyDeclined = true;
+    },
+    addSessionProxy(
+      sessionProxy: AddressOrPair,
+      seed: Uint8Array,
+      role: SessionProxyRole,
+    ) {
+      this.sessionProxies[role] = sessionProxy;
+      this.sessionProxySeeds[sessionProxy] = seed;
+    },
+    removeProxyForRole(role: SessionProxyRole) {
+      delete this.sessionProxies[role];
+      delete this.sessionProxySeeds[role];
     },
     setBalanceFree(balance: BigInt, chain: ChainId) {
       this.balanceFree[chain] = balance;

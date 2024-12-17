@@ -17,7 +17,10 @@ export const useNotes = defineStore("notes", {
     },
     getFinancialNotes() {
       return this.getSortedNotesNewestFirst.filter(
-        (note) => (note.amount > 0) | note.category.includes("Guess"),
+        (note) =>
+          (note.amount > 0) |
+          note.category.includes("Guess") |
+          note.category.includes("Session Proxy"),
       );
     },
     getConversationCounterparties() {

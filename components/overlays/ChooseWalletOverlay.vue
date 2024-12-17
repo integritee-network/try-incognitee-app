@@ -76,15 +76,37 @@
           </option>
         </select>
       </div>
+      <div v-if="accountStore.hasInjector" class="mt-10">
+        <p class="text-sm text-gray-400 wrap-text">
+          your currently selected account is {{ accountStore.getAddress }}
+        </p>
+        <div
+          v-if="accountStore.sessionProxyForRole(SessionProxyRole.ReadBalance)"
+          class="mt-10"
+        >
+          <button
+            @click="changeSessionAuthorization"
+            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          >
+            Change Session Key Authorization
+          </button>
+        </div>
+      </div>
       <div
-        v-if="accountStore.hasInjector && showTrustedGetterHint"
+        v-if="
+          accountStore.hasInjector &&
+          showTrustedGetterHint &&
+          selectedExtensionAccountIsNew
+        "
         class="mt-10"
       >
-        <p>
+        <p class="text-sm text-gray-400">
           please allow this app to read your balance by signing the upcoming
           request in your extension
         </p>
-        <p>this window will close once a balance could be fetched</p>
+        <p class="mt-5 text-sm text-gray-400">
+          this window will close once a balance could be fetched
+        </p>
       </div>
     </div>
   </OverlayDialog>
@@ -94,14 +116,34 @@
 import {
   connectExtension,
   extensionAccounts,
-  injectorForAddress,
 } from "~/lib/signerExtensionUtils";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps, computed, ref, watch } from "vue";
+import { computed, defineProps, ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
+import { encodeAddress } from "@polkadot/util-crypto";
+import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const accountStore = useAccount();
+const currentExtensionAccount = ref("");
 const selectedExtensionAccount = ref("");
+
+const selectedExtensionAccountIsNew = computed(() => {
+  try {
+    const selectedAddressEncoded = encodeAddress(
+      selectedExtensionAccount.value,
+      accountStore.getSs58Format,
+    );
+    console.log(
+      "comparing",
+      currentExtensionAccount.value,
+      " to ",
+      selectedAddressEncoded,
+    );
+    return selectedAddressEncoded !== currentExtensionAccount.value;
+  } catch (e) {
+    return false;
+  }
+});
 
 const props = defineProps({
   createTestingAccount: {
@@ -124,7 +166,23 @@ const props = defineProps({
     type: Boolean,
     required: false,
   },
+  changeSessionAuthorization: {
+    type: Function,
+    required: false,
+  },
 });
+
+watch(
+  () => props.show,
+  (show) => {
+    if (show) {
+      console.log("current extension account: ", accountStore.getAddress);
+      currentExtensionAccount.value = accountStore.getAddress;
+      //selectedExtensionAccount.value = "";
+    }
+  },
+);
+
 const hasCreateTestingAccountFn = computed(
   () => typeof props.createTestingAccount === "function",
 );
@@ -139,10 +197,15 @@ const closeProxy = () => {
 };
 
 watch(selectedExtensionAccount, async (selectedAddress) => {
-  if (selectedAddress) {
+  if (selectedAddress && selectedExtensionAccountIsNew.value) {
     props.onExtensionAccountChange(selectedAddress);
   }
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrap-text {
+  white-space: normal;
+  word-wrap: break-word;
+}
+</style>

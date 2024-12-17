@@ -54,33 +54,6 @@
               class="flex items-center w-full text-left text-sm font-semibold hover:bg-gray-800 px-2 py-2 rounded-md"
               @click="
                 () => {
-                  emitEvent('switchToSwap');
-                  toggleSidebar();
-                }
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6 mr-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-                />
-              </svg>
-              Swap
-            </button>
-          </li>
-          <li class="px-4">
-            <button
-              class="flex items-center w-full text-left text-sm font-semibold hover:bg-gray-800 px-2 py-2 rounded-md"
-              @click="
-                () => {
                   emitEvent('switchToVouchers');
                   toggleSidebar();
                 }
@@ -128,6 +101,47 @@
                 />
               </svg>
               Messages
+            </button>
+          </li>
+          <li v-if="accountStore.getSymbol === 'TEER'" class="px-4">
+            <button
+              class="flex items-center w-full text-left text-sm font-semibold hover:bg-gray-800 px-2 py-2 rounded-md"
+              @click="
+                () => {
+                  emitEvent('switchToTeerDays');
+                  toggleSidebar();
+                }
+              "
+            >
+              <TEERdays class="w-6 h-6 mb-2 mr-2" />
+              TeerDays
+            </button>
+          </li>
+          <li class="px-4">
+            <button
+              class="flex items-center w-full text-left text-sm font-semibold text-gray-500 hover:bg-gray-800 px-2 py-2 rounded-md"
+              @click="
+                () => {
+                  emitEvent('switchToSwap');
+                  toggleSidebar();
+                }
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                />
+              </svg>
+              Swap
             </button>
           </li>
         </ul>
@@ -186,6 +200,7 @@ import HealthIndicator from "@/components/ui/HealthIndicator.vue";
 import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
 import Incognitee from "@/assets/img/incognitee-full-logo.svg";
+import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 
 // Sidebar-State (local)
 const isSidebarOpen = ref(false);

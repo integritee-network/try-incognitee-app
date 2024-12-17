@@ -1,5 +1,13 @@
 <template>
   <div v-if="show" class="p-3">
+    <div class="mb-3">
+      <button
+        @click="eventBus.emit('toggleSidebar')"
+        class="lg:hidden text-white focus:outline-none text-2xl"
+      >
+        ☰
+      </button>
+    </div>
     <WarningBanner
       v-if="
         accountStore.getSymbol === 'TEER' &&
@@ -11,14 +19,6 @@
       textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
     />
     <div v-else>
-      <div class="mb-3">
-        <button
-          @click="eventBus.emit('toggleSidebar')"
-          class="lg:hidden text-white focus:outline-none text-2xl"
-        >
-          ☰
-        </button>
-      </div>
       <CampaignBanner
         v-if="enableActions"
         :onClick="openGuessTheNumberOverlay"

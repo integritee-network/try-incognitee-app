@@ -28,4 +28,8 @@ export const identities = [
     username: "ExtensionTester3",
     address: "15JmfZMWYeTEdBDCErte22Sup5FA6PMMkS9A3KeLkaf4a4HM",
   },
+  {
+    username: "IncogniteeQuizMaster",
+    address: "12sJZcxqGkBUN8xesuLxC4hbYk7Y6W6Amkm52onbcxgfvnzA",
+  }
 ];

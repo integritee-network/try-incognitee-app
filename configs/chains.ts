@@ -11,7 +11,7 @@ export enum ChainId {
   IntegriteeDev,
   IncogniteePaseoRelay,
   IncogniteeIntegriteeKusama,
-  IncogniteeAssetHubPolkadot
+  IncogniteeAssetHubPolkadot,
 }
 
 type ChainConfig = {

@@ -13,7 +13,7 @@ export const minUnshieldingAmount = (token: string): number => {
     return 1.1;
   } else if (token === "DOT") {
     return 0.1;
-  } else  {
+  } else {
     return 0.1;
   }
-}
+};

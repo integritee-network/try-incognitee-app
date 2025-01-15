@@ -11,7 +11,7 @@
     <WarningBanner
       v-if="
         (accountStore.getSymbol === 'TEER' ||
-        accountStore.getSymbol === 'DOT') &&
+          accountStore.getSymbol === 'DOT') &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -1037,7 +1037,7 @@ import {
   INCOGNITEE_SHIELDING_FEE_FRACTION,
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
-  minUnshieldingAmount
+  minUnshieldingAmount,
 } from "~/configs/incognitee";
 import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";

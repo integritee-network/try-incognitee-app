@@ -314,10 +314,7 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
-              <div
-                v-if="summaryHolders === null"
-                class="spinner"
-              ></div>
+              <div v-if="summaryHolders === null" class="spinner"></div>
               <div
                 v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
@@ -347,10 +344,7 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
-              <div
-                v-if="summaryTeerBonded === null"
-                class="spinner"
-              ></div>
+              <div v-if="summaryTeerBonded === null" class="spinner"></div>
               <div
                 v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
@@ -380,10 +374,7 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
-              <div
-                v-if="summaryTeerDays === null"
-                class="spinner"
-              ></div>
+              <div v-if="summaryTeerDays === null" class="spinner"></div>
               <div
                 v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
@@ -656,12 +647,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-  web3FromAddress,
-} from "@polkadot/extension-dapp";
+import { web3FromAddress } from "@polkadot/extension-dapp";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import {onMounted, onUnmounted, computed, ref, watch, defineProps} from "vue";
+import { onMounted, onUnmounted, computed, ref, watch, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { useAccount } from "~/store/account.ts";
 import { formatDecimalBalance } from "~/helpers/numbers";
@@ -704,7 +693,10 @@ watch(
 );
 const onExtensionAccountChange = async () => {
   await dropSubscriptions();
-  console.log("re-subscribing to TEERday data using account:", accountStore.getAddress);
+  console.log(
+    "re-subscribing to TEERday data using account:",
+    accountStore.getAddress,
+  );
   await subscribeToTeerDayStats();
   if (accountStore.getAddress === "none") {
     console.log("skipping api init. no address");
@@ -721,10 +713,7 @@ const onExtensionAccountChange = async () => {
     }) => {
       console.log("TEER balance:" + currentFree);
       accountStore.setBalanceFree(BigInt(currentFree), teerdaysNetwork);
-      accountStore.setBalanceReserved(
-        BigInt(currentReserved),
-        teerdaysNetwork,
-      );
+      accountStore.setBalanceReserved(BigInt(currentReserved), teerdaysNetwork);
       accountStore.setBalanceFrozen(BigInt(currentFrozen), teerdaysNetwork);
       isFetchingTeerBalance.value = false;
     },
@@ -998,7 +987,6 @@ const props = defineProps({
     required: true,
   },
 });
-
 </script>
 
 <style scoped>

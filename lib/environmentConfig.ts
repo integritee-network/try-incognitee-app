@@ -29,19 +29,34 @@ export const loadEnv = async (envFile?: string) => {
     return envOverride[key] ?? envDefault[key] ?? defaultValue;
   };
 
-  const shieldingTargetEnv = getEnvValue("SHIELDING_TARGET", ChainId.PaseoRelay);
+  const shieldingTargetEnv = getEnvValue(
+    "SHIELDING_TARGET",
+    ChainId.PaseoRelay,
+  );
   const shieldingLimitEnv = getEnvValue("SHIELDING_LIMIT", Infinity);
-  const incogniteeSidechainEnv = getEnvValue("INCOGNITEE_SIDECHAIN", ChainId.IncogniteePaseoRelay);
-  const incogniteeShardEnv = getEnvValue("SHARD", "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c");
+  const incogniteeSidechainEnv = getEnvValue(
+    "INCOGNITEE_SIDECHAIN",
+    ChainId.IncogniteePaseoRelay,
+  );
+  const incogniteeShardEnv = getEnvValue(
+    "SHARD",
+    "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c",
+  );
   const isLiveEnv = getEnvValue("LIVE", true);
-  const integriteeNetworkEnv = getEnvValue("TEERDAYS_NETWORK", ChainId.IntegriteeKusama);
+  const integriteeNetworkEnv = getEnvValue(
+    "TEERDAYS_NETWORK",
+    ChainId.IntegriteeKusama,
+  );
 
   incogniteeShard.value = incogniteeShardEnv;
   shieldingTarget.value = ChainId[shieldingTargetEnv] ?? ChainId.PaseoRelay;
-  incogniteeSidechain.value = ChainId[incogniteeSidechainEnv] ?? ChainId.IncogniteePaseoRelay;
-  shieldingLimit.value = shieldingLimitEnv > 0 ? Number(shieldingLimitEnv) : Infinity;
+  incogniteeSidechain.value =
+    ChainId[incogniteeSidechainEnv] ?? ChainId.IncogniteePaseoRelay;
+  shieldingLimit.value =
+    shieldingLimitEnv > 0 ? Number(shieldingLimitEnv) : Infinity;
   isLive.value = toBoolean(isLiveEnv);
-  teerdaysNetwork.value = ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
+  teerdaysNetwork.value =
+    ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
 
   console.log(
     "SHIELDING_TARGET: env:" +

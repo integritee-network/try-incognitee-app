@@ -41,8 +41,8 @@ const systemHealth = useSystemHealth();
 const router = useRouter();
 
 const contextualHealth = computed(() => {
-//    case "/teerdays":
-//      return systemHealth.getIntegriteeSystemHealth.overall();
+  //    case "/teerdays":
+  //      return systemHealth.getIntegriteeSystemHealth.overall();
   return systemHealth.getSidechainSystemHealth.overall();
 });
 

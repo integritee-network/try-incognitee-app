@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import IndexPage from './index.vue';
+import IndexPage from "./index.vue";
 </script>

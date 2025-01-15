@@ -861,7 +861,6 @@ const subscribeToTeerDayStats = async () => {
   integriteeNetworkApi = await ApiPromise.create({ provider: wsProvider });
   accountStore.setDecimals(Number(integriteeNetworkApi.registry.chainDecimals));
   accountStore.setSS58Format(Number(integriteeNetworkApi.registry.chainSS58));
-  accountStore.setSymbol(String(integriteeNetworkApi.registry.chainTokens));
   if (accountStore.hasInjector) {
     router.push({
       query: { address: accountStore.getAddress },

@@ -32,7 +32,7 @@
   <div v-if="activeApp === 'vouchers'"><VouchersTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
-  <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>
+  <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab :isMobile="isMobile" /></div>
   <!-- New Wallet -->
   <OverlayDialog
     :show="showNewWalletOverlay"

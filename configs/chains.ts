@@ -78,3 +78,5 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
     api: "wss://scv1.asset-hub-polkadot.api.incognitee.io:443",
   },
 };
+
+export const TEER_DECIMALS = 12;

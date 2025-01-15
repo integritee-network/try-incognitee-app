@@ -10,7 +10,8 @@
     </div>
     <WarningBanner
       v-if="
-        accountStore.getSymbol === 'TEER' &&
+        (accountStore.getSymbol === 'TEER' ||
+        accountStore.getSymbol === 'DOT') &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -20,7 +21,7 @@
     />
     <div v-else>
       <CampaignBanner
-        v-if="enableActions"
+        v-if="enableActions && accountStore.getSymbol === 'TEER'"
         :onClick="openGuessTheNumberOverlay"
         :isMobile="isMobile"
         textMobile="Guess-The-Number"

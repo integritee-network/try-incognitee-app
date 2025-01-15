@@ -122,7 +122,7 @@ import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, defineProps } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -828,7 +828,7 @@ const switchToTeerDays = () => {
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
-  loadEnv();
+  await loadEnv(props.envFile);
   await incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
     incogniteeShard.value,
@@ -977,6 +977,11 @@ const checkIfMobile = () => {
 
 const enableActions = computed(() => {
   return isLive.value || forceLive.value;
+});
+
+// overrides the .env values
+const props = defineProps({
+  envFile: String,
 });
 </script>
 

@@ -31,7 +31,7 @@
     >
       <DOT class="w-[30px] h-[30px]" />
       <p class="text-xs">DOT</p>
-      <div class="ribbon red"><span>beta</span></div>
+      <div class="ribbon gray"><span>soon</span></div>
     </div>
 
     <!-- PAS PASEO Box -->
@@ -86,7 +86,7 @@ const handleTeerClick = () => {
     if (props.selectedNetwork === ChainId.IntegriteeKusama) {
       console.log("do nothing");
     } else {
-      window.open("https://app.incognitee.io", "_blank");
+      window.open("https://app.incognitee.io/teer", "_blank");
     }
   } catch (e) {
     console.log(e);
@@ -98,7 +98,7 @@ const handleDotClick = () => {
     if (props.selectedNetwork === ChainId.AssetHubPolkadot) {
       console.log("do nothing");
     } else {
-      window.open("https://app.incognitee.io", "_blank");
+      window.open("https://app.incognitee.io/dot", "_blank");
     }
   } catch (e) {
     console.log(e);

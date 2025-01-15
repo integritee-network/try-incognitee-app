@@ -653,7 +653,7 @@ import { useRouter } from "vue-router";
 import { useAccount } from "@/store/account.ts";
 import { chainConfigs } from "@/configs/chains.ts";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
-import { loadEnv, integriteeNetwork } from "@/lib/environmentConfig";
+import { loadEnv, teerdaysNetwork } from "@/lib/environmentConfig";
 import { Bond } from "@/lib/teerDays";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
@@ -676,9 +676,9 @@ const summaryTeerDays = ref(0);
 let api: ApiPromise | null = null;
 
 const subscribeToTeerDayStats = async () => {
-  const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
+  const wsProvider = new WsProvider(chainConfigs[teerdaysNetwork.value].api);
   console.log(
-    "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
+    "trying to init api at " + chainConfigs[teerdaysNetwork.value].api,
   );
   api = await ApiPromise.create({ provider: wsProvider });
   accountStore.setDecimals(Number(api.registry.chainDecimals));

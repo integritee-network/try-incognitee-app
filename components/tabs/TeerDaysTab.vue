@@ -100,7 +100,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceFrozen(
-                              integriteeNetwork,
+                              teerdaysNetwork,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -114,7 +114,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceFrozen(
-                                  integriteeNetwork,
+                                  teerdaysNetwork,
                                 )
                               }}
                               TEER</time
@@ -125,7 +125,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceReserved(
-                              integriteeNetwork,
+                              teerdaysNetwork,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -139,7 +139,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceReserved(
-                                  integriteeNetwork,
+                                  teerdaysNetwork,
                                 )
                               }}
                               TEER</time
@@ -663,7 +663,7 @@ import { ChainId, chainConfigs } from "~/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { eventBus } from "~/helpers/eventBus";
-import { loadEnv, integriteeNetwork, isLive } from "~/lib/environmentConfig";
+import { loadEnv, teerdaysNetwork, isLive } from "~/lib/environmentConfig";
 import { Bond, PendingUnlock } from "~/lib/teerDays";
 import {
   extensionAccounts,
@@ -734,12 +734,12 @@ const onExtensionAccountChange = async (selectedAddress) => {
       },
     }) => {
       console.log("TEER balance:" + currentFree);
-      accountStore.setBalanceFree(BigInt(currentFree), integriteeNetwork);
+      accountStore.setBalanceFree(BigInt(currentFree), teerdaysNetwork);
       accountStore.setBalanceReserved(
         BigInt(currentReserved),
-        integriteeNetwork,
+        teerdaysNetwork,
       );
-      accountStore.setBalanceFrozen(BigInt(currentFrozen), integriteeNetwork);
+      accountStore.setBalanceFrozen(BigInt(currentFrozen), teerdaysNetwork);
       closeChooseWalletOverlay();
       isFetchingTeerBalance.value = false;
     },
@@ -854,9 +854,9 @@ const connect = () => {
 let integriteeNetworkApi: ApiPromise | null = null;
 
 const subscribeToTeerDayStats = async () => {
-  const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
+  const wsProvider = new WsProvider(chainConfigs[teerdaysNetwork.value].api);
   console.log(
-    "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
+    "trying to init api at " + chainConfigs[teerdaysNetwork.value].api,
   );
   integriteeNetworkApi = await ApiPromise.create({ provider: wsProvider });
   accountStore.setDecimals(Number(integriteeNetworkApi.registry.chainDecimals));
@@ -917,7 +917,6 @@ const subscribeToTeerDayStats = async () => {
 };
 
 onMounted(async () => {
-  loadEnv();
   eventBus.on("addressClicked", openChooseWalletOverlay);
   const injectedAddress = router.currentRoute.value.query.address;
   if (injectedAddress) {
@@ -1011,7 +1010,7 @@ watch(refreshCounter, async () => {
 });
 
 const transferableBalance = computed(() => {
-  const balance = accountStore.getDecimalBalanceTransferable(integriteeNetwork);
+  const balance = accountStore.getDecimalBalanceTransferable(teerdaysNetwork);
   return formatDecimalBalance(balance);
 });
 

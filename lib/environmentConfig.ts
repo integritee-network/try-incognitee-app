@@ -11,7 +11,7 @@ export const incogniteeSidechain = ref(ChainId.IncogniteePaseoRelay);
 export const incogniteeShard = ref(null);
 export const isLive = ref(true);
 
-export const integriteeNetwork = ref(ChainId.IntegriteeKusama);
+export const teerdaysNetwork = ref(ChainId.IntegriteeKusama);
 
 export const loadEnv = async (envFile?: string) => {
   const envDefault = useRuntimeConfig().public;
@@ -34,14 +34,14 @@ export const loadEnv = async (envFile?: string) => {
   const incogniteeSidechainEnv = getEnvValue("INCOGNITEE_SIDECHAIN", ChainId.IncogniteePaseoRelay);
   const incogniteeShardEnv = getEnvValue("SHARD", "5wePd1LYa5M49ghwgZXs55cepKbJKhj5xfzQGfPeMS7c");
   const isLiveEnv = getEnvValue("LIVE", true);
-  const integriteeNetworkEnv = getEnvValue("INTEGRITEE_NETWORK", ChainId.IntegriteeKusama);
+  const integriteeNetworkEnv = getEnvValue("TEERDAYS_NETWORK", ChainId.IntegriteeKusama);
 
   incogniteeShard.value = incogniteeShardEnv;
   shieldingTarget.value = ChainId[shieldingTargetEnv] ?? ChainId.PaseoRelay;
   incogniteeSidechain.value = ChainId[incogniteeSidechainEnv] ?? ChainId.IncogniteePaseoRelay;
   shieldingLimit.value = shieldingLimitEnv > 0 ? Number(shieldingLimitEnv) : Infinity;
   isLive.value = toBoolean(isLiveEnv);
-  integriteeNetwork.value = ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
+  teerdaysNetwork.value = ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
 
   console.log(
     "SHIELDING_TARGET: env:" +
@@ -69,10 +69,10 @@ export const loadEnv = async (envFile?: string) => {
   );
   console.log("LIVE: env:" + isLiveEnv + ". using " + isLive.value);
   console.log(
-    "INTEGRITEE_NETWORK: env:" +
+    "TEERDAYS_NETWORK: env:" +
       integriteeNetworkEnv +
       ". using " +
-      ChainId[integriteeNetwork.value],
+      ChainId[teerdaysNetwork.value],
   );
 };
 

@@ -44,7 +44,7 @@
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
       @click="handlePasClick"
-      title="Paseo Testnet"
+      title="Paseo Testnet (Relaychain)"
     >
       <Paseo class="w-[30px] h-[30px]" />
       <p class="text-xs">PAS</p>

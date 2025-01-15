@@ -2,12 +2,16 @@ export enum ChainId {
   PolkadotRelay,
   KusamaRelay,
   PaseoRelay,
+  AssetHubPolkadot,
+  AssetHubKusama,
+  AssetHubPaseo,
   IntegriteePolkadot,
   IntegriteeKusama,
   IntegriteePaseo,
   IntegriteeDev,
   IncogniteePaseoRelay,
   IncogniteeIntegriteeKusama,
+  IncogniteeAssetHubPolkadot
 }
 
 type ChainConfig = {
@@ -31,6 +35,18 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
     //api: "wss://rpc.ibp.network/paseo",
     faucetUrl: "https://faucet.polkadot.io/",
     //faucetUrl: "https://substratefaucet.xyz/paseo/ADDRESS"
+  },
+  [ChainId.AssetHubPolkadot]: {
+    name: "Asset Hub Polkadot",
+    api: "wss://polkadot-asset-hub-rpc.polkadot.io",
+  },
+  [ChainId.AssetHubKusama]: {
+    name: "Asset Hub Kusama",
+    api: "wss://kusama-asset-hub-rpc.polkadot.io",
+  },
+  [ChainId.AssetHubPaseo]: {
+    name: "Asset Hub Paseo",
+    api: "wss://sys.ibp.network/asset-hub-paseo",
   },
   [ChainId.IntegriteePolkadot]: {
     name: "Integritee Polkadot",
@@ -56,5 +72,9 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
   [ChainId.IncogniteeIntegriteeKusama]: {
     name: "Incognitee Integritee Kusama",
     api: "wss://scv1.integritee-kusama.api.incognitee.io:443",
+  },
+  [ChainId.IncogniteeAssetHubPolkadot]: {
+    name: "Incognitee Asset Hub Polkadot",
+    api: "wss://scv1.asset-hub-polkadot.api.incognitee.io:443",
   },
 };

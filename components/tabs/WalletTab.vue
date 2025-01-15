@@ -592,7 +592,7 @@
           v-model="unshieldAmount"
           type="number"
           step="0.1"
-          :min="1.1"
+          :min="minUnshieldingAmount(accountStore.getSymbol)"
           :max="
             Math.min(
               accountStore.getDecimalBalanceFree(incogniteeSidechain) -
@@ -1036,6 +1036,7 @@ import {
   INCOGNITEE_SHIELDING_FEE_FRACTION,
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
+  minUnshieldingAmount
 } from "~/configs/incognitee";
 import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";

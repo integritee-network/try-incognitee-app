@@ -172,6 +172,16 @@ const updateAuthorization = async () => {
     selectedSessionProxyRole.value,
   );
   if (bestSessionProxyRole.value === null) {
+      if (accountStore.getDecimalBalanceFree(incogniteeSidechain) < INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE) {
+        alert(
+        "Insufficient funds to register session proxy. You need at least " +
+          formatDecimalBalance(INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE) +
+          " " +
+          accountStore.getSymbol +
+          " private balance to register a session proxy",
+      );
+      return;
+    }
     props?.close();
     await createSessionProxy();
   } else if (bestSessionProxyRole.value !== selectedSessionProxyRole.value) {
@@ -362,9 +372,9 @@ watch(
         accountStore.sessionProxyBest();
       console.log(
         "best session proxy: ",
-        bestSessionProxy.value.address,
+        bestSessionProxy.value?.address,
         " role: ",
-        bestSessionProxyRole.value,
+        bestSessionProxyRole?.value,
       );
       if (bestSessionProxyRole.value !== null) {
         selectedSessionProxyRole.value = bestSessionProxyRole.value;

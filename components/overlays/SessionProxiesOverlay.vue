@@ -94,11 +94,24 @@
                       >
                     </div>-->
 
-          <div v-if="(accountStore.getDecimalBalanceFree(incogniteeSidechain) < INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE ) &&
-            (bestSessionProxyRole == null)"
-             class="mt-5">
+          <div
+            v-if="
+              accountStore.getDecimalBalanceFree(incogniteeSidechain) <
+                INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
+              bestSessionProxyRole == null
+            "
+            class="mt-5"
+          >
             <p class="text-sm text-yellow-400">
-              You need at least {{ formatDecimalBalance(INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE) }} {{ accountStore.getSymbol }} private balance to register a session proxy. You have {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
+              You need at least
+              {{
+                formatDecimalBalance(
+                  INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
+                )
+              }}
+              {{ accountStore.getSymbol }} private balance to register a session
+              proxy. You have
+              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
             </p>
           </div>
           <div v-else>

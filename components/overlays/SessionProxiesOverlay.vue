@@ -93,22 +93,31 @@
                       >Persist session key in browser storage</label
                       >
                     </div>-->
-          <p class="text-sm text-gray-400 mb-5">
-            the signer extension will pop up and ask you to sign this request
-          </p>
 
-          <button
-            type="submit"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-          >
-            Update Authorization
-          </button>
+          <div v-if="(accountStore.getDecimalBalanceFree(incogniteeSidechain) < INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE ) &&
+            (bestSessionProxyRole == null)"
+             class="mt-5">
+            <p class="text-sm text-yellow-400">
+              You need at least {{ formatDecimalBalance(INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE) }} {{ accountStore.getSymbol }} private balance to register a session proxy. You have {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
+            </p>
+          </div>
+          <div v-else>
+            <p class="text-sm text-gray-400 mb-5">
+              the signer extension will pop up and ask you to sign this request
+            </p>
+            <button
+              type="submit"
+              class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+            >
+              Update Authorization
+            </button>
+          </div>
         </form>
         <div v-if="bestSessionProxyRole == null" class="mt-5">
           <button
             type="button"
             @click="close(true)"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+            class="rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
           >
             Continue Without Session Proxy
           </button>
@@ -172,21 +181,6 @@ const updateAuthorization = async () => {
     selectedSessionProxyRole.value,
   );
   if (bestSessionProxyRole.value === null) {
-    if (
-      accountStore.getDecimalBalanceFree(incogniteeSidechain) <
-      INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE
-    ) {
-      alert(
-        "Insufficient funds to register session proxy. You need at least " +
-          formatDecimalBalance(
-            INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
-          ) +
-          " " +
-          accountStore.getSymbol +
-          " private balance to register a session proxy",
-      );
-      return;
-    }
     props?.close();
     await createSessionProxy();
   } else if (bestSessionProxyRole.value !== selectedSessionProxyRole.value) {

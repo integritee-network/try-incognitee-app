@@ -1,12 +1,16 @@
 <template>
   <div v-if="show" class="p-3">
-    <div class="mb-3">
+    <div class="mb-3 flex justify-between items-center">
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
       >
         ☰
       </button>
+      <div class="lg:hidden">
+        <HealthIndicator />
+      </div>
+      <TokenIndicator class="lg:hidden" />
     </div>
     <WarningBanner
       v-if="
@@ -37,11 +41,6 @@
     />
 
     <div class="mt-4"></div>
-
-    <NetworkSelector
-      :openAssetsInfo="openAssetsInfo"
-      :selectedNetwork="shieldingTarget"
-    />
 
     <div>
       <PublicPrivateBalanceSwitcher
@@ -1043,7 +1042,6 @@ import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";
 import CampaignBanner from "~/components/ui/CampaignBanner.vue";
 import ObtainTokenOverlay from "~/components/overlays/ObtainTokenOverlay.vue";
-import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import PublicPrivateBalanceSwitcher from "~/components/ui/PublicPrivateBalanceSwitcher.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
@@ -1070,6 +1068,9 @@ import { formatMoment } from "~/helpers/date";
 import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

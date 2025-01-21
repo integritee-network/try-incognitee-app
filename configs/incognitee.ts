@@ -7,7 +7,7 @@ export const INCOGNITEE_UNSHIELDING_FEE = 3 * INCOGNITEE_TX_FEE; // TEER or PAS,
 export const INCOGNITEE_SHIELDING_FEE_FRACTION = 0.00175; // 0.175% of the shielding amount
 
 export const INCOGNITEE_SESSION_PROXY_DEPOSIT = 0.1; // TEER or PAS, decimals are respected
-
+export const INCOGNITEE_BYTE_FEE = 0.0001; // per byte of message
 export const minUnshieldingAmount = (token: string): number => {
   if (token === "TEER") {
     return 1.1;

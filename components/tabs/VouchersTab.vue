@@ -1,17 +1,17 @@
 <template>
-  <div class="mt-3 sm:mt-5 px-3">
+  <div class="mt-3 sm:mt-5 px-3 flex justify-between items-center">
     <button
       @click="eventBus.emit('toggleSidebar')"
       class="lg:hidden text-white focus:outline-none text-2xl"
     >
       ☰
     </button>
+    <div class="lg:hidden">
+      <HealthIndicator />
+    </div>
+    <TokenIndicator class="lg:hidden" />
   </div>
   <div class="p-3">
-    <NetworkSelector
-      :openAssetsInfo="() => {}"
-      :selectedNetwork="shieldingTarget"
-    />
     <div class="text-center mt-10 mb-5">
       <span class="text-2xl font-black">Vouchers</span>
       <p class="mt-2 text-sm text-gray-400">
@@ -359,7 +359,6 @@
 </template>
 
 <script setup lang="ts">
-import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { watch, ref, onMounted } from "vue";
 import Qrcode from "vue-qrcode";
@@ -390,6 +389,8 @@ import {
 } from "~/lib/voucherStorage";
 import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

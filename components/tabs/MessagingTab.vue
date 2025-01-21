@@ -67,12 +67,17 @@
           >
             ☰
           </button>
+
           <!-- Linksbündiger Titel -->
           <div
             class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
           >
             Chats
           </div>
+          <div class="lg:hidden">
+            <HealthIndicator />
+          </div>
+          <TokenIndicator class="lg:hidden" />
 
           <!-- Rechtsbündiges "Neue Nachricht" Icon -->
           <!-- Button zum Öffnen des Overlays -->
@@ -204,55 +209,96 @@
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto" style="height: calc(100vh - 12rem)">
           <div
-            v-if="eventHorizon"
-            class="my-5 mx-5 flex text-center text-xs text-gray-500"
+            v-if="eventHorizon && unfetchedBucketsCount === 0"
+            class="my-5 mx-5 flex text-center text-blue justify-center text-xs text-gray-500"
           >
             messages before {{ formatMoment(eventHorizon) }} have been purged
-            from Incognitee state. more recent messages can be polled in batches
+            from Incognitee state.
           </div>
           <div
             v-if="unfetchedBucketsCount > 0"
-            class="my-5 mx-5 flex text-center text-xs text-gray-500"
+            class="my-5 mx-5 flex text-center justify-center text-xs text-gray-500"
           >
-            <button @click="fetchOlderBucket">
-              query more messages
+            <div
+              @click="fetchOlderBucket"
+              class="flex items-center cursor-pointer text-blue"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-3 h-3 text-blue-600 mr-2"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              load older messages
               {{
-                accountStore.hasInjector
+                accountStore.hasInjector &&
+                !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
                   ? "(needs signature in extension)"
                   : ""
-              }}: fetch older batch {{ bucketsCount - unfetchedBucketsCount }} /
-              {{ bucketsCount }}
-            </button>
-            <div v-if="isUpdatingNotes" class="spinner"></div>
+              }}
+              ({{ bucketsCount - unfetchedBucketsCount }} /
+              {{ bucketsCount }} buckets)
+            </div>
+            <div v-if="isUpdatingNotes" class="spinner ml-4"></div>
           </div>
           <PrivateMessageHistory
             :show="true"
             :counterparty="conversationAddress"
           />
         </div>
-        <!-- Input Box -->
         <div
           v-if="recipientValid(conversationAddress)"
           class="border-t border-gray-700 bg-gray-800 absolute bottom-0 left-0 right-0 z-10"
         >
           <div class="flex items-center bg-gray-800 px-4 py-2">
             <form class="flex w-full" @submit.prevent="submitSendForm">
-              <div class="relative w-full">
-                <textarea
-                  id="newMessage"
-                  v-model="sendPrivateNote"
-                  rows="1"
-                  maxlength="140"
-                  name="newMessage"
-                  required
-                  placeholder="Enter message"
-                  class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
-                ></textarea>
-                <!-- Zeichen-Counter -->
-                <div
-                  class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 text-xs"
-                >
-                  {{ sendPrivateNote.length }}/140
+              <!-- Div für Input-Feld und Balance/Fee -->
+              <div class="flex-1">
+                <!-- Eingabefeld -->
+                <div class="relative">
+                  <textarea
+                    id="newMessage"
+                    v-model="sendPrivateNote"
+                    rows="1"
+                    maxlength="140"
+                    name="newMessage"
+                    required
+                    placeholder="Enter message"
+                    class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
+                  ></textarea>
+                  <!-- Zeichen-Counter -->
+                  <div
+                    class="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-400 text-xs"
+                  >
+                    {{ sendPrivateNote.length }}/140
+                  </div>
+                </div>
+                <div class="flex justify-between mt-1 text-xs text-gray-400">
+                  <!-- Links: Placeholder -->
+                  <div class="flex items-center" />
+
+                  <!-- Rechts: Balance und Fee -->
+                  <div class="text-right">
+                    <span>
+                      Private balance:
+                      {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+                    </span>
+                    &nbsp;&nbsp;
+                    <span>
+                      Fee: ~{{
+                        (
+                          INCOGNITEE_TX_FEE +
+                          INCOGNITEE_BYTE_FEE * sendPrivateNote.length
+                        ).toFixed(4)
+                      }}
+                      {{ accountStore.getSymbol }} for Incognitee
+                    </span>
+                  </div>
                 </div>
               </div>
               <!-- Senden-Button -->
@@ -391,10 +437,10 @@
 import PrivateMessageHistory from "~/components/ui/PrivateMessageHistory.vue";
 import { incogniteeSidechain } from "~/lib/environmentConfig";
 import { eventBus } from "@/helpers/eventBus";
-import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
+import { INCOGNITEE_BYTE_FEE, INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { defineProps, ref, watch, computed, onMounted, onUnmounted } from "vue";
+import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
@@ -405,10 +451,10 @@ import { identities as polkadotPeopleIdentities } from "@/lib/polkadotPeopleIden
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
-import { Note, NoteDirection } from "@/lib/notes";
-import { divideBigIntToFloat } from "@/helpers/numbers";
-import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+import { Note } from "@/lib/notes";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 
@@ -820,6 +866,10 @@ textarea {
 
 .text-white {
   color: #ffffff;
+}
+
+.text-blue {
+  color: #2563eb;
 }
 
 .truncate-input {

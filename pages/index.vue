@@ -784,15 +784,6 @@ const switchToWallet = () => {
   });
 };
 
-const switchToSessionsKey = () => {
-  activeApp.value = "sessionskey";
-  const query = { ...router.currentRoute.value.query };
-  query.app = activeApp.value;
-  router.push({
-    query: query,
-  });
-};
-
 const switchToMessaging = () => {
   activeApp.value = "messaging";
   const query = { ...router.currentRoute.value.query };
@@ -863,6 +854,7 @@ onMounted(async () => {
   eventBus.on("switchToVouchers", switchToVouchers);
   eventBus.on("switchToTeerDays", switchToTeerDays);
   eventBus.on("switchToFaq", switchToFaq);
+  eventBus.on("openSessionProxiesOverlay", openAuthorizeSessionOverlay);
 
   const injectedAddress = router.currentRoute.value.query.address;
   if (router.currentRoute.value.query.forceLive) {

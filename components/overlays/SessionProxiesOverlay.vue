@@ -45,12 +45,12 @@
           >
             <label class="flex items-center space-x-3">
               <div v-if="'readBalance' !== bestSessionProxyRole">
-              <input
-                type="radio"
-                id="readBalance"
-                value="ReadBalance"
-                v-model="selectedSessionProxyRole"
-              />
+                <input
+                  type="radio"
+                  id="readBalance"
+                  value="ReadBalance"
+                  v-model="selectedSessionProxyRole"
+                />
               </div>
               <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Allow reading balance</span>
@@ -61,14 +61,14 @@
           >
             <label class="flex items-center space-x-3">
               <div v-if="'readAny' !== bestSessionProxyRole">
-              <input
-                type="radio"
-                id="readAny"
-                value="ReadAny"
-                v-model="selectedSessionProxyRole"
-              />
-          </div>
-          <div v-else class="mr-4">✓</div>
+                <input
+                  type="radio"
+                  id="readAny"
+                  value="ReadAny"
+                  v-model="selectedSessionProxyRole"
+                />
+              </div>
+              <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Full read access</span>
             </label>
           </div>
@@ -77,14 +77,14 @@
           >
             <label class="flex items-center space-x-3">
               <div v-if="'nonTransfer' !== bestSessionProxyRole">
-              <input
-                type="radio"
-                id="nonTransfer"
-                value="NonTransfer"
-                v-model="selectedSessionProxyRole"
-              />
-          </div>
-      <div v-else class="mr-4">✓</div>
+                <input
+                  type="radio"
+                  id="nonTransfer"
+                  value="NonTransfer"
+                  v-model="selectedSessionProxyRole"
+                />
+              </div>
+              <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400"
                 >Allow non-transfer actions</span
               >
@@ -95,14 +95,14 @@
           >
             <label class="flex items-center space-x-3">
               <div v-if="'any' !== bestSessionProxyRole">
-              <input
-                type="radio"
-                id="any"
-                value="Any"
-                v-model="selectedSessionProxyRole"
-              />
-          </div>
-    <div v-else class="mr-4">✓</div>
+                <input
+                  type="radio"
+                  id="any"
+                  value="Any"
+                  v-model="selectedSessionProxyRole"
+                />
+              </div>
+              <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Allow all actions</span>
             </label>
           </div>

@@ -163,7 +163,12 @@
           </li>
           <li class="px-4">
             <button
-              @click="changeSessionAuthorization"
+              @click="
+                () => {
+                  emitEvent('openSessionProxiesOverlay');
+                  toggleSidebar();
+                }
+              "
               class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
             >
               <svg
@@ -349,15 +354,6 @@ import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
 import Incognitee from "@/assets/img/incognitee-full-logo.svg";
 import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-import { ChevronDownIcon } from "@heroicons/vue/20/solid";
-import {
-  connectExtension,
-  extensionAccounts,
-} from "~/lib/signerExtensionUtils";
-import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { encodeAddress } from "@polkadot/util-crypto";
-import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import Paseo from "assets/img/paseo-logo.svg";
 import USDC from "assets/img/usdc-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
@@ -381,90 +377,9 @@ const selectItem = (item) => {
 };
 
 const accountStore = useAccount();
-const currentExtensionAccount = ref("");
-const selectedExtensionAccount = ref("");
-
-const selectedExtensionAccountIsNew = computed(() => {
-  try {
-    const selectedAddressEncoded = encodeAddress(
-      selectedExtensionAccount.value,
-      accountStore.getSs58Format,
-    );
-    console.log(
-      "comparing",
-      currentExtensionAccount.value,
-      " to ",
-      selectedAddressEncoded,
-    );
-    return selectedAddressEncoded !== currentExtensionAccount.value;
-  } catch (e) {
-    return false;
-  }
-});
-
-const props = defineProps({
-  createTestingAccount: {
-    type: Function,
-    required: false,
-  },
-  show: {
-    type: Boolean,
-    required: true,
-  },
-  close: {
-    type: Function,
-    required: true,
-  },
-  onExtensionAccountChange: {
-    type: Function,
-    required: true,
-  },
-  showTrustedGetterHint: {
-    type: Boolean,
-    required: false,
-  },
-  changeSessionAuthorization: {
-    type: Function,
-    required: false,
-  },
-});
-
-watch(
-  () => props.show,
-  (show) => {
-    if (show) {
-      console.log("current extension account: ", accountStore.getAddress);
-      currentExtensionAccount.value = accountStore.getAddress;
-      //selectedExtensionAccount.value = "";
-    }
-  },
-);
-
-const hasCreateTestingAccountFn = computed(
-  () => typeof props.createTestingAccount === "function",
-);
-
-// even if the same account stays selected and the overlay is manually closed
-// we need to call onExtensionAccountChange. otherwise the balance poll will wait forever
-const closeProxy = () => {
-  if (selectedExtensionAccount.value) {
-    props.onExtensionAccountChange(selectedExtensionAccount.value);
-  }
-  props.close();
-};
-
-watch(selectedExtensionAccount, async (selectedAddress) => {
-  if (selectedAddress && selectedExtensionAccountIsNew.value) {
-    props.onExtensionAccountChange(selectedAddress);
-  }
-});
 
 // Neuer Zustand und Methode für Menü
 const isMenuOpen = ref(false);
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
-};
 
 const closeMenu = () => {
   isMenuOpen.value = false;
@@ -477,15 +392,6 @@ const handleOutsideClick = (event) => {
   }
 };
 
-// Event-Listener für Klicks außerhalb des Dropdowns
-onMounted(() => {
-  document.addEventListener("click", handleOutsideClick);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleOutsideClick);
-});
-
 // Sidebar-State (local)
 const isSidebarOpen = ref(false);
 
@@ -494,17 +400,15 @@ const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
 
-const emitAddressClicked = () => {
-  eventBus.emit("addressClicked");
-};
-
 // Event-Abonnement bei Mounten und Entfernen bei Unmounten
 onMounted(() => {
   eventBus.on("toggleSidebar", toggleSidebar);
+  document.addEventListener("click", handleOutsideClick);
 });
 
 onUnmounted(() => {
   eventBus.off("toggleSidebar", toggleSidebar);
+  document.removeEventListener("click", handleOutsideClick);
 });
 
 // Event-Emitter-Funktionen

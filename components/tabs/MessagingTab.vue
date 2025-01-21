@@ -67,12 +67,18 @@
           >
             ☰
           </button>
+
+
           <!-- Linksbündiger Titel -->
           <div
             class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
           >
             Chats
           </div>
+          <div class="lg:hidden">
+            <HealthIndicator />
+          </div>
+          <TokenIndicator class="lg:hidden" />
 
           <!-- Rechtsbündiges "Neue Nachricht" Icon -->
           <!-- Button zum Öffnen des Overlays -->
@@ -448,6 +454,8 @@ import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
 import { Note } from "@/lib/notes";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 

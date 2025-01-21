@@ -2,13 +2,15 @@
   <div v-if="show" class="flex justify-between items-center"></div>
   <div class="mb-10">
     <!-- Neuer Abschnitt, der nur angezeigt wird, wenn der "Private Balance" Tab aktiv ist -->
-    <div
-      ref="chatWindow"
-      class="flex-1 overflow-y-auto bg-incognitee-blue rounded-md"
-    >
+    <div class="flex-1 overflow-y-auto bg-incognitee-blue rounded-md">
       <div
         v-for="(note, index) in noteStore.getMessagesWith(counterparty)"
         :key="index"
+        :id="
+          index === noteStore.getMessagesWith(counterparty).length - 1
+            ? 'lastMessage'
+            : null
+        "
         class="py-2 px-4"
       >
         <!-- Ausgehende Nachrichten -->
@@ -75,17 +77,16 @@ const props = defineProps({
     required: true,
   },
 });
-const chatWindow = ref(null);
 
 watch(
-  () => noteStore.getMessagesWith(props.counterparty),
+  () => props.counterparty,
   async () => {
     await nextTick();
-    if (chatWindow.value) {
-      console.log("scrolling to bottom");
-      chatWindow.value.scrollTop = chatWindow.value.scrollHeight;
-    }
+    document
+      .getElementById("lastMessage")
+      ?.scrollIntoView({ behavior: "smooth" });
   },
+  { immediate: true },
 );
 
 const showNote = ref<Note>(null);

@@ -1,115 +1,148 @@
 <template>
-  <OverlayDialog :show="show" :close="closeProxy" title="Access Your Wallet!">
-    <div class="mt-2">
-      <div v-if="hasCreateTestingAccountFn" class="mt-4">
-        <p class="text-sm text-gray-400">How would you like to connect?</p>
-        <br />
+<OverlayDialog :show="show" :close="closeProxy" title="Access Your Wallet!">
+  <div class="my-2">
+    <p v-if="!isConnected && extensionAccounts.length < 1" class="text-sm my-5 mb-5 text-gray-400">How would you like to connect?</p>
+
+    <div
+      :class="{
+        'flex items-start space-x-4': extensionAccounts.length < 1,
+        'flex flex-col items-center space-y-5': extensionAccounts.length > 0
+      }"
+    >
+      <!-- Left Column -->
+      <div v-if="!isConnected && extensionAccounts.length < 1" :class="{ 'text-center': extensionAccounts.length > 0, 'flex-1 text-left': extensionAccounts.length < 1 }">
+        <p class="text-sm mb-3 text-gray-400">Create a new testing wallet:</p>
         <button
           @click="createTestingAccount"
-          class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+          class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-1.5 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
         >
-          Create a New Account for Testing
+          Create Wallet
         </button>
-        <p class="mt-4">or</p>
       </div>
-      <div v-if="extensionAccounts.length < 1" class="mt-4 flex flex-col">
-        <div
-          class="mx-auto grid max-w-lg grid-cols-2 gap-x-3 gap-y-3 sm:max-w-xl sm:grid-cols-4 sm:gap-x-3 lg:mx-0 lg:max-w-none lg:grid-cols-4"
-        >
-          <a href="https://talisman.xyz/download"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/talisman-logo.svg"
-              alt="talisman"
-          /></a>
-          <a href="https://novawallet.io/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/nova-wallet-logo.svg"
-              alt="nova wallet"
-          /></a>
-          <a href="https://www.subwallet.app/"
-            ><img
-              class="col-span-1 max-h-10 w-full object-contain lg:col-span-1"
-              src="/img/index/sub-wallet-logo.svg"
-              alt="sub wallet"
-          /></a>
-          <a href="https://polkadot.js.org/extension/"
-            ><img
-              class="col-span-1 max-h-7 w-full object-contain lg:col-span-1"
-              src="/img/index/polkadotjs-logo.svg"
-              alt="polkajs"
-          /></a>
-        </div>
-        <div class="mt-10">
-          <button
-            @click="connectExtension"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-          >
-            Connect Signer Extension
-          </button>
-        </div>
-      </div>
+
+      <!-- Vertical Divider -->
       <div
-        v-if="extensionAccounts.length > 0"
-        ref="walletSection"
-        id="wallet"
-        class="py-12 sm:py-16"
-      >
-        <p class="text-sm text-gray-400">
-          Choose one of your extension accounts
-        </p>
-        <select
-          v-model="selectedExtensionAccount"
-          id="account.address"
-          name="account.address"
-          placeholder="account.address"
-          class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+        v-if="extensionAccounts.length < 1"
+        class="w-px bg-gray-700 h-auto self-stretch"
+      ></div>
+
+      <!-- Right Column -->
+      <div v-if="extensionAccounts.length < 1" class="flex-1 text-left">
+        <p class="text-sm mb-3 text-gray-400">Connect using a browser extension:</p>
+        <button
+          @click="connectExtension"
+          class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-1.5 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
         >
-          <option disabled value="">choose...</option>
-          <option
-            v-for="account in extensionAccounts"
-            :key="account.address"
-            :value="account.address"
-          >
-            {{ account.meta.name }}
-          </option>
-        </select>
-      </div>
-      <div v-if="accountStore.hasInjector" class="mt-10">
-        <p class="text-sm text-gray-400 wrap-text">
-          your currently selected account is {{ accountStore.getAddress }}
-        </p>
-        <div
-          v-if="accountStore.sessionProxyForRole(SessionProxyRole.ReadBalance)"
-          class="mt-10"
-        >
-          <button
-            @click="changeSessionAuthorization"
-            class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-          >
-            Change Session Key Authorization
-          </button>
-        </div>
-      </div>
-      <div
-        v-if="
-          accountStore.hasInjector &&
-          showTrustedGetterHint &&
-          selectedExtensionAccountIsNew
-        "
-        class="mt-10"
-      >
-        <p class="text-sm text-gray-400">
-          please allow this app to read your balance by signing the upcoming
-          request in your extension
-        </p>
-        <p class="mt-5 text-sm text-gray-400">
-          this window will close once a balance could be fetched
-        </p>
+          Connect
+        </button>
       </div>
     </div>
-  </OverlayDialog>
+
+    <!-- Choose Account Section -->
+    <div
+      v-if="extensionAccounts.length > 0"
+      ref="walletSection"
+      id="wallet"
+      class="py-5 sm:py-5 w-full text-center"
+    >
+      <p class="text-sm mb-2 text-gray-400">Choose one of your extension accounts:</p>
+      <select
+        v-model="selectedExtensionAccount"
+        id="account.address"
+        name="account.address"
+        class="w-full rounded-md border-0 bg-gray-800 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-700 focus:ring-1 focus:ring-inset focus:ring-incognitee-green sm:text-sm sm:leading-6"
+      >
+        <option disabled value="">Choose...</option>
+        <option
+          v-for="account in extensionAccounts"
+          :key="account.address"
+          :value="account.address"
+        >
+          {{ account.meta.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Supported Extensions Section -->
+    <div v-if="!isConnected && extensionAccounts.length < 1" class="mt-5">
+      <p class="text-sm text-gray-400">Supported extensions:</p>
+      <div 
+      class="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 sm:grid-cols-4 sm:gap-x-3 lg:grid-cols-4"
+    >
+      <a href="https://talisman.xyz/download">
+        <img
+          class="max-h-10 w-full object-contain"
+          src="/img/index/talisman-logo.svg"
+          alt="talisman"
+        />
+      </a>
+      <a href="https://novawallet.io/">
+        <img
+          class="max-h-7 w-full object-contain"
+          src="/img/index/nova-wallet-logo.svg"
+          alt="nova wallet"
+        />
+      </a>
+      <a href="https://www.subwallet.app/">
+        <img
+          class="max-h-10 w-full object-contain"
+          src="/img/index/sub-wallet-logo.svg"
+          alt="sub wallet"
+        />
+      </a>
+      <a href="https://polkadot.js.org/extension/">
+        <img
+          class="max-h-7 w-full object-contain"
+          src="/img/index/polkadotjs-logo.svg"
+          alt="polkajs"
+        />
+      </a>
+    </div>
+    </div>
+
+    <!-- Currently Selected Account Section -->
+    <div
+  v-if="accountStore.hasInjector">
+<div class="text-sm text-gray-400 wrap-text p-4 bg-gray-900 border border-gray-800 rounded-md text-center"> <span>
+        Your currently selected account is:</span> <span class="text-white ">{{ accountStore.getAddress }}</span>
+      </div>
+ 
+  <div
+        v-if="accountStore.sessionProxyForRole(SessionProxyRole.ReadBalance)"
+        class="mt-7"
+      >
+      <p class="text-sm mb-2 text-gray-400">You want to update your Session Key Authorization settings?</p>
+        <button
+          @click="changeSessionAuthorization"
+          class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-1.5 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
+        >
+        Update Session Key
+        </button>
+      </div>
+</div>
+
+
+
+    <!-- Trusted Getter Hint Section -->
+    <div
+      v-if="
+        accountStore.hasInjector &&
+        showTrustedGetterHint &&
+        selectedExtensionAccountIsNew
+      "
+      class="mt-10"
+    >
+      <p class="text-sm text-gray-400">
+        Please allow this app to read your balance by signing the upcoming
+        request in your extension
+      </p>
+      <p class="mt-5 text-sm text-gray-400">
+        This window will close once a balance could be fetched
+      </p>
+    </div>
+  </div>
+</OverlayDialog>
+
 </template>
 
 <script setup lang="ts">
@@ -122,6 +155,11 @@ import { computed, defineProps, ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
+const isConnected = ref(false);
+
+const handleConnect = () => {
+  isConnected.value = true;
+};
 
 const accountStore = useAccount();
 const currentExtensionAccount = ref("");

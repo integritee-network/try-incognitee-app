@@ -30,6 +30,7 @@
   </div>
   <!-- all following tabs can be unmounted if unselected -->
   <div v-if="activeApp === 'vouchers'"><VouchersTab /></div>
+  <div v-else-if="activeApp === 'faq'"><FaqTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
   <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab /></div>
@@ -162,6 +163,7 @@ import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
 import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
+import FaqTab from "~/components/tabs/FaqTab.vue";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -780,6 +782,15 @@ const switchToWallet = () => {
   });
 };
 
+const switchToSessionsKey = () => {
+  activeApp.value = "sessionskey";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
+};
+
 const switchToMessaging = () => {
   activeApp.value = "messaging";
   const query = { ...router.currentRoute.value.query };
@@ -825,6 +836,15 @@ const switchToTeerDays = () => {
   });
 };
 
+const switchToFaq = () => {
+  activeApp.value = "faq";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query: query,
+  });
+};
+
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
@@ -840,6 +860,7 @@ onMounted(async () => {
   eventBus.on("switchToGov", switchToGov);
   eventBus.on("switchToVouchers", switchToVouchers);
   eventBus.on("switchToTeerDays", switchToTeerDays);
+  eventBus.on("switchToFaq", switchToFaq);
 
   const injectedAddress = router.currentRoute.value.query.address;
   if (router.currentRoute.value.query.forceLive) {

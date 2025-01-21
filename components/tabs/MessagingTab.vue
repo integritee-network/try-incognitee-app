@@ -203,74 +203,110 @@
         </div>
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto" style="height: calc(100vh - 12rem)">
-          <div
-            v-if="eventHorizon"
-            class="my-5 mx-5 flex text-center text-xs text-gray-500"
-          >
-            messages before {{ formatMoment(eventHorizon) }} have been purged
-            from Incognitee state. more recent messages can be polled in batches
-          </div>
-          <div
-            v-if="unfetchedBucketsCount > 0"
-            class="my-5 mx-5 flex text-center text-xs text-gray-500"
-          >
-            <button @click="fetchOlderBucket">
-              query more messages
-              {{
-                accountStore.hasInjector
-                  ? "(needs signature in extension)"
-                  : ""
-              }}: fetch older batch {{ bucketsCount - unfetchedBucketsCount }} /
-              {{ bucketsCount }}
-            </button>
-            <div v-if="isUpdatingNotes" class="spinner"></div>
-          </div>
+         
+      
           <PrivateMessageHistory
             :show="true"
             :counterparty="conversationAddress"
           />
         </div>
-        <!-- Input Box -->
         <div
-          v-if="recipientValid(conversationAddress)"
-          class="border-t border-gray-700 bg-gray-800 absolute bottom-0 left-0 right-0 z-10"
-        >
-          <div class="flex items-center bg-gray-800 px-4 py-2">
-            <form class="flex w-full" @submit.prevent="submitSendForm">
-              <div class="relative w-full">
-                <textarea
-                  id="newMessage"
-                  v-model="sendPrivateNote"
-                  rows="1"
-                  maxlength="140"
-                  name="newMessage"
-                  required
-                  placeholder="Enter message"
-                  class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
-                ></textarea>
-                <!-- Zeichen-Counter -->
-                <div
-                  class="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 text-xs"
-                >
-                  {{ sendPrivateNote.length }}/140
-                </div>
-              </div>
-              <!-- Senden-Button -->
-              <button
-                type="submit"
-                class="ml-4 text-gray-400 hover:text-gray-300 flex-shrink-0"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                  <path
-                    fill-rule="evenodd"
-                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </button>
-            </form>
+  v-if="recipientValid(conversationAddress)"
+  class="border-t border-gray-700 bg-gray-800 absolute bottom-0 left-0 right-0 z-10"
+>
+  <div class="flex items-center bg-gray-800 px-4 py-2">
+    <form class="flex w-full" @submit.prevent="submitSendForm">
+      <!-- Div für Input-Feld und Balance/Fee -->
+      <div class="flex-1">
+        <!-- Eingabefeld -->
+        <div class="relative">
+          <textarea
+            id="newMessage"
+            v-model="sendPrivateNote"
+            rows="1"
+            maxlength="140"
+            name="newMessage"
+            required
+            placeholder="Enter message"
+            class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
+          ></textarea>
+          <!-- Zeichen-Counter -->
+          <div
+            class="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-400 text-xs"
+          >
+            {{ sendPrivateNote.length }}/140
           </div>
         </div>
+        <div class="flex justify-between mt-1 text-xs text-gray-400">
+  <!-- Links: Test -->
+  <div class="flex items-center">
+  <!-- Last update -->
+  <span class="mr-5" v-if="eventHorizon">
+    Last update: {{ formatMoment(eventHorizon) }}
+  </span>
+  
+  <!-- Fetch button and icon -->
+  <span class="text-blue-600 flex items-center" v-if="unfetchedBucketsCount > 0">
+    <button @click="fetchOlderBucket" class="flex items-center">
+      <!-- SVG Icon -->
+      <svg
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        class="w-3 h-3 text-blue-600 mr-2"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      Fetch more
+      <!-- Conditional text -->
+      {{
+        accountStore.hasInjector
+          ? "(needs signature in extension)"
+          : ""
+      }}
+      {{ bucketsCount - unfetchedBucketsCount }} / {{ bucketsCount }}
+    </button>
+    <!-- Spinner -->
+    <span v-if="isUpdatingNotes" class="spinner ml-3"></span>
+  </span>
+</div>
+
+  <!-- Rechts: Balance und Fee -->
+  <div class="text-right">
+    <span>
+      Private balance:
+      {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+    </span>
+    &nbsp;&nbsp;
+    <span>
+      Fee: 0.01 {{ accountStore.getSymbol }} for Incognitee
+    </span>
+  </div>
+</div>
+
+      </div>
+      <!-- Senden-Button -->
+      <button
+        type="submit"
+        class="ml-4 text-gray-400 hover:text-gray-300 flex-shrink-0"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+          <path
+            fill-rule="evenodd"
+            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
       </div>
     </div>
 

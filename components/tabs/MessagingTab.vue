@@ -68,7 +68,6 @@
             ☰
           </button>
 
-
           <!-- Linksbündiger Titel -->
           <div
             class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"

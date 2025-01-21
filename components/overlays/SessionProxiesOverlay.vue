@@ -107,30 +107,53 @@
             </label>
           </div>
           <!--
-          <p class="text-sm text-gray-400">
-            If this is your personal machine, we recommend to persist a session
-            key in browser storage. This will avoid the initial authentication
-            signature in the extension when you visit this site.
-          </p>
-          <div class="mt-2">
-            <input
-              type="checkbox"
-              id="persistSession"
-              v-model="persistSessionProxy"
-            />
-            <label for="persistSession"
-            >Persist session key in browser storage</label
-            >
-          </div>-->
-          <p class="text-sm text-gray-400 my-4">
-            The signer extension will pop up and ask you to sign this request.
-          </p>
-          <button
-            type="submit"
-            class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-2 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
+                    <p class="text-sm text-gray-400">
+                      If this is your personal machine, we recommend to persist a session
+                      key in browser storage. This will avoid the initial authentication
+                      signature in the extension when you visit this site.
+                    </p>
+                    <div class="mt-2">
+                      <input
+                        type="checkbox"
+                        id="persistSession"
+                        v-model="persistSessionProxy"
+                      />
+                      <label for="persistSession"
+                      >Persist session key in browser storage</label
+                      >
+                    </div>-->
+
+          <div
+            v-if="
+              accountStore.getDecimalBalanceFree(incogniteeSidechain) <
+                INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
+              bestSessionProxyRole == null
+            "
+            class="mt-5"
           >
-            Update Authorization
-          </button>
+            <p class="text-sm text-yellow-400">
+              You need at least
+              {{
+                formatDecimalBalance(
+                  INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
+                )
+              }}
+              {{ accountStore.getSymbol }} private balance to register a session
+              proxy. You have
+              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
+            </p>
+          </div>
+          <div v-else>
+            <p class="text-sm text-gray-400 mb-5">
+              the signer extension will pop up and ask you to sign this request
+            </p>
+            <button
+              type="submit"
+              class="incognitee-bg btn btn_gradient rounded-md px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+            >
+              Update Authorization
+            </button>
+          </div>
         </form>
       </div>
 

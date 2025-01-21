@@ -234,12 +234,11 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              load older messages
               {{
                 accountStore.hasInjector &&
                 !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
-                  ? "(needs signature in extension)"
-                  : ""
+                  ? "load older messages (needs signature in extension. Add session key to automate!)"
+                  : "loading older messages"
               }}
               ({{ bucketsCount - unfetchedBucketsCount }} /
               {{ bucketsCount }} buckets)

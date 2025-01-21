@@ -241,6 +241,9 @@
       <PrivateTxHistory
         :show="currentTab === 'private'"
         :fetchOlderBucket="props.fetchOlderBucket"
+        :eventHorizon="props.eventHorizon"
+        :bucketsCount="props.bucketsCount"
+        :unfetchedBucketsCount="props.unfetchedBucketsCount"
       />
     </div>
 
@@ -1071,6 +1074,7 @@ import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.v
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
+import MessagingTab from "~/components/tabs/MessagingTab.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1615,6 +1619,12 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  eventHorizon: {
+    type: Number,
+    required: true,
+  },
+  bucketsCount: { type: Number, required: true },
+  unfetchedBucketsCount: { type: Number, required: true },
   enableActions: {
     type: Boolean,
     required: true,

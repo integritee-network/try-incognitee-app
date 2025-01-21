@@ -203,6 +203,44 @@
         </div>
         <!-- Chat Messages -->
         <div class="flex-1 overflow-y-auto" style="height: calc(100vh - 12rem)">
+          <div
+            v-if="eventHorizon && unfetchedBucketsCount === 0"
+            class="my-5 mx-5 flex text-center text-blue justify-center text-xs text-gray-500"
+          >
+            messages before {{ formatMoment(eventHorizon) }} have been purged
+            from Incognitee state.
+          </div>
+          <div
+            v-if="unfetchedBucketsCount > 0"
+            class="my-5 mx-5 flex text-center justify-center text-xs text-gray-500"
+          >
+            <div
+              @click="fetchOlderBucket"
+              class="flex items-center cursor-pointer text-blue"
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="w-3 h-3 text-blue-600 mr-2"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              load older messages
+              {{
+                accountStore.hasInjector &&
+                !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
+                  ? "(needs signature in extension)"
+                  : ""
+              }}
+              ({{ bucketsCount - unfetchedBucketsCount }} /
+              {{ bucketsCount }} buckets)
+            </div>
+            <div v-if="isUpdatingNotes" class="spinner ml-4"></div>
+          </div>
           <PrivateMessageHistory
             :show="true"
             :counterparty="conversationAddress"
@@ -236,48 +274,8 @@
                   </div>
                 </div>
                 <div class="flex justify-between mt-1 text-xs text-gray-400">
-                  <!-- Links: Test -->
-                  <div class="flex items-center">
-                    <!-- Last update -->
-                    <span class="mr-5" v-if="eventHorizon">
-                      Last update: {{ formatMoment(eventHorizon) }}
-                    </span>
-
-                    <!-- Fetch button and icon -->
-                    <span
-                      class="text-blue-600 flex items-center"
-                      v-if="unfetchedBucketsCount > 0"
-                    >
-                      <button
-                        @click="fetchOlderBucket"
-                        class="flex items-center"
-                      >
-                        <!-- SVG Icon -->
-                        <svg
-                          viewBox="0 0 16 16"
-                          fill="currentColor"
-                          class="w-3 h-3 text-blue-600 mr-2"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                        Fetch more
-                        <!-- Conditional text -->
-                        {{
-                          accountStore.hasInjector
-                            ? "(needs signature in extension)"
-                            : ""
-                        }}
-                        {{ bucketsCount - unfetchedBucketsCount }} /
-                        {{ bucketsCount }}
-                      </button>
-                      <!-- Spinner -->
-                      <span v-if="isUpdatingNotes" class="spinner ml-3"></span>
-                    </span>
-                  </div>
+                  <!-- Links: Placeholder -->
+                  <div class="flex items-center" />
 
                   <!-- Rechts: Balance und Fee -->
                   <div class="text-right">
@@ -431,7 +429,7 @@ import { eventBus } from "@/helpers/eventBus";
 import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { defineProps, ref, watch, computed, onMounted, onUnmounted } from "vue";
+import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
@@ -442,9 +440,7 @@ import { identities as polkadotPeopleIdentities } from "@/lib/polkadotPeopleIden
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { formatMoment } from "@/helpers/date";
 import { useNotes } from "@/store/notes.ts";
-import { Note, NoteDirection } from "@/lib/notes";
-import { divideBigIntToFloat } from "@/helpers/numbers";
-import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
+import { Note } from "@/lib/notes";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 
 const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
@@ -857,6 +853,10 @@ textarea {
 
 .text-white {
   color: #ffffff;
+}
+
+.text-blue {
+  color: #2563eb;
 }
 
 .truncate-input {

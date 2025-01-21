@@ -186,7 +186,7 @@
                 />
               </svg>
 
-              Session Keys
+              Session Key
             </button>
           </li>
           <UDivider
@@ -394,7 +394,9 @@ const selectToken = (item) => {
       query: currentQuery,
     })
     .then(() => {
-      window.location.reload();
+      if (selectedToken.value !== item.value) {
+        window.location.reload();
+      }
     });
   //selectedToken.value = item.label;
   //isOpen.value = false; // Close dropdown after selection

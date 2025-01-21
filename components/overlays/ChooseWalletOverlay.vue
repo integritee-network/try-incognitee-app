@@ -120,7 +120,7 @@
         <div
           class="text-sm text-gray-400 wrap-text p-4 bg-gray-900 border border-gray-800 rounded-md text-center"
         >
-          <span> Your currently selected account is:</span>
+          <span> Your currently selected account is:<br /></span>
           <span class="text-white">{{ accountStore.getAddress }}</span>
         </div>
 
@@ -129,13 +129,13 @@
           class="mt-7"
         >
           <p class="text-sm mb-2 text-gray-400">
-            You want to update your Session Key Authorization settings?
+            Would you like to update your session key authorization settings?
           </p>
           <button
             @click="changeSessionAuthorization"
             class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-1.5 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
           >
-            Update Session Key
+            Update Session Key Role
           </button>
         </div>
       </div>

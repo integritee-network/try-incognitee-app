@@ -1,13 +1,14 @@
 <template>
   <OverlayDialog :show="show" :close="closeProxy" title="Access Your Wallet!">
     <div class="my-2">
-      <p
-        v-if="!isConnected && extensionAccounts.length < 1"
-        class="text-sm my-5 mb-5 text-gray-400"
-      >
-        How would you like to connect?
-      </p>
-
+      <div v-if="hasCreateTestingAccountFn" class="mt-4">
+        <p
+          v-if="!isConnected && extensionAccounts.length < 1"
+          class="text-sm my-5 mb-5 text-gray-400"
+        >
+          How would you like to connect?
+        </p>
+      </div>
       <div
         :class="{
           'flex items-start space-x-4': extensionAccounts.length < 1,
@@ -16,7 +17,7 @@
       >
         <!-- Left Column -->
         <div
-          v-if="!isConnected && extensionAccounts.length < 1"
+          v-if="hasCreateTestingAccountFn"
           :class="{
             'text-center': extensionAccounts.length > 0,
             'flex-1 text-left': extensionAccounts.length < 1,
@@ -33,10 +34,9 @@
 
         <!-- Vertical Divider -->
         <div
-          v-if="extensionAccounts.length < 1"
+          v-if="hasCreateTestingAccountFn"
           class="w-px bg-gray-700 h-auto self-stretch"
         ></div>
-
         <!-- Right Column -->
         <div v-if="extensionAccounts.length < 1" class="flex-1 text-left">
           <p class="text-sm mb-3 text-gray-400">

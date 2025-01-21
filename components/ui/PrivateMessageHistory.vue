@@ -11,30 +11,39 @@
         :key="index"
         class="py-2 px-4"
       >
-       <!-- Ausgehende Nachrichten -->
-<div v-if="note.direction === NoteDirection.Outgoing" class="chat chat-end mb-3">
-  <div class="chat-header text-xs text-gray-500 mb-1">You</div>
-  <div class="chat-bubble message-box max-w-xs shadow-md bg-blue-500 text-white">
-    {{ note.note }}
-  </div>
-  <div class="chat-footer text-xs text-gray-500 mt-1">
-    {{ formatDate(note.timestamp) }}
-  </div>
-</div>
+        <!-- Ausgehende Nachrichten -->
+        <div
+          v-if="note.direction === NoteDirection.Outgoing"
+          class="chat chat-end mb-3"
+        >
+          <div class="chat-header text-xs text-gray-500 mb-1">You</div>
+          <div
+            class="chat-bubble message-box max-w-xs shadow-md bg-blue-500 text-white"
+          >
+            {{ note.note }}
+          </div>
+          <div class="chat-footer text-xs text-gray-500 mt-1">
+            {{ formatDate(note.timestamp) }}
+          </div>
+        </div>
 
-<!-- Eingehende Nachrichten -->
-<div v-if="note.direction === NoteDirection.Incoming" class="chat chat-start mb-3">
-  <div class="chat-header wallet-address text-xs text-gray-500 mb-1">
-    {{ note.account }}
-  </div>
-  <div class="chat-bubble message-box max-w-xs shadow-md bg-white text-black">
-    {{ note.note }}
-  </div>
-  <div class="chat-footer text-xs text-gray-500 mt-1">
-    {{ formatDate(note.timestamp) }}
-  </div>
-</div>
-
+        <!-- Eingehende Nachrichten -->
+        <div
+          v-if="note.direction === NoteDirection.Incoming"
+          class="chat chat-start mb-3"
+        >
+          <div class="chat-header wallet-address text-xs text-gray-500 mb-1">
+            {{ note.account }}
+          </div>
+          <div
+            class="chat-bubble message-box max-w-xs shadow-md bg-white text-black"
+          >
+            {{ note.note }}
+          </div>
+          <div class="chat-footer text-xs text-gray-500 mt-1">
+            {{ formatDate(note.timestamp) }}
+          </div>
+        </div>
       </div>
     </div>
   </div>

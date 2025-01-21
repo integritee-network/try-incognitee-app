@@ -156,8 +156,10 @@
             </span>
           </li>
           <li class="px-4">
-            <button @click="changeSessionAuthorization"
-              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md">
+            <button
+              @click="changeSessionAuthorization"
+              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -188,26 +190,25 @@
           </li>
           <li class="px-4">
             <a
-  href="mailto:support@integritee.network"
-  class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="w-6 h-6 mr-2"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
-    />
-  </svg>
-  Contact support
-</a>
-
+              href="mailto:support@integritee.network"
+              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+                />
+              </svg>
+              Contact support
+            </a>
           </li>
         </ul>
       </nav>
@@ -220,113 +221,111 @@
         <HealthIndicator />
       </div>
       <div class="text-sm flex flex-col space-y-1">
-  <div v-if="accountStore.getAddress === 'none'">
-    <button
-      @click="
-        () => {
-          emitEvent('addressClicked');
-          toggleSidebar();
-        }
-      "
-      class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
-    >
-      Connect Wallet
-    </button>
-  </div>
-  <div v-else>
-    <div class="text-xs text-gray-500 mb-1">Select Token:</div>
-    <div class="relative group mb-3">
-  <!-- Dropdown Trigger -->
-  <div
-    class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
-    @click="toggleDropdown"
-  >
-    <TEER v-if="selected === 'TEER'" class="w-[14px] h-[14px] mr-2" />
-    <Paseo v-else-if="selected === 'PAS'" class="w-[14px] h-[14px] mr-2" />
-    <USDC v-else class="w-[14px] h-[14px] mr-2" />
-    <span class="truncate">{{ selected }}</span>
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      :class="['w-3 h-3 ml-auto', isOpen ? 'rotate-180' : '']"
-      class="transition-transform text-gray-500 hover:text-incognitee-green"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-        clip-rule="evenodd"
-      />
-    </svg>
-  </div>
+        <div v-if="accountStore.getAddress === 'none'">
+          <button
+            @click="
+              () => {
+                emitEvent('addressClicked');
+                toggleSidebar();
+              }
+            "
+            class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
+          >
+            Connect Wallet
+          </button>
+        </div>
+        <div v-else>
+          <div class="text-xs text-gray-500 mb-1">Select Token:</div>
+          <div class="relative group mb-3">
+            <!-- Dropdown Trigger -->
+            <div
+              class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
+              @click="toggleDropdown"
+            >
+              <TEER v-if="selected === 'TEER'" class="w-[14px] h-[14px] mr-2" />
+              <Paseo
+                v-else-if="selected === 'PAS'"
+                class="w-[14px] h-[14px] mr-2"
+              />
+              <USDC v-else class="w-[14px] h-[14px] mr-2" />
+              <span class="truncate">{{ selected }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                :class="['w-3 h-3 ml-auto', isOpen ? 'rotate-180' : '']"
+                class="transition-transform text-gray-500 hover:text-incognitee-green"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
 
-  <!-- Dropdown Menu -->
-  <div
-    v-show="isOpen"
-    class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
-  >
-    <div
-      v-for="item in items"
-      :key="item.value"
-      class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
-      @click="redirect(item)"
-    >
-      <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
-      <span>{{ item.label }}</span>
+            <!-- Dropdown Menu -->
+            <div
+              v-show="isOpen"
+              class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
+            >
+              <div
+                v-for="item in items"
+                :key="item.value"
+                class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
+                @click="redirect(item)"
+              >
+                <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
+                <span>{{ item.label }}</span>
+              </div>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-show="isOpen"
+              class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
+            >
+              <div
+                v-for="item in items"
+                :key="item.value"
+                class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
+                @click="selectItem(item)"
+              >
+                <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
+                <span>{{ item.label }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-xs text-gray-500 mb-1">Connected with:</div>
+          <div class="relative group">
+            <div
+              class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green"
+              @click="
+                () => {
+                  emitEvent('addressClicked');
+                  toggleSidebar();
+                }
+              "
+            >
+              <span class="truncate">{{ accountStore.getAddress }}</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                class="w-5 h-5 text-gray-500 ml-auto hover:text-incognitee-green"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-
-
-  <!-- Dropdown Menu -->
-  <div
-    v-show="isOpen"
-    class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
-  >
-    <div
-      v-for="item in items"
-      :key="item.value"
-      class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
-      @click="selectItem(item)"
-    >
-      <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
-      <span>{{ item.label }}</span>
-    </div>
-  </div>
-</div>
-
-  <div class="text-xs text-gray-500 mb-1">Connected with:</div>
-  <div class="relative group">
-    <div
-  class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green"
-  @click="
-    () => {
-      emitEvent('addressClicked');
-      toggleSidebar();
-    }
-  "
->
-  <span class="truncate">{{ accountStore.getAddress }}</span>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    class="w-5 h-5 text-gray-500 ml-auto hover:text-incognitee-green"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-      clip-rule="evenodd"
-    />
-  </svg>
-</div>
-</div>
-
-
-</div>
-
-</div>
-    </div>
-    
   </div>
 
   <!-- Overlay: Hintergrund abdunkeln nur in mobiler Ansicht -->
@@ -346,7 +345,10 @@ import Incognitee from "@/assets/img/incognitee-full-logo.svg";
 import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { ChevronDownIcon } from "@heroicons/vue/20/solid";
-import { connectExtension, extensionAccounts, } from "~/lib/signerExtensionUtils";
+import {
+  connectExtension,
+  extensionAccounts,
+} from "~/lib/signerExtensionUtils";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
@@ -498,7 +500,6 @@ onMounted(() => {
 onUnmounted(() => {
   eventBus.off("toggleSidebar", toggleSidebar);
 });
-
 
 // Event-Emitter-Funktionen
 const emitEvent = (eventName: string) => {

@@ -1,108 +1,117 @@
 <template>
-  <OverlayDialog :show="show" :close="closeProxy" title="Session Key Authorization">
-    <div class="mt-2 space-y-6">
-  <!-- Authorization Details -->
-  <div>
-    <p class="text-sm text-gray-400">
-      For a smooth experience with minimal signing interaction, we recommend
-      that you authorize a session key. It will be cached confidentially on
-      Incognitee and loaded automatically on your next visit.
-    </p>
-    <p class="text-sm text-gray-400 mt-2">
-      Registering a session key costs a fee of
-      <span class="font-semibold">{{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}</span>
-      {{ accountStore.getSymbol }} and a deposit of
-      <span class="font-semibold">{{ INCOGNITEE_SESSION_PROXY_DEPOSIT }}</span>
-      {{ accountStore.getSymbol }} will be reserved.
-    </p>
-  </div>
-
-  <!-- Options -->
-  <div class="grid grid-cols-1 gap-4">
-  <form @submit.prevent="updateAuthorization">
-    <div
-      class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
-    >
-      <label class="flex items-center space-x-3">
-        <input
-          type="radio"
-          id="readBalance"
-          value="ReadBalance"
-          v-model="selectedSessionProxyRole"
-        />
-        <span class="text-sm text-gray-400">Allow reading balance</span>
-      </label>
-    </div>
-    <div
-      class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
-    >
-      <label class="flex items-center space-x-3">
-        <input
-          type="radio"
-          id="readAny"
-          value="ReadAny"
-          v-model="selectedSessionProxyRole"
-        />
-        <span class="text-sm text-gray-400">Full read access</span>
-      </label>
-    </div>
-    <div
-      class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
-    >
-      <label class="flex items-center space-x-3">
-        <input
-          type="radio"
-          id="nonTransfer"
-          value="NonTransfer"
-          v-model="selectedSessionProxyRole"
-        />
-        <span class="text-sm text-gray-400">Allow non-transfer actions</span>
-      </label>
-    </div>
-    <div
-      class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
-    >
-      <label class="flex items-center space-x-3">
-        <input
-          type="radio"
-          id="any"
-          value="Any"
-          v-model="selectedSessionProxyRole"
-        />
-        <span class="text-sm text-gray-400">Allow all actions</span>
-      </label>
-    </div>
-    <p class="text-sm text-gray-400 my-4">
-      The signer extension will pop up and ask you to sign this request.
-    </p>
-      <button
-        type="submit"
-        class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-2 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
-      >
-        Update Authorization
-      </button>
-    </form>
-  </div>
-
-  <!-- Continue Without Proxy -->
-  <div
-  v-if="bestSessionProxyRole == null"
-  class="mt-10 p-4 bg-gray-900 border border-gray-800 rounded-md text-center"
->
-  <p class="text-sm text-gray-400">
-    You can continue without session authorization, but it may require more frequent signing interactions.
-  </p>
-  <button
-    type="button"
-    @click="close(true)"
-    class="mt-4 bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-700 transition"
+  <OverlayDialog
+    :show="show"
+    :close="closeProxy"
+    title="Session Key Authorization"
   >
-    Continue Without Session Proxy
-  </button>
-</div>
+    <div class="mt-2 space-y-6">
+      <!-- Authorization Details -->
+      <div>
+        <p class="text-sm text-gray-400">
+          For a smooth experience with minimal signing interaction, we recommend
+          that you authorize a session key. It will be cached confidentially on
+          Incognitee and loaded automatically on your next visit.
+        </p>
+        <p class="text-sm text-gray-400 mt-2">
+          Registering a session key costs a fee of
+          <span class="font-semibold">{{
+            formatDecimalBalance(INCOGNITEE_TX_FEE)
+          }}</span>
+          {{ accountStore.getSymbol }} and a deposit of
+          <span class="font-semibold">{{
+            INCOGNITEE_SESSION_PROXY_DEPOSIT
+          }}</span>
+          {{ accountStore.getSymbol }} will be reserved.
+        </p>
+      </div>
 
-</div>
+      <!-- Options -->
+      <div class="grid grid-cols-1 gap-4">
+        <form @submit.prevent="updateAuthorization">
+          <div
+            class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
+          >
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                id="readBalance"
+                value="ReadBalance"
+                v-model="selectedSessionProxyRole"
+              />
+              <span class="text-sm text-gray-400">Allow reading balance</span>
+            </label>
+          </div>
+          <div
+            class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
+          >
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                id="readAny"
+                value="ReadAny"
+                v-model="selectedSessionProxyRole"
+              />
+              <span class="text-sm text-gray-400">Full read access</span>
+            </label>
+          </div>
+          <div
+            class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
+          >
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                id="nonTransfer"
+                value="NonTransfer"
+                v-model="selectedSessionProxyRole"
+              />
+              <span class="text-sm text-gray-400"
+                >Allow non-transfer actions</span
+              >
+            </label>
+          </div>
+          <div
+            class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
+          >
+            <label class="flex items-center space-x-3">
+              <input
+                type="radio"
+                id="any"
+                value="Any"
+                v-model="selectedSessionProxyRole"
+              />
+              <span class="text-sm text-gray-400">Allow all actions</span>
+            </label>
+          </div>
+          <p class="text-sm text-gray-400 my-4">
+            The signer extension will pop up and ask you to sign this request.
+          </p>
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-2 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
+          >
+            Update Authorization
+          </button>
+        </form>
+      </div>
 
+      <!-- Continue Without Proxy -->
+      <div
+        v-if="bestSessionProxyRole == null"
+        class="mt-10 p-4 bg-gray-900 border border-gray-800 rounded-md text-center"
+      >
+        <p class="text-sm text-gray-400">
+          You can continue without session authorization, but it may require
+          more frequent signing interactions.
+        </p>
+        <button
+          type="button"
+          @click="close(true)"
+          class="mt-4 bg-gray-800 text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-700 transition"
+        >
+          Continue Without Session Proxy
+        </button>
+      </div>
+    </div>
   </OverlayDialog>
   <StatusOverlay
     :tx-status="txStatus"

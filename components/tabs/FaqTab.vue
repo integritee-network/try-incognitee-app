@@ -1,13 +1,8 @@
 <template>
-   <div class="text-white">
-TEST
-   </div>
-
+  <div class="text-white">TEST</div>
 </template>
 
-<script>
-
-</script>
+<script></script>
 
 <style scoped>
 /* No custom styles needed as we are using Tailwind CSS */

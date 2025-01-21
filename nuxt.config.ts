@@ -16,7 +16,8 @@ export default defineNuxtConfig({
     head: {
       title: "Incognitee",
       charset: "utf-8",
-      viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      viewport:
+        "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
       meta: [
         // {
         //   hid: 'robots',

@@ -17,6 +17,23 @@
       <div class="ribbon red"><span>beta</span></div>
     </div>
 
+    <!-- DOT Box -->
+    <div
+      class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
+      :class="{
+        'border-incognitee-green':
+          dotHover || selectedNetwork === ChainId.AssetHubPolkadot,
+      }"
+      @mouseover="dotHover = true"
+      @mouseleave="dotHover = false"
+      @click="handleDotClick"
+      title="Asset Hub Polkadot"
+    >
+      <DOT class="w-[30px] h-[30px]" />
+      <p class="text-xs">DOT</p>
+      <div class="ribbon gray"><span>soon</span></div>
+    </div>
+
     <!-- PAS PASEO Box -->
     <div
       class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
@@ -27,22 +44,11 @@
       @mouseover="pasHover = true"
       @mouseleave="pasHover = false"
       @click="handlePasClick"
-      title="Paseo Testnet"
+      title="Paseo Testnet (Relaychain)"
     >
       <Paseo class="w-[30px] h-[30px]" />
       <p class="text-xs">PAS</p>
       <div class="ribbon blue"><span>test</span></div>
-    </div>
-
-    <!-- USDC Box -->
-    <div
-      class="currency-box gap-2 p-3 basis-1/3 relative cursor-pointer"
-      @click="openAssetsInfo"
-      title="USDC on Asset Hub"
-    >
-      <USDC class="w-[30px] h-[30px]" />
-      <p class="text-xs">USDC</p>
-      <div class="ribbon gray"><span>soon</span></div>
     </div>
   </div>
 </template>
@@ -52,6 +58,7 @@ import { ref, computed } from "vue";
 import Paseo from "assets/img/paseo-logo.svg";
 import USDC from "assets/img/usdc-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
+import DOT from "@/assets/img/polkadot-logo.svg";
 import { ChainId } from "@/configs/chains.ts";
 import { defineProps } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
@@ -71,6 +78,7 @@ const props = defineProps({
 // Hover-Zustände
 const teerHover = ref(false);
 const pasHover = ref(false);
+const dotHover = ref(false);
 
 // Funktionen für das Klicken auf die Boxen
 const handleTeerClick = () => {
@@ -78,7 +86,19 @@ const handleTeerClick = () => {
     if (props.selectedNetwork === ChainId.IntegriteeKusama) {
       console.log("do nothing");
     } else {
-      window.open("https://app.incognitee.io", "_blank");
+      window.open("https://app.incognitee.io/teer", "_blank");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const handleDotClick = () => {
+  try {
+    if (props.selectedNetwork === ChainId.AssetHubPolkadot) {
+      console.log("do nothing");
+    } else {
+      window.open("https://app.incognitee.io/dot", "_blank");
     }
   } catch (e) {
     console.log(e);

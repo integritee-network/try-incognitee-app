@@ -28,16 +28,31 @@
       <!-- Options -->
       <div class="grid grid-cols-1 gap-4">
         <form @submit.prevent="updateAuthorization">
+          <!-- removing proxies not yet supported
+<div v-if="bestSessionProxyRole !== null" class="radio-group">
+  <div>
+    <input
+      type="radio"
+      id="noProxy"
+      value="NoProxy"
+      v-model="selectedSessionProxyRole"
+    />
+  </div>
+  <label for="noProxy">remove all authorizations</label>
+</div> -->
           <div
             class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
           >
             <label class="flex items-center space-x-3">
+              <div v-if="'readBalance' !== bestSessionProxyRole">
               <input
                 type="radio"
                 id="readBalance"
                 value="ReadBalance"
                 v-model="selectedSessionProxyRole"
               />
+              </div>
+              <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Allow reading balance</span>
             </label>
           </div>
@@ -45,12 +60,15 @@
             class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
           >
             <label class="flex items-center space-x-3">
+              <div v-if="'readAny' !== bestSessionProxyRole">
               <input
                 type="radio"
                 id="readAny"
                 value="ReadAny"
                 v-model="selectedSessionProxyRole"
               />
+          </div>
+          <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Full read access</span>
             </label>
           </div>
@@ -58,12 +76,15 @@
             class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
           >
             <label class="flex items-center space-x-3">
+              <div v-if="'nonTransfer' !== bestSessionProxyRole">
               <input
                 type="radio"
                 id="nonTransfer"
                 value="NonTransfer"
                 v-model="selectedSessionProxyRole"
               />
+          </div>
+      <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400"
                 >Allow non-transfer actions</span
               >
@@ -73,15 +94,34 @@
             class="p-4 my-1 border border-gray-700 rounded-md hover:bg-gray-800 transition"
           >
             <label class="flex items-center space-x-3">
+              <div v-if="'any' !== bestSessionProxyRole">
               <input
                 type="radio"
                 id="any"
                 value="Any"
                 v-model="selectedSessionProxyRole"
               />
+          </div>
+    <div v-else class="mr-4">✓</div>
               <span class="text-sm text-gray-400">Allow all actions</span>
             </label>
           </div>
+          <!--
+          <p class="text-sm text-gray-400">
+            If this is your personal machine, we recommend to persist a session
+            key in browser storage. This will avoid the initial authentication
+            signature in the extension when you visit this site.
+          </p>
+          <div class="mt-2">
+            <input
+              type="checkbox"
+              id="persistSession"
+              v-model="persistSessionProxy"
+            />
+            <label for="persistSession"
+            >Persist session key in browser storage</label
+            >
+          </div>-->
           <p class="text-sm text-gray-400 my-4">
             The signer extension will pop up and ask you to sign this request.
           </p>
@@ -359,9 +399,9 @@ watch(
         accountStore.sessionProxyBest();
       console.log(
         "best session proxy: ",
-        bestSessionProxy.value.address,
+        bestSessionProxy.value?.address,
         " role: ",
-        bestSessionProxyRole.value,
+        bestSessionProxyRole?.value,
       );
       if (bestSessionProxyRole.value !== null) {
         selectedSessionProxyRole.value = bestSessionProxyRole.value;

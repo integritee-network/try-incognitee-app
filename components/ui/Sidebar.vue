@@ -104,7 +104,13 @@
               Messages
             </button>
           </li>
-          <li v-if="accountStore.getSymbol === 'TEER'" class="px-4">
+          <li
+            v-if="
+              accountStore.getSymbol === 'TEER' ||
+              accountStore.getSymbol === 'DOT'
+            "
+            class="px-4"
+          >
             <button
               class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
               @click="

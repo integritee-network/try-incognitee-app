@@ -10,11 +10,11 @@
     </div>
     <InfoBanner
       v-if="!accountStore.hasInjector"
-      :isMobile="isMobile"
-      textMobile="You need some signer extension to use this page. Please make sure to
+      :isMobile="props.isMobile"
+      textMobile="You need some signer extension to use this page securely. Please make sure to
         enable your extension and reload the page in case the connect button
         doesn't work."
-      textDesktop="You need some signer extension to use this page. Please make sure to
+      textDesktop="You need some signer extension to use this page securely. Please make sure to
         enable your extension and reload the page in case the connect button
         doesn't work."
     />
@@ -100,7 +100,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceFrozen(
-                              integriteeNetwork,
+                              teerdaysNetwork,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -114,7 +114,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceFrozen(
-                                  integriteeNetwork,
+                                  teerdaysNetwork,
                                 )
                               }}
                               TEER</time
@@ -125,7 +125,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceReserved(
-                              integriteeNetwork,
+                              teerdaysNetwork,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -139,7 +139,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceReserved(
-                                  integriteeNetwork,
+                                  teerdaysNetwork,
                                 )
                               }}
                               TEER</time
@@ -314,7 +314,9 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
+              <div v-if="summaryHolders === null" class="spinner"></div>
               <div
+                v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
               >
                 {{ summaryHolders }}
@@ -342,7 +344,9 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
+              <div v-if="summaryTeerBonded === null" class="spinner"></div>
               <div
+                v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
               >
                 {{ formatBigDecimalBalance(summaryTeerBonded) }}
@@ -370,7 +374,9 @@
             <dd
               class="mt-1 flex items-baseline justify-between md:block lg:flex"
             >
+              <div v-if="summaryTeerDays === null" class="spinner"></div>
               <div
+                v-else
                 class="flex items-baseline text-2xl font-semibold text-incognitee-green"
               >
                 {{ formatBigDecimalBalance(summaryTeerDays) }}
@@ -638,40 +644,23 @@
       </div>
     </div>
   </div>
-  <!-- Choose Wallet -->
-  <ChooseWalletOverlay
-    :show="showChooseWalletOverlay"
-    :close="closeChooseWalletOverlay"
-    :onExtensionAccountChange="onExtensionAccountChange"
-  />
 </template>
 
 <script setup lang="ts">
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress,
-} from "@polkadot/extension-dapp";
+import { web3FromAddress } from "@polkadot/extension-dapp";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { onMounted, onUnmounted, computed, ref, watch } from "vue";
+import { onMounted, onUnmounted, computed, ref, watch, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import { useAccount } from "~/store/account.ts";
 import { formatDecimalBalance } from "~/helpers/numbers";
 import { useSystemHealth } from "~/store/systemHealth.ts";
-import { ChainId, chainConfigs } from "~/configs/chains.ts";
+import { chainConfigs, TEER_DECIMALS } from "~/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { eventBus } from "~/helpers/eventBus";
-import { loadEnv, integriteeNetwork, isLive } from "~/lib/environmentConfig";
+import { teerdaysNetwork } from "~/lib/environmentConfig";
 import { Bond, PendingUnlock } from "~/lib/teerDays";
-import {
-  extensionAccounts,
-  connectExtension,
-  injectorForAddress,
-} from "~/lib/signerExtensionUtils";
-import { nextTick } from "vue";
-import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
 
@@ -684,41 +673,30 @@ const toggleAccordion = (index) => {
 const accountStore = useAccount();
 const systemHealth = useSystemHealth();
 const router = useRouter();
-const accounts = ref([]);
-const selectedAccount = ref(null);
 const currentBond = ref(null);
 const pendingUnlock = ref(null);
 const allBonds = ref([]);
-const summaryHolders = ref(0);
-const summaryTeerBonded = ref(0);
-const summaryTeerDays = ref(0);
-const isChoosingAccount = ref(false);
+const summaryHolders = ref(null);
+const summaryTeerBonded = ref(null);
+const summaryTeerDays = ref(null);
 
-const isMobile = ref(false);
-
-// Überwache die Bildschirmgröße und aktualisiere den isMobile-Wert
-const checkIfMobile = () => {
-  isMobile.value = window.matchMedia("(max-width: 768px)").matches;
-};
 const dropSubscriptions = async () => {
   console.log("dropping subscriptions");
   integriteeNetworkApi?.disconnect();
   integriteeNetworkApi = null;
-  accountStore.setInjector(null);
   isFetchingTeerBalance.value = false;
 };
-const onExtensionAccountChange = async (selectedAddress) => {
+
+watch(
+  () => accountStore.getAddress,
+  async () => await onExtensionAccountChange(),
+);
+const onExtensionAccountChange = async () => {
   await dropSubscriptions();
-  console.log("user selected extension account:", selectedAddress);
-  try {
-    accountStore.setAccount(selectedAddress.toString());
-    accountStore.setInjector(await injectorForAddress(accountStore.getAddress));
-  } catch (e) {
-    console.warn("could not load injected account" + e);
-    alert(
-      "could not find selected address in extensions. Have you enabled your extensions?",
-    );
-  }
+  console.log(
+    "re-subscribing to TEERday data using account:",
+    accountStore.getAddress,
+  );
   await subscribeToTeerDayStats();
   if (accountStore.getAddress === "none") {
     console.log("skipping api init. no address");
@@ -734,13 +712,9 @@ const onExtensionAccountChange = async (selectedAddress) => {
       },
     }) => {
       console.log("TEER balance:" + currentFree);
-      accountStore.setBalanceFree(BigInt(currentFree), integriteeNetwork);
-      accountStore.setBalanceReserved(
-        BigInt(currentReserved),
-        integriteeNetwork,
-      );
-      accountStore.setBalanceFrozen(BigInt(currentFrozen), integriteeNetwork);
-      closeChooseWalletOverlay();
+      accountStore.setBalanceFree(BigInt(currentFree), teerdaysNetwork);
+      accountStore.setBalanceReserved(BigInt(currentReserved), teerdaysNetwork);
+      accountStore.setBalanceFrozen(BigInt(currentFrozen), teerdaysNetwork);
       isFetchingTeerBalance.value = false;
     },
   );
@@ -759,10 +733,10 @@ const onExtensionAccountChange = async (selectedAddress) => {
         let lastUpdated = new Date(0);
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
         currentBond.value = new Bond(
-          bond.value / Math.pow(10, accountStore.decimals),
+          bond.value / Math.pow(10, TEER_DECIMALS),
           lastUpdated,
           bond.accumulatedTokentime /
-            Math.pow(10, accountStore.decimals) /
+            Math.pow(10, TEER_DECIMALS) /
             86400 /
             1000,
         );
@@ -783,7 +757,7 @@ const onExtensionAccountChange = async (selectedAddress) => {
         unlockDate.setUTCMilliseconds(unlockEpoch);
         console.log("Unlock date:" + unlockDate + "epoch:" + unlockEpoch);
         pendingUnlock.value = new PendingUnlock(
-          timestamp_amount[1] / Math.pow(10, accountStore.decimals),
+          timestamp_amount[1] / Math.pow(10, TEER_DECIMALS),
           unlockDate,
         );
       } else {
@@ -793,80 +767,14 @@ const onExtensionAccountChange = async (selectedAddress) => {
   );
 };
 
-const connect = () => {
-  web3Enable("Integritee Dapp")
-    .then((extensions) => {
-      console.log("Enabled extensions:", extensions);
-
-      // Check if any extensions are found
-      if (extensions.length === 0) {
-        console.error(
-          "No wallet extensions found. Please install or enable a wallet.",
-        );
-        alert("No wallet extensions found. Please install or enable a wallet.");
-        return; // Stop execution if no extensions are found
-      }
-
-      return web3Accounts();
-    })
-    .then((accountsList) => {
-      // If web3Accounts() didn't return a list, exit gracefully
-      if (!accountsList) {
-        console.error("No accounts found. Please unlock your wallet.");
-        alert("No accounts found. Please unlock your wallet.");
-        return;
-      }
-
-      // If accounts are found, store them
-      accounts.value = accountsList;
-      console.log("Found accounts:", accountsList);
-
-      if (accountsList.length > 0) {
-        // Wallet accounts found, scroll to the wallet section
-        nextTick(() => {
-          const walletSection = document.getElementById("wallet");
-          if (walletSection) {
-            // Scroll with smooth behavior
-            walletSection.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          } else {
-            console.error("Wallet section not found.");
-          }
-        });
-      } else {
-        console.error(
-          "No accounts detected. Please unlock your wallet or create an account.",
-        );
-        alert(
-          "No accounts detected. Please unlock your wallet or create an account.",
-        );
-      }
-    })
-    .catch((error) => {
-      // Handle any errors during the connection process
-      console.error("Error during wallet connection:", error);
-      alert("Error during wallet connection. Please try again.");
-    });
-};
-
 let integriteeNetworkApi: ApiPromise | null = null;
 
 const subscribeToTeerDayStats = async () => {
-  const wsProvider = new WsProvider(chainConfigs[integriteeNetwork.value].api);
+  const wsProvider = new WsProvider(chainConfigs[teerdaysNetwork.value].api);
   console.log(
-    "trying to init api at " + chainConfigs[integriteeNetwork.value].api,
+    "trying to init api at " + chainConfigs[teerdaysNetwork.value].api,
   );
   integriteeNetworkApi = await ApiPromise.create({ provider: wsProvider });
-  accountStore.setDecimals(Number(integriteeNetworkApi.registry.chainDecimals));
-  accountStore.setSS58Format(Number(integriteeNetworkApi.registry.chainSS58));
-  accountStore.setSymbol(String(integriteeNetworkApi.registry.chainTokens));
-  if (accountStore.hasInjector) {
-    router.push({
-      query: { address: accountStore.getAddress },
-    });
-  }
   console.log("api initialized");
   allBonds.value = [];
   cryptoWaitReady().then(() => {
@@ -880,10 +788,10 @@ const subscribeToTeerDayStats = async () => {
           let bond = maybeBond.unwrap();
           lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
           let mybond = new Bond(
-            bond.value / Math.pow(10, accountStore.decimals),
+            bond.value / Math.pow(10, TEER_DECIMALS),
             lastUpdated,
             bond.accumulatedTokentime /
-              Math.pow(10, accountStore.decimals) /
+              Math.pow(10, TEER_DECIMALS) /
               86400 /
               1000,
           );
@@ -917,20 +825,11 @@ const subscribeToTeerDayStats = async () => {
 };
 
 onMounted(async () => {
-  loadEnv();
-  eventBus.on("addressClicked", openChooseWalletOverlay);
-  const injectedAddress = router.currentRoute.value.query.address;
-  if (injectedAddress) {
-    connectExtension();
-    onExtensionAccountChange(injectedAddress.toString());
-  } else {
-    subscribeToTeerDayStats();
-    //openChooseWalletOverlay();
-  }
+  await onExtensionAccountChange();
 });
 
-onUnmounted(() => {
-  eventBus.off("addressClicked", openChooseWalletOverlay);
+onUnmounted(async () => {
+  await dropSubscriptions();
 });
 
 const isFetchingTeerBalance = ref(true);
@@ -939,7 +838,7 @@ const amountToBond = ref(0);
 const bondAmount = () => {
   // Handle the bonding process here
   const amount =
-    BigInt(amountToBond.value) * BigInt(Math.pow(10, accountStore.decimals));
+    BigInt(amountToBond.value) * BigInt(Math.pow(10, TEER_DECIMALS));
   console.log(`Bonding ${amount}`);
   txStatus.value = "⌛ Bonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -969,7 +868,7 @@ const amountToUnbond = ref(0);
 const unbondAmount = () => {
   // Handle the bonding process here
   const amount =
-    BigInt(amountToUnbond.value) * BigInt(Math.pow(10, accountStore.decimals));
+    BigInt(amountToUnbond.value) * BigInt(Math.pow(10, TEER_DECIMALS));
   console.log(`Unbonding ${amount}`);
   txStatus.value = "⌛ Unbonding. Please sign the transaction in your wallet.";
   openStatusOverlay();
@@ -1011,7 +910,7 @@ watch(refreshCounter, async () => {
 });
 
 const transferableBalance = computed(() => {
-  const balance = accountStore.getDecimalBalanceTransferable(integriteeNetwork);
+  const balance = accountStore.getDecimalBalanceTransferable(teerdaysNetwork);
   return formatDecimalBalance(balance);
 });
 
@@ -1082,16 +981,12 @@ const txErrHandlerIntegritee = (err) => {
   txStatus.value = `😞 Transaction failed: ${err.toString()}.`;
 };
 
-const showChooseWalletOverlay = ref(false);
-const openChooseWalletOverlay = () => {
-  isChoosingAccount.value = true;
-  isFetchingTeerBalance.value = true;
-  showChooseWalletOverlay.value = true;
-};
-const closeChooseWalletOverlay = () => {
-  isChoosingAccount.value == false;
-  showChooseWalletOverlay.value = false;
-};
+const props = defineProps({
+  isMobile: {
+    type: Boolean,
+    required: true,
+  },
+});
 </script>
 
 <style scoped>

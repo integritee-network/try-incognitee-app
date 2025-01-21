@@ -10,7 +10,8 @@
     </div>
     <WarningBanner
       v-if="
-        accountStore.getSymbol === 'TEER' &&
+        (accountStore.getSymbol === 'TEER' ||
+          accountStore.getSymbol === 'DOT') &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -20,7 +21,7 @@
     />
     <div v-else>
       <CampaignBanner
-        v-if="enableActions"
+        v-if="enableActions && accountStore.getSymbol === 'TEER'"
         :onClick="openGuessTheNumberOverlay"
         :isMobile="isMobile"
         textMobile="Guess-The-Number"
@@ -592,7 +593,7 @@
           v-model="unshieldAmount"
           type="number"
           step="0.1"
-          :min="1.1"
+          :min="minUnshieldingAmount(accountStore.getSymbol)"
           :max="
             Math.min(
               accountStore.getDecimalBalanceFree(incogniteeSidechain) -
@@ -1036,6 +1037,7 @@ import {
   INCOGNITEE_SHIELDING_FEE_FRACTION,
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
+  minUnshieldingAmount,
 } from "~/configs/incognitee";
 import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";

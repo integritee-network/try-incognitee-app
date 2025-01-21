@@ -285,7 +285,13 @@
                     </span>
                     &nbsp;&nbsp;
                     <span>
-                      Fee: 0.01 {{ accountStore.getSymbol }} for Incognitee
+                      Fee: ~{{
+                        (
+                          INCOGNITEE_TX_FEE +
+                          INCOGNITEE_BYTE_FEE * sendPrivateNote.length
+                        ).toFixed(4)
+                      }}
+                      {{ accountStore.getSymbol }} for Incognitee
                     </span>
                   </div>
                 </div>
@@ -426,7 +432,7 @@
 import PrivateMessageHistory from "~/components/ui/PrivateMessageHistory.vue";
 import { incogniteeSidechain } from "~/lib/environmentConfig";
 import { eventBus } from "@/helpers/eventBus";
-import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
+import { INCOGNITEE_BYTE_FEE, INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";

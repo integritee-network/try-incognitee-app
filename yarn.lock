@@ -10265,6 +10265,7 @@ __metadata:
     "@polkadot/wasm-util": "npm:^7.3.2"
     "@polkadot/x-randomvalues": "npm:^12.6.2"
     "@tailwindcss/aspect-ratio": "npm:^0.4.2"
+    "@tailwindcss/container-queries": "npm:^0.1.1"
     "@tailwindcss/forms": "npm:^0.5.10"
     "@tailwindcss/line-clamp": "npm:^0.4.4"
     "@tailwindcss/typography": "npm:^0.5.16"

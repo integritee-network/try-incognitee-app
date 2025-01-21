@@ -8,10 +8,6 @@
     </button>
   </div>
   <div class="p-3">
-    <NetworkSelector
-      :openAssetsInfo="() => {}"
-      :selectedNetwork="shieldingTarget"
-    />
     <div class="text-center mt-10 mb-5">
       <span class="text-2xl font-black">Vouchers</span>
       <p class="mt-2 text-sm text-gray-400">
@@ -359,7 +355,6 @@
 </template>
 
 <script setup lang="ts">
-import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { watch, ref, onMounted } from "vue";
 import Qrcode from "vue-qrcode";

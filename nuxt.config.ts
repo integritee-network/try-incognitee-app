@@ -85,6 +85,7 @@ export default defineNuxtConfig({
     "/": { ssr: false },
     "/dot": { ssr: false },
     "/teer": { ssr: false },
+    "/pas": { ssr: false },
     "/gtn": { ssr: false },
     "/teerdays-lp": { ssr: false },
     "/referral": { ssr: false },

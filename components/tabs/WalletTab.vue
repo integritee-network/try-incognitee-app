@@ -38,11 +38,6 @@
 
     <div class="mt-4"></div>
 
-    <NetworkSelector
-      :openAssetsInfo="openAssetsInfo"
-      :selectedNetwork="shieldingTarget"
-    />
-
     <div>
       <PublicPrivateBalanceSwitcher
         :selectTab="selectTab"
@@ -1043,7 +1038,6 @@ import { formatDecimalBalance } from "~/helpers/numbers";
 import WarningBanner from "~/components/ui/WarningBanner.vue";
 import CampaignBanner from "~/components/ui/CampaignBanner.vue";
 import ObtainTokenOverlay from "~/components/overlays/ObtainTokenOverlay.vue";
-import NetworkSelector from "~/components/ui/NetworkSelector.vue";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import PublicPrivateBalanceSwitcher from "~/components/ui/PublicPrivateBalanceSwitcher.vue";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";

@@ -154,14 +154,14 @@
           <UDivider
             class="flex border-gray-800 w-full border-t-1 border-solid my-5"
           />
-          <li class="px-4">
+          <li class="px-4" v-if="accountStore.hasInjector">
             <span
               class="flex items-center w-full text-left text-sm font-semibold text-gray-500 mb-2"
             >
               SETTINGS
             </span>
           </li>
-          <li class="px-4">
+          <li class="px-4" v-if="accountStore.hasInjector">
             <button
               @click="
                 () => {
@@ -190,6 +190,7 @@
             </button>
           </li>
           <UDivider
+            v-if="accountStore.hasInjector"
             class="flex border-gray-800 w-full border-t-1 border-solid my-5"
           />
           <li class="px-4">
@@ -251,15 +252,21 @@
             <!-- Dropdown Trigger -->
             <div
               class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
-              @click="toggleDropdown"
+              @click="toggleTokenDropdown"
             >
-              <TEER v-if="selected === 'TEER'" class="w-[14px] h-[14px] mr-2" />
-              <Paseo
-                v-else-if="selected === 'PAS'"
+              <TEER
+                v-if="selectedToken === 'TEER'"
                 class="w-[14px] h-[14px] mr-2"
               />
-              <USDC v-else class="w-[14px] h-[14px] mr-2" />
-              <span class="truncate">{{ selected }}</span>
+              <Paseo
+                v-else-if="selectedToken === 'PAS'"
+                class="w-[14px] h-[14px] mr-2"
+              />
+              <DOT
+                v-else-if="selectedToken === 'DOT'"
+                class="w-[14px] h-[14px] mr-2"
+              />
+              <span class="truncate">{{ selectedToken }}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -281,7 +288,7 @@
               class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
             >
               <div
-                v-for="item in items"
+                v-for="item in tokenSelectorItems"
                 :key="item.value"
                 class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
                 @click="redirect(item)"
@@ -297,10 +304,10 @@
               class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
             >
               <div
-                v-for="item in items"
+                v-for="item in tokenSelectorItems"
                 :key="item.value"
                 class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
-                @click="selectItem(item)"
+                @click="selectToken(item)"
               >
                 <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
                 <span>{{ item.label }}</span>
@@ -355,28 +362,51 @@ import { eventBus } from "@/helpers/eventBus";
 import Incognitee from "@/assets/img/incognitee-full-logo.svg";
 import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
 import Paseo from "assets/img/paseo-logo.svg";
-import USDC from "assets/img/usdc-logo.svg";
+import DOT from "@/assets/img/polkadot-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
+import { useRouter } from "vue-router";
 
 const isOpen = ref(false);
-const selected = ref("PAS");
+const selectedToken = ref("PAS");
+const router = useRouter();
+const accountStore = useAccount();
 
-const items = [
+const tokenSelectorItems = [
   { label: "TEER", value: "TEER", icon: TEER },
   { label: "PAS", value: "PAS", icon: Paseo },
-  { label: "USDC", value: "USDC", icon: USDC },
+  { label: "DOT", value: "DOT", icon: DOT },
 ];
 
-const toggleDropdown = () => {
+const toggleTokenDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const selectItem = (item) => {
-  selected.value = item.label;
-  isOpen.value = false; // Close dropdown after selection
+const selectToken = (item) => {
+  const currentQuery = { ...router.currentRoute.value.query };
+  // replace the last part of the url path with the selected token
+  let newPath = router.currentRoute.value.path.replace(
+    /\/[^/]*$/,
+    `/${item.label.toLowerCase()}`,
+  );
+  router
+    .push({
+      path: newPath,
+      query: currentQuery,
+    })
+    .then(() => {
+      window.location.reload();
+    });
+  //selectedToken.value = item.label;
+  //isOpen.value = false; // Close dropdown after selection
+  //toggleSidebar()
 };
 
-const accountStore = useAccount();
+watch(
+  () => accountStore.getSymbol,
+  (newValue) => {
+    selectedToken.value = newValue;
+  },
+);
 
 // Neuer Zustand und Methode für Menü
 const isMenuOpen = ref(false);
@@ -404,6 +434,7 @@ const toggleSidebar = () => {
 onMounted(() => {
   eventBus.on("toggleSidebar", toggleSidebar);
   document.addEventListener("click", handleOutsideClick);
+  selectedToken.value = accountStore.getSymbol;
 });
 
 onUnmounted(() => {

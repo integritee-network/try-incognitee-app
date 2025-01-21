@@ -1,12 +1,16 @@
 <template>
   <div v-if="show" class="p-3">
-    <div class="mb-3">
+    <div class="mb-3 flex justify-between items-center">
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
       >
         ☰
       </button>
+      <div class="lg:hidden">
+        <HealthIndicator />
+      </div>
+      <TokenIndicator class="lg:hidden" />
     </div>
     <WarningBanner
       v-if="
@@ -1064,6 +1068,9 @@ import { formatMoment } from "~/helpers/date";
 import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

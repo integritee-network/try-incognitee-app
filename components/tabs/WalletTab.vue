@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="p-3">
-    <div class="mb-3 flex justify-between items-center">
+    <div class="flex justify-between items-center">
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
@@ -9,6 +9,9 @@
       </button>
       <div class="lg:hidden">
         <HealthIndicator />
+      </div>
+      <div class="lg:hidden">
+        <WalletNumber/>
       </div>
       <TokenIndicator class="lg:hidden" />
     </div>
@@ -1071,6 +1074,7 @@ import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.v
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
+import WalletNumber from "~/components/ui/WalletNumber.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

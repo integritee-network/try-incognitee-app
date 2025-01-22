@@ -385,7 +385,7 @@ const selectToken = (item) => {
   const currentQuery = { ...router.currentRoute.value.query };
   // replace the last part of the url path with the selected token
   let newPath = router.currentRoute.value.path.replace(
-    /\/[^/]*$/,
+    /\/[^/?]*(?=\/|\?|$)/,
     `/${item.label.toLowerCase()}`,
   );
   router

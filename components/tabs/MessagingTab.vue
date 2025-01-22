@@ -236,7 +236,8 @@
               </svg>
               {{
                 accountStore.hasInjector &&
-                !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
+                accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) ===
+                  null
                   ? "load older messages (needs signature in extension. Add session key to automate!)"
                   : "loading older messages"
               }}

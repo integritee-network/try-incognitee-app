@@ -680,7 +680,7 @@ watch(pollCounter, async () => {
   // autofetch history slowly
   try {
     if (
-      accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny) ||
+      accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) !== null ||
       !accountStore.hasInjector
     ) {
       console.debug("unfetchedBucketsCount is " + unfetchedBucketsCount.value);

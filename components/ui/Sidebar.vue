@@ -222,6 +222,34 @@
               Contact support
             </a>
           </li>
+          <li class="px-4">
+            <button
+              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
+              @click="
+                () => {
+                  emitEvent('switchToFaq');
+                  toggleSidebar();
+                }
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
+                />
+              </svg>
+
+              FAQ
+            </button>
+          </li>
         </ul>
       </nav>
     </div>
@@ -229,7 +257,7 @@
     <!-- Footer Content -->
     <div class="px-4 space-y-4 mb-4">
       <div class="flex items-center text-xs" @click="toggleSidebar">
-        <span class="mr-2 text-gray-500">System Health</span>
+        <span class="mr-2 text-gray-400">System Health</span>
         <HealthIndicator />
       </div>
       <div class="text-sm flex flex-col space-y-1">
@@ -254,6 +282,7 @@
               class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
               @click="toggleTokenDropdown"
             >
+              <!-- Token Icon -->
               <TEER
                 v-if="selectedToken === 'TEER'"
                 class="w-[14px] h-[14px] mr-2"
@@ -266,12 +295,36 @@
                 v-else-if="selectedToken === 'DOT'"
                 class="w-[14px] h-[14px] mr-2"
               />
+
+              <!-- Token Name -->
               <span class="truncate">{{ selectedToken }}</span>
+
+              <!-- Badge -->
+              <span
+                v-if="selectedToken === 'TEER'"
+                class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset ml-auto"
+              >
+                Beta
+              </span>
+              <span
+                v-else-if="selectedToken === 'PAS'"
+                class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset ml-auto"
+              >
+                Test
+              </span>
+              <span
+                v-else-if="selectedToken === 'DOT'"
+                class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/30 ring-inset ml-auto"
+              >
+                Beta
+              </span>
+
+              <!-- Dropdown Arrow -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 24 24"
-                :class="['w-3 h-3 ml-auto', isOpen ? 'rotate-180' : '']"
+                :class="['w-3 h-3 ml-2', isOpen ? 'rotate-180' : '']"
                 class="transition-transform text-gray-500 hover:text-incognitee-green"
               >
                 <path
@@ -290,27 +343,33 @@
               <div
                 v-for="item in tokenSelectorItems"
                 :key="item.value"
-                class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
-                @click="redirect(item)"
-              >
-                <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
-                <span>{{ item.label }}</span>
-              </div>
-            </div>
-
-            <!-- Dropdown Menu -->
-            <div
-              v-show="isOpen"
-              class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
-            >
-              <div
-                v-for="item in tokenSelectorItems"
-                :key="item.value"
-                class="flex text-xs items-center px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
+                class="flex items-center justify-between text-xs px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
                 @click="selectToken(item)"
               >
-                <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
-                <span>{{ item.label }}</span>
+                <!-- Linke Seite mit Icon und Token-Name -->
+                <div class="flex items-center">
+                  <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
+                  <span>{{ item.label }}</span>
+                </div>
+                <!-- Rechte Seite mit Badge -->
+                <span
+                  v-if="item.label === 'TEER'"
+                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+                >
+                  Beta
+                </span>
+                <span
+                  v-else-if="item.label === 'DOT'"
+                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+                >
+                  Beta
+                </span>
+                <span
+                  v-else-if="item.label === 'PAS'"
+                  class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
+                >
+                  Test
+                </span>
               </div>
             </div>
           </div>

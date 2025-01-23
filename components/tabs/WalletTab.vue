@@ -1,6 +1,6 @@
 <template>
   <div v-if="show" class="p-3">
-    <div class="mb-3 flex justify-between items-center">
+    <div class="flex justify-between items-center">
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
@@ -9,6 +9,9 @@
       </button>
       <div class="lg:hidden">
         <HealthIndicator />
+      </div>
+      <div class="lg:hidden">
+        <WalletIndicator />
       </div>
       <TokenIndicator class="lg:hidden" />
     </div>
@@ -244,6 +247,7 @@
         :eventHorizon="props.eventHorizon"
         :bucketsCount="props.bucketsCount"
         :unfetchedBucketsCount="props.unfetchedBucketsCount"
+        :isUpdatingNotes="props.isUpdatingNotes"
       />
     </div>
 
@@ -1075,6 +1079,7 @@ import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
+import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1625,6 +1630,10 @@ const props = defineProps({
   },
   bucketsCount: { type: Number, required: true },
   unfetchedBucketsCount: { type: Number, required: true },
+  isUpdatingNotes: {
+    type: Boolean,
+    required: true,
+  },
   enableActions: {
     type: Boolean,
     required: true,

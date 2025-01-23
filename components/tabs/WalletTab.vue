@@ -11,7 +11,7 @@
         <HealthIndicator />
       </div>
       <div class="lg:hidden">
-        <WalletNumber/>
+        <WalletNumber />
       </div>
       <TokenIndicator class="lg:hidden" />
     </div>

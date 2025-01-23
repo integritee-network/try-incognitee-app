@@ -1,6 +1,6 @@
 <template>
   <div v-if="accountStore.getSymbol === 'TEER'">
-    <TEER class="w-[23px] h-[23px]" /> 
+    <TEER class="w-[23px] h-[23px]" />
   </div>
   <div v-else-if="accountStore.getSymbol === 'DOT'">
     <DOT class="w-[23px] h-[23px]" />

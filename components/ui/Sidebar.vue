@@ -257,7 +257,6 @@
     <!-- Footer Content -->
     <div class="px-4 space-y-4 mb-4">
       <div class="flex items-center text-xs" @click="toggleSidebar">
-        
         <HealthIndicator />
       </div>
       <div class="text-sm flex flex-col space-y-1">
@@ -279,102 +278,98 @@
           <div class="relative group mb-3">
             <!-- Dropdown Trigger -->
             <div
-  class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
-  @click="toggleTokenDropdown"
->
-  <!-- Token Icon -->
-  <TEER
-    v-if="selectedToken === 'TEER'"
-    class="w-[14px] h-[14px] mr-2"
-  />
-  <Paseo
-    v-else-if="selectedToken === 'PAS'"
-    class="w-[14px] h-[14px] mr-2"
-  />
-  <DOT
-    v-else-if="selectedToken === 'DOT'"
-    class="w-[14px] h-[14px] mr-2"
-  />
+              class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
+              @click="toggleTokenDropdown"
+            >
+              <!-- Token Icon -->
+              <TEER
+                v-if="selectedToken === 'TEER'"
+                class="w-[14px] h-[14px] mr-2"
+              />
+              <Paseo
+                v-else-if="selectedToken === 'PAS'"
+                class="w-[14px] h-[14px] mr-2"
+              />
+              <DOT
+                v-else-if="selectedToken === 'DOT'"
+                class="w-[14px] h-[14px] mr-2"
+              />
 
-  <!-- Token Name -->
-  <span class="truncate">{{ selectedToken }}</span>
+              <!-- Token Name -->
+              <span class="truncate">{{ selectedToken }}</span>
 
-  <!-- Badge -->
-  <span
-    v-if="selectedToken === 'TEER'"
-    class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset ml-auto"
-  >
-  Beta
-  </span>
-  <span
-    v-else-if="selectedToken === 'PAS'"
-    class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset ml-auto"
-  >
-    Test
-  </span>
-  <span
-    v-else-if="selectedToken === 'DOT'"
-    class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/30 ring-inset ml-auto"
-  >
-    Beta
-  </span>
+              <!-- Badge -->
+              <span
+                v-if="selectedToken === 'TEER'"
+                class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset ml-auto"
+              >
+                Beta
+              </span>
+              <span
+                v-else-if="selectedToken === 'PAS'"
+                class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset ml-auto"
+              >
+                Test
+              </span>
+              <span
+                v-else-if="selectedToken === 'DOT'"
+                class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/30 ring-inset ml-auto"
+              >
+                Beta
+              </span>
 
-  <!-- Dropdown Arrow -->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    :class="['w-3 h-3 ml-2', isOpen ? 'rotate-180' : '']"
-    class="transition-transform text-gray-500 hover:text-incognitee-green"
-  >
-    <path
-      fill-rule="evenodd"
-      d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
-      clip-rule="evenodd"
-    />
-  </svg>
-</div>
-
-
-       
+              <!-- Dropdown Arrow -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                :class="['w-3 h-3 ml-2', isOpen ? 'rotate-180' : '']"
+                class="transition-transform text-gray-500 hover:text-incognitee-green"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
 
             <!-- Dropdown Menu -->
             <div
               v-show="isOpen"
               class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
             >
-            <div
-  v-for="item in tokenSelectorItems"
-  :key="item.value"
-  class="flex items-center justify-between text-xs px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
-  @click="selectToken(item)"
->
-  <!-- Linke Seite mit Icon und Token-Name -->
-  <div class="flex items-center">
-    <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
-    <span>{{ item.label }}</span>
-  </div>
-  <!-- Rechte Seite mit Badge -->
-  <span
-    v-if="item.label === 'TEER'"
-    class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
-  >
-    Beta
-  </span>
-  <span
-    v-else-if="item.label === 'DOT'"
-    class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
-  >
-  Beta
-  </span>
-  <span
-    v-else-if="item.label === 'PAS'"
-    class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
-  >
-    Test
-  </span>
-</div>
-
+              <div
+                v-for="item in tokenSelectorItems"
+                :key="item.value"
+                class="flex items-center justify-between text-xs px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
+                @click="selectToken(item)"
+              >
+                <!-- Linke Seite mit Icon und Token-Name -->
+                <div class="flex items-center">
+                  <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
+                  <span>{{ item.label }}</span>
+                </div>
+                <!-- Rechte Seite mit Badge -->
+                <span
+                  v-if="item.label === 'TEER'"
+                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+                >
+                  Beta
+                </span>
+                <span
+                  v-else-if="item.label === 'DOT'"
+                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+                >
+                  Beta
+                </span>
+                <span
+                  v-else-if="item.label === 'PAS'"
+                  class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
+                >
+                  Test
+                </span>
+              </div>
             </div>
           </div>
 

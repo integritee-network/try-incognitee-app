@@ -69,11 +69,7 @@
           </button>
 
           <!-- Linksbündiger Titel -->
-          <div
-            class="text-2xl font-bold tracking-tight text-white"
-          >
-            Chats
-          </div>
+          <div class="text-2xl font-bold tracking-tight text-white">Chats</div>
           <div class="lg:hidden">
             <HealthIndicator />
           </div>

@@ -1,4 +1,12 @@
 <template>
+  <div class="mt-3 sm:mt-5 px-3">
+    <button
+      @click="eventBus.emit('toggleSidebar')"
+      class="lg:hidden text-white focus:outline-none text-2xl"
+    >
+      ☰
+    </button>
+  </div>
   <div class="px-5 py-5 sm:py-5 lg:px-5 lg:py-5">
     <h2 class="flex text-2xl font-bold tracking-tight text-white sm:text-2xl">
       Frequently Asked Questions
@@ -78,9 +86,21 @@
 <script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/vue/24/outline";
+import { eventBus } from "~/helpers/eventBus";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import WalletNumber from "~/components/ui/WalletNumber.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 export default {
+  computed: {
+    eventBus() {
+      return eventBus;
+    },
+  },
   components: {
+    TokenIndicator,
+    WalletNumber,
+    HealthIndicator,
     Disclosure,
     DisclosureButton,
     DisclosurePanel,

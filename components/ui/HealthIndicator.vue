@@ -4,7 +4,6 @@
       class="flex items-center text-xs"
       v-if="contextualHealth === Health.Healthy"
     >
-      <span class="mr-2 text-gray-400">System Health</span>
       <div
         class="bg-green-500 w-3 h-3 rounded-full"
         title="system health: all good"
@@ -14,7 +13,6 @@
       class="flex items-center text-xs"
       v-else-if="contextualHealth === Health.Warning"
     >
-      <span class="mr-2 text-gray-400">System Health</span>
       <div
         class="bg-yellow-500 w-3 h-3 rounded-full"
         title="system health: warnings"
@@ -24,14 +22,12 @@
       class="flex items-center text-xs"
       v-else-if="contextualHealth === Health.Critical"
     >
-      <span class="mr-2 text-gray-400">System Health</span>
       <div
         class="bg-red-500 w-3 h-3 rounded-full"
         title="system health: critical"
       ></div>
     </div>
     <div class="flex items-center text-xs" v-else>
-      <span class="mr-2 text-gray-400">System Health</span>
       <div
         class="bg-gray-500 w-3 h-3 rounded-full"
         title="health unknown"

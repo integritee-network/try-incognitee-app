@@ -257,6 +257,7 @@
     <!-- Footer Content -->
     <div class="px-4 space-y-4 mb-4">
       <div class="flex items-center text-xs" @click="toggleSidebar">
+        <span class="mr-2 text-gray-400">System Health</span>
         <HealthIndicator />
       </div>
       <div class="text-sm flex flex-col space-y-1">
@@ -443,7 +444,7 @@ const selectToken = (item) => {
   const currentQuery = { ...router.currentRoute.value.query };
   // replace the last part of the url path with the selected token
   let newPath = router.currentRoute.value.path.replace(
-    /\/[^/]*$/,
+    /\/[^/?]*(?=\/|\?|$)/,
     `/${item.label.toLowerCase()}`,
   );
   router

@@ -1,5 +1,8 @@
 <template>
-  <div class="flex items-center text-xs gap-1">
+  <div
+    class="flex items-center text-xs gap-1"
+    @click="emitEvent('addressClicked')"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -22,7 +25,14 @@
 
 <script setup lang="ts">
 import { useAccount } from "~/store/account";
+import { eventBus } from "@/helpers/eventBus";
+
 const accountStore = useAccount();
+
+// Event-Emitter-Funktionen
+const emitEvent = (eventName: string) => {
+  eventBus.emit(eventName);
+};
 </script>
 
 <style scoped>

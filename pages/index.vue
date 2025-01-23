@@ -12,6 +12,9 @@
       ref="walletTabRef"
       :updateNotes="updateNotes"
       :fetchOlderBucket="fetchOlderBucket"
+      :eventHorizon="oldestMomentInNoteBuckets"
+      :bucketsCount="bucketsCount"
+      :unfetchedBucketsCount="unfetchedBucketsCount"
       :enableActions="enableActions"
     />
   </div>
@@ -398,7 +401,7 @@ const bucketsCount = computed(() => {
 
 const unfetchedBucketsCount = computed(() => {
   if (!noteBucketsInfo.value) return 0;
-  return firstNoteBucketIndexFetched.value
+  return firstNoteBucketIndexFetched.value >= 0
     ? firstNoteBucketIndexFetched.value -
         noteBucketsInfo.value.first.unwrap().index
     : noteBucketsInfo.value.last.unwrap().index -
@@ -407,7 +410,7 @@ const unfetchedBucketsCount = computed(() => {
 });
 
 const fetchIncogniteeNotes = async (
-  bucketIndex: number,
+  maybeBucketIndex: number | null,
   skip_if_signer_needed: boolean,
 ) => {
   if (!incogniteeStore.apiReady) return;
@@ -419,6 +422,7 @@ const fetchIncogniteeNotes = async (
     );
     return;
   }
+  const bucketIndex = maybeBucketIndex ? maybeBucketIndex : 0;
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
   const sessionProxy = accountStore.sessionProxyForRole(
     SessionProxyRole.ReadAny,
@@ -673,6 +677,20 @@ const pollCounter = useInterval(2000);
 watch(pollCounter, async () => {
   await fetchIncogniteeBalance();
   await fetchNetworkStatus();
+  // autofetch history slowly
+  try {
+    if (
+      accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) !== null ||
+      !accountStore.hasInjector
+    ) {
+      console.debug("unfetchedBucketsCount is " + unfetchedBucketsCount.value);
+      if (unfetchedBucketsCount.value > 0) {
+        await fetchOlderBucket();
+      }
+    }
+  } catch (error) {
+    console.warn("error auto-fetching older incognitee note buckets: " + error);
+  }
 });
 
 watch(

@@ -8,7 +8,7 @@
   <div v-else-if="accountStore.getSymbol === 'PAS'">
     <Paseo class="w-[23px] h-[23px]" />
   </div>
-  <div v-else>unknown token</div>
+  <div v-else class="spinner"></div>
 </template>
 
 <script setup lang="ts">

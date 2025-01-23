@@ -1074,6 +1074,7 @@ import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.v
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
+import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletNumber from "~/components/ui/WalletNumber.vue";
 
 const accountStore = useAccount();

@@ -230,12 +230,12 @@
                   clip-rule="evenodd"
                 />
               </svg>
-              load older messages
               {{
                 accountStore.hasInjector &&
-                !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
-                  ? "(needs signature in extension)"
-                  : ""
+                accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) ===
+                  null
+                  ? "load older messages (needs signature in extension. Add session key to automate!)"
+                  : "loading older messages"
               }}
               ({{ bucketsCount - unfetchedBucketsCount }} /
               {{ bucketsCount }} buckets)
@@ -283,6 +283,7 @@
                     <span>
                       Private balance:
                       {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+                      {{ accountStore.getSymbol }}
                     </span>
                     &nbsp;&nbsp;
                     <span>
@@ -292,7 +293,7 @@
                           INCOGNITEE_BYTE_FEE * sendPrivateNote.length
                         ).toFixed(4)
                       }}
-                      {{ accountStore.getSymbol }} for Incognitee
+                      {{ accountStore.getSymbol }}
                     </span>
                   </div>
                 </div>

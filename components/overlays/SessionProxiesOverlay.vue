@@ -69,9 +69,7 @@
                 />
               </div>
               <div v-else class="mr-1">✓</div>
-              <span class="text-sm text-gray-400"
-                >Full read access (incl. history)</span
-              >
+              <span class="text-sm text-gray-400">Full read access</span>
             </label>
           </div>
           <div
@@ -104,10 +102,8 @@
                   v-model="selectedSessionProxyRole"
                 />
               </div>
-              <div v-else class="mr-1">✓</div>
-              <span class="text-sm text-yellow-400"
-                >⚠️ Allow all actions ️️(danger zone)</span
-              >
+              <div v-else class="mr-4">✓</div>
+              <span class="text-sm text-gray-400">All actions</span>
             </label>
           </div>
           <!--

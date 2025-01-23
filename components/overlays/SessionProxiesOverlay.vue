@@ -52,8 +52,8 @@
                   v-model="selectedSessionProxyRole"
                 />
               </div>
-              <div v-else class="mr-4">✓</div>
-              <span class="text-sm text-gray-400">Allow reading balance</span>
+              <div v-else class="mr-1">✓</div>
+              <span class="text-sm text-gray-400">Read balance</span>
             </label>
           </div>
           <div
@@ -68,7 +68,7 @@
                   v-model="selectedSessionProxyRole"
                 />
               </div>
-              <div v-else class="mr-4">✓</div>
+              <div v-else class="mr-1">✓</div>
               <span class="text-sm text-gray-400">Full read access</span>
             </label>
           </div>
@@ -84,9 +84,9 @@
                   v-model="selectedSessionProxyRole"
                 />
               </div>
-              <div v-else class="mr-4">✓</div>
+              <div v-else class="mr-1">✓</div>
               <span class="text-sm text-gray-400"
-                >Allow non-transfer actions</span
+                >Non-transfer actions <b>(recommended)</b></span
               >
             </label>
           </div>
@@ -103,7 +103,7 @@
                 />
               </div>
               <div v-else class="mr-4">✓</div>
-              <span class="text-sm text-gray-400">Allow all actions</span>
+              <span class="text-sm text-gray-400">All actions</span>
             </label>
           </div>
           <!--

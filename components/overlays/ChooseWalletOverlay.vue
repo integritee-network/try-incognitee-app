@@ -159,6 +159,9 @@
         <p class="mt-5 text-sm text-gray-400">
           This window will close once a balance could be fetched
         </p>
+        <div class="spinner-container">
+          <div class="spinner"></div>
+        </div>
       </div>
     </div>
   </OverlayDialog>
@@ -269,5 +272,31 @@ watch(selectedExtensionAccount, async (selectedAddress) => {
 .wrap-text {
   white-space: normal;
   word-wrap: break-word;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Adjust as needed */
+}
+
+.spinner {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 1em; /* Adjust the size here */
+  height: 1em; /* Adjust the size here */
+  animation: spin 2s linear infinite;
+  vertical-align: middle; /* Align with the text */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

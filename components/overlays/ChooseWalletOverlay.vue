@@ -43,11 +43,14 @@
             Connect using a browser extension:
           </p>
           <button
-            @click="connectExtension"
+            @click="tryConnectExtension"
             class="bg-gradient-to-r from-incognitee-green to-incognitee-blue rounded-md text-sm font-semibold text-white py-1.5 w-full hover:shadow-lg hover:shadow-incognitee-green/50"
           >
             Connect
           </button>
+          <div v-if="maybeWarning" class="text-yellow-400 text-sm mt-2">
+            {{ maybeWarning }}
+          </div>
         </div>
       </div>
 
@@ -180,6 +183,7 @@ const handleConnect = () => {
 const accountStore = useAccount();
 const currentExtensionAccount = ref("");
 const selectedExtensionAccount = ref("");
+const maybeWarning = ref(null);
 
 const selectedExtensionAccountIsNew = computed(() => {
   try {
@@ -248,6 +252,10 @@ const closeProxy = () => {
     props.onExtensionAccountChange(selectedExtensionAccount.value);
   }
   props.close();
+};
+
+const tryConnectExtension = async () => {
+  maybeWarning.value = await connectExtension();
 };
 
 watch(selectedExtensionAccount, async (selectedAddress) => {

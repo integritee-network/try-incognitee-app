@@ -9,40 +9,32 @@ import { ref } from "vue";
 
 export const extensionAccounts = ref([]);
 export const selectedExtensionAccount = ref(null);
-export const connectExtension = () => {
-  return web3Enable("Integritee Dapp")
-    .then((extensions) => {
-      console.log("Enabled extensions:", extensions);
+export const connectExtension = async () => {
+  const extensions = await web3Enable("Integritee Dapp");
+  console.log("Enabled extensions:", extensions);
 
-      if (extensions.length === 0) {
-        console.error(
-          "No wallet extensions found. Please install or enable a wallet.",
-        );
-        alert("No wallet extensions found. Please install or enable a wallet.");
-        return;
-      }
+  if (extensions.length === 0) {
+    console.error("No wallet extensions found.");
+    return "Please install a wallet extension and make sure it is enabled";
+  }
 
-      return web3Accounts();
-    })
-    .then((accountsList) => {
-      if (!accountsList) {
-        console.error("No accounts found. Please unlock your wallet.");
-        alert("No accounts found. Please unlock your wallet.");
-        return;
-      }
+  const accountsList = await web3Accounts();
+  if (!accountsList) {
+    console.error("No accounts found. Please unlock your wallet.");
+    return "No accounts found. Please unlock your wallet.";
+  }
 
-      extensionAccounts.value = accountsList;
-      console.log("Found accounts:", accountsList);
+  extensionAccounts.value = accountsList;
+  console.log("Found accounts:", accountsList);
 
-      if (accountsList.length < 1) {
-        console.error(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
-        );
-        alert(
-          "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
-        );
-      }
-    });
+  if (accountsList.length < 1) {
+    console.error(
+      "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.",
+    );
+    return "No accounts detected in extension. Please unlock your wallet, check visibility or create an account.";
+  }
+
+  return null; // No issues, return null
 };
 
 export const injectorForAddress = async (address) => {

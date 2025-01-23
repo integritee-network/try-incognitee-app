@@ -8,7 +8,7 @@
         <HealthIndicator/>
       </div>
       <div class="lg:hidden">
-        <WalletNumber/>
+        <WalletIndicator/>
       </div>
       <div class="lg:hidden">
       <TokenIndicator/>
@@ -70,7 +70,7 @@ import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/vue/24/outline";
 import { eventBus } from "@/helpers/eventBus";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletNumber from "~/components/ui/WalletNumber.vue";
+import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 
 export default {
   computed: {

@@ -671,7 +671,7 @@ import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletNumber from "~/components/ui/WalletNumber.vue";
+import WalletNumber from "~/components/ui/WalletIndicator.vue";
 
 const activeAccordion = ref(null);
 

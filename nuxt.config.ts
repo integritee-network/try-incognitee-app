@@ -90,7 +90,6 @@ export default defineNuxtConfig({
     "/teerdays-lp": { ssr: false },
     "/referral": { ssr: false },
     "/referraltc": { ssr: false },
-    "/faq": { ssr: false },
   },
   imports: {
     autoImport: false,

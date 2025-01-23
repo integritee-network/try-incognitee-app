@@ -69,11 +69,7 @@
           </button>
 
           <!-- Linksbündiger Titel -->
-          <div
-            class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
-          >
-            Chats
-          </div>
+          <div class="text-2xl font-bold tracking-tight text-white">Chats</div>
           <div class="lg:hidden">
             <HealthIndicator />
           </div>
@@ -236,7 +232,8 @@
               </svg>
               {{
                 accountStore.hasInjector &&
-                !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
+                accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) ===
+                  null
                   ? "load older messages (needs signature in extension. Add session key to automate!)"
                   : "loading older messages"
               }}
@@ -286,6 +283,7 @@
                     <span>
                       Private balance:
                       {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+                      {{ accountStore.getSymbol }}
                     </span>
                     &nbsp;&nbsp;
                     <span>
@@ -295,7 +293,7 @@
                           INCOGNITEE_BYTE_FEE * sendPrivateNote.length
                         ).toFixed(4)
                       }}
-                      {{ accountStore.getSymbol }} for Incognitee
+                      {{ accountStore.getSymbol }}
                     </span>
                   </div>
                 </div>

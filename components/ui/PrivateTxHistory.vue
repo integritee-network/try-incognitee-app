@@ -145,7 +145,8 @@
             </svg>
             {{
               accountStore.hasInjector &&
-              !accountStore.hasSessionProxyForRole(SessionProxyRole.ReadAny)
+              accountStore.sessionProxyForRole(SessionProxyRole.ReadAny) ===
+                null
                 ? "load older events (needs signature in extension. Add session key to automate!)"
                 : "loading older events"
             }}
@@ -211,6 +212,10 @@ const props = defineProps({
   },
   bucketsCount: { type: Number, required: true },
   unfetchedBucketsCount: { type: Number, required: true },
+  isUpdatingNotes: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const showNote = ref<Note>(null);

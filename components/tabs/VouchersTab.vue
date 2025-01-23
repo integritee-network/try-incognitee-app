@@ -10,7 +10,7 @@
       <HealthIndicator />
     </div>
     <div class="lg:hidden">
-      <WalletNumber />
+      <WalletIndicator />
     </div>
     <TokenIndicator class="lg:hidden" />
   </div>
@@ -394,7 +394,7 @@ import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletNumber from "~/components/ui/WalletNumber.vue";
+import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

@@ -15,6 +15,7 @@
       :eventHorizon="oldestMomentInNoteBuckets"
       :bucketsCount="bucketsCount"
       :unfetchedBucketsCount="unfetchedBucketsCount"
+      :isUpdatingNotes="isUpdatingNotes"
       :enableActions="enableActions"
     />
   </div>

@@ -11,7 +11,7 @@
         <HealthIndicator />
       </div>
       <div class="lg:hidden">
-        <WalletNumber />
+        <WalletIndicator />
       </div>
       <TokenIndicator class="lg:hidden" />
     </div>
@@ -244,6 +244,10 @@
       <PrivateTxHistory
         :show="currentTab === 'private'"
         :fetchOlderBucket="props.fetchOlderBucket"
+        :eventHorizon="props.eventHorizon"
+        :bucketsCount="props.bucketsCount"
+        :unfetchedBucketsCount="props.unfetchedBucketsCount"
+        :isUpdatingNotes="props.isUpdatingNotes"
       />
     </div>
 
@@ -1075,7 +1079,7 @@ import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
-import WalletNumber from "~/components/ui/WalletNumber.vue";
+import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1618,6 +1622,16 @@ const props = defineProps({
   },
   fetchOlderBucket: {
     type: Function,
+    required: true,
+  },
+  eventHorizon: {
+    type: Number,
+    required: true,
+  },
+  bucketsCount: { type: Number, required: true },
+  unfetchedBucketsCount: { type: Number, required: true },
+  isUpdatingNotes: {
+    type: Boolean,
     required: true,
   },
   enableActions: {

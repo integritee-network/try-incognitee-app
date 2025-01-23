@@ -212,6 +212,10 @@ const props = defineProps({
   },
   bucketsCount: { type: Number, required: true },
   unfetchedBucketsCount: { type: Number, required: true },
+  isUpdatingNotes: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const showNote = ref<Note>(null);

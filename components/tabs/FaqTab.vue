@@ -83,12 +83,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/vue/24/outline";
 import { eventBus } from "~/helpers/eventBus";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
-import WalletNumber from "~/components/ui/WalletNumber.vue";
+import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 
 export default {
@@ -99,7 +99,7 @@ export default {
   },
   components: {
     TokenIndicator,
-    WalletNumber,
+    WalletIndicator,
     HealthIndicator,
     Disclosure,
     DisclosureButton,

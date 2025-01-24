@@ -1,25 +1,30 @@
 <template>
   <div class="mt-3 sm:mt-5 px-3">
     <div class="flex justify-between items-center">
-    <button @click="eventBus.emit('toggleSidebar')" class="lg:hidden text-white focus:outline-none text-2xl">
-      ☰
-    </button>
-    <div class="lg:hidden">
-        <HealthIndicator/>
+      <button
+        @click="eventBus.emit('toggleSidebar')"
+        class="lg:hidden text-white focus:outline-none text-2xl"
+      >
+        ☰
+      </button>
+      <div class="lg:hidden">
+        <HealthIndicator />
       </div>
       <div class="lg:hidden">
-        <WalletIndicator/>
+        <WalletIndicator />
       </div>
       <div class="lg:hidden">
-      <TokenIndicator/>
-    </div>
+        <TokenIndicator />
+      </div>
     </div>
   </div>
   <div class="px-5 py-5 sm:py-5 lg:px-5 lg:py-5">
     <h2 class="flex text-2xl font-bold tracking-tight text-white sm:text-2xl">
       Frequently Asked Questions
     </h2>
-    <div class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl">
+    <div
+      class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl"
+    >
       Introduction
     </div>
     <p class="my-4 mb-10 text-sm text-gray-400">
@@ -29,17 +34,30 @@
       and how it can benefit you.
     </p>
     <div v-for="(section, index) in faqSections" :key="index" class="mt-8">
-      <h3 class="flex text-lg font-bold tracking-tight text-incognitee-blue sm:text-lg mb-5">
+      <h3
+        class="flex text-lg font-bold tracking-tight text-incognitee-blue sm:text-lg mb-5"
+      >
         {{ section.title }}
       </h3>
       <!-- Fragen und Antworten -->
       <dl class="space-y-6 divide-y divide-white/10 px-4 py-2">
-        <Disclosure as="div" v-for="faq in section.questions" :key="faq.question" v-slot="{ open }">
+        <Disclosure
+          as="div"
+          v-for="faq in section.questions"
+          :key="faq.question"
+          v-slot="{ open }"
+        >
           <dt>
-            <DisclosureButton class="flex w-full justify-between text-left text-white my-5">
+            <DisclosureButton
+              class="flex w-full justify-between text-left text-white my-5"
+            >
               <span class="font-semibold">{{ faq.question }}</span>
               <span class="ml-6 flex h-7 items-center">
-                <PlusSmallIcon v-if="!open" class="w-6 h-6" aria-hidden="true" />
+                <PlusSmallIcon
+                  v-if="!open"
+                  class="w-6 h-6"
+                  aria-hidden="true"
+                />
                 <MinusSmallIcon v-else class="w-6 h-6" aria-hidden="true" />
               </span>
             </DisclosureButton>
@@ -50,16 +68,26 @@
         </Disclosure>
       </dl>
     </div>
-    <div class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl">
+    <div
+      class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl"
+    >
       Need More Help?
     </div>
     <p class="my-4 mb-10 text-sm text-gray-400">
       If you have any additional questions or need support, please contact us at
-      <a href="mailto:support@incognitee.io"
-        class="text-incognitee-green hover:underline">support@integritee.network</a>
-      or via the full documentation at<a href="https://docs.incognitee.io" target="_blank" rel="noopener noreferrer"
-        class="text-incognitee-green hover:underline">
-        docs.incognitee.io</a>.
+      <a
+        href="mailto:support@incognitee.io"
+        class="text-incognitee-green hover:underline"
+        >support@integritee.network</a
+      >
+      or via the full documentation at<a
+        href="https://docs.incognitee.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-incognitee-green hover:underline"
+      >
+        docs.incognitee.io</a
+      >.
     </p>
   </div>
 </template>

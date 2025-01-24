@@ -1,18 +1,21 @@
 <template>
   <div class="p-3">
     <div class="flex mb-3 justify-between items-center">
-    <button @click="eventBus.emit('toggleSidebar')" class="lg:hidden text-white focus:outline-none text-2xl">
-      ☰
-    </button>
-    <div class="lg:hidden">
-        <HealthIndicator/>
+      <button
+        @click="eventBus.emit('toggleSidebar')"
+        class="lg:hidden text-white focus:outline-none text-2xl"
+      >
+        ☰
+      </button>
+      <div class="lg:hidden">
+        <HealthIndicator />
       </div>
       <div class="lg:hidden">
-        <WalletNumber/>
+        <WalletNumber />
       </div>
       <div class="lg:hidden">
-      <TokenIndicator/>
-    </div>
+        <TokenIndicator />
+      </div>
     </div>
     <InfoBanner
       v-if="!accountStore.hasInjector"

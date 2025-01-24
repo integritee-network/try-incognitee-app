@@ -8,14 +8,14 @@
         ☰
       </button>
       <div class="lg:hidden">
-        <HealthIndicator/>
+        <HealthIndicator />
       </div>
       <div class="lg:hidden">
         <WalletIndicator />
       </div>
       <div class="lg:hidden">
-      <TokenIndicator/>
-    </div>
+        <TokenIndicator />
+      </div>
     </div>
     <WarningBanner
       v-if="

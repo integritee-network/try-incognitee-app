@@ -416,6 +416,8 @@ const fetchIncogniteeNotes = async (
 ) => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
+  // avoid race condition leading to duplicate entries in notes
+  if (accountStore.getSymbol === "UNIT") return;
 
   if (disableGetter.value == true) {
     console.log(

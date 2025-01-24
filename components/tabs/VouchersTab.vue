@@ -533,6 +533,7 @@ const generateNewVoucher = async (
     const url = new URL(window.location.href);
     url.searchParams.set("seed", voucherSeedHex);
     url.searchParams.delete("app");
+    url.searchParams.delete("address");
     const voucher = new Voucher(
       new Date(),
       shard,

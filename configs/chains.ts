@@ -35,10 +35,15 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
     //api: "wss://rpc.ibp.network/paseo",
     faucetUrl: "https://faucet.polkadot.io/",
     //faucetUrl: "https://substratefaucet.xyz/paseo/ADDRESS"
+    indexerUrls: ["https://paseo.subscan.io/account/ADDRESS?tab=transfer"],
   },
   [ChainId.AssetHubPolkadot]: {
     name: "Asset Hub Polkadot",
     api: "wss://polkadot-asset-hub-rpc.polkadot.io",
+    indexerUrls: [
+      "https://assethub-polkadot.subscan.io/account/ADDRESS?tab=transfer",
+      "https://assethub-polkadot.statescan.io/#/accounts/ADDRESS?tab=transfers",
+    ],
   },
   [ChainId.AssetHubKusama]: {
     name: "Asset Hub Kusama",
@@ -55,6 +60,7 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
   [ChainId.IntegriteeKusama]: {
     name: "Integritee Kusama",
     api: "wss://kusama.api.integritee.network",
+    indexerUrls: ["https://integritee.subscan.io/account/ADDRESS?tab=transfer"],
   },
   [ChainId.IntegriteePaseo]: {
     name: "Integritee Paseo",

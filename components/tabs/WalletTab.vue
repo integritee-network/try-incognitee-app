@@ -251,6 +251,7 @@
         :unfetchedBucketsCount="props.unfetchedBucketsCount"
         :isUpdatingNotes="props.isUpdatingNotes"
       />
+      <PublicTxHistory :show="currentTab === 'public'" />
     </div>
 
     <!-- Assets Info -->
@@ -1057,6 +1058,7 @@ import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import Qrcode from "vue-qrcode";
 import BalanceInteractorContainer from "~/components/ui/BalanceInteractorContainer.vue";
 import PrivateTxHistory from "~/components/ui/PrivateTxHistory.vue";
+import PublicTxHistory from "~/components/ui/PublicTxHistory.vue";
 import { computed, defineProps, ref, defineExpose } from "vue";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { TypeRegistry, u32 } from "@polkadot/types";

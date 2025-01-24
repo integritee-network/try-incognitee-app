@@ -1,12 +1,15 @@
 <template>
   <div class="p-3">
-    <div class="mb-3">
+    <div class="flex mb-3 justify-between items-center">
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
       >
         ☰
       </button>
+      <div class="lg:hidden">
+        <WalletNumber />
+      </div>
     </div>
     <InfoBanner
       v-if="!accountStore.hasInjector"
@@ -663,6 +666,9 @@ import { teerdaysNetwork } from "~/lib/environmentConfig";
 import { Bond, PendingUnlock } from "~/lib/teerDays";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
+import HealthIndicator from "~/components/ui/HealthIndicator.vue";
+import TokenIndicator from "~/components/ui/TokenIndicator.vue";
+import WalletNumber from "~/components/ui/WalletIndicator.vue";
 
 const activeAccordion = ref(null);
 

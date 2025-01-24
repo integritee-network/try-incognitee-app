@@ -606,7 +606,7 @@ const copyVoucherUrlToClipboard = () => {
     .writeText(selectedVoucher.value?.url)
     .then(() =>
       alert(
-        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
+        "copied your voucher url to the clipboard. Please share it only with the recipient.",
       ),
     );
 };

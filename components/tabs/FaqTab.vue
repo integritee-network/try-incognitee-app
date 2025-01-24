@@ -190,7 +190,7 @@ export default {
             {
               question: "Is my data private, and who has access to it?",
               answer:
-                "Your data is completely private by default. No one else, including us, can access your transaction details, as they remain encrypted even while being processed.",
+                "Your data and metadata are completely private by default. No one else, including us, can access your transaction details, as they remain encrypted even while being processed.",
             },
             {
               question: "What happens if the blockchain is compromised?",
@@ -270,7 +270,7 @@ export default {
             {
               question: "Are there any limits or restrictions?",
               answer: `
-          While in beta status, limits will apply to the amount of funds you can shield to Incognitee:
+          While in <i>beta</i> status, limits will apply to the amount of funds you can shield to Incognitee:
           <ul>
             <li>Shielding limit: 111 DOT</li>
             <li>Shielding limit: 1000 TEER</li>

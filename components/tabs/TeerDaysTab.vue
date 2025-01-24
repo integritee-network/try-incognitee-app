@@ -8,13 +8,7 @@
         ☰
       </button>
       <div class="lg:hidden">
-        <HealthIndicator />
-      </div>
-      <div class="lg:hidden">
         <WalletNumber />
-      </div>
-      <div class="lg:hidden">
-        <TokenIndicator />
       </div>
     </div>
     <InfoBanner

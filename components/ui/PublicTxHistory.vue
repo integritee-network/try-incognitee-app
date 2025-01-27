@@ -1,21 +1,32 @@
 <template>
   <div v-if="show">
-    <div class="mt-4 flex items-center space-x-2">
-      <p class="text-gray-500">
-        Look up your account's public tx history on public indexers:
-      </p>
-      <div class="indexer-links flex items-center space-x-2">
-        <div
-          v-for="(url, index) in indexerUrls"
-          :key="index"
-          class="flex items-center space-x-2"
-        >
-          <a :href="url" target="_blank" class="text-blue-500 hover:underline">
-            <img :src="getIcon(url)" alt="indexer icon" class="w-6 h-6" />
-          </a>
-        </div>
+  
+      <div class="mt-10 flex justify-between items-center">
+      <div
+        class="title text-2xl font-bold tracking-tight text-white sm:text-2xl"
+      >
+        History
       </div>
     </div>
+    <div class="my-5 mx-5 flex flex-col items-center text-center text-incognitee-blue text-xs">
+    <!-- Text oben -->
+    <span class="mb-2">Look up your account's public tx history on public indexers:</span>
+
+    <!-- Icons unten -->
+    <div class="indexer-links flex justify-center items-center space-x-4">
+      <div
+        v-for="(url, index) in indexerUrls"
+        :key="index"
+        class="flex items-center justify-center mt-3"
+      >
+        <a :href="url" target="_blank" class="flex items-center justify-center">
+          <img :src="getIcon(url)" alt="indexer icon" class="w-6 h-6" />
+        </a>
+      </div>
+    </div>
+  </div>
+     
+    
   </div>
 </template>
 

@@ -16,6 +16,7 @@
           v-else-if="selectedToken === 'DOT'"
           class="w-[14px] h-[14px] mr-2"
         />
+        <div v-else class="spinner"></div>
         <span class="truncate">{{ selectedToken }}</span>
       </div>
 
@@ -44,7 +45,7 @@
         xmlns="http://www.w3.org/2000/svg"
         fill="currentColor"
         viewBox="0 0 24 24"
-        :class="['w-3 h-3 ml-2', isOpen ? 'rotate-180' : '']"
+        :class="['w-3 h-3 ml-2', dropdownIsOpen ? 'rotate-180' : '']"
         class="transition-transform text-gray-500 hover:text-incognitee-green"
       >
         <path
@@ -57,7 +58,7 @@
 
     <!-- Dropdown Menu -->
     <div
-      v-show="isOpen"
+      v-show="dropdownIsOpen"
       class="absolute top-full mt-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
     >
       <div
@@ -105,8 +106,8 @@ import { useRouter } from "vue-router";
 import { useAccount } from "@/store/account";
 
 // Zustand des Dropdowns
-const isOpen = ref(false);
-const selectedToken = ref("PAS"); // Standardwert
+const dropdownIsOpen = ref(false);
+const selectedToken = ref("");
 const router = useRouter();
 const accountStore = useAccount();
 
@@ -119,7 +120,7 @@ const tokenSelectorItems = [
 
 // Dropdown umschalten
 const toggleTokenDropdown = () => {
-  isOpen.value = !isOpen.value;
+  dropdownIsOpen.value = !dropdownIsOpen.value;
 };
 
 // Token auswählen und navigieren
@@ -140,6 +141,7 @@ watch(
   () => accountStore.getSymbol,
   (newToken) => {
     if (newToken) {
+      console.debug("TokenIndicator: setting token to : ", newToken);
       selectedToken.value = newToken;
     }
   },
@@ -185,5 +187,14 @@ watch(
 
 .ribbon.gray span {
   background-color: var(--integritee-gray);
+}
+.spinner {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 1em; /* Adjust the size here */
+  height: 1em; /* Adjust the size here */
+  animation: spin 2s linear infinite;
+  vertical-align: middle; /* Align with the text */
 }
 </style>

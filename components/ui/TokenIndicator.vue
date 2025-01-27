@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import Paseo from "@/assets/img/paseo-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
 import DOT from "@/assets/img/polkadot-logo.svg";
@@ -140,6 +140,13 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  const token = accountStore.getSymbol;
+  if (token && token !== "UNIT") {
+    selectedToken.value = accountStore.getSymbol;
+  }
+});
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-    <div class="relative group mb-3">
+  <div class="relative group mb-3">
     <!-- Dropdown Trigger -->
     <div
       class="flex items-center justify-between w-full rounded-md border border-gray-700 bg-gray-800 py-1 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
@@ -7,10 +7,7 @@
     >
       <!-- Token Icon und Name -->
       <div class="flex items-center">
-        <TEER
-          v-if="selectedToken === 'TEER'"
-          class="w-[14px] h-[14px] mr-2"
-        />
+        <TEER v-if="selectedToken === 'TEER'" class="w-[14px] h-[14px] mr-2" />
         <Paseo
           v-else-if="selectedToken === 'PAS'"
           class="w-[14px] h-[14px] mr-2"
@@ -130,14 +127,12 @@ const selectToken = (item) => {
   const currentQuery = { ...router.currentRoute.value.query };
   const newPath = router.currentRoute.value.path.replace(
     /\/[^/?]*(?=\/|\?|$)/,
-    `/${item.label.toLowerCase()}`
+    `/${item.label.toLowerCase()}`,
   );
-  router
-    .push({ path: newPath, query: currentQuery })
-    .then(() => {
-      selectedToken.value = item.value;
-      window.location.reload(); // Seite neu laden
-    });
+  router.push({ path: newPath, query: currentQuery }).then(() => {
+    selectedToken.value = item.value;
+    window.location.reload(); // Seite neu laden
+  });
 };
 
 // Token überwachen
@@ -147,9 +142,8 @@ watch(
     if (newToken) {
       selectedToken.value = newToken;
     }
-  }
+  },
 );
-
 </script>
 
 <style scoped>

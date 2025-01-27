@@ -75,14 +75,8 @@
 
         <!-- Badge -->
         <span
-          v-if="item.label === 'TEER'"
+          v-if="item.label === 'TEER' || item.label === 'DOT'"
           class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
-        >
-          Beta
-        </span>
-        <span
-          v-else-if="item.label === 'DOT'"
-          class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/20 ring-inset"
         >
           Beta
         </span>

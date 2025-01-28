@@ -545,11 +545,13 @@ watch(txStatus, (newValue) => {
   if (newValue) {
     showNotification.value = true;
 
-    // Verstecke die Benachrichtigung nach 5 Sekunden
-    setTimeout(() => {
-      showNotification.value = false;
-      txStatus.value = ""; // Zurücksetzen des Status
-    }, 5000);
+    // auto-hide success message after 5 seconds. We expect the message to appear in the chat window by then
+    if (txStatus.value === "😀 message sent successfully") {
+      setTimeout(() => {
+        showNotification.value = false;
+        txStatus.value = ""; // Zurücksetzen des Status
+      }, 5000);
+    }
   }
 });
 

@@ -112,64 +112,79 @@ export const useAccount = defineStore("account", {
       };
     },
     formatBalanceFree({ balanceFree, decimals }) {
-      return (chain: ChainId): string => {
+      return (chain: ChainId, forceDecimals?: number): string => {
         if (!balanceFree[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceFree[chain],
-          10 ** decimals,
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
         );
         return formatDecimalBalance(balanceValue);
       };
     },
     formatBalanceReserved({ balanceReserved, decimals }) {
-      return (chain: ChainId): string => {
+      return (chain: ChainId, forceDecimals?: number): string => {
         if (!balanceReserved[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceReserved[chain],
-          10 ** decimals,
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
         );
         return formatDecimalBalance(balanceValue);
       };
     },
     formatBalanceFrozen({ balanceFrozen, decimals }) {
-      return (chain: ChainId): string => {
+      return (chain: ChainId, forceDecimals?: number): string => {
         if (!balanceFrozen[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceFrozen[chain],
-          10 ** decimals,
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
         );
         return formatDecimalBalance(balanceValue);
       };
     },
     getDecimalBalanceFree({ balanceFree, decimals }) {
-      return (chain: ChainId): number => {
+      return (chain: ChainId, forceDecimals?: number): number => {
         if (!balanceFree[chain]) return 0;
-        return divideBigIntToFloat(balanceFree[chain], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceFree[chain],
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+        );
       };
     },
     getDecimalBalanceReserved({ balanceReserved, decimals }) {
-      return (chain: ChainId): number => {
+      return (chain: ChainId, forceDecimals?: number): number => {
         if (!balanceReserved[chain]) return 0;
-        return divideBigIntToFloat(balanceReserved[chain], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceReserved[chain],
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+        );
       };
     },
     getDecimalBalanceFrozen({ balanceFrozen, decimals }) {
-      return (chain: ChainId): number => {
+      return (chain: ChainId, forceDecimals?: number): number => {
         if (!balanceFrozen[chain]) return 0;
-        return divideBigIntToFloat(balanceFrozen[chain], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceFrozen[chain],
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+        );
       };
     },
     getDecimalBalanceTransferable({ balanceFree, balanceFrozen, decimals }) {
-      return (chain: ChainId): number => {
+      return (chain: ChainId, forceDecimals?: number): number => {
         const frozen = balanceFrozen[chain] ? balanceFrozen[chain] : BigInt(0);
         const free = balanceFree[chain] ? balanceFree[chain] : BigInt(0);
-        return divideBigIntToFloat(BigInt(free - frozen), 10 ** decimals);
+        return divideBigIntToFloat(
+          BigInt(free - frozen),
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+        );
       };
     },
     getDecimalExistentialDeposit({ existentialDeposit, decimals }) {
-      return (chain: ChainId): number => {
+      return (chain: ChainId, forceDecimals?: number): number => {
         if (!existentialDeposit[chain]) return 0;
-        return divideBigIntToFloat(existentialDeposit[chain], 10 ** decimals);
+        return divideBigIntToFloat(
+          existentialDeposit[chain],
+          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+        );
       };
     },
   },

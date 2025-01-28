@@ -104,6 +104,7 @@
                           v-if="
                             accountStore.getDecimalBalanceFrozen(
                               teerdaysNetwork,
+                              12,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -118,6 +119,7 @@
                               >{{
                                 accountStore.formatBalanceFrozen(
                                   teerdaysNetwork,
+                                  12,
                                 )
                               }}
                               TEER</time
@@ -129,6 +131,7 @@
                           v-if="
                             accountStore.getDecimalBalanceReserved(
                               teerdaysNetwork,
+                              12,
                             ) > 0
                           "
                           class="flex w-full flex-none gap-x-4 px-6"
@@ -143,6 +146,7 @@
                               >{{
                                 accountStore.formatBalanceReserved(
                                   teerdaysNetwork,
+                                  12,
                                 )
                               }}
                               TEER</time
@@ -916,7 +920,10 @@ watch(refreshCounter, async () => {
 });
 
 const transferableBalance = computed(() => {
-  const balance = accountStore.getDecimalBalanceTransferable(teerdaysNetwork);
+  const balance = accountStore.getDecimalBalanceTransferable(
+    teerdaysNetwork,
+    12,
+  );
   return formatDecimalBalance(balance);
 });
 

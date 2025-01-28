@@ -59,7 +59,10 @@
 
           <div class="text-white mb-6 text-center">
             <div class="">
-              <h3 class="text-sm mb-3">Public Transferable Balance</h3>
+              <h3 class="text-sm mb-3">
+                Public Transferable Balance on
+                {{ chainConfigs[shieldingTarget].name }}
+              </h3>
               <div
                 v-if="isFetchingShieldingTargetBalance"
                 class="spinner"

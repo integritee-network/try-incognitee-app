@@ -99,6 +99,12 @@ import { eventBus } from "@/helpers/eventBus";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
+import {
+  INCOGNITEE_SESSION_PROXY_DEPOSIT,
+  INCOGNITEE_TX_FEE,
+  INCOGNITEE_UNSHIELDING_FEE,
+  INCOGNITEE_SHIELDING_FEE_FRACTION,
+} from "~/configs/incognitee";
 
 export default {
   computed: {
@@ -256,14 +262,19 @@ export default {
         `,
             },
             {
+              question: "Where are my DOT?",
+              answer:
+                "In order to shield DOT to Incognitee, you need to <a href=https://support.polkadot.network/support/solutions/articles/65000181119>move them to Asset Hub Polkadot</a> and connect the wallet holding DOT to the Incognitee app. Your transferable tokens will show in your public balance.",
+            },
+            {
               question: "What are the fees of Incognitee?",
               answer: `
-          Current fees:
+          Current fees for Incognitee:
           <ul>
-            <li>Shielding: 0.175% of the amount</li>
-            <li>Private Transfer: 0.01 DOT</li>
-            <li>Unshielding: 0.03 DOT</li>
-            <li>Session Proxy Deposit: 0.1 DOT</li>
+            <li>Shielding: ${(100 * INCOGNITEE_SHIELDING_FEE_FRACTION).toFixed(3)}% of the amount</li>
+            <li>Private Transfer: ${INCOGNITEE_TX_FEE} DOT or TEER</li>
+            <li>Unshielding: ${INCOGNITEE_UNSHIELDING_FEE} DOT or TEER</li>
+            <li>Session Proxy Deposit: ${INCOGNITEE_SESSION_PROXY_DEPOSIT} DOT or TEER</li>
           </ul>
         `,
             },

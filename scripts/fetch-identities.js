@@ -1,4 +1,4 @@
-// run in /scripts/ folder with node fetch-idenities.js
+// run in /scripts/ folder with node fetch-identities.js
 
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 const fs = require("fs");

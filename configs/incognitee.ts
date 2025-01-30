@@ -17,3 +17,5 @@ export const minUnshieldingAmount = (token: string): number => {
     return 0.1;
   }
 };
+
+export const INCOGNITEE_SHIELDING_MIN = 0.5; // TEER or PAS, decimals are respected

@@ -398,8 +398,8 @@
             id="shieldAmount"
             v-model="shieldAmount"
             type="number"
-            step="1"
-            :min="1"
+            step=".1"
+            :min="INCOGNITEE_SHIELDING_MIN"
             :max="computedShieldingMax"
             required
             class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 text-right"
@@ -1049,6 +1049,7 @@ import {
   INCOGNITEE_SHIELDING_FEE_FRACTION,
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
+  INCOGNITEE_SHIELDING_MIN,
   minUnshieldingAmount,
 } from "~/configs/incognitee";
 import { formatDecimalBalance } from "~/helpers/numbers";
@@ -1145,10 +1146,10 @@ const submitSendForm = () => {
 const submitShieldForm = async () => {
   // double check input values here
   // fixme: why is this necessary? it seems computed max will not be enforced otherwise
-  if (shieldAmount.value > computedShieldingMax.value) {
-    alert(
-      `Shield amount exceeds the maximum allowed value of ${computedShieldingMax.value}`,
-    );
+  if (
+    shieldAmount.value > computedShieldingMax.value ||
+    shieldAmount.value < INCOGNITEE_SHIELDING_MIN
+  ) {
     return;
   }
   if (systemHealth.getSidechainSystemHealth.overall() !== Health.Healthy) {

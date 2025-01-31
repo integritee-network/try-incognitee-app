@@ -11,7 +11,7 @@
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lintfix": "eslint . --fix && prettier --write --list-different ."
+    "lintfix": "prettier --write --list-different ."
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "^1.0.0",
@@ -44,8 +44,8 @@
     "vue-router": "^4.3.2"
   },
   "dependencies": {
-    "@encointer/util": "^0.18.0",
-    "@encointer/worker-api": "^0.18.0",
+    "@encointer/util": "^0.18.1",
+    "@encointer/worker-api": "^0.18.1",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@headlessui/tailwindcss": "^0.2.1",
     "@headlessui/vue": "^1.7.22",

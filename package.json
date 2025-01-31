@@ -11,7 +11,7 @@
     "lint": "yarn lint:eslint && yarn lint:prettier",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier . --check",
-    "lintfix": "eslint . --fix && prettier --write --list-different ."
+    "lintfix": "prettier --write --list-different ."
   },
   "devDependencies": {
     "@egoist/tailwindcss-icons": "^1.0.0",

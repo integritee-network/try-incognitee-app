@@ -412,8 +412,7 @@
               </a>
             </div>
           </div>
-          <div class="footer__column">
-          </div>
+          <div class="footer__column"></div>
         </div>
       </div>
       <div class="footer__bottom">

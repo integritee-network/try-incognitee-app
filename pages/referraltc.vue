@@ -413,29 +413,6 @@
             </div>
           </div>
           <div class="footer__column">
-            <div class="footer__column-title">Company</div>
-            <div class="footer__column-list">
-              <NuxtLink to="/about#join" class="footer__column-link text-link">
-                Jobs
-              </NuxtLink>
-              <NuxtLink
-                to="/about#roadmap"
-                class="footer__column-link text-link"
-              >
-                Roadmap
-              </NuxtLink>
-              <a
-                :href="LINKEDIN_LINK"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="footer__column-link text-link"
-              >
-                LinkedIn
-              </a>
-              <!--              <a href="/" target="_blank" class="footer__column-link text-link">-->
-              <!--                Contacts-->
-              <!--              </a>-->
-            </div>
           </div>
         </div>
       </div>
@@ -443,11 +420,6 @@
         <span class="paragraph_medium"
           >©{{ new Date().getFullYear() }} Integritee, Inc.</span
         >
-        <span>
-          <NuxtLink to="/privacy-policy" class="blue paragraph_medium"
-            >Imprint and Privacy Policy</NuxtLink
-          >
-        </span>
       </div>
     </div>
   </footer>

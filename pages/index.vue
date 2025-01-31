@@ -678,6 +678,9 @@ const fetchIncogniteeNotes = async (
 
 const pollCounter = useInterval(2000);
 watch(pollCounter, async () => {
+  console.debug(`[IntegriteeWorker]: connections stats: ${JSON.stringify(incogniteeStore?.api?.wsStats)}`)
+  console.debug(`[IntegriteeWorker]: endpoint stats: ${JSON.stringify(incogniteeStore?.api?.endpointStats)}`)
+
   await fetchIncogniteeBalance();
   await fetchNetworkStatus();
   // autofetch history slowly

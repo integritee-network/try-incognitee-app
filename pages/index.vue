@@ -710,6 +710,11 @@ const pollingInterval = 2000; // 2 seconds
 let pollingTimeout: any = null;
 const isPolling = ref(true);
 
+// After 20 seconds in background, we will stop some services,
+// which can be resumed upon coming into foreground again.
+const inactivityTimeoutPeriod = 20000; // 20 seconds
+let disconnectWsTimeout: any = null;
+
 async function pollWorker() {
   if (!incogniteeStore.api?.isReady) {
     // Schedule the next polling.
@@ -737,20 +742,33 @@ function handleVisibilityChange() {
 
 async function onVisible() {
   isPolling.value = true;
+  clearInterval(disconnectWsTimeout);
+
   if (!incogniteeStore.api?.isConnected) {
     console.debug("[onVisible] Reconnecting to the worker api");
     await incogniteeStore.api?.connect();
   }
 
+  // avoid spamming polls due to visibility changes
+  clearInterval(pollingTimeout);
   await pollWorker();
 }
 
 async function onBackground() {
   isPolling.value = false;
+  clearTimeout(pollingTimeout);
+
   // otherwise we will see errors in the log that
   // the websocket unexpectedly closed after a while.
+
+  // prevent scheduling multiple closes
+  clearInterval(disconnectWsTimeout);
+  disconnectWsTimeout = setTimeout(closeWs, inactivityTimeoutPeriod);
+}
+
+async function closeWs() {
+  console.debug("closing websocket");
   await incogniteeStore.api?.closeWs();
-  clearTimeout(pollingTimeout);
 }
 
 watch(

@@ -306,6 +306,9 @@ const storeSessionProxies = (proxies) => {
 const fetchNetworkStatus = async () => {
   const promises = [];
   if (shieldingTargetApi.value?.isReady) {
+    // If the browser tab was open, but inactive for a long time,
+    // it could be that we need to reconnect (ready is a bad indicator here).
+    await reconnectShieldingTargetIfNecessary();
     const p = shieldingTargetApi.value.rpc.chain
       .getFinalizedHead()
       .then((head) => {
@@ -802,6 +805,17 @@ watch(
   () => accountStore.getAddress,
   async () => await subscribeWhatsReady(),
 );
+
+async function reconnectShieldingTargetIfNecessary() {
+  if (!shieldingTargetApi.value?.isConnected) {
+    const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+    console.log(
+        "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
+    );
+    shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
+    await shieldingTargetApi.value.isReady;
+  }
+}
 
 const subscribeWhatsReady = async () => {
   //todo! only reinitialize if account changes

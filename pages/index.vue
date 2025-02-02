@@ -676,20 +676,9 @@ const fetchIncogniteeNotes = async (
   }
 };
 
-const pollingInterval = 2000; // 2 seconds
-let pollingTimeout: any = null;
-const isPolling = ref(true);
-
-async function pollWorker() {
+async function fetchWorkerData() {
   if (!incogniteeStore.api?.isReady) {
-    // Schedule the next polling.
-    pollingTimeout = setTimeout(pollWorker, pollingInterval);
     return;
-  }
-
-  if (!incogniteeStore.api?.isConnected) {
-    // If we resumed from the background, it could be that we have to reconnect to the websocket again
-    await incogniteeStore.api?.connect();
   }
 
   console.debug(
@@ -715,6 +704,20 @@ async function pollWorker() {
   } catch (error) {
     console.warn("error auto-fetching older incognitee note buckets: " + error);
   }
+}
+
+const pollingInterval = 2000; // 2 seconds
+let pollingTimeout: any = null;
+const isPolling = ref(true);
+
+async function pollWorker() {
+  if (!incogniteeStore.api?.isReady) {
+    // Schedule the next polling.
+    pollingTimeout = setTimeout(pollWorker, pollingInterval);
+    return;
+  }
+
+  await fetchWorkerData();
 
   if (isPolling.value) {
     // Schedule the next polling.
@@ -724,14 +727,30 @@ async function pollWorker() {
 
 function handleVisibilityChange() {
   if (document.visibilityState === "visible") {
-    console.debug("[Polling] Tab is active. Resuming polling...");
-    isPolling.value = true;
-    pollWorker();
+    console.debug("[Polling] Tab became visible");
+    onVisible();
   } else {
-    console.debug("[Polling] Tab is inactive. Pausing polling...");
-    isPolling.value = false;
-    clearTimeout(pollingTimeout);
+    console.debug("[Polling] Tab became invisible");
+    onBackground();
   }
+}
+
+async function onVisible() {
+  isPolling.value = true;
+  if (!incogniteeStore.api?.isConnected) {
+    console.debug("[onVisible] Reconnecting to the worker api");
+    await incogniteeStore.api?.connect();
+  }
+
+  await pollWorker();
+}
+
+async function onBackground() {
+  isPolling.value = false;
+  // otherwise we will see errors in the log that
+  // the websocket unexpectedly closed after a while.
+  await incogniteeStore.api?.closeWs();
+  clearTimeout(pollingTimeout);
 }
 
 watch(

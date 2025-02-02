@@ -218,6 +218,10 @@ const fetchIncogniteeBalance = async () => {
     return;
   }
 
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   isUpdatingIncogniteeBalance.value = true;
 
   const injector = accountStore.hasInjector ? accountStore.injector : null;
@@ -302,6 +306,9 @@ const storeSessionProxies = (proxies) => {
 const fetchNetworkStatus = async () => {
   const promises = [];
   if (shieldingTargetApi.value?.isReady) {
+    // If the browser tab was open, but inactive for a long time,
+    // it could be that we need to reconnect (ready is a bad indicator here).
+    await reconnectShieldingTargetIfNecessary();
     const p = shieldingTargetApi.value.rpc.chain
       .getFinalizedHead()
       .then((head) => {
@@ -314,6 +321,9 @@ const fetchNetworkStatus = async () => {
     promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
   console.debug("fetch network status info");
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
@@ -364,6 +374,10 @@ const updateNotes = async () => {
 };
 const fetchNoteBucketsInfo = async () => {
   if (!incogniteeStore.apiReady) return;
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   console.log("fetch note buckets info");
   const getter = incogniteeStore.api.noteBucketsInfoGetter(
     incogniteeStore.shard,
@@ -425,6 +439,11 @@ const fetchIncogniteeNotes = async (
     );
     return;
   }
+
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   const bucketIndex = maybeBucketIndex ? maybeBucketIndex : 0;
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
   const sessionProxy = accountStore.sessionProxyForRole(
@@ -676,8 +695,15 @@ const fetchIncogniteeNotes = async (
   }
 };
 
-const pollCounter = useInterval(2000);
-watch(pollCounter, async () => {
+async function fetchWorkerData() {
+  if (!incogniteeStore.api?.isReady) {
+    return;
+  }
+
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   console.debug(
     `[IntegriteeWorker]: connections stats: ${JSON.stringify(incogniteeStore?.api?.wsStats)}`,
   );
@@ -701,12 +727,104 @@ watch(pollCounter, async () => {
   } catch (error) {
     console.warn("error auto-fetching older incognitee note buckets: " + error);
   }
-});
+}
+
+const pollingInterval = 2000; // 2 seconds
+let pollingTimeout: any = null;
+const isPolling = ref(true);
+
+// After 20 seconds in background, we will stop some services,
+// which can be resumed upon coming into foreground again.
+const inactivityTimeoutPeriod = 20000; // 20 seconds
+let disconnectWsTimeout: any = null;
+
+async function pollWorker() {
+  if (!incogniteeStore.api?.isReady) {
+    // Schedule the next polling.
+    pollingTimeout = setTimeout(pollWorker, pollingInterval);
+    return;
+  }
+
+  await fetchWorkerData();
+
+  if (isPolling.value) {
+    // Schedule the next polling.
+    pollingTimeout = setTimeout(pollWorker, pollingInterval);
+  }
+}
+
+function handleVisibilityChange() {
+  if (document.visibilityState === "visible") {
+    console.debug("[Polling] Tab became visible");
+    onVisible();
+  } else {
+    console.debug("[Polling] Tab became invisible");
+    onBackground();
+  }
+}
+
+async function onVisible() {
+  isPolling.value = true;
+  clearInterval(disconnectWsTimeout);
+
+  if (!incogniteeStore.api?.isConnected) {
+    console.debug("[onVisible] Reconnecting to the worker api");
+    await incogniteeStore.api?.reconnect();
+  }
+
+  // avoid spamming polls due to visibility changes
+  clearInterval(pollingTimeout);
+  await pollWorker();
+}
+
+async function onBackground() {
+  isPolling.value = false;
+  clearTimeout(pollingTimeout);
+
+  // otherwise we will see errors in the log that
+  // the websocket unexpectedly closed after a while.
+
+  // prevent scheduling multiple closes
+  clearInterval(disconnectWsTimeout);
+  disconnectWsTimeout = setTimeout(closeWs, inactivityTimeoutPeriod);
+}
+
+async function closeWs() {
+  console.debug("closing websocket");
+  if (incogniteeStore.api?.isConnected) {
+    // not sure why, but sometimes the websocket is already
+    // closed here.
+    await incogniteeStore.api?.closeWs();
+    console.debug("closed websocket");
+  } else {
+    console.debug("websocket was closed already");
+  }
+}
 
 watch(
   () => accountStore.getAddress,
   async () => await subscribeWhatsReady(),
 );
+
+async function reconnectShieldingTargetIfNecessary() {
+  if (!shieldingTargetApi.value?.isConnected) {
+    const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
+    console.log(
+      "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
+    );
+    shieldingTargetApi.value = await ApiPromise.create({
+      provider: wsProvider,
+    });
+    await shieldingTargetApi.value.isReady;
+
+    // await is quick as we only subscribe
+    await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
+      systemHealth.observeShieldingTargetBlockNumber(
+        lastHeader.number.toNumber(),
+      );
+    });
+  }
+}
 
 const subscribeWhatsReady = async () => {
   //todo! only reinitialize if account changes
@@ -869,6 +987,7 @@ const switchToFaq = () => {
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   await loadEnv(props.envFile);
   await incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
@@ -921,11 +1040,16 @@ onMounted(async () => {
     // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
+  // start polling the worker
+  await pollWorker();
 });
 
 onUnmounted(() => {
   eventBus.off("addressClicked", openChooseWalletOverlay);
   window.removeEventListener("resize", checkIfMobile);
+
+  clearTimeout(pollingTimeout);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 
 const dropSubscriptions = () => {

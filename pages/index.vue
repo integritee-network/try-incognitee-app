@@ -814,6 +814,13 @@ async function reconnectShieldingTargetIfNecessary() {
     );
     shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
     await shieldingTargetApi.value.isReady;
+
+    // await is quick as we only subscribe
+    await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
+      systemHealth.observeShieldingTargetBlockNumber(
+          lastHeader.number.toNumber(),
+      );
+    });
   }
 }
 

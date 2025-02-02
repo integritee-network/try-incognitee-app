@@ -746,7 +746,7 @@ async function onVisible() {
 
   if (!incogniteeStore.api?.isConnected) {
     console.debug("[onVisible] Reconnecting to the worker api");
-    await incogniteeStore.api?.connect();
+    await incogniteeStore.api?.reconnect();
   }
 
   // avoid spamming polls due to visibility changes
@@ -768,7 +768,14 @@ async function onBackground() {
 
 async function closeWs() {
   console.debug("closing websocket");
-  await incogniteeStore.api?.closeWs();
+  if (incogniteeStore.api?.isConnected) {
+    // not sure why, but sometimes the websocket is already
+    // closed here.
+    await incogniteeStore.api?.closeWs();
+    console.debug("closed websocket");
+  } else {
+    console.debug("websocket was closed already");
+  }
 }
 
 watch(

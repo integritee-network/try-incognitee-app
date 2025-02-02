@@ -676,8 +676,22 @@ const fetchIncogniteeNotes = async (
   }
 };
 
-const pollCounter = useInterval(2000);
-watch(pollCounter, async () => {
+const pollingInterval = 2000; // 2 seconds
+let pollingTimeout: any = null;
+const isPolling = ref(true);
+
+async function pollWorker() {
+  if (!incogniteeStore.api?.isReady) {
+    // Schedule the next polling.
+    pollingTimeout = setTimeout(pollWorker, pollingInterval);
+    return;
+  }
+
+  if (!incogniteeStore.api?.isConnected) {
+    // If we resumed from the background, it could be that we have to reconnect to the websocket again
+    await incogniteeStore.api?.connect();
+  }
+
   console.debug(
     `[IntegriteeWorker]: connections stats: ${JSON.stringify(incogniteeStore?.api?.wsStats)}`,
   );
@@ -701,7 +715,24 @@ watch(pollCounter, async () => {
   } catch (error) {
     console.warn("error auto-fetching older incognitee note buckets: " + error);
   }
-});
+
+  if (isPolling.value) {
+    // Schedule the next polling.
+    pollingTimeout = setTimeout(pollWorker, pollingInterval);
+  }
+}
+
+function handleVisibilityChange() {
+  if (document.visibilityState === "visible") {
+    console.debug("[Polling] Tab is active. Resuming polling...");
+    isPolling.value = true;
+    pollWorker();
+  } else {
+    console.debug("[Polling] Tab is inactive. Pausing polling...");
+    isPolling.value = false;
+    clearTimeout(pollingTimeout);
+  }
+}
 
 watch(
   () => accountStore.getAddress,
@@ -869,6 +900,7 @@ const switchToFaq = () => {
 onMounted(async () => {
   checkIfMobile();
   window.addEventListener("resize", checkIfMobile);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
   await loadEnv(props.envFile);
   await incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
@@ -921,11 +953,16 @@ onMounted(async () => {
     // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
     await subscribeWhatsReady();
   }
+  // start polling the worker
+  await pollWorker();
 });
 
 onUnmounted(() => {
   eventBus.off("addressClicked", openChooseWalletOverlay);
   window.removeEventListener("resize", checkIfMobile);
+
+  clearTimeout(pollingTimeout);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 
 const dropSubscriptions = () => {

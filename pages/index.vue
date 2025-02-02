@@ -218,6 +218,10 @@ const fetchIncogniteeBalance = async () => {
     return;
   }
 
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   isUpdatingIncogniteeBalance.value = true;
 
   const injector = accountStore.hasInjector ? accountStore.injector : null;
@@ -314,6 +318,9 @@ const fetchNetworkStatus = async () => {
     promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
   console.debug("fetch network status info");
   const getter = incogniteeStore.api.parentchainsInfoGetter(
     incogniteeShard.value,
@@ -364,6 +371,10 @@ const updateNotes = async () => {
 };
 const fetchNoteBucketsInfo = async () => {
   if (!incogniteeStore.apiReady) return;
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   console.log("fetch note buckets info");
   const getter = incogniteeStore.api.noteBucketsInfoGetter(
     incogniteeStore.shard,
@@ -425,6 +436,11 @@ const fetchIncogniteeNotes = async (
     );
     return;
   }
+
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
+  }
+
   const bucketIndex = maybeBucketIndex ? maybeBucketIndex : 0;
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
   const sessionProxy = accountStore.sessionProxyForRole(
@@ -679,6 +695,10 @@ const fetchIncogniteeNotes = async (
 async function fetchWorkerData() {
   if (!incogniteeStore.api?.isReady) {
     return;
+  }
+
+  if (!incogniteeStore.api?.isConnected) {
+    await incogniteeStore.api?.reconnect();
   }
 
   console.debug(

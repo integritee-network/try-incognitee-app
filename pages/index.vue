@@ -810,15 +810,17 @@ async function reconnectShieldingTargetIfNecessary() {
   if (!shieldingTargetApi.value?.isConnected) {
     const wsProvider = new WsProvider(chainConfigs[shieldingTarget.value].api);
     console.log(
-        "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
+      "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
     );
-    shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
+    shieldingTargetApi.value = await ApiPromise.create({
+      provider: wsProvider,
+    });
     await shieldingTargetApi.value.isReady;
 
     // await is quick as we only subscribe
     await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
       systemHealth.observeShieldingTargetBlockNumber(
-          lastHeader.number.toNumber(),
+        lastHeader.number.toNumber(),
       );
     });
   }

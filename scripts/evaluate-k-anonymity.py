@@ -104,13 +104,16 @@ positive_net_amounts = sorted(set(amount for amount in net_transfers.values() if
 y_values = [sum(1 for amount in net_transfers.values() if amount > x) for x in positive_net_amounts]
 
 # Plot unshielding amount vs best case k-anonymity
+plt.style.use('dark_background')
 plt.figure(figsize=(10, 6))
-plt.plot(positive_net_amounts, y_values, marker='o')
+plt.plot(positive_net_amounts, y_values, marker='o', color='cyan')
 plt.xscale('log')
-plt.xlabel("Unshielding Amount")
-plt.ylabel("Best Case k-Anonymity")
-plt.title("Unshielding Amount vs Best Case k-Anonymity")
-plt.grid(True)
+plt.xlabel("Unshielding Amount [DOT]", color='white')
+plt.ylabel("k-Anonymity Estimate", color='white')
+plt.title("Unshielding Amount vs k-Anonymity", color='white')
+plt.grid(True, color='gray')
+plt.xticks([0.1, 1, 10, 100], ['0.1', '1', '10', '100'], color='white')
+plt.savefig('plot.png', transparent=True)
 plt.show()
 
 

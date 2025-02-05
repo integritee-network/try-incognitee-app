@@ -105,14 +105,18 @@ y_values = [sum(1 for amount in net_transfers.values() if amount > x) for x in p
 
 # Plot unshielding amount vs best case k-anonymity
 plt.style.use('dark_background')
-plt.figure(figsize=(10, 6))
-plt.plot(positive_net_amounts, y_values, marker='o', color='cyan')
-plt.xscale('log')
-plt.xlabel("Unshielding Amount [DOT]", color='white')
-plt.ylabel("k-Anonymity Estimate", color='white')
-plt.title("Unshielding Amount vs k-Anonymity", color='white')
-plt.grid(True, color='gray')
-plt.xticks([0.1, 1, 10, 100], ['0.1', '1', '10', '100'], color='white')
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(positive_net_amounts, y_values, marker='o', color='cyan')
+ax.set_xscale('log')
+ax.set_xlabel("Unshielding Amount [DOT]", color='gray')
+ax.set_ylabel("k-Anonymity Estimate", color='gray')
+ax.set_title("Unshielding Amount vs k-Anonymity", color='gray')
+ax.grid(True, color='gray')
+ax.set_xticks([0.1, 1, 10, 100])
+ax.set_xticklabels(['0.1', '1', '10', '100'], color='gray')
+ax.tick_params(axis='y', colors='gray')
+for spine in ax.spines.values():
+    spine.set_edgecolor('gray')
 plt.savefig('plot.png', transparent=True)
 plt.show()
 

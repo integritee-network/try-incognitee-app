@@ -1,11 +1,14 @@
 <template>
-  <OverlayDialog :show="show" :close="close" title="Obtain TEER Tokens!">
+  <OverlayDialog :show="show" :close="close" title="Obtain Tokens!">
     <div class="mt-2">
       <p class="text-sm text-gray-400">
         You can get {{ tokenSymbol }} at
-        <a href="https://www.gate.io/de/trade/TEER_USDT">gate.io</a> and
+        <a :href="`https://www.gate.io/de/trade/${tokenSymbol}_USDT`"
+          >gate.io</a
+        >
+        and
         <a
-          href="https://www.kraken.com/prices/integritee?quote=usd&interval=24h"
+          :href="`https://www.kraken.com/prices/${tokenSymbol === 'TEER' ? 'integritee' : tokenSymbol === 'DOT' ? 'polkadot' : ''}?quote=usd&interval=24h`"
           >Kraken</a
         >
       </p>
@@ -41,6 +44,16 @@
             </div>
           </div>
         </div>
+      </div>
+      <div v-if="tokenSymbol === 'DOT'">
+        <p class="mt-4 text-sm text-gray-400">
+          then, you'll need to
+          <a href="https://kheopswap.xyz/#/polkadot/teleport"
+            >teleport your DOT</a
+          >
+          from the Polkadot relay chain to the same address on Polkadot AH
+          (Asset Hub).
+        </p>
       </div>
     </div>
   </OverlayDialog>

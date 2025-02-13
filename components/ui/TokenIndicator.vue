@@ -1,5 +1,5 @@
 <template>
-  <div class="relative group mb-3">
+  <div class="relative group">
     <!-- Dropdown Trigger -->
     <div
       class="flex items-center justify-between w-full rounded-md border border-gray-700 bg-gray-800 py-1 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
@@ -23,19 +23,19 @@
       <!-- Badge -->
       <span
         v-if="selectedToken === 'TEER'"
-        class="inline-flex items-center ml-3 rounded-md bg-yellow-400/10 px-2 py-0.5 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20"
+        class="hidden sm:inline-flex items-center ml-3 rounded-md bg-yellow-400/10 px-2 py-0.5 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20"
       >
         Beta
       </span>
       <span
         v-else-if="selectedToken === 'PAS'"
-        class="inline-flex items-center ml-3 rounded-md bg-blue-400/10 px-2 py-0.5 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30"
+        class="hidden sm:inline-flex items-center ml-3 rounded-md bg-blue-400/10 px-2 py-0.5 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30"
       >
         Test
       </span>
       <span
         v-else-if="selectedToken === 'DOT'"
-        class="inline-flex items-center ml-3 rounded-md bg-green-400/10 px-2 py-0.5 text-xs font-medium text-green-400 ring-1 ring-green-400/30"
+        class="hidden sm:inline-flex items-center ml-3 rounded-md bg-green-400/10 px-2 py-0.5 text-xs font-medium text-green-400 ring-1 ring-green-400/30"
       >
         Beta
       </span>
@@ -76,13 +76,13 @@
         <!-- Badge -->
         <span
           v-if="item.label === 'TEER' || item.label === 'DOT'"
-          class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+          class="hidden sm:inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
         >
           Beta
         </span>
         <span
           v-else-if="item.label === 'PAS'"
-          class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
+          class="hidden sm:inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
         >
           Test
         </span>

@@ -1,16 +1,13 @@
 <template>
-  <div class="flex bg-incognitee-blue text-white">
-    <Sidebar />
+  <div class="flex bg-incognitee-blue text-white h-screen">
+    <!-- Sidebar bleibt links -->
+    <Sidebar class="w-64 border-r border-gray-800 hidden lg:block" />
 
-    <!-- Content Area -->
-    <div class="flex h-screen w-screen bg-incognitee-blue text-white">
-      <!-- Sidebarplatzhalter für Desktop -->
-      <aside
-        class="bg-incognitee-blue border-r border-gray-800 w-64 hidden lg:block"
-      ></aside>
-      <!-- Main Content -->
-      <div class="flex flex-col flex-1">
-        <main class="flex-1">
+    <!-- Content-Bereich: Container zentriert neben der Sidebar -->
+    <div class="flex flex-1 justify-center">
+      <!-- Innerer Container: Begrenzte Breite, linksbündiger Inhalt -->
+      <div class="w-full max-w-[800px] mt-3 flex flex-col items-start">
+        <main class="w-full">
           <NuxtPage />
         </main>
       </div>

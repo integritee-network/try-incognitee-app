@@ -50,14 +50,14 @@
     </div>
     <!-- Overlay End -->
 
-    <div class="bg-incognitee-blue text-white flex">
+    <div class="bg-incognitee-blue text-white flex w-full">
       <!-- Form starts here -->
 
       <!-- Sidebar -->
       <div
         v-if="!isMobile || !showChatDetail"
-        :class="isMobile ? 'w-full' : 'md:w-1/3'"
-        class="bg-incognitee-blue border-r border-gray-700 flex flex-col"
+        :class="isMobile ? 'w-full' : 'w-full'"
+        class="bg-incognitee-blue border-r border-gray-700 flex flex-col h-screen overflow-hidden"
       >
         <div class="px-4 py-4 flex items-center justify-between">
           <!-- Sidebar-Button -->
@@ -190,7 +190,7 @@
           >
             ← Back
           </button>
-          <h2 class="text-lg font-bold">
+          <h2 class="text-sm font-bold">
             {{
               recipientValid(conversationAddress)
                 ? (maybeUsername(conversationAddress) || "") +

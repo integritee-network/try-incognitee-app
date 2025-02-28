@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       TEERDAYS_NETWORK: process.env.TEERDAYS_NETWORK,
       SHARD: process.env.SHARD,
       SHIELDING_LIMIT: process.env.SHIELDING_LIMIT,
+      ASSET: process.env.ASSET,
       LIVE: process.env.LIVE,
     },
   },

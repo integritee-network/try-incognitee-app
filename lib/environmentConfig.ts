@@ -12,6 +12,7 @@ export const incogniteeShard = ref(null);
 export const isLive = ref(true);
 
 export const teerdaysNetwork = ref(ChainId.IntegriteeKusama);
+export const asset = ref(null);
 
 export const loadEnv = async (envFile?: string) => {
   const envDefault = useRuntimeConfig().public;
@@ -47,6 +48,7 @@ export const loadEnv = async (envFile?: string) => {
     "TEERDAYS_NETWORK",
     ChainId.IntegriteeKusama,
   );
+  const assetEnv = getEnvValue("ASSET", null);
 
   incogniteeShard.value = incogniteeShardEnv;
   shieldingTarget.value = ChainId[shieldingTargetEnv] ?? ChainId.PaseoRelay;
@@ -57,6 +59,7 @@ export const loadEnv = async (envFile?: string) => {
   isLive.value = toBoolean(isLiveEnv);
   teerdaysNetwork.value =
     ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
+  asset.value = assetEnv;
 
   console.log(
     "SHIELDING_TARGET: env:" +
@@ -64,6 +67,7 @@ export const loadEnv = async (envFile?: string) => {
       ". using " +
       ChainId[shieldingTarget.value],
   );
+  console.log("ASSET: env:" + assetEnv + ". using " + asset.value);
   console.log(
     "SHIELDING_LIMIT: env:" +
       shieldingLimitEnv +

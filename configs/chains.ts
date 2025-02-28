@@ -53,7 +53,9 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
     name: "Asset Hub Paseo",
     api: "wss://sys.ibp.network/asset-hub-paseo",
     faucetUrl: "https://faucet.polkadot.io/?parachain=1000",
-    indexerUrls: ["https://assethub-paseo.subscan.io/account/ADDRESS?tab=transfer"],
+    indexerUrls: [
+      "https://assethub-paseo.subscan.io/account/ADDRESS?tab=transfer",
+    ],
   },
   [ChainId.IntegriteePolkadot]: {
     name: "Integritee Polkadot",

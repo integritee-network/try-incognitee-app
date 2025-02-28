@@ -156,11 +156,12 @@ import {
   isLive,
   loadEnv,
   shieldingTarget,
+  asset,
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { formatMoment } from "~/helpers/date";
-import { Note, NoteDirection } from "~/lib/notes";
+import { parseCall } from "~/lib/notes";
 import {
   SessionProxyRole,
   sessionProxyRoleOrder,
@@ -233,7 +234,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.accountInfoAndSessionProxiesGetter(
+        await incogniteeStore.api.accountEssentialsGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -254,9 +255,9 @@ const fetchIncogniteeBalance = async () => {
 
   await getterMap[accountStore.account]
     .send()
-    .then((accountInfoAndSessionProxies) => {
-      const accountInfo = accountInfoAndSessionProxies.account_info;
-      const proxies = accountInfoAndSessionProxies.session_proxies;
+    .then((accountEssentials) => {
+      const accountInfo = accountEssentials.account_info;
+      const proxies = accountEssentials.session_proxies;
       console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
@@ -491,193 +492,17 @@ const fetchIncogniteeNotes = async (
         `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucketIndex}:`,
       );
       for (const note of notes) {
-        if (note.note.isSuccessfulTrustedCall) {
-          const call = incogniteeStore.api.createType(
-            "IntegriteeTrustedCall",
-            note.note.asSuccessfulTrustedCall,
-          );
-          if (call.isBalanceShield) {
-            const typedCall = call.asBalanceShield;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance shield: ${typedCall}`,
+        try {
+          if (note.note.isSuccessfulTrustedCall) {
+            const call = incogniteeStore.api.createType(
+              "IntegriteeTrustedCall",
+              note.note.asSuccessfulTrustedCall,
             );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            noteStore.addNote(
-              new Note(
-                "Shield",
-                NoteDirection.Incoming,
-                to,
-                BigInt(typedCall[2]),
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isBalanceUnshield) {
-            const typedCall = call.asBalanceUnshield;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance unshield: ${typedCall}`,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            noteStore.addNote(
-              new Note(
-                "Unshield",
-                NoteDirection.Outgoing,
-                to,
-                BigInt(typedCall[2]),
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isBalanceTransfer) {
-            const typedCall = call.asBalanceTransfer;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
-              accountStore.getSs58Format,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Transfer",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  null,
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Transfer",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  null,
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isBalanceTransferWithNote) {
-            const typedCall = call.asBalanceTransferWithNote;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer with note: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
-              accountStore.getSs58Format,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Transfer",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[3].toString(),
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Transfer",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[3].toString(),
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isSendNote) {
-            const typedCall = call.asSendNote;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] send note: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
-              accountStore.getSs58Format,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Note",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(0),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[2].toString(),
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Note",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(0),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[2].toString(),
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isGuessTheNumber) {
-            const typedCall = call.asGuessTheNumber.asGuess;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] guess the number: ${typedCall}`,
-            );
-            noteStore.addNote(
-              new Note(
-                `Submit Guess (${typedCall[1]})`,
-                NoteDirection.None,
-                null,
-                null,
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isAddSessionProxy) {
-            const typedCall = call.asAddSessionProxy;
-            const proxy = encodeAddress(
-              typedCall[1],
-              accountStore.getSs58Format,
-            );
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] add session proxy: ${typedCall}`,
-            );
-            noteStore.addNote(
-              new Note(
-                `Add Session Proxy (${typedCall[2].role})`,
-                NoteDirection.None,
-                proxy,
-                null,
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else {
-            console.error(
-              `[${formatMoment(note.timestamp?.toNumber())}] unknown call: ${call}`,
-            );
+            const parsedNote = parseCall(call, note.timestamp, accountStore.getAddress, accountStore.getSs58Format);
+            noteStore.addNote(parsedNote);
           }
+        } catch (e) {
+          console.error(`[fetchIncogniteeNotes] error parsing note ${e}`);
         }
       }
     })

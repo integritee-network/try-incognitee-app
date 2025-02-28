@@ -50,9 +50,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
   const callDateStr = formatMoment(timestamp?.toNumber());
   if (call.isBalanceShield) {
     const typedCall = call.asBalanceShield;
-    console.debug(
-      `[${callDateStr}] balance shield: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] balance shield: ${typedCall}`);
     const to = encodeAddress(typedCall[1], ss58format);
     return new Note(
       "Shield",
@@ -65,9 +63,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     );
   } else if (call.isBalanceUnshield) {
     const typedCall = call.asBalanceUnshield;
-    console.debug(
-      `[${callDateStr}] balance unshield: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] balance unshield: ${typedCall}`);
     const to = encodeAddress(typedCall[1], ss58format);
     return new Note(
       "Unshield",
@@ -80,9 +76,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     );
   } else if (call.isBalanceTransfer) {
     const typedCall = call.asBalanceTransfer;
-    console.debug(
-      `[${callDateStr}] balance transfer: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] balance transfer: ${typedCall}`);
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
     if (from === ownAddress) {
@@ -112,9 +106,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     }
   } else if (call.isAssetsTransfer) {
     const typedCall = call.asAssetsTransfer;
-    console.debug(
-      `[${callDateStr}] assets transfer: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] assets transfer: ${typedCall}`);
     const from = encodeAddress(typedCall[0], ss58format);
     //console.debug(`asset id: ${typedCall[2]} => ${String(typedCall[2])}  `);
     const to = encodeAddress(typedCall[1], ss58format);
@@ -145,9 +137,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     }
   } else if (call.isBalanceTransferWithNote) {
     const typedCall = call.asBalanceTransferWithNote;
-    console.debug(
-      `[${callDateStr}] balance transfer with note: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] balance transfer with note: ${typedCall}`);
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
     if (from === ownAddress) {
@@ -177,9 +167,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     }
   } else if (call.isSendNote) {
     const typedCall = call.asSendNote;
-    console.debug(
-      `[${callDateStr}] send note: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] send note: ${typedCall}`);
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
     if (from === ownAddress) {
@@ -209,9 +197,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     }
   } else if (call.isGuessTheNumber) {
     const typedCall = call.asGuessTheNumber.asGuess;
-    console.debug(
-      `[${callDateStr}] guess the number: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] guess the number: ${typedCall}`);
     return new Note(
       `Submit Guess (${typedCall[1]})`,
       NoteDirection.None,
@@ -224,9 +210,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
   } else if (call.isAddSessionProxy) {
     const typedCall = call.asAddSessionProxy;
     const proxy = encodeAddress(typedCall[1], ss58format);
-    console.debug(
-      `[${callDateStr}] add session proxy: ${typedCall}`,
-    );
+    console.debug(`[${callDateStr}] add session proxy: ${typedCall}`);
     return new Note(
       `Add Session Proxy (${typedCall[2].role})`,
       NoteDirection.None,
@@ -237,8 +221,6 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       null,
     );
   } else {
-    console.error(
-      `[${callDateStr}] unknown call: ${call}`,
-    );
+    console.error(`[${callDateStr}] unknown call: ${call}`);
   }
 };

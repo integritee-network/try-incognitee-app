@@ -75,7 +75,7 @@
               class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8"
             >
               <div class="text-sm font-medium text-white">
-                {{ voucher.amount }} {{ accountStore.getSymbol }}
+                {{ voucher.amount }} {{ accountStore.getSymbol(asset) }}
               </div>
               <time class="mt-1 text-xs text-gray-500">{{
                 formatDate(voucher.timestamp)
@@ -236,7 +236,7 @@
             <label
               for="CreateVoucher"
               class="text-sm font-medium leading-6 text-white"
-              >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol(asset) }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
@@ -273,7 +273,7 @@
           <div class="text-right">
             <span class="text-xs text-gray-400"
               >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
-              {{ accountStore.getSymbol }} for Incognitee</span
+              {{ accountStore.getSymbol(asset) }} for Incognitee</span
             >
           </div>
         </div>
@@ -370,7 +370,11 @@ import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import { INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { formatDate } from "@/helpers/date";
-import { shieldingTarget, incogniteeSidechain } from "~/lib/environmentConfig";
+import {
+  shieldingTarget,
+  incogniteeSidechain,
+  asset,
+} from "~/lib/environmentConfig";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { Health, useSystemHealth } from "~/store/systemHealth";
@@ -540,7 +544,7 @@ const generateNewVoucher = async (
       encodeAddress(newAccount.address, accountStore.getSs58Format),
       voucherSeedHex,
       url.toString(),
-      divideBigIntToFloat(amount, 10 ** accountStore.getDecimals),
+      divideBigIntToFloat(amount, 10 ** accountStore.getDecimals(asset.value)),
       note,
     );
     console.log("generated new voucher: " + voucher);

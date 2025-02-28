@@ -3,6 +3,7 @@ import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
 import { ChainId } from "@/configs/chains";
+import { assetDecimals } from "@/configs/assets";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
 import {
@@ -23,23 +24,23 @@ export const useAccount = defineStore("account", {
     // remember if the user has declined creating a proxy
     sessionProxyDeclined: <boolean>false,
     // free balance per chain
-    balanceFree: <Record<ChainId, BigInt>>{},
+    balanceFree: <Record<ChainAssetId, BigInt>>{},
     // reserved balance per chain
-    balanceReserved: <Record<ChainId, BigInt>>{},
+    balanceReserved: <Record<ChainAssetId, BigInt>>{},
     // frozen balance per chain
-    balanceFrozen: <Record<ChainId, BigInt>>{},
+    balanceFrozen: <Record<ChainAssetId, BigInt>>{},
     // nonce per chain
     nonce: <Record<ChainId, number>>{},
     // genesis hash
     genesisHash: <Record<String, number>>{},
     // decimals (we assume it's the same for all used chains as it's the token we're shielding
-    decimals: <number>0,
+    nativeDecimals: <number>0,
     // native token symbol (we assume it's the same for all used chains as it's the token we're shielding
     symbol: <string>"UNIT",
     // ss58 format (we assume it's the same for all used chains
     ss58Format: <number>42,
     // existential deposit per chain
-    existentialDeposit: <Record<ChainId, BigInt>>{},
+    existentialDeposit: <Record<ChainAssetId, BigInt>>{},
   }),
   getters: {
     getShortAddress({ account }): string {
@@ -55,11 +56,15 @@ export const useAccount = defineStore("account", {
     getSs58Format({ ss58Format }): number {
       return ss58Format;
     },
-    getSymbol({ symbol }): string {
-      return symbol;
+    getSymbol({ symbol }): (asset: string | null) => string {
+      return (asset: string | null): string => {
+        return asset ? String(asset).trim().normalize() : symbol;
+      };
     },
-    getDecimals({ decimals }): number {
-      return decimals;
+    getDecimals({ nativeDecimals }): (asset: string | null) => number {
+      return (asset: string | null): number => {
+        return asset ? assetDecimals[asset] : nativeDecimals;
+      };
     },
     hasInjector({ injector }): boolean {
       return injector != null;
@@ -111,80 +116,97 @@ export const useAccount = defineStore("account", {
         return sessionProxySeeds[proxy];
       };
     },
-    formatBalanceFree({ balanceFree, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): string => {
+    formatBalanceFree({ balanceFree }) {
+      return (chain: ChainAssetId, forceDecimals?: number): string => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceFree[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceFree[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+          10 ** decimals,
         );
         return formatDecimalBalance(balanceValue);
       };
     },
-    formatBalanceReserved({ balanceReserved, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): string => {
+    formatBalanceReserved({ balanceReserved }) {
+      return (chain: ChainAssetId, forceDecimals?: number): string => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceReserved[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceReserved[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+          10 ** decimals,
         );
         return formatDecimalBalance(balanceValue);
       };
     },
-    formatBalanceFrozen({ balanceFrozen, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): string => {
+    formatBalanceFrozen({ balanceFrozen }) {
+      return (chain: ChainAssetId, forceDecimals?: number): string => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceFrozen[chain]) return "0.000";
         const balanceValue: number = divideBigIntToFloat(
           balanceFrozen[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
+          10 ** decimals,
         );
         return formatDecimalBalance(balanceValue);
       };
     },
-    getDecimalBalanceFree({ balanceFree, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): number => {
+    getDecimalBalanceFree({ balanceFree }) {
+      return (chain: ChainAssetId, forceDecimals?: number): number => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceFree[chain]) return 0;
-        return divideBigIntToFloat(
-          balanceFree[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
-        );
+        return divideBigIntToFloat(balanceFree[chain], 10 ** decimals);
       };
     },
-    getDecimalBalanceReserved({ balanceReserved, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): number => {
+    getDecimalBalanceReserved({ balanceReserved }) {
+      return (chain: ChainAssetId, forceDecimals?: number): number => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceReserved[chain]) return 0;
-        return divideBigIntToFloat(
-          balanceReserved[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
-        );
+        return divideBigIntToFloat(balanceReserved[chain], 10 ** decimals);
       };
     },
-    getDecimalBalanceFrozen({ balanceFrozen, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): number => {
+    getDecimalBalanceFrozen({ balanceFrozen }) {
+      return (chain: ChainAssetId, forceDecimals?: number): number => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!balanceFrozen[chain]) return 0;
-        return divideBigIntToFloat(
-          balanceFrozen[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
-        );
+        return divideBigIntToFloat(balanceFrozen[chain], 10 ** decimals);
       };
     },
-    getDecimalBalanceTransferable({ balanceFree, balanceFrozen, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): number => {
+    getDecimalBalanceTransferable({ balanceFree, balanceFrozen }) {
+      return (chain: ChainAssetId, forceDecimals?: number): number => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         const frozen = balanceFrozen[chain] ? balanceFrozen[chain] : BigInt(0);
         const free = balanceFree[chain] ? balanceFree[chain] : BigInt(0);
-        return divideBigIntToFloat(
-          BigInt(free - frozen),
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
-        );
+        return divideBigIntToFloat(BigInt(free - frozen), 10 ** decimals);
       };
     },
-    getDecimalExistentialDeposit({ existentialDeposit, decimals }) {
-      return (chain: ChainId, forceDecimals?: number): number => {
+    getDecimalExistentialDeposit({ existentialDeposit }) {
+      return (chain: ChainAssetId, forceDecimals?: number): number => {
+        const decimals =
+          forceDecimals !== undefined
+            ? forceDecimals
+            : this.getDecimals(chain.asset);
         if (!existentialDeposit[chain]) return 0;
-        return divideBigIntToFloat(
-          existentialDeposit[chain],
-          10 ** (forceDecimals !== undefined ? forceDecimals : decimals),
-        );
+        return divideBigIntToFloat(existentialDeposit[chain], 10 ** decimals);
       };
     },
   },
@@ -220,13 +242,13 @@ export const useAccount = defineStore("account", {
       delete this.sessionProxies[role];
       delete this.sessionProxySeeds[role];
     },
-    setBalanceFree(balance: BigInt, chain: ChainId) {
+    setBalanceFree(balance: BigInt, chain: ChainAssetId) {
       this.balanceFree[chain] = balance;
     },
-    setBalanceReserved(balance: BigInt, chain: ChainId) {
+    setBalanceReserved(balance: BigInt, chain: ChainAssetId) {
       this.balanceReserved[chain] = balance;
     },
-    setBalanceFrozen(balance: BigInt, chain: ChainId) {
+    setBalanceFrozen(balance: BigInt, chain: ChainAssetId) {
       this.balanceFrozen[chain] = balance;
     },
     setNonce(nonce: number, chain: ChainId) {
@@ -236,8 +258,8 @@ export const useAccount = defineStore("account", {
     setGenesisHash(genesisHash: String, chain: ChainId) {
       this.genesisHash[chain] = genesisHash;
     },
-    setDecimals(decimals: number) {
-      this.decimals = decimals;
+    setNativeDecimals(decimals: number) {
+      this.nativeDecimals = decimals;
     },
     setSymbol(symbol: string) {
       console.debug(`Setting symbol to ${symbol}`);
@@ -246,7 +268,7 @@ export const useAccount = defineStore("account", {
     setSS58Format(ss58Format: number) {
       this.ss58Format = ss58Format;
     },
-    setExistentialDeposit(existentialDeposit: BigInt, chain: ChainId) {
+    setExistentialDeposit(existentialDeposit: BigInt, chain: ChainAssetId) {
       this.existentialDeposit[chain] = existentialDeposit;
     },
     decimalAmountToBigInt(amount: number): BigInt {

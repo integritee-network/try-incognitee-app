@@ -17,11 +17,11 @@
           <span class="font-semibold">{{
             formatDecimalBalance(INCOGNITEE_TX_FEE)
           }}</span>
-          {{ accountStore.getSymbol }} and a deposit of
+          {{ accountStore.getSymbol(asset) }} and a deposit of
           <span class="font-semibold">{{
             INCOGNITEE_SESSION_PROXY_DEPOSIT
           }}</span>
-          {{ accountStore.getSymbol }} will be reserved.
+          {{ accountStore.getSymbol(asset) }} will be reserved.
         </p>
       </div>
 
@@ -138,8 +138,8 @@
                   INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
                 )
               }}
-              {{ accountStore.getSymbol }} private balance to register a session
-              proxy. You have
+              {{ accountStore.getSymbol(asset) }} private balance to register a
+              session proxy. You have
               {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
             </p>
           </div>

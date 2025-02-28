@@ -19,8 +19,8 @@
     </div>
     <WarningBanner
       v-if="
-        (accountStore.getSymbol === 'TEER' ||
-          accountStore.getSymbol === 'DOT') &&
+        (accountStore.getSymbol(asset) === 'TEER' ||
+          accountStore.getSymbol(asset) === 'DOT') &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -30,7 +30,7 @@
     />
     <div v-else>
       <CampaignBanner
-        v-if="enableActions && accountStore.getSymbol === 'TEER'"
+        v-if="enableActions && accountStore.getSymbol(asset) === 'TEER'"
         :onClick="openGuessTheNumberOverlay"
         :isMobile="isMobile"
         textMobile="Guess-The-Number"
@@ -70,11 +70,13 @@
               <div class="text-4xl font-semibold" v-else>
                 {{
                   formatDecimalBalance(
-                    accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                    accountStore.getDecimalBalanceTransferable(
+                      shieldingTargetChainAssetId,
+                    ),
                   )
                 }}
                 <span class="text-sm font-semibold">{{
-                  accountStore.getSymbol
+                  accountStore.getSymbol(asset)
                 }}</span>
               </div>
             </div>
@@ -143,7 +145,7 @@
                     d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
                   />
                 </svg>
-                <p class="text-xs">Get {{ accountStore.getSymbol }}</p>
+                <p class="text-xs">Get {{ accountStore.getSymbol(asset) }}</p>
               </div>
             </div>
           </div>
@@ -164,9 +166,9 @@
               v-if="!isFetchingIncogniteeBalance && !disableGetter"
               class="text-4xl font-semibold"
             >
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}
               <span class="text-sm font-semibold">{{
-                accountStore.getSymbol
+                accountStore.getSymbol(asset)
               }}</span>
             </div>
           </div>
@@ -373,8 +375,8 @@
       <div v-if="shieldingLimit < Infinity">
         <p class="text-sm text-gray-400 text-left my-4">
           During beta phase, you can only shield up to
-          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
-          current private balance on incognitee.
+          {{ shieldingLimit }} {{ accountStore.getSymbol(asset) }} which
+          includes your current private balance on incognitee.
         </p>
       </div>
       <form
@@ -386,12 +388,12 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-              >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol(asset) }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
               >Available for shielding: {{ computedShieldingMax.toFixed(3) }}
-              {{ accountStore.getSymbol }}</span
+              {{ accountStore.getSymbol(asset) }}</span
             >
           </div>
           <input
@@ -407,7 +409,7 @@
           />
           <div class="text-right">
             <span class="text-xs text-gray-400"
-              >Fee: ~16 m{{ accountStore.getSymbol }} for L1,
+              >Fee: ~16 m{{ accountStore.getSymbol(asset) }} for L1,
               {{
                 formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100)
               }}% for Incognitee</span
@@ -482,7 +484,7 @@
 
     <ObtainTokenOverlay
       :withdraw-to-address="accountStore.getAddress"
-      :token-symbol="accountStore.getSymbol"
+      :token-symbol="accountStore.getSymbol(asset)"
       :close="closeObtainTokenOverlay"
       :show="showObtainTokenOverlay"
     />
@@ -500,8 +502,8 @@
       <div v-if="shieldingLimit < Infinity">
         <p class="text-sm text-gray-400 text-left my-4">
           During beta phase, you can only shield up to
-          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
-          current private balance on incognitee.
+          {{ shieldingLimit }} {{ accountStore.getSymbol(asset) }} which
+          includes your current private balance on incognitee.
         </p>
       </div>
       <form class="mt-5" @submit.prevent="submitUnshieldForm">
@@ -583,7 +585,7 @@
         <p class="text-sm text-gray-400 text-left mt-5">
           For optimal k-anonymity, we advise you to unshield either exactly 10
           or 100
-          {{ accountStore.getSymbol }} at the time. In the future we will
+          {{ accountStore.getSymbol(asset) }} at the time. In the future we will
           provide a score including timing and popular amounts to enhance
           unlinkability of your actions.
         </p>
@@ -592,7 +594,7 @@
           <label
             for="unshieldAmount"
             class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
+            >{{ accountStore.getSymbol(asset) }} Amount</label
           >
 
           <span class="text-xs text-gray-400"
@@ -605,7 +607,7 @@
           v-model="unshieldAmount"
           type="number"
           step="0.1"
-          :min="minUnshieldingAmount(accountStore.getSymbol)"
+          :min="minUnshieldingAmount(accountStore.getSymbol(asset))"
           :max="
             Math.min(
               accountStore.getDecimalBalanceFree(incogniteeSidechain) -
@@ -622,7 +624,7 @@
         <div class="text-right">
           <span class="text-xs text-gray-400"
             >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
-            {{ accountStore.getSymbol }} for Incognitee</span
+            {{ accountStore.getSymbol(asset) }} for Incognitee</span
           >
         </div>
 
@@ -754,7 +756,7 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-              >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol(asset) }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
@@ -787,7 +789,7 @@
           <div class="text-right">
             <span class="text-xs text-gray-400"
               >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
-              {{ accountStore.getSymbol }} for Incognitee</span
+              {{ accountStore.getSymbol(asset) }} for Incognitee</span
             >
           </div>
         </div>
@@ -861,7 +863,7 @@
                             Math.pow(10, accountStore.decimals),
                         )
                       }}
-                      {{ accountStore.getSymbol }}
+                      {{ accountStore.getSymbol(asset) }}
                     </dd>
                   </div>
 
@@ -986,7 +988,7 @@
           <div class="text-left right-0 mb-0">
             <span class="text-xs text-gray-400"
               >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
-              {{ accountStore.getSymbol }} for Incognitee</span
+              {{ accountStore.getSymbol(asset) }} for Incognitee</span
             >
           </div>
         </form>
@@ -1014,8 +1016,8 @@
                 <p>
                   You need at least
                   {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} private
-                  {{ accountStore.getSymbol }} to participate in the game.
-                  Please shield some first.
+                  {{ accountStore.getSymbol(asset) }} to participate in the
+                  game. Please shield some first.
                 </p>
               </div>
             </div>
@@ -1075,6 +1077,7 @@ import {
   shieldingLimit,
   incogniteeSidechain,
   isLive,
+  asset,
 } from "~/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
@@ -1088,6 +1091,7 @@ import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
+import { ChainAssetId } from "../../configs/assets";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1438,7 +1442,7 @@ const computedShieldingMax = computed(() => {
     0,
     Math.min(
       shieldingLimit.value -
-        accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
+        accountStore.getDecimalBalanceFree(chainAssetId.value),
       accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
         accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
         0.1,
@@ -1646,6 +1650,14 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+});
+
+const incogniteeChainAssetId = computed(() => {
+  return new ChainAssetId(incogniteeSidechain.value, asset.value);
+});
+
+const shieldingTargetChainAssetId = computed(() => {
+  return new ChainAssetId(shieldingTarget.value, null);
 });
 </script>
 

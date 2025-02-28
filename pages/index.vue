@@ -85,7 +85,7 @@
             type="button"
             class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
           >
-            Get free {{ accountStore.getSymbol }} tokens from faucet
+            Get free {{ accountStore.getSymbol(null) }} tokens from faucet
           </button>
         </a>
       </div>
@@ -160,8 +160,8 @@ import {
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
-import { formatMoment } from "~/helpers/date";
 import { parseCall } from "~/lib/notes";
+import { ChainAssetId } from "~/configs/assets";
 import {
   SessionProxyRole,
   sessionProxyRoleOrder,
@@ -265,8 +265,20 @@ const fetchIncogniteeBalance = async () => {
       storeSessionProxies(proxies);
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
-        incogniteeSidechain.value,
+        new ChainAssetId(incogniteeSidechain.value, null),
       );
+      for (const assetBalance of accountEssentials.asset_balances) {
+        console.log(
+          "found asset balance: " +
+            assetBalance.asset_id +
+            ": " +
+            assetBalance.balance,
+        );
+        accountStore.setBalanceFree(
+          BigInt(assetBalance.balance),
+          new ChainAssetId(incogniteeSidechain.value, assetBalance.asset_id),
+        );
+      }
       accountStore.setNonce(
         Number(accountInfo.nonce),
         incogniteeSidechain.value,
@@ -432,7 +444,7 @@ const fetchIncogniteeNotes = async (
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
   // avoid race condition leading to duplicate entries in notes
-  if (accountStore.getSymbol === "UNIT") return;
+  if (accountStore.getSymbol(null) === "UNIT") return;
 
   if (disableGetter.value == true) {
     console.log(
@@ -498,7 +510,12 @@ const fetchIncogniteeNotes = async (
               "IntegriteeTrustedCall",
               note.note.asSuccessfulTrustedCall,
             );
-            const parsedNote = parseCall(call, note.timestamp, accountStore.getAddress, accountStore.getSs58Format);
+            const parsedNote = parseCall(
+              call,
+              note.timestamp,
+              accountStore.getAddress,
+              accountStore.getSs58Format,
+            );
             noteStore.addNote(parsedNote);
           }
         } catch (e) {
@@ -667,7 +684,7 @@ const subscribeWhatsReady = async () => {
   accountStore.setExistentialDeposit(
     BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
   );
-  accountStore.setDecimals(
+  accountStore.setNativeDecimals(
     Number(shieldingTargetApi.value.registry.chainDecimals),
   );
   accountStore.setSS58Format(

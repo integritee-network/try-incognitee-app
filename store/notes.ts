@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Note } from "@/lib/notes";
-import { isAssetEqual } from "@/lib/assets";
+import { isAssetEqual } from "~/configs/assets";
 export const useNotes = defineStore("notes", {
   state: () => ({
     notes: new Set<Note>(),
@@ -23,7 +23,8 @@ export const useNotes = defineStore("notes", {
             (note.amount > 0 && isAssetEqual(note.asset, asset)) ||
             note.category.includes("Guess") ||
             note.category.includes("Session Proxy"),
-        )}
+        );
+      };
     },
     getConversationCounterparties() {
       const latestNotes = new Map<string, Note>();

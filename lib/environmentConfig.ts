@@ -12,7 +12,7 @@ export const incogniteeShard = ref(null);
 export const isLive = ref(true);
 
 export const teerdaysNetwork = ref(ChainId.IntegriteeKusama);
-export const asset = ref(null);
+export const asset = ref<string | null>(null);
 
 export const loadEnv = async (envFile?: string) => {
   const envDefault = useRuntimeConfig().public;
@@ -59,7 +59,7 @@ export const loadEnv = async (envFile?: string) => {
   isLive.value = toBoolean(isLiveEnv);
   teerdaysNetwork.value =
     ChainId[integriteeNetworkEnv] ?? ChainId.IntegriteeKusama;
-  asset.value = assetEnv;
+  asset.value = String(assetEnv).trim().normalize();
 
   console.log(
     "SHIELDING_TARGET: env:" +

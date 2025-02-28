@@ -90,3 +90,14 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
 };
 
 export const TEER_DECIMALS = 12;
+
+export const isBetaSidechain = (chainId: ChainId) => {
+  return (
+    chainId === ChainId.IncogniteeIntegriteeKusama ||
+    chainId === ChainId.IncogniteeAssetHubPolkadot
+  );
+};
+
+export const isSidechainTestnet = (chainId: ChainId) => {
+  return chainId === ChainId.IncogniteeAssetHubPaseo;
+};

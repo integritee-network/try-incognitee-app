@@ -13,7 +13,7 @@ export class Note {
   category: string;
   account: string | null;
   amount: BigInt | null;
-  assetId: string | null;
+  asset: string | null;
   note: string | null;
 
   constructor(
@@ -21,7 +21,7 @@ export class Note {
     direction: NoteDirection,
     account: string | null,
     amount: BigInt | null,
-    assetId: string | null,
+    asset: string | null,
     timestamp: Date,
     note: string | null,
   ) {
@@ -30,7 +30,7 @@ export class Note {
     this.category = category;
     this.account = account;
     this.amount = amount;
-    this.assetId = assetId;
+    this.asset = asset;
     this.note = note;
   }
   equals(other: Note): boolean {
@@ -41,16 +41,17 @@ export class Note {
       this.direction === other.direction &&
       this.category === other.category &&
       this.amount === other.amount &&
-      this.assetId === other.assetId
+      this.asset === other.asset
     );
   }
 }
 
 export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
+  const callDateStr = formatMoment(timestamp?.toNumber());
   if (call.isBalanceShield) {
     const typedCall = call.asBalanceShield;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] balance shield: ${typedCall}`,
+      `[${callDateStr}] balance shield: ${typedCall}`,
     );
     const to = encodeAddress(typedCall[1], ss58format);
     return new Note(
@@ -65,7 +66,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
   } else if (call.isBalanceUnshield) {
     const typedCall = call.asBalanceUnshield;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] balance unshield: ${typedCall}`,
+      `[${callDateStr}] balance unshield: ${typedCall}`,
     );
     const to = encodeAddress(typedCall[1], ss58format);
     return new Note(
@@ -80,7 +81,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
   } else if (call.isBalanceTransfer) {
     const typedCall = call.asBalanceTransfer;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] balance transfer: ${typedCall}`,
+      `[${callDateStr}] balance transfer: ${typedCall}`,
     );
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
@@ -106,13 +107,13 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       );
     } else {
       console.error(
-        `[${formatMoment(timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+        `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
       );
     }
   } else if (call.isAssetsTransfer) {
     const typedCall = call.asAssetsTransfer;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] assets transfer: ${typedCall}`,
+      `[${callDateStr}] assets transfer: ${typedCall}`,
     );
     const from = encodeAddress(typedCall[0], ss58format);
     //console.debug(`asset id: ${typedCall[2]} => ${String(typedCall[2])}  `);
@@ -139,13 +140,13 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       );
     } else {
       console.error(
-        `[${formatMoment(timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+        `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
       );
     }
   } else if (call.isBalanceTransferWithNote) {
     const typedCall = call.asBalanceTransferWithNote;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] balance transfer with note: ${typedCall}`,
+      `[${callDateStr}] balance transfer with note: ${typedCall}`,
     );
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
@@ -171,13 +172,13 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       );
     } else {
       console.error(
-        `[${formatMoment(timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+        `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
       );
     }
   } else if (call.isSendNote) {
     const typedCall = call.asSendNote;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] send note: ${typedCall}`,
+      `[${callDateStr}] send note: ${typedCall}`,
     );
     const from = encodeAddress(typedCall[0], ss58format);
     const to = encodeAddress(typedCall[1], ss58format);
@@ -203,13 +204,13 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       );
     } else {
       console.error(
-        `[${formatMoment(timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
+        `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
       );
     }
   } else if (call.isGuessTheNumber) {
     const typedCall = call.asGuessTheNumber.asGuess;
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] guess the number: ${typedCall}`,
+      `[${callDateStr}] guess the number: ${typedCall}`,
     );
     return new Note(
       `Submit Guess (${typedCall[1]})`,
@@ -224,7 +225,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     const typedCall = call.asAddSessionProxy;
     const proxy = encodeAddress(typedCall[1], ss58format);
     console.debug(
-      `[${formatMoment(timestamp?.toNumber())}] add session proxy: ${typedCall}`,
+      `[${callDateStr}] add session proxy: ${typedCall}`,
     );
     return new Note(
       `Add Session Proxy (${typedCall[2].role})`,
@@ -237,7 +238,7 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
     );
   } else {
     console.error(
-      `[${formatMoment(timestamp?.toNumber())}] unknown call: ${call}`,
+      `[${callDateStr}] unknown call: ${call}`,
     );
   }
 };

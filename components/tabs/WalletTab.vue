@@ -1078,6 +1078,8 @@ import {
   incogniteeSidechain,
   isLive,
   asset,
+  incogniteeChainAssetId,
+  shieldingTargetChainAssetId
 } from "~/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
@@ -1117,12 +1119,12 @@ const selectTab = (tab) => {
 
 defineExpose({
   onWalletInfoInitialized: async () => {
-    console.log("onWalletInfoInitialized");
+    console.log("onWalletInfoInitialized: L1: " + accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) + " L2: " + accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value));
     if (
-      accountStore.getDecimalBalanceTransferable(shieldingTarget.value) === 0
+      accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) === 0
     ) {
       if (
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) >
+        accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) >
         0
       ) {
         console.log("account has funds on incognitee. selecting private tab");
@@ -1296,44 +1298,70 @@ const shield = async () => {
 const unshield = async () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ Will unshield to L1.";
-  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
+  const amount = asset.value ? accountStore.decimalAmountToBigInt(unshieldAmount.value, assetDecimals[asset.value])
+    : accountStore.decimalAmountToBigInt(unshieldAmount.value);
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
-
-  await incogniteeStore.api
-    .balanceUnshieldFunds(
-      account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      accountStore.getAddress,
-      recipientAddress.value,
-      amount,
-      {
-        signer: accountStore.injector?.signer,
-        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
-        nonce: nonce,
-      },
-    )
-    .then((result) =>
-      handleTopResult(
-        result,
-        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
-      ),
-    )
-    .catch((err) => handleTopError(err));
+  if (asset.value) {
+    await incogniteeStore.api
+      .assetUnshieldFunds(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        asset.value,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(
+          result,
+          "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
+        ),
+      )
+      .catch((err) => handleTopError(err));
+  } else {
+    await incogniteeStore.api
+      .balanceUnshieldFunds(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(
+          result,
+          "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
+        ),
+      )
+      .catch((err) => handleTopError(err));
+  }
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
 const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on Incognitee.";
-  const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
+  const amount = asset.value ? accountStore.decimalAmountToBigInt(sendAmount.value, assetDecimals[asset.value])
+    : accountStore.decimalAmountToBigInt(sendAmount.value);
   const account = accountStore.account;
 
   const encoder = new TextEncoder();
@@ -1351,26 +1379,47 @@ const sendPrivately = async () => {
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
+    `sending ${sendAmount.value} ${accountStore.getSymbol(asset.value)} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
-  await incogniteeStore.api
-    .trustedBalanceTransfer(
-      account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      accountStore.getAddress,
-      recipientAddress.value,
-      amount,
-      note,
-      {
-        signer: accountStore.injector?.signer,
-        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
-        nonce: nonce,
-      },
-    )
-    .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
-    .catch((err) => handleTopError(err));
+  if (asset.value) {
+    await incogniteeStore.api
+      .trustedAssetTransfer(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        asset.value,
+        note,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+      .catch((err) => handleTopError(err));
+  } else {
+    await incogniteeStore.api
+      .trustedBalanceTransfer(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        note,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+      .catch((err) => handleTopError(err));
+  }
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 const submitGuess = async () => {
@@ -1443,8 +1492,8 @@ const computedShieldingMax = computed(() => {
     Math.min(
       shieldingLimit.value -
         accountStore.getDecimalBalanceFree(chainAssetId.value),
-      accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
-        accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
+      accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) -
+        accountStore.getDecimalExistentialDeposit(shieldingTargetChainAssetId.value) -
         0.1,
     ),
   );
@@ -1512,7 +1561,7 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value)),
+    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value)),
   );
   showUnshieldOverlay.value = true;
 };
@@ -1542,7 +1591,7 @@ const openPrivateSendOverlay = () => {
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,
-      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1,
+      accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) - 0.1,
     ),
   );
   showPrivateSendOverlay.value = true;
@@ -1650,14 +1699,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-});
-
-const incogniteeChainAssetId = computed(() => {
-  return new ChainAssetId(incogniteeSidechain.value, asset.value);
-});
-
-const shieldingTargetChainAssetId = computed(() => {
-  return new ChainAssetId(shieldingTarget.value, null);
 });
 </script>
 

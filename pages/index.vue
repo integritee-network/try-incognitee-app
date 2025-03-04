@@ -157,11 +157,13 @@ import {
   loadEnv,
   shieldingTarget,
   asset,
+  incogniteeChainAssetId,
+  shieldingTargetChainAssetId, incogniteeChainNativeAsset, shieldingTargetChainNativeAsset
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { parseCall } from "~/lib/notes";
-import { ChainAssetId } from "~/configs/assets";
+import { ChainAssetId, assetHubRoute } from "~/configs/assets";
 import {
   SessionProxyRole,
   sessionProxyRoleOrder,
@@ -265,7 +267,7 @@ const fetchIncogniteeBalance = async () => {
       storeSessionProxies(proxies);
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
-        new ChainAssetId(incogniteeSidechain.value, null),
+        incogniteeChainNativeAsset.value,
       );
       for (const assetBalance of accountEssentials.asset_balances) {
         console.log(
@@ -276,7 +278,7 @@ const fetchIncogniteeBalance = async () => {
         );
         accountStore.setBalanceFree(
           BigInt(assetBalance.balance),
-          new ChainAssetId(incogniteeSidechain.value, assetBalance.asset_id),
+          new ChainAssetId(incogniteeSidechain.value, assetBalance.asset_id.toString()),
         );
       }
       accountStore.setNonce(
@@ -290,7 +292,9 @@ const fetchIncogniteeBalance = async () => {
         proxies.length == 0 &&
         accountStore.hasInjector &&
         !accountStore.hasDeclinedSessionProxy &&
-        accountStore.getDecimalBalanceFree(incogniteeSidechain.value) > 0
+        (accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset.value) > 0 ||
+          accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) > 0
+        )
       ) {
         openAuthorizeSessionOverlay();
       }
@@ -683,6 +687,7 @@ const subscribeWhatsReady = async () => {
   await shieldingTargetApi.value.isReady;
   accountStore.setExistentialDeposit(
     BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
+    shieldingTargetChainNativeAsset.value
   );
   accountStore.setNativeDecimals(
     Number(shieldingTargetApi.value.registry.chainDecimals),
@@ -734,31 +739,63 @@ const subscribeWhatsReady = async () => {
       },
     }) => {
       console.log(
-        "shielding-target balance: free=" +
+        "shielding-target native balance: free=" +
           currentFree +
           " reserved=" +
           currentReserved +
           " frozen=" +
           currentFrozen,
       );
-      accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceFree(BigInt(currentFree), shieldingTargetChainNativeAsset.value);
       accountStore.setBalanceReserved(
         BigInt(currentReserved),
-        shieldingTarget.value,
+        shieldingTargetChainNativeAsset.value,
       );
       accountStore.setBalanceFrozen(
         BigInt(currentFrozen),
-        shieldingTarget.value,
+        shieldingTargetChainNativeAsset.value,
       );
       isFetchingShieldingTargetBalance.value = false;
     },
   );
   promises.push(p1);
+  // if asset, subscribe to asset balance too
+  if (asset.value) {
+    const [module, assetId] = assetHubRoute[asset.value];
+    let formattedAssetId: any = assetId;
+    try {
+      // If assetId is a JSON string (for ForeignAssets like WETH), parse it
+      formattedAssetId = JSON.parse(assetId);
+    } catch (e) {
+      // assetId remains as a string for standard Assets
+    }
+    console.log("asset instance: " + module + " formattedAssetId: " + formattedAssetId);
+    const pA = shieldingTargetApi.value.query.assets.account(
+      //formattedAssetId,
+      1984,
+      accountStore.getAddress,
+      (assetAccount) => {
+        const balance = BigInt(assetAccount.unwrapOrDefault().balance.toString());
+        console.log(
+          "shielding-target asset balance:",
+          "asset =", asset.value,
+          "assetAccount =", assetAccount,
+          "balance = ", balance
+        );
+        accountStore.setBalanceFree(balance, shieldingTargetChainAssetId.value);
+        //isFetchingShieldingTargetBalance.value = false;
+      }
+    );
+    promises.push(pA)
+  }
+
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   const p2 = fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
   );
   promises.push(p2);
+  if (asset.val)
+
   await Promise.all(promises);
   walletTabRef.value?.onWalletInfoInitialized();
 };

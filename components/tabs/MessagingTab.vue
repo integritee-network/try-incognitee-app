@@ -432,7 +432,7 @@
 
 <script setup lang="ts">
 import PrivateMessageHistory from "~/components/ui/PrivateMessageHistory.vue";
-import { incogniteeSidechain, asset } from "~/lib/environmentConfig";
+import {incogniteeSidechain, asset, incogniteeChainAssetId} from "~/lib/environmentConfig";
 import { eventBus } from "@/helpers/eventBus";
 import { INCOGNITEE_BYTE_FEE, INCOGNITEE_TX_FEE } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
@@ -452,6 +452,7 @@ import { Note } from "@/lib/notes";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import HealthIndicator from "~/components/ui/HealthIndicator.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
+import {ChainAssetId} from "~/configs/assets";
 
 const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 
@@ -649,7 +650,7 @@ const sendPrivately = async () => {
   txStatus.value = "⌛ Sending message privately on incognitee";
   const account = accountStore.account;
   if (
-    accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) <
+    accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) <
     3 * INCOGNITEE_TX_FEE
   ) {
     txStatus.value = "";

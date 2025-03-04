@@ -1,9 +1,10 @@
 import { useRuntimeConfig } from "#app";
 import { ChainId } from "@/configs/chains";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import dotenv from "dotenv";
 import fs from "fs";
-import path from "path"; // Add this import
+import path from "path";
+import {ChainAssetId} from "~/configs/assets"; // Add this import
 
 export const shieldingTarget = ref(ChainId.PaseoRelay);
 export const shieldingLimit = ref(Infinity);
@@ -102,3 +103,23 @@ const toBoolean = (value: string | number | boolean): boolean => {
     return value.toLowerCase() === "true" || value === "1";
   return false;
 };
+
+export const incogniteeChainAssetId = computed(() => {
+  return new ChainAssetId(incogniteeSidechain.value, asset.value ? asset.value : 'native');
+});
+
+export const incogniteeChainNativeAsset = computed(() => {
+  return new ChainAssetId(incogniteeSidechain.value, 'native');
+});
+
+export const shieldingTargetChainAssetId = computed(() => {
+  return new ChainAssetId(shieldingTarget.value, asset.value ? asset.value : 'native');
+});
+
+export const shieldingTargetChainNativeAsset = computed(() => {
+  return new ChainAssetId(shieldingTarget.value, 'native');
+});
+
+export const teerdaysChainNativeAsset = computed(() => {
+  return new ChainAssetId(teerdaysNetwork.value, 'native');
+});

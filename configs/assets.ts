@@ -1,4 +1,4 @@
-import { ChainId } from "@/config/chains.ts";
+import { ChainId } from "@/configs/chains.ts";
 import Paseo from "@/assets/img/paseo-logo.svg?url";
 import TEER from "@/assets/img/logo-icon.svg?url";
 import DOT from "@/assets/img/polkadot-logo.svg?url";
@@ -17,6 +17,13 @@ export const assetDecimals: Record<string, number> = {
   ETH: 18,
   WETH: 18,
 };
+export const assetHubRoute: Record<string, [string, string]> = {
+  USDT: ['assets', '1984'],
+  USDC: ['assets', '1337'],
+  "USDC.e": ['foreignAssets', '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }'],
+  ETH: ['foreignAssets', 'not yet defined'], // Consider using null or undefined
+  WETH: ['foreignAssets', '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }'],
+};
 
 export class ChainAssetId {
   chain: ChainId;
@@ -24,9 +31,14 @@ export class ChainAssetId {
 
   constructor(chain: ChainId, asset: string | null) {
     this.chain = chain;
-    this.asset = asset;
+    this.asset = asset ?? 'native';
+  }
+
+  key(): string {
+    return `${this.chain}-${this.asset}`;
   }
 }
+
 
 // Token Liste
 export const tokenSelectorItems = [

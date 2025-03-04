@@ -13,13 +13,13 @@
             class="w-[14px] h-[14px] mr-2"
           />
         </div>
+        <div v-else class="spinner"></div>
         <div v-if="getHubIconUrlForAsset(selectedToken)">
           <img
             :src="getHubIconUrlForAsset(selectedToken)"
             class="w-[14px] h-[14px] mr-2"
           />
         </div>
-        <div v-else class="spinner"></div>
         <span class="truncate">{{ selectedToken }}</span>
       </div>
 

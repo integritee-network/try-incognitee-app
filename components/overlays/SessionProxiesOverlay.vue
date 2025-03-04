@@ -125,7 +125,7 @@
 
           <div
             v-if="
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) <
+              accountStore.getDecimalBalanceFree(incogniteeChainAssetId) <
                 INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
               bestSessionProxyRole == null
             "
@@ -140,7 +140,7 @@
               }}
               {{ accountStore.getSymbol(asset) }} private balance to register a
               session proxy. You have
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}.
             </p>
           </div>
           <div v-else>
@@ -202,7 +202,7 @@ import {
 import { useIncognitee } from "~/store/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { incogniteeSidechain } from "~/lib/environmentConfig";
+import {incogniteeChainAssetId, incogniteeSidechain} from "~/lib/environmentConfig";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

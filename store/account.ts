@@ -275,8 +275,12 @@ export const useAccount = defineStore("account", {
     setExistentialDeposit(existentialDeposit: BigInt, chainAsset: ChainAssetId) {
       this.existentialDeposit[chainAsset.key()] = existentialDeposit;
     },
-    decimalAmountToBigInt(amount: number, forceDecimals? : number): BigInt {
-      return BigInt(Math.round(amount * 10 ** forceDecimals ? forceDecimals : this.decimals));
+    decimalAmountToBigInt(amount: number, chainAsset: ChainAssetId, forceDecimals? : number): BigInt {
+      const decimals =
+        forceDecimals !== undefined
+          ? forceDecimals
+          : this.getDecimals(chainAsset.asset);
+      return BigInt(Math.round(amount * 10 ** decimals));
     },
   },
 });

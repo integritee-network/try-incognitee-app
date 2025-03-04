@@ -373,7 +373,7 @@ import { formatDate } from "@/helpers/date";
 import {
   shieldingTarget,
   incogniteeSidechain,
-  asset,
+  asset, incogniteeChainAssetId,
 } from "~/lib/environmentConfig";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
@@ -476,7 +476,7 @@ const doForgetVoucher = () => {
 const fundNewVoucher = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on incognitee.";
-  const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
+  const amount = accountStore.decimalAmountToBigInt(sendAmount.value, incogniteeChainAssetId.value);
   const account = accountStore.account;
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;

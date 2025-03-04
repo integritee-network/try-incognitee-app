@@ -1282,24 +1282,35 @@ const shield = async () => {
   txStatus.value = "⌛ Awaiting signature and connection...";
   console.log("local api ready: " + props.api?.isReady);
   if (incogniteeStore.vault && props.api?.isReady) {
-    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
-    console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
+    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value, shieldingTargetChainAssetId.value);
+    console.log(`sending ${amount} ${asset.value ? asset.value : 'native'}  to vault: ${incogniteeStore.vault}`);
 
-    await props.api.tx.balances
-      .transferKeepAlive(incogniteeStore.vault, amount)
-      .signAsync(accountStore.account, {
-        signer: accountStore.injector?.signer,
-      })
-      .then((tx) => tx.send(txResHandlerShieldingTarget))
-      .catch(txErrHandlerShieldingTarget);
+    if (asset.value) {
+      await props.api.tx.assets
+        .transferKeepAlive(1984, incogniteeStore.vault, amount)
+        .signAsync(accountStore.account, {
+          signer: accountStore.injector?.signer,
+        })
+        .then((tx) => tx.send(txResHandlerShieldingTarget))
+        .catch(txErrHandlerShieldingTarget);
+
+    } else {
+      await props.api.tx.balances
+        .transferKeepAlive(incogniteeStore.vault, amount)
+        .signAsync(accountStore.account, {
+          signer: accountStore.injector?.signer,
+        })
+        .then((tx) => tx.send(txResHandlerShieldingTarget))
+        .catch(txErrHandlerShieldingTarget);
+
+    }
   }
 };
 
 const unshield = async () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ Will unshield to L1.";
-  const amount = asset.value ? accountStore.decimalAmountToBigInt(unshieldAmount.value, assetDecimals[asset.value])
-    : accountStore.decimalAmountToBigInt(unshieldAmount.value);
+  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value, incogniteeChainAssetId.value);
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
@@ -1360,8 +1371,7 @@ const unshield = async () => {
 const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on Incognitee.";
-  const amount = asset.value ? accountStore.decimalAmountToBigInt(sendAmount.value, assetDecimals[asset.value])
-    : accountStore.decimalAmountToBigInt(sendAmount.value);
+  const amount = accountStore.decimalAmountToBigInt(sendAmount.value, incogniteeChainAssetId.value);
   const account = accountStore.account;
 
   const encoder = new TextEncoder();
@@ -1491,8 +1501,8 @@ const computedShieldingMax = computed(() => {
     0,
     Math.min(
       shieldingLimit.value -
-        accountStore.getDecimalBalanceFree(chainAssetId.value),
-      accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) -
+        accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value),
+        accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) -
         accountStore.getDecimalExistentialDeposit(shieldingTargetChainAssetId.value) -
         0.1,
     ),

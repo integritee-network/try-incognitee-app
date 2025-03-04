@@ -202,7 +202,7 @@ import {
 import { useIncognitee } from "~/store/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import {incogniteeChainAssetId, incogniteeSidechain} from "~/lib/environmentConfig";
+import {incogniteeChainAssetId, incogniteeSidechain, asset } from "~/lib/environmentConfig";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

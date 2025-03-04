@@ -61,6 +61,19 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       new Date(timestamp?.toNumber()),
       null,
     );
+  } else if (call.isAssetsShield) {
+    const typedCall = call.asAssetsShield;
+    console.debug(`[${callDateStr}] assets shield: ${typedCall}`);
+    const to = encodeAddress(typedCall[1], ss58format);
+    return new Note(
+      "Shield",
+      NoteDirection.Incoming,
+      to,
+      BigInt(typedCall[3]),
+      typedCall[2].toString(),
+      new Date(timestamp?.toNumber()),
+      null,
+    );
   } else if (call.isBalanceUnshield) {
     const typedCall = call.asBalanceUnshield;
     console.debug(`[${callDateStr}] balance unshield: ${typedCall}`);
@@ -71,6 +84,19 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
       to,
       BigInt(typedCall[2]),
       null,
+      new Date(timestamp?.toNumber()),
+      null,
+    );
+  } else if (call.isAssetsUnshield) {
+    const typedCall = call.asAssetsUnshield;
+    console.debug(`[${callDateStr}] assets unshield: ${typedCall}`);
+    const to = encodeAddress(typedCall[1], ss58format);
+    return new Note(
+      "Unshield",
+      NoteDirection.Outgoing,
+      to,
+      BigInt(typedCall[3]),
+      typedCall[2].toString(),
       new Date(timestamp?.toNumber()),
       null,
     );
@@ -98,6 +124,36 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
         null,
         new Date(timestamp?.toNumber()),
         null,
+      );
+    } else {
+      console.error(
+        `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
+      );
+    }
+  } else if (call.isBalanceTransferWithNote) {
+    const typedCall = call.asBalanceTransferWithNote;
+    console.debug(`[${callDateStr}] balance transfer with note: ${typedCall}`);
+    const from = encodeAddress(typedCall[0], ss58format);
+    const to = encodeAddress(typedCall[1], ss58format);
+    if (from === ownAddress) {
+      return new Note(
+        "Outgoing Transfer",
+        NoteDirection.Outgoing,
+        to,
+        BigInt(typedCall[2]),
+        null,
+        new Date(timestamp?.toNumber()),
+        typedCall[3].toString(),
+      );
+    } else if (to === ownAddress) {
+      return new Note(
+        "Incoming Transfer",
+        NoteDirection.Incoming,
+        from,
+        BigInt(typedCall[2]),
+        null,
+        new Date(timestamp?.toNumber()),
+        typedCall[3].toString(),
       );
     } else {
       console.error(
@@ -135,30 +191,31 @@ export const parseCall = (call, timestamp, ownAddress, ss58format): Note => {
         `[${callDateStr}] unknown relation to transfer: ${typedCall}`,
       );
     }
-  } else if (call.isBalanceTransferWithNote) {
-    const typedCall = call.asBalanceTransferWithNote;
-    console.debug(`[${callDateStr}] balance transfer with note: ${typedCall}`);
+  } else if (call.isAssetsTransferWithNote) {
+    const typedCall = call.asAssetsTransferWithNote;
+    console.debug(`[${callDateStr}] assets transfer with note: ${typedCall}`);
     const from = encodeAddress(typedCall[0], ss58format);
+    //console.debug(`asset id: ${typedCall[2]} => ${String(typedCall[2])}  `);
     const to = encodeAddress(typedCall[1], ss58format);
     if (from === ownAddress) {
       return new Note(
         "Outgoing Transfer",
         NoteDirection.Outgoing,
         to,
-        BigInt(typedCall[2]),
-        null,
+        BigInt(typedCall[3]),
+        String(typedCall[2]),
         new Date(timestamp?.toNumber()),
-        typedCall[3].toString(),
+        typedCall[4].toString(),
       );
     } else if (to === ownAddress) {
       return new Note(
         "Incoming Transfer",
         NoteDirection.Incoming,
         from,
-        BigInt(typedCall[2]),
-        null,
+        BigInt(typedCall[3]),
+        String(typedCall[2]),
         new Date(timestamp?.toNumber()),
-        typedCall[3].toString(),
+        typedCall[4].toString(),
       );
     } else {
       console.error(

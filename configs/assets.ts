@@ -15,7 +15,7 @@ export const assetDecimals: Record<string, number> = {
   USDC: 6,
   "USDC.e": 6,
   ETH: 18,
-  WETH: 18,
+  WETH: 15, // fixme: is 18 but we get too few from the faucet,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
   USDT: ['assets', '1984'],

@@ -599,7 +599,7 @@
 
           <span class="text-xs text-gray-400"
             >Available private balance:
-            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
+            {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}</span
           >
         </div>
         <input
@@ -610,8 +610,8 @@
           :min="minUnshieldingAmount(accountStore.getSymbol(asset))"
           :max="
             Math.min(
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-                accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+              accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(incogniteeChainAssetId) -
                 0.1,
               shieldingLimit,
             )
@@ -761,7 +761,7 @@
 
             <span class="text-xs text-gray-400"
               >Available private balance:
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}</span
             >
           </div>
 
@@ -774,8 +774,8 @@
               step="0.01"
               :min="0.1"
               :max="
-                accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-                accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+                accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(incogniteeChainAssetId) -
                 0.1
               "
               required
@@ -1093,7 +1093,7 @@ import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
-import { ChainAssetId } from "../../configs/assets";
+import {assetHubRoute, ChainAssetId} from "../../configs/assets";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1286,8 +1286,11 @@ const shield = async () => {
     console.log(`sending ${amount} ${asset.value ? asset.value : 'native'}  to vault: ${incogniteeStore.vault}`);
 
     if (asset.value) {
-      await props.api.tx.assets
-        .transferKeepAlive(1984, incogniteeStore.vault, amount)
+      const [module, assetIdStr] = assetHubRoute[asset.value];
+      const assetId = JSON.parse(assetIdStr)
+      console.log("asset instance: " + module + " AssetId: " + assetId);
+      await props.api.tx[module]
+        .transferKeepAlive(assetId, incogniteeStore.vault, amount)
         .signAsync(accountStore.account, {
           signer: accountStore.injector?.signer,
         })

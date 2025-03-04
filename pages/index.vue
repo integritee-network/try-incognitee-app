@@ -761,18 +761,11 @@ const subscribeWhatsReady = async () => {
   promises.push(p1);
   // if asset, subscribe to asset balance too
   if (asset.value) {
-    const [module, assetId] = assetHubRoute[asset.value];
-    let formattedAssetId: any = assetId;
-    try {
-      // If assetId is a JSON string (for ForeignAssets like WETH), parse it
-      formattedAssetId = JSON.parse(assetId);
-    } catch (e) {
-      // assetId remains as a string for standard Assets
-    }
-    console.log("asset instance: " + module + " formattedAssetId: " + formattedAssetId);
-    const pA = shieldingTargetApi.value.query.assets.account(
-      //formattedAssetId,
-      1984,
+    const [module, assetIdStr] = assetHubRoute[asset.value];
+    const assetId = JSON.parse(assetIdStr)
+    console.log("asset instance: " + module + " AssetId: " + assetId);
+    const pA = shieldingTargetApi.value.query[module].account(
+      assetId,
       accountStore.getAddress,
       (assetAccount) => {
         const balance = BigInt(assetAccount.unwrapOrDefault().balance.toString());

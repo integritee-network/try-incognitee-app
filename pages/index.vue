@@ -297,9 +297,7 @@ const fetchIncogniteeBalance = async () => {
         proxies.length == 0 &&
         accountStore.hasInjector &&
         !accountStore.hasDeclinedSessionProxy &&
-        (accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset.value) >
-          0 ||
-          accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) > 0)
+        accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset.value) > 0
       ) {
         openAuthorizeSessionOverlay();
       }

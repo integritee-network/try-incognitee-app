@@ -17,11 +17,11 @@
           <span class="font-semibold">{{
             formatDecimalBalance(INCOGNITEE_TX_FEE)
           }}</span>
-          {{ accountStore.getSymbol(asset) }} and a deposit of
+          {{ accountStore.getSymbol(null) }} and a deposit of
           <span class="font-semibold">{{
             INCOGNITEE_SESSION_PROXY_DEPOSIT
           }}</span>
-          {{ accountStore.getSymbol(asset) }} will be reserved.
+          {{ accountStore.getSymbol(null) }} will be reserved.
         </p>
       </div>
 
@@ -125,7 +125,7 @@
 
           <div
             v-if="
-              accountStore.getDecimalBalanceFree(incogniteeChainAssetId) <
+              accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset) <
                 INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
               bestSessionProxyRole == null
             "
@@ -138,9 +138,9 @@
                   INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
                 )
               }}
-              {{ accountStore.getSymbol(asset) }} private balance to register a
+              {{ accountStore.getSymbol(null) }} private balance to register a
               session proxy. You have
-              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}.
+              {{ accountStore.formatBalanceFree(incogniteeChainNativeAsset) }}.
             </p>
           </div>
           <div v-else>
@@ -206,6 +206,7 @@ import {
   incogniteeChainAssetId,
   incogniteeSidechain,
   asset,
+  incogniteeChainNativeAsset,
 } from "~/lib/environmentConfig";
 
 const accountStore = useAccount();

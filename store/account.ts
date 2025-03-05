@@ -210,14 +210,6 @@ export const useAccount = defineStore("account", {
         const free = balanceFree[chainAsset.key()]
           ? balanceFree[chainAsset.key()]
           : BigInt(0);
-        console.log(
-          "getting Free balance for chain ",
-          chainAsset,
-          " : ",
-          free,
-          "Frozen balance: ",
-          frozen,
-        );
         return divideBigIntToFloat(BigInt(free - frozen), 10 ** decimals);
       };
     },
@@ -268,12 +260,6 @@ export const useAccount = defineStore("account", {
       delete this.sessionProxySeeds[role];
     },
     setBalanceFree(balance: BigInt, chainAsset: ChainAssetId) {
-      console.log(
-        "Setting free balance for chain",
-        chainAsset,
-        " to ",
-        balance,
-      );
       this.balanceFree[chainAsset.key()] = balance;
     },
     setBalanceReserved(balance: BigInt, chainAsset: ChainAssetId) {

@@ -798,7 +798,7 @@ const subscribeWhatsReady = async () => {
     console.log("fetched incognitee balance"),
   );
   promises.push(p2);
-  if (asset.val) await Promise.all(promises);
+  await Promise.all(promises);
   walletTabRef.value?.onWalletInfoInitialized();
 };
 

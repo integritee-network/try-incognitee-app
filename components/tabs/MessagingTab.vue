@@ -282,7 +282,9 @@
                   <div class="text-right">
                     <span>
                       Private balance:
-                      {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+                      {{
+                        accountStore.formatBalanceFree(incogniteeChainAssetId)
+                      }}
                       {{ accountStore.getSymbol(asset) }}
                     </span>
                     &nbsp;&nbsp;

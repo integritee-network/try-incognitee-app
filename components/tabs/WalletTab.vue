@@ -1088,6 +1088,7 @@ import {
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
 import { ApiPromise } from "@polkadot/api";
+import { isNumber } from '@polkadot/util';
 import { formatMoment } from "~/helpers/date";
 import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
@@ -1309,10 +1310,21 @@ const shield = async () => {
     if (asset.value) {
       const [module, assetIdStr] = assetHubRoute[asset.value];
       const assetId = JSON.parse(assetIdStr);
-      console.log("asset instance: " + module + " AssetId: " + assetId);
+      const feeAssetLocation = isNumber(assetId) ? props.api.createType('MultiLocation', {
+          parents: 0,
+          interior: {
+            X2: [
+              { PalletInstance: 50 },      // PalletInstance (replace 50 with actual pallet ID)
+              { GeneralIndex: assetId }    // Asset ID (e.g., USDT asset ID)
+            ]
+          }
+        })
+        : assetId;
+      console.log("asset instance: ", module, " AssetId: ", assetId, " fee AssetId: ", feeAssetLocation );
       await props.api.tx[module]
         .transferKeepAlive(assetId, incogniteeStore.vault, amount)
         .signAsync(accountStore.account, {
+          assetId: feeAssetLocation,
           signer: accountStore.injector?.signer,
         })
         .then((tx) => tx.send(txResHandlerShieldingTarget))

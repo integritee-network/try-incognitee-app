@@ -317,7 +317,7 @@
               </span>
               <span
                 v-else-if="selectedToken === 'DOT'"
-                class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/30 ring-inset ml-auto"
+                class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-yellow-400/30 ring-inset ml-auto"
               >
                 Beta
               </span>
@@ -344,7 +344,9 @@
               class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
             >
               <div
-                v-for="item in tokenSelectorItems"
+                v-for="item in getSelectableTokens(
+                  isSidechainTestnet(incogniteeSidechain),
+                )"
                 :key="item.value"
                 class="flex items-center justify-between text-xs px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
                 @click="selectToken(item)"
@@ -429,12 +431,13 @@ import Paseo from "assets/img/paseo-logo.svg";
 import DOT from "@/assets/img/polkadot-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
 import { useRouter } from "vue-router";
-import { asset } from "~/lib/environmentConfig";
+import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
 import {
   getHubIconUrlForAsset,
   getIconUrlForAsset,
-  tokenSelectorItems,
+  getSelectableTokens,
 } from "~/configs/assets.ts";
+import { isSidechainTestnet } from "~/configs/chains";
 
 const isOpen = ref(false);
 const selectedToken = ref("PAS");

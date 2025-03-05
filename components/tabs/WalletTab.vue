@@ -611,7 +611,9 @@
           :max="
             Math.min(
               accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
-                accountStore.getDecimalExistentialDeposit(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(
+                  incogniteeChainAssetId,
+                ) -
                 0.1,
               shieldingLimit,
             )
@@ -775,7 +777,9 @@
               :min="0.1"
               :max="
                 accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
-                accountStore.getDecimalExistentialDeposit(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(
+                  incogniteeChainAssetId,
+                ) -
                 0.1
               "
               required
@@ -1079,7 +1083,7 @@ import {
   isLive,
   asset,
   incogniteeChainAssetId,
-  shieldingTargetChainAssetId
+  shieldingTargetChainAssetId,
 } from "~/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
@@ -1093,7 +1097,7 @@ import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
-import {assetHubRoute, ChainAssetId} from "../../configs/assets";
+import { assetHubRoute, ChainAssetId } from "../../configs/assets";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1119,13 +1123,25 @@ const selectTab = (tab) => {
 
 defineExpose({
   onWalletInfoInitialized: async () => {
-    console.log("onWalletInfoInitialized: L1: " + accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) + " L2: " + accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value));
+    console.log(
+      "onWalletInfoInitialized: L1: " +
+        accountStore.getDecimalBalanceTransferable(
+          shieldingTargetChainAssetId.value,
+        ) +
+        " L2: " +
+        accountStore.getDecimalBalanceTransferable(
+          incogniteeChainAssetId.value,
+        ),
+    );
     if (
-      accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) === 0
+      accountStore.getDecimalBalanceTransferable(
+        shieldingTargetChainAssetId.value,
+      ) === 0
     ) {
       if (
-        accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) >
-        0
+        accountStore.getDecimalBalanceTransferable(
+          incogniteeChainAssetId.value,
+        ) > 0
       ) {
         console.log("account has funds on incognitee. selecting private tab");
         selectTab("private");
@@ -1282,12 +1298,17 @@ const shield = async () => {
   txStatus.value = "⌛ Awaiting signature and connection...";
   console.log("local api ready: " + props.api?.isReady);
   if (incogniteeStore.vault && props.api?.isReady) {
-    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value, shieldingTargetChainAssetId.value);
-    console.log(`sending ${amount} ${asset.value ? asset.value : 'native'}  to vault: ${incogniteeStore.vault}`);
+    const amount = accountStore.decimalAmountToBigInt(
+      shieldAmount.value,
+      shieldingTargetChainAssetId.value,
+    );
+    console.log(
+      `sending ${amount} ${asset.value ? asset.value : "native"}  to vault: ${incogniteeStore.vault}`,
+    );
 
     if (asset.value) {
       const [module, assetIdStr] = assetHubRoute[asset.value];
-      const assetId = JSON.parse(assetIdStr)
+      const assetId = JSON.parse(assetIdStr);
       console.log("asset instance: " + module + " AssetId: " + assetId);
       await props.api.tx[module]
         .transferKeepAlive(assetId, incogniteeStore.vault, amount)
@@ -1296,7 +1317,6 @@ const shield = async () => {
         })
         .then((tx) => tx.send(txResHandlerShieldingTarget))
         .catch(txErrHandlerShieldingTarget);
-
     } else {
       await props.api.tx.balances
         .transferKeepAlive(incogniteeStore.vault, amount)
@@ -1305,7 +1325,6 @@ const shield = async () => {
         })
         .then((tx) => tx.send(txResHandlerShieldingTarget))
         .catch(txErrHandlerShieldingTarget);
-
     }
   }
 };
@@ -1313,7 +1332,10 @@ const shield = async () => {
 const unshield = async () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ Will unshield to L1.";
-  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value, incogniteeChainAssetId.value);
+  const amount = accountStore.decimalAmountToBigInt(
+    unshieldAmount.value,
+    incogniteeChainAssetId.value,
+  );
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
@@ -1374,7 +1396,10 @@ const unshield = async () => {
 const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on Incognitee.";
-  const amount = accountStore.decimalAmountToBigInt(sendAmount.value, incogniteeChainAssetId.value);
+  const amount = accountStore.decimalAmountToBigInt(
+    sendAmount.value,
+    incogniteeChainAssetId.value,
+  );
   const account = accountStore.account;
 
   const encoder = new TextEncoder();
@@ -1412,7 +1437,9 @@ const sendPrivately = async () => {
           nonce: nonce,
         },
       )
-      .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+      .then((result) =>
+        handleTopResult(result, "😀 Balance transfer successful"),
+      )
       .catch((err) => handleTopError(err));
   } else {
     await incogniteeStore.api
@@ -1430,7 +1457,9 @@ const sendPrivately = async () => {
           nonce: nonce,
         },
       )
-      .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
+      .then((result) =>
+        handleTopResult(result, "😀 Balance transfer successful"),
+      )
       .catch((err) => handleTopError(err));
   }
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
@@ -1505,8 +1534,12 @@ const computedShieldingMax = computed(() => {
     Math.min(
       shieldingLimit.value -
         accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value),
-        accountStore.getDecimalBalanceTransferable(shieldingTargetChainAssetId.value) -
-        accountStore.getDecimalExistentialDeposit(shieldingTargetChainAssetId.value) -
+      accountStore.getDecimalBalanceTransferable(
+        shieldingTargetChainAssetId.value,
+      ) -
+        accountStore.getDecimalExistentialDeposit(
+          shieldingTargetChainAssetId.value,
+        ) -
         0.1,
     ),
   );
@@ -1574,7 +1607,10 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value)),
+    Math.min(
+      10,
+      accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value),
+    ),
   );
   showUnshieldOverlay.value = true;
 };

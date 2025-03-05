@@ -18,11 +18,17 @@ export const assetDecimals: Record<string, number> = {
   WETH: 15, // fixme: is 18 but we get too few from the faucet,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
-  USDT: ['assets', '1984'],
-  USDC: ['assets', '1337'],
-  "USDC.e": ['foreignAssets', '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }'],
-  ETH: ['foreignAssets', 'not yet defined'], // Consider using null or undefined
-  WETH: ['foreignAssets', '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }'],
+  USDT: ["assets", "1984"],
+  USDC: ["assets", "1337"],
+  "USDC.e": [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
+  ],
+  ETH: ["foreignAssets", "not yet defined"], // Consider using null or undefined
+  WETH: [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
+  ],
 };
 
 export class ChainAssetId {
@@ -31,14 +37,13 @@ export class ChainAssetId {
 
   constructor(chain: ChainId, asset: string | null) {
     this.chain = chain;
-    this.asset = asset ?? 'native';
+    this.asset = asset ?? "native";
   }
 
   key(): string {
     return `${this.chain}-${this.asset}`;
   }
 }
-
 
 // Token Liste
 export const tokenSelectorItems = [
@@ -68,6 +73,14 @@ export const tokenSelectorItems = [
   },
   { label: "WETH", value: "WETH", icon: ETH, hubIcon: Paseo, maturity: "test" },
 ];
+
+export const getSelectableTokens = (isTestnet: boolean) => {
+  if (isTestnet) {
+    return tokenSelectorItems.filter((item) => item.maturity === "test");
+  } else {
+    return tokenSelectorItems.filter((item) => item.maturity !== "test");
+  }
+};
 
 export const getIconUrlForAsset = (asset: string) => {
   const item = tokenSelectorItems.find((item) => item.value === asset);

@@ -166,7 +166,10 @@ export const useAccount = defineStore("account", {
             ? forceDecimals
             : this.getDecimals(chainAsset.asset);
         if (!balanceFree[chainAsset.key()]) return 0;
-        return divideBigIntToFloat(balanceFree[chainAsset.key()], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceFree[chainAsset.key()],
+          10 ** decimals,
+        );
       };
     },
     getDecimalBalanceReserved({ balanceReserved }) {
@@ -176,7 +179,10 @@ export const useAccount = defineStore("account", {
             ? forceDecimals
             : this.getDecimals(chainAsset.asset);
         if (!balanceReserved[chainAsset.key()]) return 0;
-        return divideBigIntToFloat(balanceReserved[chainAsset.key()], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceReserved[chainAsset.key()],
+          10 ** decimals,
+        );
       };
     },
     getDecimalBalanceFrozen({ balanceFrozen }) {
@@ -186,7 +192,10 @@ export const useAccount = defineStore("account", {
             ? forceDecimals
             : this.getDecimals(chainAsset.asset);
         if (!balanceFrozen[chainAsset.key()]) return 0;
-        return divideBigIntToFloat(balanceFrozen[chainAsset.key()], 10 ** decimals);
+        return divideBigIntToFloat(
+          balanceFrozen[chainAsset.key()],
+          10 ** decimals,
+        );
       };
     },
     getDecimalBalanceTransferable({ balanceFree, balanceFrozen }) {
@@ -195,9 +204,20 @@ export const useAccount = defineStore("account", {
           forceDecimals !== undefined
             ? forceDecimals
             : this.getDecimals(chainAsset.asset);
-        const frozen = balanceFrozen[chainAsset.key()] ? balanceFrozen[chainAsset.key()] : BigInt(0);
-        const free = balanceFree[chainAsset.key()] ? balanceFree[chainAsset.key()] : BigInt(0);
-        console.log("getting Free balance for chain ", chainAsset, " : ", free, "Frozen balance: ", frozen);
+        const frozen = balanceFrozen[chainAsset.key()]
+          ? balanceFrozen[chainAsset.key()]
+          : BigInt(0);
+        const free = balanceFree[chainAsset.key()]
+          ? balanceFree[chainAsset.key()]
+          : BigInt(0);
+        console.log(
+          "getting Free balance for chain ",
+          chainAsset,
+          " : ",
+          free,
+          "Frozen balance: ",
+          frozen,
+        );
         return divideBigIntToFloat(BigInt(free - frozen), 10 ** decimals);
       };
     },
@@ -208,7 +228,10 @@ export const useAccount = defineStore("account", {
             ? forceDecimals
             : this.getDecimals(chainAsset.asset);
         if (!existentialDeposit[chainAsset.key()]) return 0;
-        return divideBigIntToFloat(existentialDeposit[chainAsset.key()], 10 ** decimals);
+        return divideBigIntToFloat(
+          existentialDeposit[chainAsset.key()],
+          10 ** decimals,
+        );
       };
     },
   },
@@ -245,8 +268,12 @@ export const useAccount = defineStore("account", {
       delete this.sessionProxySeeds[role];
     },
     setBalanceFree(balance: BigInt, chainAsset: ChainAssetId) {
-      console.log("Setting free balance for chain", chainAsset,
-        " to ", balance);
+      console.log(
+        "Setting free balance for chain",
+        chainAsset,
+        " to ",
+        balance,
+      );
       this.balanceFree[chainAsset.key()] = balance;
     },
     setBalanceReserved(balance: BigInt, chainAsset: ChainAssetId) {
@@ -272,10 +299,17 @@ export const useAccount = defineStore("account", {
     setSS58Format(ss58Format: number) {
       this.ss58Format = ss58Format;
     },
-    setExistentialDeposit(existentialDeposit: BigInt, chainAsset: ChainAssetId) {
+    setExistentialDeposit(
+      existentialDeposit: BigInt,
+      chainAsset: ChainAssetId,
+    ) {
       this.existentialDeposit[chainAsset.key()] = existentialDeposit;
     },
-    decimalAmountToBigInt(amount: number, chainAsset: ChainAssetId, forceDecimals? : number): BigInt {
+    decimalAmountToBigInt(
+      amount: number,
+      chainAsset: ChainAssetId,
+      forceDecimals?: number,
+    ): BigInt {
       const decimals =
         forceDecimals !== undefined
           ? forceDecimals

@@ -59,7 +59,9 @@
       class="absolute top-full mt-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
     >
       <div
-        v-for="item in tokenSelectorItems"
+        v-for="item in getSelectableTokens(
+          isSidechainTestnet(incogniteeSidechain),
+        )"
         :key="item.value"
         class="flex items-center justify-between px-3 py-2 text-xs hover:bg-gray-700 hover:text-white cursor-pointer"
         @click="selectToken(item)"
@@ -101,7 +103,7 @@ import { isBetaSidechain, isSidechainTestnet } from "~/configs/chains.ts";
 import {
   getIconUrlForAsset,
   getHubIconUrlForAsset,
-  tokenSelectorItems,
+  getSelectableTokens,
 } from "~/configs/assets.ts";
 
 // Zustand des Dropdowns

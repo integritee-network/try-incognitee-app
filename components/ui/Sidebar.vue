@@ -304,19 +304,13 @@
 
               <!-- Badge -->
               <span
-                v-if="selectedToken === 'TEER'"
-                class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset ml-auto"
-              >
-                Beta
-              </span>
-              <span
-                v-else-if="selectedToken === 'PAS'"
+                v-if="isSidechainTestnet(incogniteeSidechain)"
                 class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset ml-auto"
               >
                 Test
               </span>
               <span
-                v-else-if="selectedToken === 'DOT'"
+                v-else-if="isBetaSidechain(incogniteeSidechain)"
                 class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-yellow-400/30 ring-inset ml-auto"
               >
                 Beta
@@ -437,7 +431,7 @@ import {
   getIconUrlForAsset,
   getSelectableTokens,
 } from "~/configs/assets.ts";
-import { isSidechainTestnet } from "~/configs/chains";
+import { isBetaSidechain, isSidechainTestnet } from "~/configs/chains";
 
 const isOpen = ref(false);
 const selectedToken = ref("PAS");

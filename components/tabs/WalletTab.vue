@@ -19,8 +19,8 @@
     </div>
     <WarningBanner
       v-if="
-        (accountStore.getSymbol === 'TEER' ||
-          accountStore.getSymbol === 'DOT') &&
+        (accountStore.getSymbol(asset) === 'TEER' ||
+          accountStore.getSymbol(asset) === 'DOT') &&
         accountStore.getAddress !== 'none' &&
         !accountStore.hasInjector
       "
@@ -30,7 +30,7 @@
     />
     <div v-else>
       <CampaignBanner
-        v-if="enableActions && accountStore.getSymbol === 'TEER'"
+        v-if="enableActions && accountStore.getSymbol(asset) === 'TEER'"
         :onClick="openGuessTheNumberOverlay"
         :isMobile="isMobile"
         textMobile="Guess-The-Number"
@@ -70,11 +70,13 @@
               <div class="text-4xl font-semibold" v-else>
                 {{
                   formatDecimalBalance(
-                    accountStore.getDecimalBalanceTransferable(shieldingTarget),
+                    accountStore.getDecimalBalanceTransferable(
+                      shieldingTargetChainAssetId,
+                    ),
                   )
                 }}
                 <span class="text-sm font-semibold">{{
-                  accountStore.getSymbol
+                  accountStore.getSymbol(asset)
                 }}</span>
               </div>
             </div>
@@ -143,7 +145,7 @@
                     d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
                   />
                 </svg>
-                <p class="text-xs">Get {{ accountStore.getSymbol }}</p>
+                <p class="text-xs">Get {{ accountStore.getSymbol(asset) }}</p>
               </div>
             </div>
           </div>
@@ -164,9 +166,9 @@
               v-if="!isFetchingIncogniteeBalance && !disableGetter"
               class="text-4xl font-semibold"
             >
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}
               <span class="text-sm font-semibold">{{
-                accountStore.getSymbol
+                accountStore.getSymbol(asset)
               }}</span>
             </div>
           </div>
@@ -373,8 +375,8 @@
       <div v-if="shieldingLimit < Infinity">
         <p class="text-sm text-gray-400 text-left my-4">
           During beta phase, you can only shield up to
-          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
-          current private balance on incognitee.
+          {{ shieldingLimit }} {{ accountStore.getSymbol(asset) }} which
+          includes your current private balance on incognitee.
         </p>
       </div>
       <form
@@ -386,12 +388,12 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-              >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol(asset) }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
               >Available for shielding: {{ computedShieldingMax.toFixed(3) }}
-              {{ accountStore.getSymbol }}</span
+              {{ accountStore.getSymbol(asset) }}</span
             >
           </div>
           <input
@@ -407,7 +409,7 @@
           />
           <div class="text-right">
             <span class="text-xs text-gray-400"
-              >Fee: ~16 m{{ accountStore.getSymbol }} for L1,
+              >Fee: ~16 m{{ accountStore.getSymbol(asset) }} for L1,
               {{
                 formatDecimalBalance(INCOGNITEE_SHIELDING_FEE_FRACTION * 100)
               }}% for Incognitee</span
@@ -482,7 +484,7 @@
 
     <ObtainTokenOverlay
       :withdraw-to-address="accountStore.getAddress"
-      :token-symbol="accountStore.getSymbol"
+      :token-symbol="accountStore.getSymbol(asset)"
       :close="closeObtainTokenOverlay"
       :show="showObtainTokenOverlay"
     />
@@ -500,8 +502,8 @@
       <div v-if="shieldingLimit < Infinity">
         <p class="text-sm text-gray-400 text-left my-4">
           During beta phase, you can only shield up to
-          {{ shieldingLimit }} {{ accountStore.getSymbol }} which includes your
-          current private balance on incognitee.
+          {{ shieldingLimit }} {{ accountStore.getSymbol(asset) }} which
+          includes your current private balance on incognitee.
         </p>
       </div>
       <form class="mt-5" @submit.prevent="submitUnshieldForm">
@@ -583,7 +585,7 @@
         <p class="text-sm text-gray-400 text-left mt-5">
           For optimal k-anonymity, we advise you to unshield either exactly 10
           or 100
-          {{ accountStore.getSymbol }} at the time. In the future we will
+          {{ accountStore.getSymbol(asset) }} at the time. In the future we will
           provide a score including timing and popular amounts to enhance
           unlinkability of your actions.
         </p>
@@ -592,12 +594,12 @@
           <label
             for="unshieldAmount"
             class="text-sm font-medium leading-6 text-white"
-            >{{ accountStore.getSymbol }} Amount</label
+            >{{ accountStore.getSymbol(asset) }} Amount</label
           >
 
           <span class="text-xs text-gray-400"
             >Available private balance:
-            {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
+            {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}</span
           >
         </div>
         <input
@@ -605,11 +607,13 @@
           v-model="unshieldAmount"
           type="number"
           step="0.1"
-          :min="minUnshieldingAmount(accountStore.getSymbol)"
+          :min="minUnshieldingAmount(accountStore.getSymbol(asset))"
           :max="
             Math.min(
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-                accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+              accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(
+                  incogniteeChainAssetId,
+                ) -
                 0.1,
               shieldingLimit,
             )
@@ -622,7 +626,7 @@
         <div class="text-right">
           <span class="text-xs text-gray-400"
             >Fee: {{ formatDecimalBalance(INCOGNITEE_UNSHIELDING_FEE) }}
-            {{ accountStore.getSymbol }} for Incognitee</span
+            {{ accountStore.getSymbol(asset) }} for Incognitee</span
           >
         </div>
 
@@ -754,12 +758,12 @@
             <label
               for="sendAmount"
               class="text-sm font-medium leading-6 text-white"
-              >{{ accountStore.getSymbol }} Amount</label
+              >{{ accountStore.getSymbol(asset) }} Amount</label
             >
 
             <span class="text-xs text-gray-400"
               >Available private balance:
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}</span
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}</span
             >
           </div>
 
@@ -772,8 +776,10 @@
               step="0.01"
               :min="0.1"
               :max="
-                accountStore.getDecimalBalanceFree(incogniteeSidechain) -
-                accountStore.getDecimalExistentialDeposit(incogniteeSidechain) -
+                accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -
+                accountStore.getDecimalExistentialDeposit(
+                  incogniteeChainAssetId,
+                ) -
                 0.1
               "
               required
@@ -787,7 +793,7 @@
           <div class="text-right">
             <span class="text-xs text-gray-400"
               >Fee: {{ formatDecimalBalance(INCOGNITEE_TX_FEE) }}
-              {{ accountStore.getSymbol }} for Incognitee</span
+              {{ accountStore.getSymbol(asset) }} for Incognitee</span
             >
           </div>
         </div>
@@ -861,7 +867,7 @@
                             Math.pow(10, accountStore.decimals),
                         )
                       }}
-                      {{ accountStore.getSymbol }}
+                      {{ accountStore.getSymbol(asset) }}
                     </dd>
                   </div>
 
@@ -986,7 +992,7 @@
           <div class="text-left right-0 mb-0">
             <span class="text-xs text-gray-400"
               >Fee: {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }}
-              {{ accountStore.getSymbol }} for Incognitee</span
+              {{ accountStore.getSymbol(asset) }} for Incognitee</span
             >
           </div>
         </form>
@@ -1014,8 +1020,8 @@
                 <p>
                   You need at least
                   {{ formatDecimalBalance(INCOGNITEE_GTN_GUESS_FEE) }} private
-                  {{ accountStore.getSymbol }} to participate in the game.
-                  Please shield some first.
+                  {{ accountStore.getSymbol(asset) }} to participate in the
+                  game. Please shield some first.
                 </p>
               </div>
             </div>
@@ -1075,6 +1081,9 @@ import {
   shieldingLimit,
   incogniteeSidechain,
   isLive,
+  asset,
+  incogniteeChainAssetId,
+  shieldingTargetChainAssetId,
 } from "~/lib/environmentConfig";
 import { chainConfigs } from "~/configs/chains";
 import { QrcodeStream } from "vue-qrcode-reader";
@@ -1088,6 +1097,7 @@ import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
+import { assetHubRoute, ChainAssetId } from "../../configs/assets";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1113,13 +1123,25 @@ const selectTab = (tab) => {
 
 defineExpose({
   onWalletInfoInitialized: async () => {
-    console.log("onWalletInfoInitialized");
+    console.log(
+      "onWalletInfoInitialized: L1: " +
+        accountStore.getDecimalBalanceTransferable(
+          shieldingTargetChainAssetId.value,
+        ) +
+        " L2: " +
+        accountStore.getDecimalBalanceTransferable(
+          incogniteeChainAssetId.value,
+        ),
+    );
     if (
-      accountStore.getDecimalBalanceTransferable(shieldingTarget.value) === 0
+      accountStore.getDecimalBalanceTransferable(
+        shieldingTargetChainAssetId.value,
+      ) === 0
     ) {
       if (
-        accountStore.getDecimalBalanceTransferable(incogniteeSidechain.value) >
-        0
+        accountStore.getDecimalBalanceTransferable(
+          incogniteeChainAssetId.value,
+        ) > 0
       ) {
         console.log("account has funds on incognitee. selecting private tab");
         selectTab("private");
@@ -1276,60 +1298,108 @@ const shield = async () => {
   txStatus.value = "⌛ Awaiting signature and connection...";
   console.log("local api ready: " + props.api?.isReady);
   if (incogniteeStore.vault && props.api?.isReady) {
-    const amount = accountStore.decimalAmountToBigInt(shieldAmount.value);
-    console.log(`sending ${amount} to vault: ${incogniteeStore.vault}`);
+    const amount = accountStore.decimalAmountToBigInt(
+      shieldAmount.value,
+      shieldingTargetChainAssetId.value,
+    );
+    console.log(
+      `sending ${amount} ${asset.value ? asset.value : "native"}  to vault: ${incogniteeStore.vault}`,
+    );
 
-    await props.api.tx.balances
-      .transferKeepAlive(incogniteeStore.vault, amount)
-      .signAsync(accountStore.account, {
-        signer: accountStore.injector?.signer,
-      })
-      .then((tx) => tx.send(txResHandlerShieldingTarget))
-      .catch(txErrHandlerShieldingTarget);
+    if (asset.value) {
+      const [module, assetIdStr] = assetHubRoute[asset.value];
+      const assetId = JSON.parse(assetIdStr);
+      console.log("asset instance: " + module + " AssetId: " + assetId);
+      await props.api.tx[module]
+        .transferKeepAlive(assetId, incogniteeStore.vault, amount)
+        .signAsync(accountStore.account, {
+          signer: accountStore.injector?.signer,
+        })
+        .then((tx) => tx.send(txResHandlerShieldingTarget))
+        .catch(txErrHandlerShieldingTarget);
+    } else {
+      await props.api.tx.balances
+        .transferKeepAlive(incogniteeStore.vault, amount)
+        .signAsync(accountStore.account, {
+          signer: accountStore.injector?.signer,
+        })
+        .then((tx) => tx.send(txResHandlerShieldingTarget))
+        .catch(txErrHandlerShieldingTarget);
+    }
   }
 };
 
 const unshield = async () => {
   console.log("will unshield 30% of your private funds to same account on L1");
   txStatus.value = "⌛ Will unshield to L1.";
-  const amount = accountStore.decimalAmountToBigInt(unshieldAmount.value);
+  const amount = accountStore.decimalAmountToBigInt(
+    unshieldAmount.value,
+    incogniteeChainAssetId.value,
+  );
   const account = accountStore.account;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${unshieldAmount.value} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
-
-  await incogniteeStore.api
-    .balanceUnshieldFunds(
-      account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      accountStore.getAddress,
-      recipientAddress.value,
-      amount,
-      {
-        signer: accountStore.injector?.signer,
-        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
-        nonce: nonce,
-      },
-    )
-    .then((result) =>
-      handleTopResult(
-        result,
-        "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
-      ),
-    )
-    .catch((err) => handleTopError(err));
+  if (asset.value) {
+    await incogniteeStore.api
+      .assetUnshieldFunds(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        asset.value,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(
+          result,
+          "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
+        ),
+      )
+      .catch((err) => handleTopError(err));
+  } else {
+    await incogniteeStore.api
+      .balanceUnshieldFunds(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(
+          result,
+          "😀 Successfully triggered unshielding process. You should see the unshielded funds appear on L1 in seconds",
+        ),
+      )
+      .catch((err) => handleTopError(err));
+  }
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 
 const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on Incognitee.";
-  const amount = accountStore.decimalAmountToBigInt(sendAmount.value);
+  const amount = accountStore.decimalAmountToBigInt(
+    sendAmount.value,
+    incogniteeChainAssetId.value,
+  );
   const account = accountStore.account;
 
   const encoder = new TextEncoder();
@@ -1347,26 +1417,51 @@ const sendPrivately = async () => {
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${sendAmount.value} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
+    `sending ${sendAmount.value} ${accountStore.getSymbol(asset.value)} from ${account.address} privately to ${recipientAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
-  await incogniteeStore.api
-    .trustedBalanceTransfer(
-      account,
-      incogniteeStore.shard,
-      incogniteeStore.fingerprint,
-      accountStore.getAddress,
-      recipientAddress.value,
-      amount,
-      note,
-      {
-        signer: accountStore.injector?.signer,
-        delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
-        nonce: nonce,
-      },
-    )
-    .then((result) => handleTopResult(result, "😀 Balance transfer successful"))
-    .catch((err) => handleTopError(err));
+  if (asset.value) {
+    await incogniteeStore.api
+      .trustedAssetTransfer(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        asset.value,
+        note,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(result, "😀 Balance transfer successful"),
+      )
+      .catch((err) => handleTopError(err));
+  } else {
+    await incogniteeStore.api
+      .trustedBalanceTransfer(
+        account,
+        incogniteeStore.shard,
+        incogniteeStore.fingerprint,
+        accountStore.getAddress,
+        recipientAddress.value,
+        amount,
+        note,
+        {
+          signer: accountStore.injector?.signer,
+          delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),
+          nonce: nonce,
+        },
+      )
+      .then((result) =>
+        handleTopResult(result, "😀 Balance transfer successful"),
+      )
+      .catch((err) => handleTopError(err));
+  }
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 const submitGuess = async () => {
@@ -1438,9 +1533,13 @@ const computedShieldingMax = computed(() => {
     0,
     Math.min(
       shieldingLimit.value -
-        accountStore.getDecimalBalanceFree(incogniteeSidechain.value),
-      accountStore.getDecimalBalanceTransferable(shieldingTarget.value) -
-        accountStore.getDecimalExistentialDeposit(shieldingTarget.value) -
+        accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value),
+      accountStore.getDecimalBalanceTransferable(
+        shieldingTargetChainAssetId.value,
+      ) -
+        accountStore.getDecimalExistentialDeposit(
+          shieldingTargetChainAssetId.value,
+        ) -
         0.1,
     ),
   );
@@ -1508,7 +1607,10 @@ const openUnshieldOverlay = () => {
     return;
   }
   unshieldAmount.value = Math.floor(
-    Math.min(10, accountStore.getDecimalBalanceFree(incogniteeSidechain.value)),
+    Math.min(
+      10,
+      accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value),
+    ),
   );
   showUnshieldOverlay.value = true;
 };
@@ -1538,7 +1640,7 @@ const openPrivateSendOverlay = () => {
   sendAmount.value = Math.floor(
     Math.min(
       sendAmount.value,
-      accountStore.getDecimalBalanceFree(incogniteeSidechain.value) - 0.1,
+      accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) - 0.1,
     ),
   );
   showPrivateSendOverlay.value = true;

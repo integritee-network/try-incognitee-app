@@ -15,7 +15,7 @@
             <table class="w-full text-left">
               <tbody>
                 <tr
-                  v-for="(note, index) in noteStore.getFinancialNotes"
+                  v-for="(note, index) in noteStore.getFinancialNotes(asset)"
                   :key="index"
                 >
                   <td class="relative py-5 pr-6">
@@ -79,10 +79,12 @@
                       {{
                         divideBigIntToFloat(
                           note.amount,
-                          10 ** accountStore.getDecimals,
+                          10 ** accountStore.getDecimals(note.asset),
                         )
                       }}
-                      {{ accountStore.getSymbol }}
+                      {{
+                        note.asset ? note.asset : accountStore.getSymbol(null)
+                      }}
                     </div>
                     <time class="mt-1 text-xs/5 text-gray-500">{{
                       formatDate(note.timestamp)
@@ -176,7 +178,7 @@ import { divideBigIntToFloat } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
-
+import { asset } from "@/lib/environmentConfig";
 //const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 const identityLut = wellKnownIdentities;
 

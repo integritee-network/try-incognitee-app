@@ -17,11 +17,11 @@
           <span class="font-semibold">{{
             formatDecimalBalance(INCOGNITEE_TX_FEE)
           }}</span>
-          {{ accountStore.getSymbol }} and a deposit of
+          {{ accountStore.getSymbol(asset) }} and a deposit of
           <span class="font-semibold">{{
             INCOGNITEE_SESSION_PROXY_DEPOSIT
           }}</span>
-          {{ accountStore.getSymbol }} will be reserved.
+          {{ accountStore.getSymbol(asset) }} will be reserved.
         </p>
       </div>
 
@@ -125,7 +125,7 @@
 
           <div
             v-if="
-              accountStore.getDecimalBalanceFree(incogniteeSidechain) <
+              accountStore.getDecimalBalanceFree(incogniteeChainAssetId) <
                 INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
               bestSessionProxyRole == null
             "
@@ -138,9 +138,9 @@
                   INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
                 )
               }}
-              {{ accountStore.getSymbol }} private balance to register a session
-              proxy. You have
-              {{ accountStore.formatBalanceFree(incogniteeSidechain) }}.
+              {{ accountStore.getSymbol(asset) }} private balance to register a
+              session proxy. You have
+              {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}.
             </p>
           </div>
           <div v-else>
@@ -202,7 +202,11 @@ import {
 import { useIncognitee } from "~/store/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { incogniteeSidechain } from "~/lib/environmentConfig";
+import {
+  incogniteeChainAssetId,
+  incogniteeSidechain,
+  asset,
+} from "~/lib/environmentConfig";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

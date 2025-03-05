@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Note } from "@/lib/notes";
+import { isAssetEqual } from "~/configs/assets";
 export const useNotes = defineStore("notes", {
   state: () => ({
     notes: new Set<Note>(),
@@ -15,13 +16,15 @@ export const useNotes = defineStore("notes", {
         (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
       );
     },
-    getFinancialNotes() {
-      return this.getSortedNotesNewestFirst.filter(
-        (note) =>
-          (note.amount > 0) |
-          note.category.includes("Guess") |
-          note.category.includes("Session Proxy"),
-      );
+    getFinancialNotes(): (asset: string | null) => Note[] {
+      return (asset: string | null): Note[] => {
+        return this.getSortedNotesNewestFirst.filter(
+          (note) =>
+            (note.amount > 0 && isAssetEqual(note.asset, asset)) ||
+            note.category.includes("Guess") ||
+            note.category.includes("Session Proxy"),
+        );
+      };
     },
     getConversationCounterparties() {
       const latestNotes = new Map<string, Note>();

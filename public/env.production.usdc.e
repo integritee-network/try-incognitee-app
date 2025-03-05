@@ -1,0 +1,7 @@
+SHIELDING_TARGET=AssetHubPolkadot
+INCOGNITEE_SIDECHAIN=IncogniteeAssetHubPolkadot
+TEERDAYS_NETWORK=IntegriteePolkadot
+SHARD=5notyetdefineddddddddddddddddddddddddd
+SHIELDING_LIMIT=111
+ASSET=USDC.e
+LIVE=false

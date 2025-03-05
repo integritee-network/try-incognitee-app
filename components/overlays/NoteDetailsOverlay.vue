@@ -66,7 +66,7 @@
                     {{
                       divideBigIntToFloat(
                         note.amount,
-                        10 ** accountStore.getDecimals,
+                        10 ** accountStore.getDecimals(note.asset),
                       )
                     }}
                     TEER

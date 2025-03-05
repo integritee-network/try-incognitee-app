@@ -85,7 +85,7 @@
             type="button"
             class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
           >
-            Get free {{ accountStore.getSymbol }} tokens from faucet
+            Get free {{ accountStore.getSymbol(null) }} tokens from faucet
           </button>
         </a>
       </div>
@@ -156,11 +156,16 @@ import {
   isLive,
   loadEnv,
   shieldingTarget,
+  asset,
+  incogniteeChainAssetId,
+  shieldingTargetChainAssetId,
+  incogniteeChainNativeAsset,
+  shieldingTargetChainNativeAsset,
 } from "@/lib/environmentConfig";
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
-import { formatMoment } from "~/helpers/date";
-import { Note, NoteDirection } from "~/lib/notes";
+import { parseCall } from "~/lib/notes";
+import { ChainAssetId, assetHubRoute } from "~/configs/assets";
 import {
   SessionProxyRole,
   sessionProxyRoleOrder,
@@ -233,7 +238,7 @@ const fetchIncogniteeBalance = async () => {
         );
       }
       getterMap[accountStore.account] =
-        await incogniteeStore.api.accountInfoAndSessionProxiesGetter(
+        await incogniteeStore.api.accountEssentialsGetter(
           accountStore.account,
           incogniteeStore.shard,
           { signer: injector?.signer },
@@ -254,9 +259,9 @@ const fetchIncogniteeBalance = async () => {
 
   await getterMap[accountStore.account]
     .send()
-    .then((accountInfoAndSessionProxies) => {
-      const accountInfo = accountInfoAndSessionProxies.account_info;
-      const proxies = accountInfoAndSessionProxies.session_proxies;
+    .then((accountEssentials) => {
+      const accountInfo = accountEssentials.account_info;
+      const proxies = accountEssentials.session_proxies;
       console.debug(
         `current account info L2: ${accountInfo} on shard ${incogniteeStore.shard}`,
       );
@@ -264,8 +269,23 @@ const fetchIncogniteeBalance = async () => {
       storeSessionProxies(proxies);
       accountStore.setBalanceFree(
         BigInt(accountInfo.data.free),
-        incogniteeSidechain.value,
+        incogniteeChainNativeAsset.value,
       );
+      for (const assetBalance of accountEssentials.asset_balances) {
+        console.log(
+          "found asset balance: " +
+            assetBalance.asset_id +
+            ": " +
+            assetBalance.balance,
+        );
+        accountStore.setBalanceFree(
+          BigInt(assetBalance.balance),
+          new ChainAssetId(
+            incogniteeSidechain.value,
+            assetBalance.asset_id.toString(),
+          ),
+        );
+      }
       accountStore.setNonce(
         Number(accountInfo.nonce),
         incogniteeSidechain.value,
@@ -277,7 +297,9 @@ const fetchIncogniteeBalance = async () => {
         proxies.length == 0 &&
         accountStore.hasInjector &&
         !accountStore.hasDeclinedSessionProxy &&
-        accountStore.getDecimalBalanceFree(incogniteeSidechain.value) > 0
+        (accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset.value) >
+          0 ||
+          accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) > 0)
       ) {
         openAuthorizeSessionOverlay();
       }
@@ -431,7 +453,7 @@ const fetchIncogniteeNotes = async (
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
   // avoid race condition leading to duplicate entries in notes
-  if (accountStore.getSymbol === "UNIT") return;
+  if (accountStore.getSymbol(null) === "UNIT") return;
 
   if (disableGetter.value == true) {
     console.log(
@@ -491,193 +513,22 @@ const fetchIncogniteeNotes = async (
         `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucketIndex}:`,
       );
       for (const note of notes) {
-        if (note.note.isSuccessfulTrustedCall) {
-          const call = incogniteeStore.api.createType(
-            "IntegriteeTrustedCall",
-            note.note.asSuccessfulTrustedCall,
-          );
-          if (call.isBalanceShield) {
-            const typedCall = call.asBalanceShield;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance shield: ${typedCall}`,
+        try {
+          if (note.note.isSuccessfulTrustedCall) {
+            const call = incogniteeStore.api.createType(
+              "IntegriteeTrustedCall",
+              note.note.asSuccessfulTrustedCall,
             );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            noteStore.addNote(
-              new Note(
-                "Shield",
-                NoteDirection.Incoming,
-                to,
-                BigInt(typedCall[2]),
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isBalanceUnshield) {
-            const typedCall = call.asBalanceUnshield;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance unshield: ${typedCall}`,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            noteStore.addNote(
-              new Note(
-                "Unshield",
-                NoteDirection.Outgoing,
-                to,
-                BigInt(typedCall[2]),
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isBalanceTransfer) {
-            const typedCall = call.asBalanceTransfer;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
+            const parsedNote = parseCall(
+              call,
+              note.timestamp,
+              accountStore.getAddress,
               accountStore.getSs58Format,
             );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Transfer",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  null,
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Transfer",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  null,
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isBalanceTransferWithNote) {
-            const typedCall = call.asBalanceTransferWithNote;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] balance transfer with note: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
-              accountStore.getSs58Format,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Transfer",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[3].toString(),
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Transfer",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(typedCall[2]),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[3].toString(),
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isSendNote) {
-            const typedCall = call.asSendNote;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] send note: ${typedCall}`,
-            );
-            const from = encodeAddress(
-              typedCall[0],
-              accountStore.getSs58Format,
-            );
-            const to = encodeAddress(typedCall[1], accountStore.getSs58Format);
-            if (from === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Outgoing Note",
-                  NoteDirection.Outgoing,
-                  to,
-                  BigInt(0),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[2].toString(),
-                ),
-              );
-            } else if (to === accountStore.getAddress) {
-              noteStore.addNote(
-                new Note(
-                  "Incoming Note",
-                  NoteDirection.Incoming,
-                  from,
-                  BigInt(0),
-                  new Date(note.timestamp?.toNumber()),
-                  typedCall[2].toString(),
-                ),
-              );
-            } else {
-              console.error(
-                `[${formatMoment(note.timestamp?.toNumber())}] unknown relation to transfer: ${typedCall}`,
-              );
-            }
-          } else if (call.isGuessTheNumber) {
-            const typedCall = call.asGuessTheNumber.asGuess;
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] guess the number: ${typedCall}`,
-            );
-            noteStore.addNote(
-              new Note(
-                `Submit Guess (${typedCall[1]})`,
-                NoteDirection.None,
-                null,
-                null,
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else if (call.isAddSessionProxy) {
-            const typedCall = call.asAddSessionProxy;
-            const proxy = encodeAddress(
-              typedCall[1],
-              accountStore.getSs58Format,
-            );
-            console.debug(
-              `[${formatMoment(note.timestamp?.toNumber())}] add session proxy: ${typedCall}`,
-            );
-            noteStore.addNote(
-              new Note(
-                `Add Session Proxy (${typedCall[2].role})`,
-                NoteDirection.None,
-                proxy,
-                null,
-                new Date(note.timestamp?.toNumber()),
-                null,
-              ),
-            );
-          } else {
-            console.error(
-              `[${formatMoment(note.timestamp?.toNumber())}] unknown call: ${call}`,
-            );
+            noteStore.addNote(parsedNote);
           }
+        } catch (e) {
+          console.error(`[fetchIncogniteeNotes] error parsing note ${e}`);
         }
       }
     })
@@ -841,8 +692,9 @@ const subscribeWhatsReady = async () => {
   await shieldingTargetApi.value.isReady;
   accountStore.setExistentialDeposit(
     BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
+    shieldingTargetChainNativeAsset.value,
   );
-  accountStore.setDecimals(
+  accountStore.setNativeDecimals(
     Number(shieldingTargetApi.value.registry.chainDecimals),
   );
   accountStore.setSS58Format(
@@ -892,32 +744,63 @@ const subscribeWhatsReady = async () => {
       },
     }) => {
       console.log(
-        "shielding-target balance: free=" +
+        "shielding-target native balance: free=" +
           currentFree +
           " reserved=" +
           currentReserved +
           " frozen=" +
           currentFrozen,
       );
-      accountStore.setBalanceFree(BigInt(currentFree), shieldingTarget.value);
+      accountStore.setBalanceFree(
+        BigInt(currentFree),
+        shieldingTargetChainNativeAsset.value,
+      );
       accountStore.setBalanceReserved(
         BigInt(currentReserved),
-        shieldingTarget.value,
+        shieldingTargetChainNativeAsset.value,
       );
       accountStore.setBalanceFrozen(
         BigInt(currentFrozen),
-        shieldingTarget.value,
+        shieldingTargetChainNativeAsset.value,
       );
       isFetchingShieldingTargetBalance.value = false;
     },
   );
   promises.push(p1);
+  // if asset, subscribe to asset balance too
+  if (asset.value) {
+    const [module, assetIdStr] = assetHubRoute[asset.value];
+    const assetId = JSON.parse(assetIdStr);
+    console.log("asset instance: " + module + " AssetId: " + assetId);
+    const pA = shieldingTargetApi.value.query[module].account(
+      assetId,
+      accountStore.getAddress,
+      (assetAccount) => {
+        const balance = BigInt(
+          assetAccount.unwrapOrDefault().balance.toString(),
+        );
+        console.log(
+          "shielding-target asset balance:",
+          "asset =",
+          asset.value,
+          "assetAccount =",
+          assetAccount,
+          "balance = ",
+          balance,
+        );
+        accountStore.setBalanceFree(balance, shieldingTargetChainAssetId.value);
+        //isFetchingShieldingTargetBalance.value = false;
+      },
+    );
+    promises.push(pA);
+  }
+
   // for quicker responsiveness we dont wait until the next regular poll, but trigger the balance fetch here
   const p2 = fetchIncogniteeBalance().then(() =>
     console.log("fetched incognitee balance"),
   );
   promises.push(p2);
-  await Promise.all(promises);
+  if (asset.val) await Promise.all(promises);
   walletTabRef.value?.onWalletInfoInitialized();
 };
 

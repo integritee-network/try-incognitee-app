@@ -103,7 +103,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceFrozen(
-                              teerdaysNetwork,
+                              teerdaysChainNativeAsset,
                               12,
                             ) > 0
                           "
@@ -118,7 +118,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceFrozen(
-                                  teerdaysNetwork,
+                                  teerdaysChainNativeAsset,
                                   12,
                                 )
                               }}
@@ -130,7 +130,7 @@
                         <div
                           v-if="
                             accountStore.getDecimalBalanceReserved(
-                              teerdaysNetwork,
+                              teerdaysChainNativeAsset,
                               12,
                             ) > 0
                           "
@@ -145,7 +145,7 @@
                             <time datetime="2023-01-31"
                               >{{
                                 accountStore.formatBalanceReserved(
-                                  teerdaysNetwork,
+                                  teerdaysChainNativeAsset,
                                   12,
                                 )
                               }}
@@ -666,7 +666,10 @@ import { chainConfigs, TEER_DECIMALS } from "~/configs/chains.ts";
 import { useInterval } from "@vueuse/core";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { eventBus } from "~/helpers/eventBus";
-import { teerdaysNetwork } from "~/lib/environmentConfig";
+import {
+  teerdaysNetwork,
+  teerdaysChainNativeAsset,
+} from "~/lib/environmentConfig";
 import { Bond, PendingUnlock } from "~/lib/teerDays";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
@@ -722,9 +725,18 @@ const onExtensionAccountChange = async () => {
       },
     }) => {
       console.log("TEER balance:" + currentFree);
-      accountStore.setBalanceFree(BigInt(currentFree), teerdaysNetwork);
-      accountStore.setBalanceReserved(BigInt(currentReserved), teerdaysNetwork);
-      accountStore.setBalanceFrozen(BigInt(currentFrozen), teerdaysNetwork);
+      accountStore.setBalanceFree(
+        BigInt(currentFree),
+        teerdaysChainNativeAsset,
+      );
+      accountStore.setBalanceReserved(
+        BigInt(currentReserved),
+        teerdaysChainNativeAsset,
+      );
+      accountStore.setBalanceFrozen(
+        BigInt(currentFrozen),
+        teerdaysChainNativeAsset,
+      );
       isFetchingTeerBalance.value = false;
     },
   );
@@ -921,7 +933,7 @@ watch(refreshCounter, async () => {
 
 const transferableBalance = computed(() => {
   const balance = accountStore.getDecimalBalanceTransferable(
-    teerdaysNetwork,
+    teerdaysChainNativeAsset,
     12,
   );
   return formatDecimalBalance(balance);

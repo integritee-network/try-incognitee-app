@@ -106,8 +106,8 @@
           </li>
           <li
             v-if="
-              accountStore.getSymbol === 'TEER' ||
-              accountStore.getSymbol === 'DOT'
+              accountStore.getSymbol(null) === 'TEER' ||
+              accountStore.getSymbol(null) === 'DOT'
             "
             class="px-4"
           >
@@ -283,18 +283,21 @@
               @click="toggleTokenDropdown"
             >
               <!-- Token Icon -->
-              <TEER
-                v-if="selectedToken === 'TEER'"
-                class="w-[14px] h-[14px] mr-2"
-              />
-              <Paseo
-                v-else-if="selectedToken === 'PAS'"
-                class="w-[14px] h-[14px] mr-2"
-              />
-              <DOT
-                v-else-if="selectedToken === 'DOT'"
-                class="w-[14px] h-[14px] mr-2"
-              />
+              <div class="flex items-center">
+                <div v-if="getIconUrlForAsset(selectedToken)">
+                  <img
+                    :src="getIconUrlForAsset(selectedToken)"
+                    class="w-[14px] h-[14px] mr-2"
+                  />
+                </div>
+                <div v-if="getHubIconUrlForAsset(selectedToken)">
+                  <img
+                    :src="getHubIconUrlForAsset(selectedToken)"
+                    class="w-[14px] h-[14px] mr-2"
+                  />
+                </div>
+                <div v-else class="spinner"></div>
+              </div>
 
               <!-- Token Name -->
               <span class="truncate">{{ selectedToken }}</span>
@@ -314,7 +317,7 @@
               </span>
               <span
                 v-else-if="selectedToken === 'DOT'"
-                class="inline-flex items-center rounded-md bg-green-400/10 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-green-400/30 ring-inset ml-auto"
+                class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-400 ring-1 ring-yellow-400/30 ring-inset ml-auto"
               >
                 Beta
               </span>
@@ -341,31 +344,35 @@
               class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
             >
               <div
-                v-for="item in tokenSelectorItems"
+                v-for="item in getSelectableTokens(
+                  isSidechainTestnet(incogniteeSidechain),
+                )"
                 :key="item.value"
                 class="flex items-center justify-between text-xs px-3 py-2 hover:bg-gray-700 hover:text-white cursor-pointer"
                 @click="selectToken(item)"
               >
                 <!-- Linke Seite mit Icon und Token-Name -->
                 <div class="flex items-center">
-                  <component :is="item.icon" class="w-[14px] h-[14px] mr-2" />
+                  <img :src="item.icon" alt="" class="w-[14px] h-[14px]" />
+                  <div v-if="item.hubIcon" class="mr-2">
+                    <img
+                      :src="item.hubIcon"
+                      alt=""
+                      class="w-[10px] h-[10px] mr-2"
+                    />
+                  </div>
+                  <div v-else class="mr-2"></div>
                   <span>{{ item.label }}</span>
                 </div>
                 <!-- Rechte Seite mit Badge -->
                 <span
-                  v-if="item.label === 'TEER'"
+                  v-if="item.maturity === 'beta'"
                   class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
                 >
                   Beta
                 </span>
                 <span
-                  v-else-if="item.label === 'DOT'"
-                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
-                >
-                  Beta
-                </span>
-                <span
-                  v-else-if="item.label === 'PAS'"
+                  v-if="item.maturity === 'test'"
                   class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
                 >
                   Test
@@ -424,17 +431,18 @@ import Paseo from "assets/img/paseo-logo.svg";
 import DOT from "@/assets/img/polkadot-logo.svg";
 import TEER from "@/assets/img/logo-icon.svg";
 import { useRouter } from "vue-router";
+import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
+import {
+  getHubIconUrlForAsset,
+  getIconUrlForAsset,
+  getSelectableTokens,
+} from "~/configs/assets.ts";
+import { isSidechainTestnet } from "~/configs/chains";
 
 const isOpen = ref(false);
 const selectedToken = ref("PAS");
 const router = useRouter();
 const accountStore = useAccount();
-
-const tokenSelectorItems = [
-  { label: "TEER", value: "TEER", icon: TEER },
-  { label: "PAS", value: "PAS", icon: Paseo },
-  { label: "DOT", value: "DOT", icon: DOT },
-];
 
 const toggleTokenDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -463,7 +471,7 @@ const selectToken = (item) => {
 };
 
 watch(
-  () => accountStore.getSymbol,
+  () => accountStore.getSymbol(asset.value),
   (newValue) => {
     selectedToken.value = newValue;
   },
@@ -495,7 +503,7 @@ const toggleSidebar = () => {
 onMounted(() => {
   eventBus.on("toggleSidebar", toggleSidebar);
   document.addEventListener("click", handleOutsideClick);
-  selectedToken.value = accountStore.getSymbol;
+  selectedToken.value = accountStore.getSymbol(asset.value);
 });
 
 onUnmounted(() => {

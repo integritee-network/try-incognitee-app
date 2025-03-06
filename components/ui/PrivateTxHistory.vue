@@ -83,7 +83,9 @@
                         )
                       }}
                       {{
-                        note.asset ? note.asset : accountStore.getSymbol(null)
+                        note.asset
+                          ? unifyAssetIdDisplay(note.asset)
+                          : accountStore.getSymbol(null)
                       }}
                     </div>
                     <time class="mt-1 text-xs/5 text-gray-500">{{
@@ -179,6 +181,7 @@ import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
 import { asset } from "@/lib/environmentConfig";
+import { unifyAssetIdDisplay } from "../../configs/assets";
 //const identityLut = [...polkadotPeopleIdentities, ...wellKnownIdentities];
 const identityLut = wellKnownIdentities;
 

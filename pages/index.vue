@@ -165,7 +165,7 @@ import {
 import { useSystemHealth } from "@/store/systemHealth";
 import { useNotes } from "~/store/notes";
 import { parseCall } from "~/lib/notes";
-import { ChainAssetId, assetHubRoute } from "~/configs/assets";
+import { ChainAssetId, assetHubRoute, unifyAssetId } from "~/configs/assets";
 import {
   SessionProxyRole,
   sessionProxyRoleOrder,
@@ -767,7 +767,7 @@ const subscribeWhatsReady = async () => {
   promises.push(p1);
   // if asset, subscribe to asset balance too
   if (asset.value) {
-    const [module, assetIdStr] = assetHubRoute[asset.value];
+    const [module, assetIdStr] = assetHubRoute[unifyAssetId(asset.value)];
     const assetId = JSON.parse(assetIdStr);
     console.log("asset instance: " + module + " AssetId: " + assetId);
     const pA = shieldingTargetApi.value.query[module].account(

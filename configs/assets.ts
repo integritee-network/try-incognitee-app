@@ -8,24 +8,29 @@ import ETH from "@/assets/img/eth-logo.svg?url";
 export const isAssetEqual = (
   a: string | null | undefined,
   b: string | null | undefined,
-) => (!a && !b) || a === b; // Treat null, "", and undefined as equivalent
+) => {
+  const aa = unifyAssetId(a);
+  const bb = unifyAssetId(b);
+  return (!a && !b) || aa === bb;
+}; // Treat null, "", and undefined as equivalent
 
+// use unified asset id as key (lowercase, no dots)
 export const assetDecimals: Record<string, number> = {
-  USDT: 6,
-  USDC: 6,
-  "USDC.e": 6,
-  ETH: 18,
-  WETH: 15, // fixme: is 18 but we get too few from the faucet,
+  usdt: 6,
+  usdc: 6,
+  usdc_e: 6,
+  eth: 18,
+  weth: 15, // fixme: is 18 but we get too few from the faucet,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
-  USDT: ["assets", "1984"],
-  USDC: ["assets", "1337"],
-  "USDC.e": [
+  usdt: ["assets", "1984"],
+  usdc: ["assets", "1337"],
+  usdc_e: [
     "foreignAssets",
-    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" } } ] } }',
   ],
-  ETH: ["foreignAssets", "not yet defined"], // Consider using null or undefined
-  WETH: [
+  eth: ["foreignAssets", "not yet defined"], // Consider using null or undefined
+  weth: [
     "foreignAssets",
     '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
   ],
@@ -41,9 +46,25 @@ export class ChainAssetId {
   }
 
   key(): string {
-    return `${this.chain}-${this.asset}`;
+    return `${this.chain}-${unifyAssetId(this.asset)}`;
   }
 }
+
+export const unifyAssetId = (str: string | null) => {
+  return str?.toLowerCase().replace(/\./g, "_");
+};
+
+export const unifyAssetIdDisplay = (str: string | null) => {
+  if (!str) {
+    return "UNIT";
+  }
+  switch (unifyAssetId(str)) {
+    case "usdc_e":
+      return "USDC.e";
+    default:
+      return str.toUpperCase();
+  }
+};
 
 // Token Liste
 export const tokenSelectorItems = [

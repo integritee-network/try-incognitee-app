@@ -1098,7 +1098,11 @@ import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
 import TokenIndicator from "~/components/ui/TokenIndicator.vue";
 import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import WalletIndicator from "~/components/ui/WalletIndicator.vue";
-import { assetHubRoute, ChainAssetId } from "../../configs/assets";
+import {
+  assetHubRoute,
+  ChainAssetId,
+  unifyAssetId,
+} from "../../configs/assets";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1308,8 +1312,9 @@ const shield = async () => {
     );
 
     if (asset.value) {
-      const [module, assetIdStr] = assetHubRoute[asset.value];
+      const [module, assetIdStr] = assetHubRoute[unifyAssetId(asset.value)];
       const assetId = JSON.parse(assetIdStr);
+      console.log("shield AssetId:", assetId);
       const feeAssetLocation = isNumber(assetId)
         ? props.api.createType("MultiLocation", {
             parents: 0,
@@ -1320,7 +1325,7 @@ const shield = async () => {
               ],
             },
           })
-        : assetId; // if assetId already is a Location (foreignAsset), pass it on.
+        : null; // we don't use foreignAssets yet to pay fees as the ones we're interested in are not sufficient for account creation anyway
       console.log(
         "asset instance: ",
         module,

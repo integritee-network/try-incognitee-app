@@ -3,7 +3,7 @@ import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
 import { ChainId } from "@/configs/chains";
-import { assetDecimals } from "@/configs/assets";
+import { assetDecimals, unifyAssetId } from "@/configs/assets";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
 import {
@@ -64,7 +64,7 @@ export const useAccount = defineStore("account", {
     getDecimals({ nativeDecimals }): (asset: string | null) => number {
       return (asset: string | null): number => {
         if (!asset || asset === "native") return nativeDecimals;
-        return assetDecimals[asset];
+        return assetDecimals[unifyAssetId(asset)];
       };
     },
     hasInjector({ injector }): boolean {

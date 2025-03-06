@@ -16,11 +16,13 @@ export const useNotes = defineStore("notes", {
         (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
       );
     },
+    // pass "all" to get notes for all assets
     getFinancialNotes(): (asset: string | null) => Note[] {
       return (asset: string | null): Note[] => {
         return this.getSortedNotesNewestFirst.filter(
           (note) =>
-            (note.amount > 0 && isAssetEqual(note.asset, asset)) ||
+            (note.amount > 0 &&
+              (asset === "all" || isAssetEqual(note.asset, asset))) ||
             note.category.includes("Guess") ||
             note.category.includes("Session Proxy"),
         );

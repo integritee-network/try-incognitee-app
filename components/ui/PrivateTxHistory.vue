@@ -15,7 +15,7 @@
             <table class="w-full text-left">
               <tbody>
                 <tr
-                  v-for="(note, index) in noteStore.getFinancialNotes(asset)"
+                  v-for="(note, index) in noteStore.getFinancialNotes('all')"
                   :key="index"
                 >
                   <td class="relative py-5 pr-6">

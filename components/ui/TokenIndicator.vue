@@ -10,25 +10,37 @@
         <div v-if="getIconUrlForAsset(selectedToken)">
           <img
             :src="getIconUrlForAsset(selectedToken)"
-            class="w-[14px] h-[14px] mr-2"
+            class="w-[14px] h-[14px]"
           />
         </div>
         <div v-else class="spinner"></div>
         <div v-if="getHubIconUrlForAsset(selectedToken)">
           <img
             :src="getHubIconUrlForAsset(selectedToken)"
-            class="w-[14px] h-[14px] mr-2"
+            class="w-[8px] h-[8px]"
           />
         </div>
-        <span class="truncate">{{ selectedToken }}</span>
+        <span class="ml-2 truncate">{{ selectedToken }}</span>
       </div>
 
       <!-- Badge -->
       <span
-        v-if="isBetaSidechain(incogniteeSidechain)"
+        v-if="
+          isBetaSidechain(incogniteeSidechain) &&
+          getMaturityForAsset(selectedToken) === 'beta'
+        "
         class="hidden sm:inline-flex items-center ml-3 rounded-md bg-yellow-400/10 px-2 py-0.5 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20"
       >
         Beta
+      </span>
+      <span
+        v-else-if="
+          isBetaSidechain(incogniteeSidechain) &&
+          getMaturityForAsset(selectedToken) === 'soon'
+        "
+        class="hidden sm:inline-flex items-center ml-3 rounded-md bg-gray-400/10 px-2 py-0.5 text-xs font-medium text-gray-400 ring-1 ring-gray-400/30"
+      >
+        Soon
       </span>
       <span
         v-else-if="isSidechainTestnet(incogniteeSidechain)"
@@ -84,6 +96,12 @@
           Beta
         </span>
         <span
+          v-else-if="item.maturity === 'soon'"
+          class="hidden sm:inline-flex items-center ml-3 rounded-md bg-gray-400/10 px-2 py-0.5 text-xs font-medium text-gray-400 ring-1 ring-gray-400/30"
+        >
+          Soon
+        </span>
+        <span
           v-if="item.maturity === 'test'"
           class="hidden sm:inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset"
         >
@@ -104,6 +122,7 @@ import {
   getIconUrlForAsset,
   getHubIconUrlForAsset,
   getSelectableTokens,
+  getMaturityForAsset,
 } from "~/configs/assets.ts";
 
 // Zustand des Dropdowns

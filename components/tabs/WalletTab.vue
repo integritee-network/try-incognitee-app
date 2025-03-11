@@ -42,7 +42,7 @@
       v-if="!enableActions"
       :isMobile="isMobile"
       textMobile="This page is not yet live for mainnet"
-      textDesktop="This page is not yet live for mainnet. please visit <a href='https://try.incognitee.io'>try.incognitee.io</a> for the latest version of our paseo testnet wallet"
+      textDesktop="This page is not yet live for mainnet. Please stay tuned!"
     />
 
     <div class="mt-4"></div>

@@ -17,6 +17,7 @@ export const isAssetEqual = (
 // use unified asset id as key (lowercase, no dots)
 export const assetDecimals: Record<string, number> = {
   usdt: 6,
+  usdt_e: 6,
   usdc: 6,
   usdc_e: 6,
   eth: 18,
@@ -24,6 +25,10 @@ export const assetDecimals: Record<string, number> = {
 };
 export const assetHubRoute: Record<string, [string, string]> = {
   usdt: ["assets", "1984"],
+  usdt_e: [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0xdac17f958d2ee523a2206206994597c13d831ec7" } } ] } }',
+  ],
   usdc: ["assets", "1337"],
   usdc_e: [
     "foreignAssets",
@@ -61,6 +66,8 @@ export const unifyAssetIdDisplay = (str: string | null) => {
   switch (unifyAssetId(str)) {
     case "usdc_e":
       return "USDC.e";
+    case "usdt_e":
+      return "USDT.e";
     default:
       return str.toUpperCase();
   }
@@ -75,7 +82,14 @@ export const tokenSelectorItems = [
     value: "USDC.e",
     icon: USDC,
     hubIcon: DOT,
-    maturity: "beta",
+    maturity: "soon",
+  },
+  {
+    label: "USDT.e",
+    value: "USDT.e",
+    icon: USDT,
+    hubIcon: DOT,
+    maturity: "soon",
   },
   { label: "PAS", value: "PAS", icon: Paseo, hubIcon: null, maturity: "test" },
   {
@@ -106,6 +120,13 @@ export const getSelectableTokens = (isTestnet: boolean) => {
 export const getIconUrlForAsset = (asset: string) => {
   const item = tokenSelectorItems.find((item) => item.value === asset);
   return item?.icon;
+};
+
+export const getMaturityForAsset = (asset: string) => {
+  const item = tokenSelectorItems.find(
+    (item) => unifyAssetId(item.value) === unifyAssetId(asset),
+  );
+  return item?.maturity;
 };
 
 export const getHubIconUrlForAsset = (asset: string) => {

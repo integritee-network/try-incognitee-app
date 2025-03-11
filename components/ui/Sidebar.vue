@@ -304,10 +304,22 @@
 
               <!-- Badge -->
               <span
-                v-if="isSidechainTestnet(incogniteeSidechain)"
-                class="inline-flex items-center rounded-md bg-blue-400/10 px-2 py-1 text-xs font-medium text-blue-400 ring-1 ring-blue-400/30 ring-inset ml-auto"
+                v-if="
+                  isBetaSidechain(incogniteeSidechain) &&
+                  getMaturityForAsset(selectedToken) === 'beta'
+                "
+                class="hidden sm:inline-flex items-center ml-3 rounded-md bg-yellow-400/10 px-2 py-0.5 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20"
               >
-                Test
+                Beta
+              </span>
+              <span
+                v-else-if="
+                  isBetaSidechain(incogniteeSidechain) &&
+                  getMaturityForAsset(selectedToken) === 'soon'
+                "
+                class="hidden sm:inline-flex items-center ml-3 rounded-md bg-gray-400/10 px-2 py-0.5 text-xs font-medium text-gray-400 ring-1 ring-gray-400/30"
+              >
+                Soon
               </span>
               <span
                 v-else-if="isBetaSidechain(incogniteeSidechain)"
@@ -361,9 +373,15 @@
                 <!-- Rechte Seite mit Badge -->
                 <span
                   v-if="item.maturity === 'beta'"
-                  class="inline-flex items-center rounded-md bg-yellow-400/10 px-2 py-1 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20 ring-inset"
+                  class="hidden sm:inline-flex items-center ml-3 rounded-md bg-yellow-400/10 px-2 py-0.5 text-xs font-medium text-yellow-500 ring-1 ring-yellow-400/20"
                 >
                   Beta
+                </span>
+                <span
+                  v-else-if="item.maturity === 'soon'"
+                  class="hidden sm:inline-flex items-center ml-3 rounded-md bg-gray-400/10 px-2 py-0.5 text-xs font-medium text-gray-400 ring-1 ring-gray-400/30"
+                >
+                  Soon
                 </span>
                 <span
                   v-if="item.maturity === 'test'"
@@ -429,6 +447,7 @@ import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
 import {
   getHubIconUrlForAsset,
   getIconUrlForAsset,
+  getMaturityForAsset,
   getSelectableTokens,
 } from "~/configs/assets.ts";
 import { isBetaSidechain, isSidechainTestnet } from "~/configs/chains";

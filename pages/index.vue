@@ -435,13 +435,17 @@ const bucketsCount = computed(() => {
 });
 
 const unfetchedBucketsCount = computed(() => {
-  if (!noteBucketsInfo.value) return 0;
-  return firstNoteBucketIndexFetched.value >= 0
-    ? firstNoteBucketIndexFetched.value -
-        noteBucketsInfo.value.first.unwrap().index
-    : noteBucketsInfo.value.last.unwrap().index -
-        noteBucketsInfo.value.first.unwrap().index +
-        1;
+  const firstBucketIndex = noteBucketsInfo.value?.first
+    .unwrap()
+    .index.toNumber();
+  const lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index.toNumber();
+  if (firstBucketIndex === null || lastBucketIndex === null) return null;
+  const unfetchedCount =
+    firstNoteBucketIndexFetched.value === null
+      ? lastBucketIndex - firstBucketIndex + 1
+      : firstNoteBucketIndexFetched.value - firstBucketIndex;
+  console.debug("unfetchedBucketsCount: ", unfetchedCount);
+  return unfetchedCount;
 });
 
 const fetchIncogniteeNotes = async (

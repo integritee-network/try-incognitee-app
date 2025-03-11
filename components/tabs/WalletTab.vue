@@ -509,7 +509,7 @@
       <form class="mt-5" @submit.prevent="submitUnshieldForm">
         <div class="flex flex-col">
           <label
-            for="recipientAddress"
+            for="unshieldingRecipientAddress"
             class="text-sm font-medium leading-6 text-white text-left"
             >Recipient</label
           >
@@ -532,8 +532,8 @@
               </svg>
             </div>
             <input
-              id="recipientAddress"
-              v-model="recipientAddress"
+              id="unshieldingRecipientAddress"
+              v-model="unshieldingRecipientAddress"
               type="text"
               required
               placeholder="Recipient"
@@ -541,7 +541,10 @@
               style="border-color: #24ad7c"
             />
             <div class="absolute right-3 flex space-x-2">
-              <div @click="setRecipientAddressToSelf" class="cursor-pointer">
+              <div
+                @click="setUnshieldingRecipientAddressToSelf"
+                class="cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -1113,6 +1116,7 @@ const sendPrivateNote = ref("");
 const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const recipientAddress = ref("");
+const unshieldingRecipientAddress = ref("");
 const guess = ref(null);
 const guessTheNumberInfo = ref(null);
 const currentTab = ref("public");
@@ -1214,6 +1218,10 @@ const submitGuessForm = async () => {
 
 const setRecipientAddressToSelf = () => {
   recipientAddress.value = accountStore.getAddress;
+};
+
+const setUnshieldingRecipientAddressToSelf = () => {
+  unshieldingRecipientAddress.value = accountStore.getAddress;
 };
 const txResHandlerShieldingTarget = ({ events = [], status, txHash }) => {
   status.isFinalized
@@ -1367,7 +1375,7 @@ const unshield = async () => {
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${recipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
+    `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${unshieldingRecipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
   if (asset.value) {
     await incogniteeStore.api
@@ -1376,7 +1384,7 @@ const unshield = async () => {
         incogniteeStore.shard,
         incogniteeStore.fingerprint,
         accountStore.getAddress,
-        recipientAddress.value,
+        unshieldingRecipientAddress.value,
         amount,
         asset.value,
         {
@@ -1399,7 +1407,7 @@ const unshield = async () => {
         incogniteeStore.shard,
         incogniteeStore.fingerprint,
         accountStore.getAddress,
-        recipientAddress.value,
+        unshieldingRecipientAddress.value,
         amount,
         {
           signer: accountStore.injector?.signer,
@@ -1696,7 +1704,11 @@ const scanResult = ref("No QR code data yet");
 const onDecode = (decodeResult) => {
   console.log("QR scan decoded: " + decodeResult[0].rawValue);
   scanResult.value = decodeResult[0].rawValue;
-  recipientAddress.value = decodeResult[0].rawValue;
+  if (showPrivateSendOverlay.value) {
+    recipientAddress.value = decodeResult[0].rawValue;
+  } else if (showUnshieldOverlay.value) {
+    unshieldingRecipientAddress.value = decodeResult[0].rawValue;
+  }
   closeScanOverlay();
 };
 const showScanOverlay = ref(false);

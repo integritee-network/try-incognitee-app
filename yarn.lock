@@ -497,32 +497,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@encointer/node-api@npm:^0.19.2-alpha.0":
-  version: 0.19.2-alpha.0
-  resolution: "@encointer/node-api@npm:0.19.2-alpha.0"
+"@encointer/node-api@npm:^0.19.2-alpha.1":
+  version: 0.19.2-alpha.1
+  resolution: "@encointer/node-api@npm:0.19.2-alpha.1"
   dependencies:
-    "@encointer/types": "npm:^0.19.2-alpha.0"
+    "@encointer/types": "npm:^0.19.2-alpha.1"
     "@polkadot/api": "npm:^11.2.1"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/cfb080d7265f76fc3a62eb9634a3ce62fcf54638a0330b6e61bd139844fc5215b1590a85111ce25d49432582243b33e2cbc7fc5fbe8bf2ecbe707bc014d32a96
+  checksum: 10c0/9e644c593c2da620945749a4340f3d53962d19ed2c999ec9cbc8f52a845c31cb6e38e16fd0f5971e6432a9f7cc321153309bbdf9d30f1f8a1308d1bd0cec7084
   languageName: node
   linkType: hard
 
-"@encointer/types@npm:^0.19.2-alpha.0":
-  version: 0.19.2-alpha.0
-  resolution: "@encointer/types@npm:0.19.2-alpha.0"
+"@encointer/types@npm:^0.19.2-alpha.1":
+  version: 0.19.2-alpha.1
+  resolution: "@encointer/types@npm:0.19.2-alpha.1"
   dependencies:
     "@polkadot/api": "npm:^11.2.1"
     "@polkadot/types": "npm:^11.2.1"
     "@polkadot/types-codec": "npm:^11.2.1"
     "@polkadot/util": "npm:^12.6.2"
-  checksum: 10c0/72a920823de391857a28621697aba6431f0b1d5724f88a9ead0989c32faaf6bba985da83a4baa01b9a32211940a1936f5ee73627c3327a63ba180e4c0883ac44
+  checksum: 10c0/e07500ccb356da041d307b0d87e0a83050b2025fb4bfef6b3eee86bcb98999c3ba8856153534ecd1de355629b121d03f1facab08fdd106d0eca6d510f0f98e66
   languageName: node
   linkType: hard
 
-"@encointer/util@npm:^0.19.2-alpha.0":
-  version: 0.19.2-alpha.0
-  resolution: "@encointer/util@npm:0.19.2-alpha.0"
+"@encointer/util@npm:^0.19.2-alpha.1":
+  version: 0.19.2-alpha.1
+  resolution: "@encointer/util@npm:0.19.2-alpha.1"
   dependencies:
     "@babel/runtime": "npm:^7.18.9"
     "@polkadot/util": "npm:^12.6.2"
@@ -530,17 +530,17 @@ __metadata:
     "@types/bn.js": "npm:^5.1.5"
     assert: "npm:^2.0.0"
     bn.js: "npm:^5.2.1"
-  checksum: 10c0/d19beec06a924a8b3a612300ea1560a418d6b0b0be5c686c51458d16b4497bb0f381f519745a28a631262259df09cb09644c269ae51ad398eee4eecb17f69c9e
+  checksum: 10c0/8787f4ee92cd7e73a8d90ba3de056cdf4e7a0a77567a760074d8835f52d0fad7cb8fc3249cc2612d2896f66560d556bd586d724fe6a7582c32e12b96acdd635b
   languageName: node
   linkType: hard
 
-"@encointer/worker-api@npm:^0.19.2-alpha.0":
-  version: 0.19.2-alpha.0
-  resolution: "@encointer/worker-api@npm:0.19.2-alpha.0"
+"@encointer/worker-api@npm:^0.19.2-alpha.1":
+  version: 0.19.2-alpha.1
+  resolution: "@encointer/worker-api@npm:0.19.2-alpha.1"
   dependencies:
-    "@encointer/node-api": "npm:^0.19.2-alpha.0"
-    "@encointer/types": "npm:^0.19.2-alpha.0"
-    "@encointer/util": "npm:^0.19.2-alpha.0"
+    "@encointer/node-api": "npm:^0.19.2-alpha.1"
+    "@encointer/types": "npm:^0.19.2-alpha.1"
+    "@encointer/util": "npm:^0.19.2-alpha.1"
     "@peculiar/webcrypto": "npm:^1.4.6"
     "@polkadot/api": "npm:^11.2.1"
     "@polkadot/keyring": "npm:^12.6.2"
@@ -555,7 +555,7 @@ __metadata:
     tslib: "npm:^2.6.2"
   peerDependencies:
     "@polkadot/x-randomvalues": ^12.3.2
-  checksum: 10c0/7136c6b80d078eefe561e14a332b8ff2fefa6b38ce8b900f1aba40829f426451ae5d51f327bbadffbcc75fee90a053bdb90ea88cab72ac03b161899317f3a88f
+  checksum: 10c0/79d26a99b4a72aa7c7fb00ee673317ef35115d26196b1b153a62e2a63890ee0add5f300c769813cc7050de54fbd19928b2ae6e8ac4a2e29a135e9c76b6127982
   languageName: node
   linkType: hard
 
@@ -9655,8 +9655,8 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@egoist/tailwindcss-icons": "npm:^1.0.0"
-    "@encointer/util": "npm:^0.19.2-alpha.0"
-    "@encointer/worker-api": "npm:^0.19.2-alpha.0"
+    "@encointer/util": "npm:^0.19.2-alpha.1"
+    "@encointer/worker-api": "npm:^0.19.2-alpha.1"
     "@esbuild-plugins/node-globals-polyfill": "npm:^0.2.3"
     "@headlessui/tailwindcss": "npm:^0.2.1"
     "@headlessui/vue": "npm:^1.7.22"

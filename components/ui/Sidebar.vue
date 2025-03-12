@@ -274,7 +274,7 @@
             Connect Wallet
           </button>
         </div>
-        <div v-else>
+        <div>
           <div class="text-xs text-gray-500 mb-1">Select Token:</div>
           <div class="relative group mb-3">
             <!-- Dropdown Trigger -->
@@ -290,13 +290,13 @@
                     class="w-[14px] h-[14px] mr-2"
                   />
                 </div>
+                <div v-else class="spinner"></div>
                 <div v-if="getHubIconUrlForAsset(selectedToken)">
                   <img
                     :src="getHubIconUrlForAsset(selectedToken)"
                     class="w-[14px] h-[14px] mr-2"
                   />
                 </div>
-                <div v-else class="spinner"></div>
               </div>
 
               <!-- Token Name -->
@@ -392,7 +392,8 @@
               </div>
             </div>
           </div>
-
+        </div>
+        <div v-if="accountStore.getAddress !== 'none'">
           <div class="text-xs text-gray-500 mb-1">Connected with:</div>
           <div class="relative group">
             <div

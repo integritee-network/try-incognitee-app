@@ -143,7 +143,7 @@
               {{ accountStore.formatBalanceFree(incogniteeChainNativeAsset) }}.
             </p>
           </div>
-          <div v-else>
+          <div v-else-if="!sessionProxyChangeInProgress" class="mt-5">
             <p class="text-sm text-gray-400 mb-5">
               the signer extension will pop up and ask you to sign this request
             </p>
@@ -154,12 +154,15 @@
               Update Authorization
             </button>
           </div>
+          <div v-else class="mt-5 mb-5 flex justify-center">
+            <div class="spinner"></div>
+          </div>
         </form>
       </div>
 
       <!-- Continue Without Proxy -->
       <div
-        v-if="bestSessionProxyRole == null"
+        v-if="bestSessionProxyRole == null && !sessionProxyChangeInProgress"
         class="mt-10 p-4 bg-gray-900 border border-gray-800 rounded-md text-center"
       >
         <p class="text-sm text-gray-400">
@@ -213,6 +216,7 @@ const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
 
+const sessionProxyChangeInProgress = ref(false);
 const selectedSessionProxyRole = ref("NonTransfer");
 const persistSessionProxy = ref(false);
 const bestSessionProxy = ref(null);
@@ -236,11 +240,10 @@ const updateAuthorization = async () => {
     " to ",
     selectedSessionProxyRole.value,
   );
+  sessionProxyChangeInProgress.value = true;
   if (bestSessionProxyRole.value === null) {
-    props?.close();
     await createSessionProxy();
   } else if (bestSessionProxyRole.value !== selectedSessionProxyRole.value) {
-    props?.close();
     await modifySessionProxyRole(
       bestSessionProxy.value,
       selectedSessionProxyRole.value,
@@ -373,10 +376,15 @@ const handleTopResult = (result, successMsg?) => {
       }
       //update history to see successful action immediately
       props?.updateNotes();
+      props?.close();
+      sessionProxyChangeInProgress.value = false;
+
       return;
     }
     if (result.status.isInvalid) {
       txStatus.value = "😞 Invalid (unspecified reason)";
+      props?.close();
+      sessionProxyChangeInProgress.value = false;
       return;
     }
   }
@@ -455,5 +463,24 @@ const closeProxy = () => {
 
 .radio-group input[type="radio"] {
   margin-right: 10px;
+}
+
+.spinner {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 1em; /* Adjust the size here */
+  height: 1em; /* Adjust the size here */
+  animation: spin 2s linear infinite;
+  vertical-align: middle; /* Align with the text */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

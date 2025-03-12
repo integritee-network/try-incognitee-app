@@ -5,6 +5,7 @@ export class Voucher {
   seed: string;
   url: string;
   amount: number;
+  asset: string | null;
   note: string | null;
   constructor(
     timestamp: Date,
@@ -13,6 +14,7 @@ export class Voucher {
     seed: string,
     url: string,
     amount: number,
+    asset: string | null,
     note: string | null,
   ) {
     this.timestamp = timestamp;
@@ -21,6 +23,7 @@ export class Voucher {
     this.seed = seed;
     this.url = url;
     this.amount = amount;
+    this.asset = asset;
     this.note = note;
   }
   equals(other: Voucher): boolean {
@@ -36,6 +39,7 @@ const parseVoucher = (data: any): Voucher => {
     data.seed,
     data.url,
     data.amount,
+    data.asset,
     data.note,
   );
 };

@@ -75,7 +75,10 @@
               class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8"
             >
               <div class="text-sm font-medium text-white">
-                {{ voucher.amount }} {{ accountStore.getSymbol(asset) }}
+                {{ voucher.amount }}
+                {{
+                  voucher.asset ? voucher.asset : accountStore.getSymbol(null)
+                }}
               </div>
               <time class="mt-1 text-xs text-gray-500">{{
                 formatDate(voucher.timestamp)
@@ -574,6 +577,7 @@ const generateNewVoucher = async (
       voucherSeedHex,
       url.toString(),
       divideBigIntToFloat(amount, 10 ** accountStore.getDecimals(asset.value)),
+      asset.value,
       note,
     );
     console.log("generated new voucher: " + voucher);

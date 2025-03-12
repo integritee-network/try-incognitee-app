@@ -564,8 +564,9 @@ async function fetchWorkerData() {
     `[IntegriteeWorker]: endpoint stats: ${JSON.stringify(incogniteeStore?.api?.endpointStats)}`,
   );
 
-  await fetchIncogniteeBalance();
   await fetchNetworkStatus();
+  await fetchIncogniteeBalance();
+
   // autofetch history slowly
   try {
     if (
@@ -921,10 +922,8 @@ onMounted(async () => {
   } else {
     openChooseWalletOverlay();
   }
-  if (accountStore.getAddress !== "none") {
-    // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
-    await subscribeWhatsReady();
-  }
+  // if we move back from TEERdays, the account may already be selected and the subscription watcher won't trigger
+  await subscribeWhatsReady();
   // start polling the worker
   await pollWorker();
 });

@@ -651,7 +651,7 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAccount } from "@/store/account.ts";
-import { chainConfigs } from "@/configs/chains.ts";
+import { chainConfigs, TEER_DECIMALS } from "@/configs/chains.ts";
 import { XMarkIcon } from "@heroicons/vue/20/solid";
 import { loadEnv, teerdaysNetwork } from "@/lib/environmentConfig";
 import { Bond } from "@/lib/teerDays";
@@ -695,10 +695,10 @@ const subscribeToTeerDayStats = async () => {
         let bond = maybeBond.unwrap();
         lastUpdated.setUTCMilliseconds(bond.lastUpdated.toNumber());
         let mybond = new Bond(
-          bond.value / Math.pow(10, accountStore.decimals),
+          bond.value / Math.pow(10, TEER_DECIMALS),
           lastUpdated,
           bond.accumulatedTokentime /
-            Math.pow(10, accountStore.decimals) /
+            Math.pow(10, TEER_DECIMALS) /
             86400 /
             1000,
         );

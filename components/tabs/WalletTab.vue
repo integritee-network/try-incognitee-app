@@ -867,7 +867,7 @@
                       {{
                         formatDecimalBalance(
                           guessTheNumberInfo?.winnings /
-                            Math.pow(10, accountStore.decimals),
+                            Math.pow(10, accountStore.getDecimals(null)),
                         )
                       }}
                       {{ accountStore.getSymbol(asset) }}
@@ -949,7 +949,7 @@
       </div>
       <div
         v-if="
-          accountStore.getDecimalBalanceTransferable(incogniteeSidechain) >
+          accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId) >
           INCOGNITEE_GTN_GUESS_FEE
         "
         class="mb-4"

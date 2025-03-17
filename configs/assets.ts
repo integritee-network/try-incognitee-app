@@ -82,14 +82,14 @@ export const tokenSelectorItems = [
     value: "USDC.e",
     icon: USDC,
     hubIcon: DOT,
-    maturity: "soon",
+    maturity: "beta",
   },
   {
     label: "USDT.e",
     value: "USDT.e",
     icon: USDT,
     hubIcon: DOT,
-    maturity: "soon",
+    maturity: "beta",
   },
   { label: "PAS", value: "PAS", icon: Paseo, hubIcon: null, maturity: "test" },
   {

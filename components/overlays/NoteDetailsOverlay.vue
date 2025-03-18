@@ -69,7 +69,7 @@
                         10 ** accountStore.getDecimals(note.asset),
                       )
                     }}
-                    TEER
+                    {{ accountStore.getSymbol(note.asset) }}
                   </dd>
                 </div>
               </div>

@@ -583,7 +583,7 @@ async function fetchWorkerData() {
   }
 }
 
-const pollingInterval = 2000; // 2 seconds
+const pollingInterval = 500; // 0.5 seconds
 let pollingTimeout: any = null;
 const isPolling = ref(true);
 

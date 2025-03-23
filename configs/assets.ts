@@ -21,7 +21,7 @@ export const assetDecimals: Record<string, number> = {
   usdc: 6,
   usdc_e: 6,
   eth: 18,
-  weth: 15, // fixme: is 18 but we get too few from the faucet,
+  weth: 18,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
   usdt: ["assets", "1984"],
@@ -34,7 +34,10 @@ export const assetHubRoute: Record<string, [string, string]> = {
     "foreignAssets",
     '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" } } ] } }',
   ],
-  eth: ["foreignAssets", "not yet defined"], // Consider using null or undefined
+  eth: [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X1": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } } ] } }',
+  ],
   weth: [
     "foreignAssets",
     '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
@@ -91,6 +94,7 @@ export const tokenSelectorItems = [
     hubIcon: DOT,
     maturity: "beta",
   },
+  { label: "ETH", value: "ETH", icon: ETH, hubIcon: DOT, maturity: "beta" },
   { label: "PAS", value: "PAS", icon: Paseo, hubIcon: null, maturity: "test" },
   {
     label: "USDC",

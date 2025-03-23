@@ -10,7 +10,7 @@ export const divideBigIntToFloat = (
 export const formatDecimalBalance = (balance: number): string => {
   return balance.toLocaleString("de-CH", {
     minimumFractionDigits: 1,
-    maximumFractionDigits: 3,
+    maximumFractionDigits: 6,
     thousandsSeparator: "'",
   });
 };

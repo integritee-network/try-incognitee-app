@@ -13,9 +13,44 @@ export const minUnshieldingAmount = (token: string): number => {
     return 1.1;
   } else if (token === "DOT") {
     return 0.1;
+  } else if (token === "WETH" || token === "ETH") {
+    return 0.0001;
+  } else {
+    return 0.1;
+  }
+};
+export const minShieldingAmount = (token: string): number => {
+  if (token === "TEER") {
+    return 0.5;
+  } else if (token === "DOT") {
+    return 0.1;
+  } else if (token === "WETH" || token === "ETH") {
+    return 0.0001;
   } else {
     return 0.1;
   }
 };
 
-export const INCOGNITEE_SHIELDING_MIN = 0.5; // TEER or PAS, decimals are respected
+export const txFeeBase = (token: string): number => {
+  if (token === "WETH" || token === "ETH") {
+    return INCOGNITEE_TX_FEE / 2000;
+  } else {
+    return INCOGNITEE_TX_FEE;
+  }
+};
+
+export const txFeePerByte = (token: string): number => {
+  if (token === "WETH" || token === "ETH") {
+    return INCOGNITEE_BYTE_FEE / 2000;
+  } else {
+    return INCOGNITEE_BYTE_FEE;
+  }
+};
+
+export const txFeeUnshielding = (token: string): number => {
+  if (token === "WETH" || token === "ETH") {
+    return INCOGNITEE_UNSHIELDING_FEE / 2000;
+  } else {
+    return INCOGNITEE_UNSHIELDING_FEE;
+  }
+};

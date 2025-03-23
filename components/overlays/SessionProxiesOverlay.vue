@@ -15,7 +15,7 @@
         <p class="text-sm text-gray-400 mt-2">
           Registering a session key costs a fee of
           <span class="font-semibold">{{
-            formatDecimalBalance(INCOGNITEE_TX_FEE)
+            formatDecimalBalance(txFeeBase(asset))
           }}</span>
           {{ accountStore.getSymbol(null) }} and a deposit of
           <span class="font-semibold">{{

@@ -79,6 +79,7 @@ export default defineNuxtConfig({
     "/usdc.e": { ssr: false },
     "/usdt.e": { ssr: false },
     "/weth": { ssr: false },
+    "/eth": { ssr: false },
     "/gtn": { ssr: false },
     "/teerdays-lp": { ssr: false },
     //"/referral": { ssr: false },

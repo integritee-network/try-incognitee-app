@@ -291,8 +291,8 @@
                     <span>
                       Fee: ~{{
                         (
-                          INCOGNITEE_TX_FEE +
-                          INCOGNITEE_BYTE_FEE * sendPrivateNote.length
+                          txFeeBase(asset) +
+                          txFeePerByte(asset) * sendPrivateNote.length
                         ).toFixed(4)
                       }}
                       {{ accountStore.getSymbol(asset) }}
@@ -440,7 +440,7 @@ import {
   incogniteeChainAssetId,
 } from "~/lib/environmentConfig";
 import { eventBus } from "@/helpers/eventBus";
-import { INCOGNITEE_BYTE_FEE, INCOGNITEE_TX_FEE } from "~/configs/incognitee";
+import { txFeeBase, txFeePerByte } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";
@@ -657,7 +657,7 @@ const sendPrivately = async () => {
   const account = accountStore.account;
   if (
     accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) <
-    3 * INCOGNITEE_TX_FEE
+    3 * txFeeBase(asset)
   ) {
     txStatus.value = "";
     alert("Insufficient balance");

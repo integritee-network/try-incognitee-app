@@ -408,7 +408,8 @@
               >
 
               <span class="text-xs text-gray-400"
-                >Available for shielding: {{ computedShieldingMax.toFixed(3) }}
+                >Available for shielding:
+                {{ formatDecimalBalance(computedShieldingMax) }}
                 {{ accountStore.getSymbol(asset) }}</span
               >
             </div>
@@ -416,7 +417,7 @@
               id="shieldAmount"
               v-model="shieldAmount"
               type="number"
-              step=".000001"
+              step=".0000001"
               :min="minShieldingAmount(asset)"
               :max="computedShieldingMax"
               required

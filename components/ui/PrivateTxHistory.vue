@@ -77,9 +77,11 @@
                         note.direction === NoteDirection.Incoming ? "+" : "-"
                       }}
                       {{
-                        divideBigIntToFloat(
-                          note.amount,
-                          10 ** accountStore.getDecimals(note.asset),
+                        formatDecimalBalance(
+                          divideBigIntToFloat(
+                            note.amount,
+                            10 ** accountStore.getDecimals(note.asset),
+                          ),
                         )
                       }}
                       {{
@@ -176,7 +178,7 @@ import { useAccount } from "@/store/account.ts";
 import { useNotes } from "@/store/notes.ts";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { Note, NoteDirection } from "@/lib/notes";
-import { divideBigIntToFloat } from "@/helpers/numbers";
+import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
 import NoteDetailsOverlay from "~/components/overlays/NoteDetailsOverlay.vue";
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";

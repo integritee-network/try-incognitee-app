@@ -75,7 +75,7 @@
               class="flex flex-col items-end py-4 pr-4 text-right text-sm text-white sm:pr-6 lg:pr-8"
             >
               <div class="text-sm font-medium text-white">
-                {{ voucher.amount }}
+                {{ formatDecimalBalance(voucher.amount) }}
                 {{
                   voucher.asset ? voucher.asset : accountStore.getSymbol(null)
                 }}

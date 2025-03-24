@@ -617,8 +617,9 @@
           </div>
 
           <p class="text-sm text-gray-400 text-left mt-5">
-            For optimal k-anonymity, we advise you to unshield either exactly 10
-            or 100
+            For optimal k-anonymity, we advise you to unshield either exactly
+            {{ computedUnshieldingSuggestions[0] }} or
+            {{ computedUnshieldingSuggestions[1] }}
             {{ accountStore.getSymbol(asset) }} at the time. In the future we
             will provide a score including timing and popular amounts to enhance
             unlinkability of your actions.
@@ -1625,6 +1626,11 @@ const computedShieldingMax = computed(() => {
         ),
     ),
   );
+});
+
+const computedUnshieldingSuggestions = computed(() => {
+  const highest = Math.pow(10, Math.floor(Math.log10(shieldingLimit.value)));
+  return [highest / 10, highest];
 });
 
 const showAssetsInfo = ref(false);

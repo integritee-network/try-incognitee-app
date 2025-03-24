@@ -521,7 +521,7 @@
         v-if="
           txFeeUnshielding(asset) +
             minUnshieldingAmount(accountStore.getSymbol(asset)) >
-          accountStore.formatBalanceFree(incogniteeChainAssetId)
+          accountStore.getDecimalBalanceFree(incogniteeChainAssetId)
         "
       >
         <p class="text-sm text-yellow-400">

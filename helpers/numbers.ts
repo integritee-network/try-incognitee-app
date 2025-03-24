@@ -13,18 +13,21 @@ export const formatDecimalBalance = (balance: number): string => {
     { value: 1e6, suffix: "M" },
     //{ value: 1e3, suffix: "k" },
     //{ value: 1e-3, suffix: "m" },
-    { value: 1e-6, suffix: "µ" },
+    { value: 1e-6, threshold: 1e-4, suffix: "µ" },
     { value: 1e-9, suffix: "n" },
     { value: 1e-12, suffix: "p" },
     { value: 1, suffix: "" },
   ];
 
   const magnitude =
-    magnitudes.find((m) => balance < m.value * 1000 && balance >= m.value) ||
-    magnitudes[magnitudes.length - 1];
+    magnitudes.find(
+      (m) =>
+        balance < (m.threshold ? m.threshold : m.value * 1000) &&
+        balance >= m.value,
+    ) || magnitudes[magnitudes.length - 1];
   const adjustedBalance = balance / magnitude.value;
   const maxFractionDigits = Math.min(
-    6,
+    7,
     Math.ceil(Math.max(3, 3 + Math.max(0, -Math.log10(adjustedBalance)))),
   );
   return (

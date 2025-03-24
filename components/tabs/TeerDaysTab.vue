@@ -725,17 +725,20 @@ const onExtensionAccountChange = async () => {
       },
     }) => {
       console.log("TEER balance:" + currentFree);
+      console.log(
+        "chainAssetId: " + JSON.stringify(teerdaysChainNativeAsset.value),
+      );
       accountStore.setBalanceFree(
         BigInt(currentFree),
-        teerdaysChainNativeAsset,
+        teerdaysChainNativeAsset.value,
       );
       accountStore.setBalanceReserved(
         BigInt(currentReserved),
-        teerdaysChainNativeAsset,
+        teerdaysChainNativeAsset.value,
       );
       accountStore.setBalanceFrozen(
         BigInt(currentFrozen),
-        teerdaysChainNativeAsset,
+        teerdaysChainNativeAsset.value,
       );
       isFetchingTeerBalance.value = false;
     },

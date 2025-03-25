@@ -126,7 +126,7 @@
           <div
             v-if="
               accountStore.getDecimalBalanceFree(incogniteeChainNativeAsset) <
-                INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE &&
+                INCOGNITEE_SESSION_PROXY_DEPOSIT + txFeeBase(null) &&
               bestSessionProxyRole == null
             "
             class="mt-5"
@@ -135,7 +135,7 @@
               You need at least
               {{
                 formatDecimalBalance(
-                  INCOGNITEE_SESSION_PROXY_DEPOSIT + INCOGNITEE_TX_FEE,
+                  INCOGNITEE_SESSION_PROXY_DEPOSIT + txFeeBase(null),
                 )
               }}
               {{ accountStore.getSymbol(null) }} private balance to register a
@@ -199,14 +199,13 @@ import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { formatDecimalBalance } from "~/helpers/numbers";
 import { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
 import {
-  INCOGNITEE_TX_FEE,
   INCOGNITEE_SESSION_PROXY_DEPOSIT,
+  txFeeBase,
 } from "~/configs/incognitee";
 import { useIncognitee } from "~/store/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
 import {
-  incogniteeChainAssetId,
   incogniteeSidechain,
   asset,
   incogniteeChainNativeAsset,

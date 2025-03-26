@@ -191,6 +191,7 @@ const disableGetter = ref(false);
 const activeApp = ref("wallet");
 const faucetUrl = ref(null);
 const forceLive = ref(false);
+const mockExtension = ref(false);
 const shieldingTargetApi = ref<ApiPromise | null>(null);
 const isProd = computed(
   () => chainConfigs[shieldingTarget.value].faucetUrl === undefined,
@@ -894,6 +895,12 @@ onMounted(async () => {
     forceLive.value = true;
     console.log("forcing live status to true");
   }
+  // this is needed to facilitate end-to-end-tests without extension e.g. for screenshots
+  if (router.currentRoute.value.query.mockExtension) {
+    mockExtension.value = true;
+    console.log("fall back to mocking extension unless really connected");
+    accountStore.setInjector("mock");
+  }
   const initActiveApp = router.currentRoute.value.query.app;
   if (initActiveApp) {
     activeApp.value = initActiveApp;
@@ -1034,6 +1041,16 @@ const enableActions = computed(() => {
 const props = defineProps({
   envFile: String,
 });
+
+const copyOwnAddressToClipboard = () => {
+  navigator.clipboard
+    .writeText(accountStore.getAddress)
+    .then(() =>
+      alert(
+        "copied your account address to clipboard. Please paste it into the address field on the faucet.",
+      ),
+    );
+};
 </script>
 
 <style scoped>

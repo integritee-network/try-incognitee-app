@@ -32,4 +32,8 @@ export const identities = [
     username: "IncogniteeQuizMaster",
     address: "12sJZcxqGkBUN8xesuLxC4hbYk7Y6W6Amkm52onbcxgfvnzA",
   },
+  {
+    username: "AmazingTeam",
+    address: "1J2bHGAhUiCahsPQdx4YBczgas9J6ZbENEr2NDqQGsK9PVN",
+  },
 ];

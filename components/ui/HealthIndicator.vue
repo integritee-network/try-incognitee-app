@@ -1,5 +1,9 @@
 <template>
-  <div @click="openHealthDetailsOverlay" class="cursor-pointer">
+  <div
+    @click="openHealthDetailsOverlay"
+    class="cursor-pointer"
+    id="health-indicator"
+  >
     <div
       class="flex items-center text-xs"
       v-if="contextualHealth === Health.Healthy"

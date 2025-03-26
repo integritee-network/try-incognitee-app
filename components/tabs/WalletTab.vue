@@ -4,16 +4,17 @@
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
+        id="sidebar-open"
       >
         ☰
       </button>
-      <div class="lg:hidden">
+      <div class="lg:hidden" id="wallet-tab-health-indicator">
         <HealthIndicator />
       </div>
-      <div class="lg:hidden">
+      <div class="lg:hidden" id="wallet-tab-wallet-indicator">
         <WalletIndicator />
       </div>
-      <div class="lg:hidden">
+      <div class="lg:hidden" id="wallet-tab-token-indicator">
         <TokenIndicator />
       </div>
     </div>
@@ -67,7 +68,11 @@
                 v-if="isFetchingShieldingTargetBalance"
                 class="spinner"
               ></div>
-              <div class="text-4xl font-semibold" v-else>
+              <div
+                class="text-4xl font-semibold"
+                v-else
+                id="public-balance-display"
+              >
                 {{
                   formatDecimalBalance(
                     accountStore.getDecimalBalanceTransferable(
@@ -88,6 +93,7 @@
               <div
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openShieldOverlay"
+                id="public-balance-shield"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -109,6 +115,7 @@
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openFaucetOverlay"
                 v-if="faucetUrl"
+                id="private-balance-faucet"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -129,6 +136,7 @@
               <div
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openObtainTokenOverlay"
+                id="private-balance-obtain"
                 v-else
               >
                 <svg
@@ -165,6 +173,7 @@
             <div
               v-if="!isFetchingIncogniteeBalance && !disableGetter"
               class="text-4xl font-semibold"
+              id="private-balance-display"
             >
               {{ accountStore.formatBalanceFree(incogniteeChainAssetId) }}
               <span class="text-sm font-semibold">{{
@@ -179,6 +188,7 @@
               <div
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openPrivateSendOverlay"
+                id="private-balance-send"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -200,6 +210,7 @@
               <div
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openReceiveOverlay"
+                id="private-balance-receive"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -221,6 +232,7 @@
               <div
                 class="flex flex-col items-center text-center cursor-pointer"
                 @click="openUnshieldOverlay"
+                id="private-balance-unshield"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -668,6 +680,7 @@
           <div class="mt-8 w-full bg-gray-800">
             <button
               type="submit"
+              id="private-balance-unshield-submit"
               class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
             >
               Unshield
@@ -859,11 +872,9 @@
             >
             <div class="relative flex items-center rounded-lg">
               <textarea
-                id="messages"
+                id="sendPrivateNote"
                 v-model="sendPrivateNote"
                 rows="2"
-                ref="messageTextarea"
-                name="messages"
                 placeholder="Enter a private note for the recipient"
                 :maxlength="140"
                 class="w-full text-sm rounded-lg flex-grow py-2 bg-cool-900 text-white placeholder-gray-500 border border-green-500 truncate-input pr-12"
@@ -874,6 +885,7 @@
           <div class="mt-8 bottom-0 left-0 w-full bg-gray-800">
             <button
               type="submit"
+              id="private-balance-send-transfer"
               class="btn btn_gradient inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm"
             >
               Transfer

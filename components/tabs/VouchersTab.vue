@@ -3,16 +3,19 @@
     <button
       @click="eventBus.emit('toggleSidebar')"
       class="lg:hidden text-white focus:outline-none text-2xl"
+      id="sidebar-open"
     >
       ☰
     </button>
-    <div class="lg:hidden">
+    <div class="lg:hidden" id="vouchers-tab-health-indicator">
       <HealthIndicator />
     </div>
-    <div class="lg:hidden">
+    <div class="lg:hidden" id="vouchers-tab-wallet-indicator">
       <WalletIndicator />
     </div>
-    <TokenIndicator class="lg:hidden" />
+    <div class="lg:hidden" id="vouchers-tab-token-indicator">
+      <TokenIndicator />
+    </div>
   </div>
   <div class="p-3">
     <div class="text-center mt-10 mb-5">
@@ -26,6 +29,7 @@
         @click="openCreateVoucher"
         type="button"
         class="my-10 bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
+        id="vouchers-create"
       >
         Create Voucher​
       </button>
@@ -87,13 +91,13 @@
             <td
               class="py-4 pl-0 pr-4 text-right text-sm/6 text-white sm:table-cell sm:pr-6 lg:pr-8"
             >
-              <!-- Desktop Ansicht -->
               <div class="flex items-center gap-4">
                 <svg
                   @click="showVoucher(voucher)"
                   viewBox="0 0 24 24"
                   fill="currentColor"
                   class="size-5 cursor-pointer"
+                  id="voucher-show"
                 >
                   <path
                     d="M11.625 16.5a1.875 1.875 0 1 0 0-3.75 1.875 1.875 0 0 0 0 3.75Z"

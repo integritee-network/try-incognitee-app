@@ -4,6 +4,7 @@
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
+        id="sidebar-open"
       >
         ☰
       </button>

@@ -4,7 +4,13 @@ from pymongo import MongoClient
 from collections import defaultdict, Counter
 import networkx as nx
 import numpy as np
+
 # Load environment variables from .env file
+
+# token = "DOT"
+# token = "ETH"
+# token = "USDC.e"
+token = "USDT.e"
 
 
 # MongoDB connection URL
@@ -15,24 +21,180 @@ client = MongoClient(MONGODB_URL)
 db = client["asset-hub-polkadot"]
 collection = db["events"]
 
-# Queries
-shielding_query = {
-    "section": "balances",
-    "method": "Transfer",
-    "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9"
+queries = {
+    "DOT": {
+        "decimals": "10",
+        "shielding_query": {
+            "section": "balances",
+            "method": "Transfer",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9"
+        },
+        "unshielding_query": {
+            "section": "balances",
+            "method": "Transfer",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9"
+        }
+    },
+    "ETH": {
+        "decimals": "18",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X1": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X1": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "USDC.e": {
+        "decimals": "6",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "USDT.e": {
+        "decimals": "6",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0xdac17f958d2ee523a2206206994597c13d831ec7"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
 }
-unshielding_query = {
-    "section": "balances",
-    "method": "Transfer",
-    "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9"
-}
+
+# Select the appropriate queries based on the token value
+shielding_query = queries[token]["shielding_query"]
+unshielding_query = queries[token]["unshielding_query"]
+decimals = int(queries[token]["decimals"])
 
 # Fetch data from MongoDB
 shielding_events = list(collection.find(shielding_query))
 unshielding_events = list(collection.find(unshielding_query))
 
-print(f"Found {len(shielding_events)} shielding events")
-print(f"Found {len(unshielding_events)} unshielding events")
+print(f"Found {len(shielding_events)} shielding events for " + token)
+print(f"Found {len(unshielding_events)} unshielding events for " + token)
 
 G = nx.DiGraph()
 
@@ -44,19 +206,19 @@ gross_unshielded = 0
 for event in shielding_events:
     from_address = event["data"]["from"][:8]
     to_address = event["data"]["to"][:8]
-    amount = int(event["data"]["amount"].replace(",", "")) / 10**10
+    amount = int(event["data"]["amount"].replace(",", "")) / 10**decimals
     gross_shielded += amount
     net_transfers[(from_address, to_address)] += amount
 
 for event in unshielding_events:
     from_address = event["data"]["from"][:8]
     to_address = event["data"]["to"][:8]
-    amount = int(event["data"]["amount"].replace(",", "")) / 10**10
+    amount = int(event["data"]["amount"].replace(",", "")) / 10**decimals
     gross_unshielded += amount
     net_transfers[(to_address, from_address)] -= amount
 
-print(f"Gross shielded amount: {gross_shielded} DOT")
-print(f"Gross unshielded amount: {gross_unshielded} DOT")
+print(f"Gross shielded amount: {gross_shielded} " + token)
+print(f"Gross unshielded amount: {gross_unshielded} " + token)
 
 # Add nodes and consolidated edges to the graph
 for (from_address, to_address), net_amount in net_transfers.items():
@@ -112,14 +274,14 @@ plt.show(block=False)
 
 # Calculate x-values and y-values for the second figure
 positive_net_amounts = sorted(set(amount for amount in net_transfers.values() if amount > 0))
-y_values = [sum(1 for amount in net_transfers.values() if amount > x) for x in positive_net_amounts]
+y_values = [1+sum(1 for amount in net_transfers.values() if amount > x) for x in positive_net_amounts]
 
 # Plot unshielding amount vs best case k-anonymity
 plt.style.use('dark_background')
 fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(positive_net_amounts, y_values, marker='o', color='cyan')
 ax.set_xscale('log')
-ax.set_xlabel("Unshielding Amount [DOT]", color='gray')
+ax.set_xlabel(f'Unshielding Amount [{token}]', color='gray')
 ax.set_ylabel("k-Anonymity Estimate", color='gray')
 ax.set_title("Unshielding Amount vs k-Anonymity", color='gray')
 ax.grid(True, color='gray')
@@ -128,9 +290,8 @@ ax.set_xticklabels(['0.1', '1', '10', '100', '1000'], color='gray')
 ax.tick_params(axis='y', colors='gray')
 for spine in ax.spines.values():
     spine.set_edgecolor('gray')
-plt.savefig('plot.png', transparent=True)
+plt.savefig(f'k-anonymity-{token}.png', transparent=True)
 plt.show()
-
 
 # # Extract data.from accounts from shielding events
 # shielding_from_accounts = {event["data"]["from"] for event in shielding_events}

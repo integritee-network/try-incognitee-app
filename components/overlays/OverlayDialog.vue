@@ -21,6 +21,7 @@
               <div class="absolute right-0 top-0 pr-4 pt-4">
                 <button
                   type="button"
+                  id="overlay-close"
                   class="text-gray-400 hover:text-gray-500"
                   @click="close"
                 >

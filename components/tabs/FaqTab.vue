@@ -4,17 +4,18 @@
       <button
         @click="eventBus.emit('toggleSidebar')"
         class="lg:hidden text-white focus:outline-none text-2xl"
+        id="sidebar-open"
       >
         ☰
       </button>
       <div class="lg:hidden">
-        <HealthIndicator />
+        <HealthIndicator id="header-health-indicator" />
       </div>
       <div class="lg:hidden">
-        <WalletIndicator />
+        <WalletIndicator id="header-wallet-indicator" />
       </div>
       <div class="lg:hidden">
-        <TokenIndicator />
+        <TokenIndicator id="header-token-indicator" />
       </div>
     </div>
   </div>

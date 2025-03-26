@@ -5,6 +5,7 @@
     >
       <nav class="flex space-x-4" aria-label="Tabs">
         <button
+          id="public-balance-tab-selector"
           @click="selectTab('public')"
           :class="[
             currentTab === 'public'
@@ -16,6 +17,7 @@
           Public Balance
         </button>
         <button
+          id="private-balance-tab-selector"
           @click="selectTab('private')"
           :class="[
             currentTab === 'private'

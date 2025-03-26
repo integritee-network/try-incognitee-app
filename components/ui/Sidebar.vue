@@ -14,6 +14,7 @@
         <button
           @click="eventBus.emit('toggleSidebar')"
           class="lg:hidden text-white focus:outline-none"
+          id="sidebar-close"
         >
           ✕
         </button>
@@ -31,6 +32,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-wallet"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -58,6 +60,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-vouchers"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,6 +88,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-messages"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -119,6 +123,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-teerdays"
             >
               <TEERdays class="w-6 h-6 mb-2 mr-2" />
               TeerDays
@@ -133,6 +138,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-swap"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -169,6 +175,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-session-key"
               class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
             >
               <svg
@@ -231,6 +238,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-faq"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -258,7 +266,7 @@
     <div class="px-4 space-y-4 mb-4">
       <div class="flex items-center text-xs" @click="toggleSidebar">
         <span class="mr-2 text-gray-400">System Health</span>
-        <HealthIndicator />
+        <HealthIndicator id="sidebar-health-indicator" />
       </div>
       <div class="text-sm flex flex-col space-y-1">
         <div v-if="accountStore.getAddress === 'none'">
@@ -269,6 +277,7 @@
                 toggleSidebar();
               }
             "
+            id="sidebar-connect-wallet"
             class="bg-gradient-to-r from-incognitee-green to-incognitee-blue w-full justify-center rounded-md text-sm font-semibold text-white py-1.5 px-4 sm:w-auto hover:shadow-lg hover:shadow-incognitee-green/50"
           >
             Connect Wallet
@@ -281,6 +290,7 @@
             <div
               class="flex items-center w-full rounded-md border border-gray-700 bg-gray-800 py-1.5 px-3 text-xs text-gray-400 hover:ring-1 hover:ring-incognitee-green focus-within:ring-1 focus-within:ring-incognitee-green cursor-pointer"
               @click="toggleTokenDropdown"
+              id="sidebar-token-dropdown-toggle"
             >
               <!-- Token Icon -->
               <div class="flex items-center">
@@ -404,6 +414,7 @@
                   toggleSidebar();
                 }
               "
+              id="sidebar-wallet-address"
             >
               <span class="truncate">{{ accountStore.getAddress }}</span>
               <svg

@@ -64,22 +64,26 @@
           <button
             @click="eventBus.emit('toggleSidebar')"
             class="lg:hidden text-white focus:outline-none text-2xl"
+            id="sidebar-open"
           >
             ☰
           </button>
 
           <!-- Linksbündiger Titel -->
           <div class="text-2xl font-bold tracking-tight text-white">Chats</div>
-          <div class="lg:hidden">
+          <div class="lg:hidden" id="messaging-tab-health-indicator">
             <HealthIndicator />
           </div>
-          <TokenIndicator class="lg:hidden" />
+          <div class="lg:hidden" id="messaging-tab-token-indicator">
+            <TokenIndicator />
+          </div>
 
           <!-- Rechtsbündiges "Neue Nachricht" Icon -->
           <!-- Button zum Öffnen des Overlays -->
           <button
             @click="openNewRecipientOverlay"
             class="text-gray-400 rounded"
+            id="conversations-new"
           >
             <svg
               fill="none"
@@ -94,7 +98,7 @@
                 d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-            <span class="sr-only">Start ne chat</span>
+            <span class="sr-only">Start new chat</span>
           </button>
         </div>
         <!-- Recipient Address Input -->
@@ -187,6 +191,7 @@
             v-if="isMobile"
             @click="closeChat"
             class="text-white text-sm font-medium"
+            id="chat-close"
           >
             ← Back
           </button>
@@ -258,11 +263,10 @@
                 <!-- Eingabefeld -->
                 <div class="relative">
                   <textarea
-                    id="newMessage"
+                    id="chat-message-input"
                     v-model="sendPrivateNote"
                     rows="1"
                     maxlength="140"
-                    name="newMessage"
                     required
                     placeholder="Enter message"
                     class="w-full text-sm rounded-lg py-2 pr-12 bg-cool-900 text-white placeholder-gray-500 border border-transparent hover:border-incognitee-green focus:border-incognitee-blue"
@@ -303,6 +307,7 @@
               <!-- Senden-Button -->
               <button
                 type="submit"
+                id="message-submit"
                 class="ml-4 text-gray-400 hover:text-gray-300 flex-shrink-0"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">

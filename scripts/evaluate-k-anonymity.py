@@ -31,21 +31,32 @@ unshielding_query = {
 shielding_events = list(collection.find(shielding_query))
 unshielding_events = list(collection.find(unshielding_query))
 
+print(f"Found {len(shielding_events)} shielding events")
+print(f"Found {len(unshielding_events)} unshielding events")
+
 G = nx.DiGraph()
 
 # Calculate net transfers
 net_transfers = defaultdict(int)
+gross_shielded = 0
+gross_unshielded = 0
+
 for event in shielding_events:
     from_address = event["data"]["from"][:8]
     to_address = event["data"]["to"][:8]
     amount = int(event["data"]["amount"].replace(",", "")) / 10**10
+    gross_shielded += amount
     net_transfers[(from_address, to_address)] += amount
 
 for event in unshielding_events:
     from_address = event["data"]["from"][:8]
     to_address = event["data"]["to"][:8]
     amount = int(event["data"]["amount"].replace(",", "")) / 10**10
+    gross_unshielded += amount
     net_transfers[(to_address, from_address)] -= amount
+
+print(f"Gross shielded amount: {gross_shielded} DOT")
+print(f"Gross unshielded amount: {gross_unshielded} DOT")
 
 # Add nodes and consolidated edges to the graph
 for (from_address, to_address), net_amount in net_transfers.items():

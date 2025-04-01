@@ -429,7 +429,7 @@
               id="shieldAmount"
               v-model="shieldAmount"
               type="number"
-              step=".0000001"
+              step="any"
               :min="minShieldingAmount(asset)"
               :max="computedShieldingMax"
               required
@@ -653,7 +653,7 @@
             id="unshieldAmount"
             v-model="unshieldAmount"
             type="number"
-            step=".000001"
+            step="any"
             :min="minUnshieldingAmount(accountStore.getSymbol(asset))"
             :max="
               Math.min(
@@ -838,7 +838,7 @@
                 id="sendAmount"
                 v-model="sendAmount"
                 type="number"
-                step=".000001"
+                step="any"
                 :min="txFeeBase(asset)"
                 :max="
                   accountStore.getDecimalBalanceFree(incogniteeChainAssetId) -

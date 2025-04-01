@@ -5,6 +5,7 @@ import DOT from "@/assets/img/polkadot-logo.svg?url";
 import USDC from "@/assets/img/usdc-logo.svg?url";
 import USDT from "@/assets/img/usdt-logo.svg?url";
 import ETH from "@/assets/img/eth-logo.svg?url";
+import WBTC from "@/assets/img/wbtc-logo.svg?url";
 export const isAssetEqual = (
   a: string | null | undefined,
   b: string | null | undefined,
@@ -22,6 +23,7 @@ export const assetDecimals: Record<string, number> = {
   usdc_e: 6,
   eth: 18,
   weth: 18,
+  wbtc_e: 8,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
   usdt: ["assets", "1984"],
@@ -41,6 +43,10 @@ export const assetHubRoute: Record<string, [string, string]> = {
   weth: [
     "foreignAssets",
     '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 11155111 } } }, { "AccountKey20": { "network": null, "key": "0xfff9976782d46cc05630d1f6ebab18b2324d6b14" } } ] } }',
+  ],
+  wbtc_e: [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" } } ] } }',
   ],
 };
 
@@ -71,6 +77,8 @@ export const unifyAssetIdDisplay = (str: string | null) => {
       return "USDC.e";
     case "usdt_e":
       return "USDT.e";
+    case "wbtc_e":
+      return "WBTC.e";
     default:
       return str.toUpperCase();
   }
@@ -95,6 +103,13 @@ export const tokenSelectorItems = [
     maturity: "beta",
   },
   { label: "ETH", value: "ETH", icon: ETH, hubIcon: DOT, maturity: "beta" },
+  {
+    label: "WBTC.e",
+    value: "WBTC.e",
+    icon: WBTC,
+    hubIcon: DOT,
+    maturity: "beta",
+  },
   { label: "PAS", value: "PAS", icon: Paseo, hubIcon: null, maturity: "test" },
   {
     label: "USDC",

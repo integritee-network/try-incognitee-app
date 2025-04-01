@@ -15,6 +15,8 @@ export const minUnshieldingAmount = (token: string): number => {
     return 0.1;
   } else if (token === "WETH" || token === "ETH") {
     return 0.0001;
+  } else if (token === "WBTC.e") {
+    return 0.000001;
   } else {
     return 0.1;
   }
@@ -26,6 +28,8 @@ export const minShieldingAmount = (token: string): number => {
     return 0.1;
   } else if (token === "WETH" || token === "ETH") {
     return 0.0001;
+  } else if (token === "WBTC.e") {
+    return 0.000001;
   } else {
     return 0.1;
   }
@@ -34,6 +38,8 @@ export const minShieldingAmount = (token: string): number => {
 export const txFeeBase = (token: string): number => {
   if (token === "WETH" || token === "ETH") {
     return INCOGNITEE_TX_FEE / 2000;
+  } else if (token === "WBTC.e") {
+    return INCOGNITEE_TX_FEE / 70000;
   } else {
     return INCOGNITEE_TX_FEE;
   }
@@ -42,6 +48,8 @@ export const txFeeBase = (token: string): number => {
 export const txFeePerByte = (token: string): number => {
   if (token === "WETH" || token === "ETH") {
     return INCOGNITEE_BYTE_FEE / 2000;
+  } else if (token === "WBTC.e") {
+    return INCOGNITEE_BYTE_FEE / 70000;
   } else {
     return INCOGNITEE_BYTE_FEE;
   }
@@ -50,6 +58,8 @@ export const txFeePerByte = (token: string): number => {
 export const txFeeUnshielding = (token: string): number => {
   if (token === "WETH" || token === "ETH") {
     return INCOGNITEE_UNSHIELDING_FEE / 2000;
+  } else if (token === "WBTC.e") {
+    return INCOGNITEE_UNSHIELDING_FEE / 70000;
   } else {
     return INCOGNITEE_UNSHIELDING_FEE;
   }

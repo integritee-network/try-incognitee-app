@@ -78,6 +78,7 @@ export default defineNuxtConfig({
     "/usdt": { ssr: false },
     "/usdc.e": { ssr: false },
     "/usdt.e": { ssr: false },
+    "/wbtc.e": { ssr: false },
     "/weth": { ssr: false },
     "/eth": { ssr: false },
     "/gtn": { ssr: false },

@@ -294,10 +294,10 @@
                     &nbsp;&nbsp;
                     <span>
                       Fee: ~{{
-                        (
+                        formatDecimalBalance(
                           txFeeBase(asset) +
-                          txFeePerByte(asset) * sendPrivateNote.length
-                        ).toFixed(4)
+                            txFeePerByte(asset) * sendPrivateNote.length,
+                        )
                       }}
                       {{ accountStore.getSymbol(asset) }}
                     </span>
@@ -443,6 +443,7 @@ import {
   incogniteeSidechain,
   asset,
   incogniteeChainAssetId,
+  incogniteeChainNativeAsset,
 } from "~/lib/environmentConfig";
 import { eventBus } from "@/helpers/eventBus";
 import { txFeeBase, txFeePerByte } from "~/configs/incognitee";
@@ -458,6 +459,7 @@ import { decodeAddress, encodeAddress } from "@polkadot/util-crypto";
 import { identities as polkadotPeopleIdentities } from "@/lib/polkadotPeopleIdentities";
 import { identities as wellKnownIdentities } from "@/lib/wellKnownIdentites";
 import { formatMoment } from "@/helpers/date";
+import { formatDecimalBalance } from "@/helpers/numbers";
 import { useNotes } from "@/store/notes.ts";
 import { Note } from "@/lib/notes";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
@@ -662,7 +664,12 @@ const sendPrivately = async () => {
   const account = accountStore.account;
   if (
     accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) <
-    3 * txFeeBase(asset)
+      3 * txFeeBase(asset.value) &&
+    // if native balance is enough, that's fine too. here we don't check for all possible assets
+    accountStore.getDecimalBalanceTransferable(
+      incogniteeChainNativeAsset.value,
+    ) <
+      3 * txFeeBase(null)
   ) {
     txStatus.value = "";
     alert("Insufficient balance");

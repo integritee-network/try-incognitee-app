@@ -22,6 +22,7 @@ export const assetDecimals: Record<string, number> = {
   usdt_e: 6,
   usdc: 6,
   usdc_e: 6,
+  eurc_e: 6,
   eth: 18,
   weth: 18,
   wbtc_e: 8,

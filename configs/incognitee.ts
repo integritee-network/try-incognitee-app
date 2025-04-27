@@ -17,6 +17,8 @@ export const minUnshieldingAmount = (token: string): number => {
     return 0.0001;
   } else if (token === "WBTC.e") {
     return 0.000001;
+  } else if (token === "PEPE.e") {
+    return 10000;
   } else {
     return 0.1;
   }
@@ -30,6 +32,8 @@ export const minShieldingAmount = (token: string): number => {
     return 0.0001;
   } else if (token === "WBTC.e") {
     return 0.000001;
+  } else if (token === "PEPE.e") {
+    return 10000;
   } else {
     return 0.1;
   }
@@ -40,6 +44,8 @@ export const txFeeBase = (token: string): number => {
     return INCOGNITEE_TX_FEE / 2000;
   } else if (token === "WBTC.e") {
     return INCOGNITEE_TX_FEE / 70000;
+  } else if (token === "PEPE.e") {
+    return INCOGNITEE_TX_FEE * 111000;
   } else {
     return INCOGNITEE_TX_FEE;
   }
@@ -50,6 +56,8 @@ export const txFeePerByte = (token: string): number => {
     return INCOGNITEE_BYTE_FEE / 2000;
   } else if (token === "WBTC.e") {
     return INCOGNITEE_BYTE_FEE / 70000;
+  } else if (token === "PEPE.e") {
+    return INCOGNITEE_BYTE_FEE * 111000;
   } else {
     return INCOGNITEE_BYTE_FEE;
   }
@@ -60,6 +68,8 @@ export const txFeeUnshielding = (token: string): number => {
     return INCOGNITEE_UNSHIELDING_FEE / 2000;
   } else if (token === "WBTC.e") {
     return INCOGNITEE_UNSHIELDING_FEE / 70000;
+  } else if (token === "PEPE.e") {
+    return INCOGNITEE_UNSHIELDING_FEE * 111000;
   } else {
     return INCOGNITEE_UNSHIELDING_FEE;
   }

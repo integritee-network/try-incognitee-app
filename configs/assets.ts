@@ -7,6 +7,7 @@ import EURC from "@/assets/img/eurc-logo.svg?url";
 import USDT from "@/assets/img/usdt-logo.svg?url";
 import ETH from "@/assets/img/eth-logo.svg?url";
 import WBTC from "@/assets/img/wbtc-logo.svg?url";
+import PEPE from "@/assets/img/pepe-logo.svg?url";
 export const isAssetEqual = (
   a: string | null | undefined,
   b: string | null | undefined,
@@ -26,6 +27,7 @@ export const assetDecimals: Record<string, number> = {
   eth: 18,
   weth: 18,
   wbtc_e: 8,
+  pepe_e: 18,
 };
 export const assetHubRoute: Record<string, [string, string]> = {
   usdt: ["assets", "1984"],
@@ -53,6 +55,10 @@ export const assetHubRoute: Record<string, [string, string]> = {
   wbtc_e: [
     "foreignAssets",
     '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599" } } ] } }',
+  ],
+  pepe_e: [
+    "foreignAssets",
+    '{ "parents": 2, "interior": { "X2": [ { "GlobalConsensus": { "Ethereum": { "chainId": 1 } } }, { "AccountKey20": { "network": null, "key": "0x6982508145454ce325ddbe47a25d4ec3d2311933" } } ] } }',
   ],
 };
 
@@ -87,6 +93,8 @@ export const unifyAssetIdDisplay = (str: string | null) => {
       return "USDT.e";
     case "wbtc_e":
       return "WBTC.e";
+    case "pepe_e":
+      return "PEPE.e";
     default:
       return str.toUpperCase();
   }
@@ -122,6 +130,13 @@ export const tokenSelectorItems = [
     label: "WBTC.e",
     value: "WBTC.e",
     icon: WBTC,
+    hubIcon: DOT,
+    maturity: "beta",
+  },
+  {
+    label: "PEPE.e",
+    value: "PEPE.e",
+    icon: PEPE,
     hubIcon: DOT,
     maturity: "beta",
   },

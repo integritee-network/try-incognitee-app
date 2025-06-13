@@ -36,4 +36,8 @@ export const identities = [
     username: "AmazingTeam",
     address: "1J2bHGAhUiCahsPQdx4YBczgas9J6ZbENEr2NDqQGsK9PVN",
   },
+  {
+    username: "ChatGPT chatbot",
+    address: "15o3m381FjkpzGuecA9GikpBQqrhPT8sPH5anBkmGfZuauo8",
+  },
 ];

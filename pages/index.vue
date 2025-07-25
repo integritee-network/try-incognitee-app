@@ -670,7 +670,7 @@ async function reconnectShieldingTargetIfNecessary() {
     shieldingTargetApi.value = await ApiPromise.create({
       provider: wsProvider,
     });
-    await shieldingTargetApi.value.isReady;
+    await shieldingTargetApi.value.isReadyOrError;
 
     // await is quick as we only subscribe
     await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
@@ -693,13 +693,13 @@ const subscribeWhatsReady = async () => {
     "trying to init api at " + chainConfigs[shieldingTarget.value].api,
   );
   shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
-  await shieldingTargetApi.value.isReady;
+  await shieldingTargetApi.value.isReadyOrError;
   accountStore.setExistentialDeposit(
     BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
     shieldingTargetChainNativeAsset.value,
   );
   accountStore.setNativeDecimals(
-    Number(shieldingTargetApi.value.registry.chainDecimals),
+    Number(shieldingTargetApi.value.registry.chainDecimals[0]),
   );
   accountStore.setSS58Format(
     Number(shieldingTargetApi.value.registry.chainSS58),

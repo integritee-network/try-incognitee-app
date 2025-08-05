@@ -108,6 +108,36 @@
               Messages
             </button>
           </li>
+
+          <li class="px-4">
+            <button
+              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
+              @click="
+                () => {
+                  emitEvent('switchToOmniChat');
+                  toggleSidebar();
+                }
+              "
+              id="sidebar-omnichat"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                />
+              </svg>
+
+              OmniChat
+            </button>
+          </li>
           <li
             v-if="
               accountStore.getSymbol(null) === 'TEER' ||
@@ -301,12 +331,14 @@
                   />
                 </div>
                 <div v-else class="spinner"></div>
-                <div v-if="getHubIconUrlForAsset(selectedToken)">
-                  <img
-                    :src="getHubIconUrlForAsset(selectedToken)"
-                    class="w-[14px] h-[14px] mr-2"
-                  />
-                </div>
+                <template v-if="typeof selectedToken === 'string'">
+                  <div v-if="getHubIconUrlForAsset(selectedToken)">
+                    <img
+                      :src="getHubIconUrlForAsset(selectedToken) || ''"
+                      class="w-[14px] h-[14px] mr-2"
+                    />
+                  </div>
+                </template>
               </div>
 
               <!-- Token Name -->
@@ -461,11 +493,11 @@ import {
   getIconUrlForAsset,
   getMaturityForAsset,
   getSelectableTokens,
-} from "~/configs/assets.ts";
+} from "~/configs/assets";
 import { isBetaSidechain, isSidechainTestnet } from "~/configs/chains";
 
 const isOpen = ref(false);
-const selectedToken = ref("PAS");
+const selectedToken = ref<string>("PAS");
 const router = useRouter();
 const accountStore = useAccount();
 
@@ -473,7 +505,7 @@ const toggleTokenDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const selectToken = (item) => {
+const selectToken = (item: { label: string; value: string }) => {
   const currentQuery = { ...router.currentRoute.value.query };
   // replace the last part of the url path with the selected token
   let newPath = router.currentRoute.value.path.replace(
@@ -498,7 +530,7 @@ const selectToken = (item) => {
 watch(
   () => accountStore.getSymbol(asset.value),
   (newValue) => {
-    selectedToken.value = newValue;
+    selectedToken.value = newValue ?? 'PAS';
   },
 );
 
@@ -509,9 +541,9 @@ const closeMenu = () => {
   isMenuOpen.value = false;
 };
 
-const handleOutsideClick = (event) => {
+const handleOutsideClick = (event: MouseEvent) => {
   const dropdown = document.getElementById("menu-button");
-  if (dropdown && !dropdown.contains(event.target)) {
+  if (dropdown && event.target instanceof Node && !dropdown.contains(event.target)) {
     closeMenu();
   }
 };
@@ -526,19 +558,21 @@ const toggleSidebar = () => {
 
 // Event-Abonnement bei Mounten und Entfernen bei Unmounten
 onMounted(() => {
-  eventBus.on("toggleSidebar", toggleSidebar);
+  eventBus.on('toggleSidebar' as any, toggleSidebar);
   document.addEventListener("click", handleOutsideClick);
-  selectedToken.value = accountStore.getSymbol(asset.value);
+  selectedToken.value = accountStore.getSymbol(asset.value) ?? 'PAS';
 });
 
 onUnmounted(() => {
-  eventBus.off("toggleSidebar", toggleSidebar);
+  eventBus.off('toggleSidebar' as any, toggleSidebar);
   document.removeEventListener("click", handleOutsideClick);
 });
 
 // Event-Emitter-Funktionen
-const emitEvent = (eventName: string) => {
-  eventBus.emit(eventName);
+type EventName = 'toggleSidebar' | 'switchToWallet' | 'switchToVouchers' | 'switchToMessaging' | 'openSessionProxiesOverlay' | 'addressClicked' | 'switchToTeerDays' | 'switchToSwap' | 'switchToFaq' | 'switchToOmniChat';
+
+const emitEvent = (eventName: EventName) => {
+  eventBus.emit(eventName as any);
 };
 </script>
 

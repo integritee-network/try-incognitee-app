@@ -40,6 +40,12 @@
   <div v-else-if="activeApp === 'teerdays'">
     <TeerDaysTab :isMobile="isMobile" />
   </div>
+  <div v-else-if="activeApp === 'omnichat'">
+    <OmniChatPage />
+  </div>
+  <div v-else-if="activeApp === 'payment-success'">
+    <PaymentSuccessTab />
+  </div>
   <!-- New Wallet -->
   <OverlayDialog
     :show="showNewWalletOverlay"
@@ -127,9 +133,11 @@
 <script setup lang="ts">
 import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
+import OmniChatPage from "~/pages/omnichat.vue";
+import PaymentSuccessTab from "~/components/tabs/PaymentSuccessTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import { computed, onMounted, onUnmounted, ref, watch, defineProps } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, defineProps, nextTick } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -189,6 +197,7 @@ const isUpdatingNotes = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const activeApp = ref("wallet");
+
 const faucetUrl = ref(null);
 const forceLive = ref(false);
 const mockExtension = ref(false);
@@ -867,7 +876,16 @@ const switchToFaq = () => {
   const query = { ...router.currentRoute.value.query };
   query.app = activeApp.value;
   router.push({
-    query: query,
+    query,
+  });
+};
+
+const switchToOmniChat = () => {
+  activeApp.value = "omnichat";
+  const query = { ...router.currentRoute.value.query };
+  query.app = activeApp.value;
+  router.push({
+    query,
   });
 };
 
@@ -888,6 +906,7 @@ onMounted(async () => {
   eventBus.on("switchToVouchers", switchToVouchers);
   eventBus.on("switchToTeerDays", switchToTeerDays);
   eventBus.on("switchToFaq", switchToFaq);
+  eventBus.on("switchToOmniChat", switchToOmniChat);
   eventBus.on("openSessionProxiesOverlay", openAuthorizeSessionOverlay);
 
   const injectedAddress = router.currentRoute.value.query.address;

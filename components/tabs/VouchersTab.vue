@@ -672,7 +672,8 @@ const copyVoucherUrlToClipboard = () => {
       position: absolute;
       content: "";
       inset: 0;
-      background: linear-gradient(
+      background:
+        linear-gradient(
           0deg,
           rgba(255, 255, 255, 0.15),
           rgba(255, 255, 255, 0.15)

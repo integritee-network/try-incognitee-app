@@ -530,7 +530,7 @@ const selectToken = (item: { label: string; value: string }) => {
 watch(
   () => accountStore.getSymbol(asset.value),
   (newValue) => {
-    selectedToken.value = newValue ?? 'PAS';
+    selectedToken.value = newValue ?? "PAS";
   },
 );
 
@@ -543,7 +543,11 @@ const closeMenu = () => {
 
 const handleOutsideClick = (event: MouseEvent) => {
   const dropdown = document.getElementById("menu-button");
-  if (dropdown && event.target instanceof Node && !dropdown.contains(event.target)) {
+  if (
+    dropdown &&
+    event.target instanceof Node &&
+    !dropdown.contains(event.target)
+  ) {
     closeMenu();
   }
 };
@@ -558,18 +562,28 @@ const toggleSidebar = () => {
 
 // Event-Abonnement bei Mounten und Entfernen bei Unmounten
 onMounted(() => {
-  eventBus.on('toggleSidebar' as any, toggleSidebar);
+  eventBus.on("toggleSidebar" as any, toggleSidebar);
   document.addEventListener("click", handleOutsideClick);
-  selectedToken.value = accountStore.getSymbol(asset.value) ?? 'PAS';
+  selectedToken.value = accountStore.getSymbol(asset.value) ?? "PAS";
 });
 
 onUnmounted(() => {
-  eventBus.off('toggleSidebar' as any, toggleSidebar);
+  eventBus.off("toggleSidebar" as any, toggleSidebar);
   document.removeEventListener("click", handleOutsideClick);
 });
 
 // Event-Emitter-Funktionen
-type EventName = 'toggleSidebar' | 'switchToWallet' | 'switchToVouchers' | 'switchToMessaging' | 'openSessionProxiesOverlay' | 'addressClicked' | 'switchToTeerDays' | 'switchToSwap' | 'switchToFaq' | 'switchToOmniChat';
+type EventName =
+  | "toggleSidebar"
+  | "switchToWallet"
+  | "switchToVouchers"
+  | "switchToMessaging"
+  | "openSessionProxiesOverlay"
+  | "addressClicked"
+  | "switchToTeerDays"
+  | "switchToSwap"
+  | "switchToFaq"
+  | "switchToOmniChat";
 
 const emitEvent = (eventName: EventName) => {
   eventBus.emit(eventName as any);

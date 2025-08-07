@@ -137,7 +137,15 @@ import OmniChatPage from "~/pages/omnichat.vue";
 import PaymentSuccessTab from "~/components/tabs/PaymentSuccessTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import { computed, onMounted, onUnmounted, ref, watch, defineProps, nextTick } from "vue";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+  defineProps,
+  nextTick,
+} from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";

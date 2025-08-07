@@ -13143,7 +13143,7 @@ __metadata:
     nuxt-svgo: "npm:^4.0.0"
     pinia: "npm:^2.1.7"
     postcss: "npm:^8.4.49"
-    prettier: "npm:^3.2.5"
+    prettier: "npm:^3.6.2"
     qrcode: "npm:^1.5.3"
     sass: "npm:^1.75.0"
     stripe: "npm:^18.3.0"
@@ -14609,7 +14609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.2.5":
+"prettier@npm:^3.6.2":
   version: 3.6.2
   resolution: "prettier@npm:3.6.2"
   bin:

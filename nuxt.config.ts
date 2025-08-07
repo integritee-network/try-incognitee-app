@@ -115,6 +115,6 @@ export default defineNuxtConfig({
           additionalData: '@use "@/assets/scss/_variables.scss" as *;',
         },
       },
-    }
+    },
   },
 });

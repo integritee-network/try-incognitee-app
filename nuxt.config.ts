@@ -115,12 +115,6 @@ export default defineNuxtConfig({
           additionalData: '@use "@/assets/scss/_variables.scss" as *;',
         },
       },
-    },
-    assetsInclude: ['**/*.svg'],
-    resolve: {
-      alias: {
-        '@': '/Users/waldemarscherer/VSCodeProjects/Incognitee/try-incognitee-app',
-      },
-    },
+    }
   },
 });

@@ -2,7 +2,6 @@ import { useRuntimeConfig } from "#app";
 import { ChainId } from "@/configs/chains";
 import { computed, ref } from "vue";
 import dotenv from "dotenv";
-import fs from "fs";
 import path from "path";
 import { ChainAssetId } from "~/configs/assets"; // Add this import
 

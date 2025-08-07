@@ -84,6 +84,7 @@ export default defineNuxtConfig({
     "/eth": { ssr: false },
     "/gtn": { ssr: false },
     "/teerdays-lp": { ssr: false },
+    "/omnichat": { ssr: false },
     //"/referral": { ssr: false },
     //"/referraltc": { ssr: false },
   },

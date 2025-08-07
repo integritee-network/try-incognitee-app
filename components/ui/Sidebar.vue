@@ -483,7 +483,7 @@ import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
 import Incognitee from "public/img/incognitee-full-logo.svg";
 import TEERdays from "public/img/index/TEERdays-icon-white.svg";
-import { DOT, TEER} from "@/configs/assets";
+import { DOT, TEER } from "@/configs/assets";
 import { useRouter } from "vue-router";
 import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
 import {

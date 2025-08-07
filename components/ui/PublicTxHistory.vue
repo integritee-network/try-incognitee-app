@@ -40,8 +40,8 @@ import { computed, defineProps, ref } from "vue";
 import { useAccount } from "@/store/account.ts";
 import { chainConfigs } from "~/configs/chains";
 import { shieldingTarget, asset } from "~/lib/environmentConfig";
-import SUBSCAN from "@/assets/img/subscan-logo.png";
-import STATESCAN from "@/assets/img/statescan-logo.png";
+const SUBSCAN = "/img/subscan-logo.png";
+const STATESCAN = "/img/statescan-logo.png";
 const accountStore = useAccount();
 
 const indexerUrls = computed(() => {

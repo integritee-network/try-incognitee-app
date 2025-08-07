@@ -481,11 +481,9 @@ import { ref, onMounted, onUnmounted, computed, defineProps, watch } from "vue";
 import HealthIndicator from "@/components/ui/HealthIndicator.vue";
 import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
-import Incognitee from "@/assets/img/incognitee-full-logo.svg";
-import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
-import Paseo from "assets/img/paseo-logo.svg";
-import DOT from "@/assets/img/polkadot-logo.svg";
-import TEER from "@/assets/img/logo-icon.svg";
+import Incognitee from "public/img/incognitee-full-logo.svg";
+import TEERdays from "public/img/index/TEERdays-icon-white.svg";
+import { DOT, TEER} from "@/configs/assets";
 import { useRouter } from "vue-router";
 import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
 import {

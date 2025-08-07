@@ -1,15 +1,14 @@
 import { ChainId } from "@/configs/chains";
 
-// Use static URLs for SVG files
-const Paseo = "/img/paseo-logo.svg";
-const TEER = "/img/logo-icon.svg";
-const DOT = "/img/polkadot-logo.svg";
-const USDC = "/img/usdc-logo.svg";
-const EURC = "/img/eurc-logo.svg";
-const USDT = "/img/usdt-logo.svg";
-const ETH = "/img/eth-logo.svg";
-const WBTC = "/img/wbtc-logo.svg";
-const PEPE = "/img/pepe-logo.svg";
+export const Paseo = "/img/paseo-logo.svg";
+export const TEER = "/img/logo-icon.svg";
+export const DOT = "/img/polkadot-logo.svg";
+export const USDC = "/img/usdc-logo.svg";
+export const EURC = "/img/eurc-logo.svg";
+export const USDT = "/img/usdt-logo.svg";
+export const ETH = "/img/eth-logo.svg";
+export const WBTC = "/img/wbtc-logo.svg";
+export const PEPE = "/img/pepe-logo.svg";
 export const isAssetEqual = (
   a: string | null | undefined,
   b: string | null | undefined,

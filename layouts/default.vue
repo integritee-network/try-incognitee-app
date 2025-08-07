@@ -21,7 +21,7 @@ import HealthIndicator from "@/components/ui/HealthIndicator.vue";
 import Sidebar from "@/components/ui/Sidebar.vue";
 import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
-import Incognitee from "@/assets/img/incognitee-full-logo.svg";
+const Incognitee = "/img/incognitee-full-logo.svg";
 
 // Sidebar-State (local)
 const isSidebarOpen = ref(false);

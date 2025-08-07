@@ -1,7 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  target: "static",
   runtimeConfig: {
     public: {
       SHIELDING_TARGET: process.env.SHIELDING_TARGET,
@@ -103,6 +102,7 @@ export default defineNuxtConfig({
   plugins: [
     { src: "~/plugins/lockScroll", mode: "client" },
     "~/plugins/qrcode-reader.ts",
+    "~/plugins/fontawesome.ts",
   ],
   svgo: {
     defaultImport: "component",
@@ -114,6 +114,12 @@ export default defineNuxtConfig({
         scss: {
           additionalData: '@use "@/assets/scss/_variables.scss" as *;',
         },
+      },
+    },
+    assetsInclude: ['**/*.svg'],
+    resolve: {
+      alias: {
+        '@': '/Users/waldemarscherer/VSCodeProjects/Incognitee/try-incognitee-app',
       },
     },
   },

@@ -86,17 +86,17 @@
                   <button @click.stop="emit('shareChat', chat.id)" 
                           class="p-1 hover:text-primary" 
                           title="Share Chat">
-                    <i class="fas fa-share-alt text-xs"></i>
+                    <font-awesome-icon :icon="['fas', 'share-alt']" class="mr-2" />
                   </button>
                   <button @click.stop="emit('archiveChat', chat.id)" 
                           class="p-1 hover:text-warning" 
                           title="Archive Chat">
-                    <i class="fas fa-archive text-xs"></i>
+                    <font-awesome-icon :icon="['fas', 'archive']" class="mr-2" />
                   </button>
                   <button @click.stop="emit('deleteChat', chat.id)" 
                           class="p-1 hover:text-error" 
                           title="Delete Chat">
-                    <i class="fas fa-trash text-xs"></i>
+                    <font-awesome-icon :icon="['fas', 'trash']" class="mr-2" />
                   </button>
                 </div>
               </div>
@@ -173,13 +173,13 @@
                 <button @click="clearChat" 
                         class="btn btn-sm bg-transparent hover:bg-transparent hover:text-primary clear-chat-btn"
                         title="Clear Chat">
-                        <font-awesome-icon :icon="['fa', 'trash-can']" />
+                        <font-awesome-icon :icon="['fas', 'trash-can']" />
                 </button>
 
                 <button @click="sendMessage" 
                         :disabled="!userInput.trim()" 
                         class="btn btn-sm btn-primary">
-                        <font-awesome-icon :icon="['fa', 'paper-plane']" />
+                        <font-awesome-icon :icon="['fas', 'paper-plane']" />
                 </button>
               </div>
             </div>
@@ -207,25 +207,25 @@
               }" 
             class="btn btn-ghost btn-sm justify-start" 
             title="Rename Chat">
-      <font-awesome-icon :icon="['fas', 'pen']" class="mr-2" />
+      <font-awesome-icon :icon="['fa', 'pen']" class="mr-2" />
       Rename
     </button>
     <button @click.stop="emit('shareChat', selectedChatForMore); closeMorePopup()" 
             class="btn btn-ghost btn-sm justify-start" 
             title="Share Chat">
-      <font-awesome-icon :icon="['fas', 'share']" class="mr-2" />
+      <font-awesome-icon :icon="['fa', 'share']" class="mr-2" />
       Share
     </button>
     <button @click.stop="emit('archiveChat', selectedChatForMore); closeMorePopup()" 
             class="btn btn-ghost btn-sm justify-start" 
             title="Archive Chat">
-      <font-awesome-icon :icon="['fas', 'box-archive']" class="mr-2" />
+      <font-awesome-icon :icon="['fa', 'box-archive']" class="mr-2" />
       Archive
     </button>
     <button @click.stop="emit('deleteChat', selectedChatForMore); closeMorePopup()" 
             class="btn btn-ghost btn-sm justify-start text-error" 
             title="Delete Chat">
-      <font-awesome-icon :icon="['fas', 'trash-can']" class="mr-2" />
+      <font-awesome-icon :icon="['fa', 'trash-can']" class="mr-2" />
       Delete
     </button>
     </div>

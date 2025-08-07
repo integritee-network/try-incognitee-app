@@ -1,13 +1,15 @@
-import { ChainId } from "@/configs/chains.ts";
-import Paseo from "@/assets/img/paseo-logo.svg?url";
-import TEER from "@/assets/img/logo-icon.svg?url";
-import DOT from "@/assets/img/polkadot-logo.svg?url";
-import USDC from "@/assets/img/usdc-logo.svg?url";
-import EURC from "@/assets/img/eurc-logo.svg?url";
-import USDT from "@/assets/img/usdt-logo.svg?url";
-import ETH from "@/assets/img/eth-logo.svg?url";
-import WBTC from "@/assets/img/wbtc-logo.svg?url";
-import PEPE from "@/assets/img/pepe-logo.svg?url";
+import { ChainId } from "@/configs/chains";
+
+// Use static URLs for SVG files
+const Paseo = "/img/paseo-logo.svg";
+const TEER = "/img/logo-icon.svg";
+const DOT = "/img/polkadot-logo.svg";
+const USDC = "/img/usdc-logo.svg";
+const EURC = "/img/eurc-logo.svg";
+const USDT = "/img/usdt-logo.svg";
+const ETH = "/img/eth-logo.svg";
+const WBTC = "/img/wbtc-logo.svg";
+const PEPE = "/img/pepe-logo.svg";
 export const isAssetEqual = (
   a: string | null | undefined,
   b: string | null | undefined,
@@ -76,7 +78,7 @@ export class ChainAssetId {
   }
 }
 
-export const unifyAssetId = (str: string | null) => {
+export const unifyAssetId = (str: string | null | undefined) => {
   return str?.toLowerCase().replace(/\./g, "_");
 };
 

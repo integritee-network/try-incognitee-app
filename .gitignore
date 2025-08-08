@@ -5,6 +5,8 @@ node_modules
 .cache
 .output
 .env
+# Draft for unlimited transfer
+.env.unlimited
 dist
 .idea
 **/.DS_Store

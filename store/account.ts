@@ -43,6 +43,13 @@ export const useAccount = defineStore("account", {
     existentialDeposit: <Record<string, BigInt>>{},
   }),
   getters: {
+    getAccount({ account }): string {
+      if (!account) {
+        throw new Error("No account set");
+      }
+      // Todo: we should use string in the first place as we infer string anywhere, but this is a workaround for now.
+      return account as string;
+    },
     getShortAddress({ account }): string {
       if (!account) return "none";
       const address = asString(account as AddressOrPair);

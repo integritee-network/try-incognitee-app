@@ -175,6 +175,8 @@ import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
 import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
 import FaqTab from "~/components/tabs/FaqTab.vue";
+import type {AccountEssentials, NotesBucketInfo, TimestampedTrustedNote} from "@encointer/types";
+import type {Vec} from "@polkadot/types";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -189,7 +191,7 @@ const isUpdatingNotes = ref(false);
 const isChoosingAccount = ref(false);
 const disableGetter = ref(false);
 const activeApp = ref("wallet");
-const faucetUrl = ref(null);
+const faucetUrl = ref<string | undefined>(undefined);
 const forceLive = ref(false);
 const mockExtension = ref(false);
 const shieldingTargetApi = ref<ApiPromise | null>(null);
@@ -211,6 +213,7 @@ const getterMap: { [address: string]: any } = {};
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
+  const currentAccount = accountStore.getAccount;
 
   if (isUpdatingIncogniteeBalance.value == true) {
     console.log("[fetchIncogniteeBalance] already updating. waiting...");
@@ -224,25 +227,23 @@ const fetchIncogniteeBalance = async () => {
     return;
   }
 
-  if (!incogniteeStore.api?.isConnected) {
-    await incogniteeStore.api?.reconnect();
-  }
-
   isUpdatingIncogniteeBalance.value = true;
 
   const injector = accountStore.hasInjector ? accountStore.injector : null;
   try {
-    if (!getterMap[accountStore.account]) {
+    if (!getterMap[currentAccount]) {
       if (injector) {
         console.debug(
           `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
         );
       }
-      getterMap[accountStore.account] =
-        await incogniteeStore.api.accountEssentialsGetter(
-          accountStore.account,
-          incogniteeStore.shard,
-          { signer: injector?.signer },
+      getterMap[currentAccount] =
+        await incogniteeStore.withWorker(
+            async (worker) => await worker.accountEssentialsGetter(
+                currentAccount,
+                incogniteeStore.shard,
+                { signer: injector?.signer },
+            )
         );
     } else {
       console.debug(`fetching incognitee balance&nonce using cached getter`);
@@ -258,9 +259,9 @@ const fetchIncogniteeBalance = async () => {
     return;
   }
 
-  await getterMap[accountStore.account]
+  await getterMap[currentAccount]
     .send()
-    .then((accountEssentials) => {
+    .then((accountEssentials: AccountEssentials) => {
       const accountInfo = accountEssentials.account_info;
       const proxies = accountEssentials.session_proxies;
       console.debug(
@@ -269,7 +270,7 @@ const fetchIncogniteeBalance = async () => {
       console.debug(`session proxies: ${proxies}`);
       storeSessionProxies(proxies);
       accountStore.setBalanceFree(
-        BigInt(accountInfo.data.free),
+        accountInfo.data.free.toBigInt(),
         incogniteeChainNativeAsset.value,
       );
       for (const assetBalance of accountEssentials.asset_balances) {
@@ -280,7 +281,7 @@ const fetchIncogniteeBalance = async () => {
             assetBalance.balance,
         );
         accountStore.setBalanceFree(
-          BigInt(assetBalance.balance),
+          assetBalance.balance.toBigInt(),
           new ChainAssetId(
             incogniteeSidechain.value,
             assetBalance.asset_id.toString(),
@@ -342,12 +343,10 @@ const fetchNetworkStatus = async () => {
     promises.push(p);
   }
   if (!incogniteeStore.apiReady) return;
-  if (!incogniteeStore.api?.isConnected) {
-    await incogniteeStore.api?.reconnect();
-  }
+
   console.debug("fetch network status info");
-  const getter = incogniteeStore.api.parentchainsInfoGetter(
-    incogniteeShard.value,
+  const getter = await incogniteeStore.withWorker(
+      (worker) => worker.parentchainsInfoGetter(incogniteeShard.value!)
   );
   const p2 = getter.send().then((info) => {
     console.debug(`parentchains info: ${info}`);
@@ -372,10 +371,10 @@ const fetchNetworkStatus = async () => {
   await Promise.all(promises);
 };
 
-const noteBucketsInfo = ref(null);
-const firstNoteBucketIndexFetched = ref(null);
-let lastAccount = null;
-let lastBucketIndex = null;
+const noteBucketsInfo = ref<NotesBucketInfo | null>(null);
+const firstNoteBucketIndexFetched = ref<number | null>(null);
+let lastAccount: string | null  = null;
+let lastBucketIndex: number | null = null;
 const noteStore = useNotes();
 const updateNotes = async () => {
   console.log("updateNotes called");
@@ -383,9 +382,9 @@ const updateNotes = async () => {
     console.log("account changed, purging note history...");
     noteStore.purgeAll();
   }
-  lastAccount = accountStore.account;
+  lastAccount = accountStore.getAccount;
   await fetchNoteBucketsInfo();
-  if (noteBucketsInfo.value?.last.unwrap().index <= lastBucketIndex) {
+  if (noteBucketsInfo.value?.last.unwrap().index <= lastBucketIndex ?? 0) {
     console.log("bucket didn't change");
   } else {
     lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index;
@@ -395,13 +394,10 @@ const updateNotes = async () => {
 };
 const fetchNoteBucketsInfo = async () => {
   if (!incogniteeStore.apiReady) return;
-  if (!incogniteeStore.api?.isConnected) {
-    await incogniteeStore.api?.reconnect();
-  }
 
   console.log("fetch note buckets info");
-  const getter = incogniteeStore.api.noteBucketsInfoGetter(
-    incogniteeStore.shard,
+  const getter = await incogniteeStore.withWorker(
+      (worker) => worker.noteBucketsInfoGetter(incogniteeStore.shard)
   );
   await getter.send().then((info) => {
     console.log(`note buckets info: ${info}`);
@@ -414,7 +410,7 @@ const fetchOlderBucket = async () => {
     : lastBucketIndex;
   console.log("fetchOlderBuckets : " + firstNoteBucketIndexFetched.value);
   isUpdatingNotes.value = true;
-  await fetchIncogniteeNotes(index);
+  await fetchIncogniteeNotes(index, false);
   firstNoteBucketIndexFetched.value = index;
   isUpdatingNotes.value = false;
 };
@@ -465,10 +461,6 @@ const fetchIncogniteeNotes = async (
     return;
   }
 
-  if (!incogniteeStore.api?.isConnected) {
-    await incogniteeStore.api?.reconnect();
-  }
-
   const bucketIndex = maybeBucketIndex ? maybeBucketIndex : 0;
   const mapKey = `notesFor:${accountStore.account}:${bucketIndex}`;
   const sessionProxy = accountStore.sessionProxyForRole(
@@ -493,11 +485,13 @@ const fetchIncogniteeNotes = async (
           );
         }
       }
-      getterMap[mapKey] = await incogniteeStore.api.notesForTrustedGetter(
-        accountStore.account,
-        bucketIndex,
-        incogniteeStore.shard,
-        { delegate: sessionProxy, signer: injector?.signer },
+      getterMap[mapKey] = await incogniteeStore.withWorker(
+          async (worker) => await worker.notesForTrustedGetter(
+            accountStore.getAccount,
+            bucketIndex,
+            incogniteeStore.shard,
+            { delegate: sessionProxy, signer: injector?.signer },
+          )
       );
     } else {
       console.debug(`fetching incognitee notes using cached getter`);
@@ -511,14 +505,14 @@ const fetchIncogniteeNotes = async (
 
   await getterMap[mapKey]
     .send()
-    .then((notes) => {
+    .then((notes: Vec<TimestampedTrustedNote>) => {
       console.debug(
         `notes for ${accountStore.getAddress} on shard ${incogniteeStore.shard} in bucket ${bucketIndex}:`,
       );
       for (const note of notes) {
         try {
           if (note.note.isSuccessfulTrustedCall) {
-            const call = incogniteeStore.api.createType(
+            const call = incogniteeStore.createType(
               "IntegriteeTrustedCall",
               note.note.asSuccessfulTrustedCall,
             );
@@ -550,20 +544,18 @@ const fetchIncogniteeNotes = async (
 };
 
 async function fetchWorkerData() {
-  if (!incogniteeStore.api?.isReady) {
+  if (!incogniteeStore.apiReady) {
     return;
   }
 
-  if (!incogniteeStore.api?.isConnected) {
-    await incogniteeStore.api?.reconnect();
-  }
-
-  console.debug(
-    `[IntegriteeWorker]: connections stats: ${JSON.stringify(incogniteeStore?.api?.wsStats)}`,
-  );
-  console.debug(
-    `[IntegriteeWorker]: endpoint stats: ${JSON.stringify(incogniteeStore?.api?.endpointStats)}`,
-  );
+await incogniteeStore.withWorker((worker) => {
+    console.debug(
+        `[IntegriteeWorker]: connections stats: ${JSON.stringify(worker.wsStats)}`,
+    );
+    console.debug(
+        `[IntegriteeWorker]: endpoint stats: ${JSON.stringify(worker.endpointStats)}`,
+    );
+  })
 
   await fetchNetworkStatus();
   await fetchIncogniteeBalance();
@@ -594,7 +586,7 @@ const inactivityTimeoutPeriod = 20000; // 20 seconds
 let disconnectWsTimeout: any = null;
 
 async function pollWorker() {
-  if (!incogniteeStore.api?.isReady) {
+  if (!incogniteeStore.apiReady) {
     // Schedule the next polling.
     pollingTimeout = setTimeout(pollWorker, pollingInterval);
     return;
@@ -622,9 +614,14 @@ async function onVisible() {
   isPolling.value = true;
   clearInterval(disconnectWsTimeout);
 
-  if (!incogniteeStore.api?.isConnected) {
+  if (!incogniteeStore.apiReady) {
+    console.debug("[onVisible] api not ready")
+    return;
+  }
+
+  if (!incogniteeStore.isConnected) {
     console.debug("[onVisible] Reconnecting to the worker api");
-    await incogniteeStore.api?.reconnect();
+    await incogniteeStore.reconnect();
   }
 
   // avoid spamming polls due to visibility changes
@@ -695,7 +692,7 @@ const subscribeWhatsReady = async () => {
   shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
   await shieldingTargetApi.value.isReadyOrError;
   accountStore.setExistentialDeposit(
-    BigInt(shieldingTargetApi.value.consts.balances.existentialDeposit),
+    shieldingTargetApi.value.consts.balances.existentialDeposit.toBigInt(),
     shieldingTargetChainNativeAsset.value,
   );
   accountStore.setNativeDecimals(
@@ -878,7 +875,7 @@ onMounted(async () => {
   await loadEnv(props.envFile);
   await incogniteeStore.initializeApi(
     chainConfigs[incogniteeSidechain.value].api,
-    incogniteeShard.value,
+    incogniteeShard.value!,
   );
   eventBus.on("addressClicked", openChooseWalletOverlay);
   eventBus.on("switchToWallet", switchToWallet);

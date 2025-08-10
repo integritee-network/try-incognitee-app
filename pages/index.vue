@@ -226,7 +226,7 @@ const getterMap: { [address: string]: any } = {};
 const fetchIncogniteeBalance = async () => {
   if (!incogniteeStore.apiReady) return;
   if (!accountStore.account) return;
-  const currentAccount = accountStore.getAccount;
+  const currentAccount = accountStore.getAccountAsString;
 
   if (isUpdatingIncogniteeBalance.value == true) {
     console.log("[fetchIncogniteeBalance] already updating. waiting...");
@@ -395,7 +395,7 @@ const updateNotes = async () => {
     console.log("account changed, purging note history...");
     noteStore.purgeAll();
   }
-  lastAccount = accountStore.getAccount;
+  lastAccount = accountStore.getAccountAsString;
   await fetchNoteBucketsInfo();
 
   if (!noteBucketsInfo.value) {
@@ -533,7 +533,7 @@ const fetchIncogniteeNotes = async (
       getterMap[mapKey] = await incogniteeStore.withWorker(
         async (worker) =>
           await worker.notesForTrustedGetter(
-            accountStore.getAccount,
+            accountStore.getAccountAsString,
             bucketIndex,
             incogniteeStore.shard,
             { delegate: sessionProxy, signer: injector?.signer },

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ChainId } from "@/configs/chains";
+import {markRaw} from "vue";
 
 class ObservableNumber {
   value: number;
@@ -122,17 +122,17 @@ export const useSystemHealth = defineStore("system-health", {
     getIntergiteeBlockNumberObservable({
       integriteeLastBlockNumber,
     }): ObservableNumber {
-      return integriteeLastBlockNumber ?? new ObservableNumber(0);
+      return integriteeLastBlockNumber ?? markRaw(new ObservableNumber(0));
     },
     getShieldingTargetBlockNumberObservable({
       shieldingTargetLastBlockNumber,
     }): ObservableNumber {
-      return shieldingTargetLastBlockNumber ?? new ObservableNumber(0);
+      return shieldingTargetLastBlockNumber ?? markRaw(new ObservableNumber(0));
     },
     getShieldingTargetImportedBlockNumberObservable({
       shieldingTargetImportedBlockNumber,
     }): ObservableNumber {
-      return shieldingTargetImportedBlockNumber ?? new ObservableNumber(0);
+      return shieldingTargetImportedBlockNumber ?? markRaw(new ObservableNumber(0));
     },
     getShieldingTargetApiGenesisHashHex({
       shieldingTargetApiGenesisHashHex,
@@ -149,21 +149,23 @@ export const useSystemHealth = defineStore("system-health", {
     observeShieldingTargetBlockNumber(block_number: number) {
       this.shieldingTargetLastBlockNumber
         ? this.shieldingTargetLastBlockNumber?.observe(block_number)
-        : (this.shieldingTargetLastBlockNumber = new ObservableNumber(
+        : (this.shieldingTargetLastBlockNumber = markRaw(new ObservableNumber(
             block_number,
-          ));
+          )));
     },
     observeShieldingTargetImportedBlockNumber(block_number: number) {
       this.shieldingTargetImportedBlockNumber
         ? this.shieldingTargetImportedBlockNumber?.observe(block_number)
-        : (this.shieldingTargetImportedBlockNumber = new ObservableNumber(
+        : (this.shieldingTargetImportedBlockNumber = markRaw(new ObservableNumber(
             block_number,
-          ));
+          )));
     },
     observeIntegriteeBlockNumber(block_number: number) {
       this.integriteeLastBlockNumber
         ? this.integriteeLastBlockNumber?.observe(block_number)
-        : (this.integriteeLastBlockNumber = new ObservableNumber(block_number));
+        : (this.integriteeLastBlockNumber = markRaw(new ObservableNumber(
+              block_number,
+          )));
     },
     setShieldingTargetApiGenesisHashHex(genesis_hash_hex: string) {
       this.shieldingTargetApiGenesisHashHex = genesis_hash_hex;

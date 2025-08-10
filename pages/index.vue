@@ -137,6 +137,7 @@ import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
+import { toRaw } from 'vue';
 import {
   cryptoWaitReady,
   encodeAddress,
@@ -384,12 +385,23 @@ const updateNotes = async () => {
   }
   lastAccount = accountStore.getAccount;
   await fetchNoteBucketsInfo();
-  if (noteBucketsInfo.value?.last.unwrap().index <= lastBucketIndex ?? 0) {
+
+  if (!noteBucketsInfo.value) {
+    console.log("[updateNotes] no note buckets info");
+    return;
+  }
+
+  // If we want to use methods of the polkadot-js type, we have to
+  // remove vue's proxy which makes private fields unavailable.
+  const bucketsIndex = toRaw(noteBucketsInfo.value).last.unwrap().index.toNumber();
+  console.log("got buckets index: " + bucketsIndex);
+  if (bucketsIndex !== null && lastBucketIndex !== null && bucketsIndex <= lastBucketIndex) {
     console.log("bucket didn't change");
   } else {
-    lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index;
+    lastBucketIndex = bucketsIndex;
     console.log("lastBucketIndex=" + lastBucketIndex);
   }
+
   await fetchIncogniteeNotes(lastBucketIndex, true);
 };
 const fetchNoteBucketsInfo = async () => {
@@ -417,26 +429,43 @@ const fetchOlderBucket = async () => {
 
 /// returns the date as moment before which all notes have been purged from sidechain state
 const oldestMomentInNoteBuckets = computed(() => {
-  const beginsAt = noteBucketsInfo.value?.first.unwrap().begins_at;
+  if (!noteBucketsInfo.value) {
+    console.log("[oldestMomentInNoteBuckets] no note buckets info");
+    return NaN;
+  }
+  // If we want to use methods of the polkadot-js type, we have to
+  // remove vue's proxy which makes private fields unavailable.
+  const rawBucketsInfo = toRaw(noteBucketsInfo.value!);
+  const beginsAt = rawBucketsInfo.first.unwrap().begins_at;
   console.log("oldest moment is " + beginsAt?.toNumber());
   return beginsAt ? beginsAt.toNumber() : NaN;
 });
 
 const bucketsCount = computed(() => {
   if (!noteBucketsInfo.value) return 0;
+  // If we want to use methods of the polkadot-js type, we have to
+  // remove vue's proxy which makes private fields unavailable.
+  const rawBucketsInfo = toRaw(noteBucketsInfo.value!);
   return (
-    noteBucketsInfo.value.last.unwrap().index -
-    noteBucketsInfo.value.first.unwrap().index +
+      rawBucketsInfo.last.unwrap().index.toNumber() -
+      rawBucketsInfo.first.unwrap().index.toNumber() +
     1
   );
 });
 
 const unfetchedBucketsCount = computed(() => {
-  const firstBucketIndex = noteBucketsInfo.value?.first
+  if (!noteBucketsInfo.value) {
+    console.log("[unfetchedBucketsCount] no note buckets info");
+    return null;
+  }
+  // If we want to use methods of the polkadot-js type, we have to
+  // remove vue's proxy which makes private fields unavailable.
+  const rawBucketsInfo = toRaw(noteBucketsInfo.value!);
+  const firstBucketIndex = rawBucketsInfo.first
     .unwrap()
     .index.toNumber();
-  const lastBucketIndex = noteBucketsInfo.value?.last.unwrap().index.toNumber();
-  if (firstBucketIndex === null || lastBucketIndex === null) return null;
+  const lastBucketIndex = rawBucketsInfo.last.unwrap().index.toNumber();
+
   const unfetchedCount =
     firstNoteBucketIndexFetched.value === null
       ? lastBucketIndex - firstBucketIndex + 1

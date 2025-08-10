@@ -129,7 +129,7 @@ import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import { computed, onMounted, onUnmounted, ref, watch, defineProps } from "vue";
+import {computed, onMounted, onUnmounted, ref, watch, defineProps, markRaw} from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -693,13 +693,13 @@ async function reconnectShieldingTargetIfNecessary() {
     console.log(
       "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
     );
-    shieldingTargetApi.value = await ApiPromise.create({
+    shieldingTargetApi.value = markRaw(await ApiPromise.create({
       provider: wsProvider,
-    });
-    await shieldingTargetApi.value.isReadyOrError;
+    }));
+    await shieldingTargetApi.value!.isReadyOrError;
 
     // await is quick as we only subscribe
-    await shieldingTargetApi.value.rpc.chain.subscribeNewHeads((lastHeader) => {
+    await shieldingTargetApi.value!.rpc.chain.subscribeNewHeads((lastHeader) => {
       systemHealth.observeShieldingTargetBlockNumber(
         lastHeader.number.toNumber(),
       );
@@ -718,7 +718,8 @@ const subscribeWhatsReady = async () => {
   console.log(
     "trying to init api at " + chainConfigs[shieldingTarget.value].api,
   );
-  shieldingTargetApi.value = await ApiPromise.create({ provider: wsProvider });
+  // need to mark it as raw to keep access to private fields
+  shieldingTargetApi.value = markRaw(await ApiPromise.create({ provider: wsProvider }));
   await shieldingTargetApi.value.isReadyOrError;
   accountStore.setExistentialDeposit(
     shieldingTargetApi.value.consts.balances.existentialDeposit.toBigInt(),

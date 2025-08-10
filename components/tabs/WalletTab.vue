@@ -1472,7 +1472,7 @@ const unshield = async () => {
         incogniteeStore.fingerprint,
         accountStore.getAddress,
         unshieldingRecipientAddress.value,
-        amount.toNumber(),
+        amount,
         {
           signer: accountStore.injector?.signer,
           delegate: accountStore.sessionProxyForRole(SessionProxyRole.Any),

@@ -456,7 +456,7 @@ const bucketsCount = computed(() => {
 const unfetchedBucketsCount = computed(() => {
   if (!noteBucketsInfo.value) {
     console.log("[unfetchedBucketsCount] no note buckets info");
-    return null;
+    return 0;
   }
   // If we want to use methods of the polkadot-js type, we have to
   // remove vue's proxy which makes private fields unavailable.

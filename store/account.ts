@@ -12,8 +12,6 @@ import { sessionProxyRoleOrder } from "@/lib/sessionProxyStorage.ts";
 
 let currentAccount: AddressOrPair | null = null;
 
-type AccountInstance = InstanceType<typeof AddressOrPair>;
-
 export const useAccount = defineStore("account", {
   state: () => ({
     // if we have an external signer, this is an address only. otherwise it should be a pair
@@ -52,7 +50,7 @@ export const useAccount = defineStore("account", {
       }
       return account as string;
     },
-    getCurrentAccount(): AccountInstance {
+    getCurrentAccount(): AddressOrPair {
       if (!currentAccount) {
         throw new Error("No account set");
       }

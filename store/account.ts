@@ -11,6 +11,10 @@ import {
   sessionProxyRoleOrder,
 } from "@/lib/sessionProxyStorage.ts";
 
+let currentAccount : AddressOrPair | null = null;
+
+type AccountInstance = InstanceType<typeof AddressOrPair>
+
 export const useAccount = defineStore("account", {
   state: () => ({
     // if we have an external signer, this is an address only. otherwise it should be a pair
@@ -43,6 +47,19 @@ export const useAccount = defineStore("account", {
     existentialDeposit: <Record<string, BigInt>>{},
   }),
   getters: {
+    getAccount({ account }): string {
+      if (!account) {
+        throw new Error("No account set");
+      }
+      // Todo: we should use string in the first place as we infer string anywhere, but this is a workaround for now.
+      return account as string;
+    },
+    getCurrentAccount(): AccountInstance {
+      if (!currentAccount) {
+        throw new Error("No account set");
+      }
+      return currentAccount as AddressOrPair
+    },
     getShortAddress({ account }): string {
       if (!account) return "none";
       const address = asString(account as AddressOrPair);
@@ -238,6 +255,7 @@ export const useAccount = defineStore("account", {
       this.BalanceFrozen = {};
     },
     setAccount(account: AddressOrPair) {
+      currentAccount = account;
       this.account = account;
     },
     setInjector(injector: InjectedExtension) {

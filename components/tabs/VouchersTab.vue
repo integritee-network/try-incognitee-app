@@ -518,7 +518,7 @@ const fundNewVoucher = async () => {
         incogniteeStore.fingerprint,
         accountStore.getAddress,
         voucher.address,
-        amount.toNumber(),
+        amount,
         asset.value,
         note,
         {
@@ -540,7 +540,7 @@ const fundNewVoucher = async () => {
         incogniteeStore.fingerprint,
         accountStore.getAddress,
         voucher.address,
-        amount.toNumber(),
+        amount,
         note,
         {
           signer: accountStore.injector?.signer,

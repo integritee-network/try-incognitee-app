@@ -9,6 +9,8 @@ class ObservableNumber {
   constructor(value: number) {
     this.value = value;
     this.timestamp = new Date();
+    this.lastDuration = 0;
+    this.lastValue = 0;
   }
   observe(new_value: number) {
     if (new_value === this.value) {
@@ -83,8 +85,8 @@ export const useSystemHealth = defineStore("system-health", {
       shieldingTargetLightClientGenesisHashHex,
     }): SidechainHealth {
       const lag =
-        shieldingTargetLastBlockNumber?.value -
-        shieldingTargetImportedBlockNumber?.value;
+          (shieldingTargetLastBlockNumber?.value ?? 0) -
+          (shieldingTargetImportedBlockNumber?.value ?? 0);
       let importHealth;
       if (lag <= 12) {
         importHealth = Health.Healthy;
@@ -96,12 +98,12 @@ export const useSystemHealth = defineStore("system-health", {
         importHealth = Health.Unknown;
       }
       const targetHealth = parachainBlockAgeToHealth(
-        shieldingTargetLastBlockNumber?.age(),
+        shieldingTargetLastBlockNumber?.age() ?? 0,
       );
       let genesisMatch = Health.Warning;
       if (
-        shieldingTargetApiGenesisHashHex?.length > 0 &&
-        shieldingTargetLightClientGenesisHashHex?.length > 0
+          (shieldingTargetApiGenesisHashHex?.length ?? 0) > 0 &&
+          (shieldingTargetLightClientGenesisHashHex?.length ?? 0) > 0
       ) {
         genesisMatch =
           shieldingTargetApiGenesisHashHex ===
@@ -113,34 +115,34 @@ export const useSystemHealth = defineStore("system-health", {
     },
     getIntegriteeSystemHealth({ integriteeLastBlockNumber }): IntegriteeHealth {
       const progressHealth = parachainBlockAgeToHealth(
-        integriteeLastBlockNumber?.age(),
+        integriteeLastBlockNumber?.age() ?? 0,
       );
       return new IntegriteeHealth(progressHealth);
     },
     getIntergiteeBlockNumberObservable({
       integriteeLastBlockNumber,
     }): ObservableNumber {
-      return integriteeLastBlockNumber;
+      return integriteeLastBlockNumber ?? new ObservableNumber(0);
     },
     getShieldingTargetBlockNumberObservable({
       shieldingTargetLastBlockNumber,
     }): ObservableNumber {
-      return shieldingTargetLastBlockNumber;
+      return shieldingTargetLastBlockNumber ?? new ObservableNumber(0);
     },
     getShieldingTargetImportedBlockNumberObservable({
       shieldingTargetImportedBlockNumber,
     }): ObservableNumber {
-      return shieldingTargetImportedBlockNumber;
+      return shieldingTargetImportedBlockNumber ?? new ObservableNumber(0);
     },
     getShieldingTargetApiGenesisHashHex({
       shieldingTargetApiGenesisHashHex,
     }): string {
-      return shieldingTargetApiGenesisHashHex;
+      return shieldingTargetApiGenesisHashHex ?? "undefined";
     },
     getShieldingTargetLightClientGenesisHashHex({
       shieldingTargetLightClientGenesisHashHex,
     }): string {
-      return shieldingTargetLightClientGenesisHashHex;
+      return shieldingTargetLightClientGenesisHashHex ?? "undefined";
     },
   },
   actions: {

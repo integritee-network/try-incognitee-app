@@ -2,14 +2,13 @@ import { defineStore } from "pinia";
 import type { AddressOrPair } from "@polkadot/api-base/types";
 import { asString } from "@encointer/util";
 import type { InjectedExtension } from "@polkadot/extension-inject/types";
-import { ChainId } from "@/configs/chains";
+import type { ChainId } from "@/configs/chains";
+import type { ChainAssetId } from "@/configs/assets";
 import { assetDecimals, unifyAssetId } from "@/configs/assets";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { divideBigIntToFloat, formatDecimalBalance } from "@/helpers/numbers";
-import {
-  SessionProxyRole,
-  sessionProxyRoleOrder,
-} from "@/lib/sessionProxyStorage.ts";
+import type { SessionProxyRole } from "@/lib/sessionProxyStorage.ts";
+import { sessionProxyRoleOrder } from "@/lib/sessionProxyStorage.ts";
 
 let currentAccount: AddressOrPair | null = null;
 
@@ -28,15 +27,15 @@ export const useAccount = defineStore("account", {
     // remember if the user has declined creating a proxy
     sessionProxyDeclined: <boolean>false,
     // free balance per chain
-    balanceFree: <Record<string, BigInt>>{},
+    balanceFree: <Record<string, bigint>>{},
     // reserved balance per chain
-    balanceReserved: <Record<string, BigInt>>{},
+    balanceReserved: <Record<string, bigint>>{},
     // frozen balance per chain
-    balanceFrozen: <Record<string, BigInt>>{},
+    balanceFrozen: <Record<string, bigint>>{},
     // nonce per chain
     nonce: <Record<ChainId, number>>{},
     // genesis hash
-    genesisHash: <Record<String, number>>{},
+    genesisHash: <Record<string, number>>{},
     // decimals (we assume it's the same for all used chains as it's the token we're shielding
     nativeDecimals: <number>0,
     // native token symbol (we assume it's the same for all used chains as it's the token we're shielding
@@ -44,7 +43,7 @@ export const useAccount = defineStore("account", {
     // ss58 format (we assume it's the same for all used chains
     ss58Format: <number>42,
     // existential deposit per chain
-    existentialDeposit: <Record<string, BigInt>>{},
+    existentialDeposit: <Record<string, bigint>>{},
   }),
   getters: {
     getAccountAsString({ account }): string {
@@ -249,9 +248,9 @@ export const useAccount = defineStore("account", {
       this.sessionProxyDeclined = false;
       this.sessionProxies = {};
       this.injector = null;
-      this.BalanceFree = {};
-      this.BalanceReserved = {};
-      this.BalanceFrozen = {};
+      this.balanceFree = {};
+      this.balanceReserved = {};
+      this.balanceFrozen = {};
     },
     setAccount(account: AddressOrPair) {
       currentAccount = account;
@@ -276,20 +275,20 @@ export const useAccount = defineStore("account", {
       delete this.sessionProxies[role];
       delete this.sessionProxySeeds[role];
     },
-    setBalanceFree(balance: BigInt, chainAsset: ChainAssetId) {
+    setBalanceFree(balance: bigint, chainAsset: ChainAssetId) {
       this.balanceFree[chainAsset.key()] = balance;
     },
-    setBalanceReserved(balance: BigInt, chainAsset: ChainAssetId) {
+    setBalanceReserved(balance: bigint, chainAsset: ChainAssetId) {
       this.balanceReserved[chainAsset.key()] = balance;
     },
-    setBalanceFrozen(balance: BigInt, chainAsset: ChainAssetId) {
+    setBalanceFrozen(balance: bigint, chainAsset: ChainAssetId) {
       this.balanceFrozen[chainAsset.key()] = balance;
     },
     setNonce(nonce: number, chain: ChainId) {
       //console.debug(`Setting nonce for chain ${chain} to ${nonce}`);
       this.nonce[chain] = nonce;
     },
-    setGenesisHash(genesisHash: String, chain: ChainId) {
+    setGenesisHash(genesisHash: string, chain: ChainId) {
       this.genesisHash[chain] = genesisHash;
     },
     setNativeDecimals(decimals: number) {
@@ -303,7 +302,7 @@ export const useAccount = defineStore("account", {
       this.ss58Format = ss58Format;
     },
     setExistentialDeposit(
-      existentialDeposit: BigInt,
+      existentialDeposit: bigint,
       chainAsset: ChainAssetId,
     ) {
       this.existentialDeposit[chainAsset.key()] = existentialDeposit;
@@ -312,7 +311,7 @@ export const useAccount = defineStore("account", {
       amount: number,
       chainAsset: ChainAssetId,
       forceDecimals?: number,
-    ): BigInt {
+    ): bigint {
       const decimals =
         forceDecimals !== undefined
           ? forceDecimals

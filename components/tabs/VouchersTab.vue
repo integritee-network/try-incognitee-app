@@ -488,7 +488,7 @@ const fundNewVoucher = async () => {
     sendAmount.value,
     incogniteeChainAssetId.value,
   );
-  const account = accountStore.account;
+  const account = accountStore.getCurrentAccount;
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;
   // fixme: https://github.com/encointer/encointer-js/issues/123
@@ -510,14 +510,14 @@ const fundNewVoucher = async () => {
   );
 
   if (asset.value) {
-    await incogniteeStore.api
+    await incogniteeStore.getWorker()
       .trustedAssetTransfer(
         account,
         incogniteeStore.shard,
         incogniteeStore.fingerprint,
         accountStore.getAddress,
         voucher.address,
-        amount,
+        amount.toNumber(),
         asset.value,
         note,
         {
@@ -531,14 +531,14 @@ const fundNewVoucher = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.api
+    await incogniteeStore.getWorker()
       .trustedBalanceTransfer(
         account,
         incogniteeStore.shard,
         incogniteeStore.fingerprint,
         accountStore.getAddress,
         voucher.address,
-        amount,
+        amount.toNumber(),
         note,
         {
           signer: accountStore.injector?.signer,
@@ -555,10 +555,10 @@ const fundNewVoucher = async () => {
 };
 
 const generateNewVoucher = async (
-  amount: BigInt,
+  amount: bigint,
   shard: string,
   note: string | null,
-): Voucher => {
+): Promise<Voucher> => {
   return cryptoWaitReady().then(() => {
     const generatedMnemonic = mnemonicGenerate();
     const localKeyring = new Keyring({ type: "sr25519", ss58Format: 42 });

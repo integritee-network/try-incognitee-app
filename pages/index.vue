@@ -672,10 +672,10 @@ async function onBackground() {
 
 async function closeWs() {
   console.debug("closing websocket");
-  if (incogniteeStore.api?.isConnected) {
+  if (incogniteeStore.isConnected()) {
     // not sure why, but sometimes the websocket is already
     // closed here.
-    await incogniteeStore.api?.closeWs();
+    await incogniteeStore.getWorker().closeWs();
     console.debug("closed websocket");
   } else {
     console.debug("websocket was closed already");

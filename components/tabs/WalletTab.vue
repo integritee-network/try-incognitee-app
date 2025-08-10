@@ -1169,7 +1169,7 @@ import {
   ChainAssetId,
   unifyAssetId,
 } from "../../configs/assets";
-import type {GuessTheNumberInfo} from "@encointer/types";
+import type { GuessTheNumberInfo } from "@encointer/types";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -1442,7 +1442,8 @@ const unshield = async () => {
     `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${unshieldingRecipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
   if (asset.value) {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .assetUnshieldFunds(
         account,
         incogniteeStore.shard,
@@ -1465,7 +1466,8 @@ const unshield = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .balanceUnshieldFunds(
         account,
         incogniteeStore.shard,
@@ -1523,7 +1525,8 @@ const sendPrivately = async () => {
   );
 
   if (asset.value) {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .trustedAssetTransfer(
         account,
         incogniteeStore.shard,
@@ -1544,7 +1547,8 @@ const sendPrivately = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .trustedBalanceTransfer(
         account,
         incogniteeStore.shard,
@@ -1583,7 +1587,8 @@ const submitGuess = async () => {
     `sending guess ${guess.value} from ${account} privately to incognitee`,
   );
 
-  await incogniteeStore.getWorker()
+  await incogniteeStore
+    .getWorker()
     .guessTheNumber(
       account,
       incogniteeStore.shard,
@@ -1604,9 +1609,9 @@ const submitGuess = async () => {
 const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("fetch guess the number info");
-  const getter = incogniteeStore.getWorker().guessTheNumberInfoGetter(
-    incogniteeStore.shard,
-  );
+  const getter = incogniteeStore
+    .getWorker()
+    .guessTheNumberInfoGetter(incogniteeStore.shard);
   await getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
     guessTheNumberInfo.value = info;

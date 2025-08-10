@@ -510,7 +510,8 @@ const fundNewVoucher = async () => {
   );
 
   if (asset.value) {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .trustedAssetTransfer(
         account,
         incogniteeStore.shard,
@@ -531,7 +532,8 @@ const fundNewVoucher = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.getWorker()
+    await incogniteeStore
+      .getWorker()
       .trustedBalanceTransfer(
         account,
         incogniteeStore.shard,

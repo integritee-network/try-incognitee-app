@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import {markRaw} from "vue";
+import { markRaw } from "vue";
 
 class ObservableNumber {
   value: number;
@@ -85,8 +85,8 @@ export const useSystemHealth = defineStore("system-health", {
       shieldingTargetLightClientGenesisHashHex,
     }): SidechainHealth {
       const lag =
-          (shieldingTargetLastBlockNumber?.value ?? 0) -
-          (shieldingTargetImportedBlockNumber?.value ?? 0);
+        (shieldingTargetLastBlockNumber?.value ?? 0) -
+        (shieldingTargetImportedBlockNumber?.value ?? 0);
       let importHealth;
       if (lag <= 12) {
         importHealth = Health.Healthy;
@@ -102,8 +102,8 @@ export const useSystemHealth = defineStore("system-health", {
       );
       let genesisMatch = Health.Warning;
       if (
-          (shieldingTargetApiGenesisHashHex?.length ?? 0) > 0 &&
-          (shieldingTargetLightClientGenesisHashHex?.length ?? 0) > 0
+        (shieldingTargetApiGenesisHashHex?.length ?? 0) > 0 &&
+        (shieldingTargetLightClientGenesisHashHex?.length ?? 0) > 0
       ) {
         genesisMatch =
           shieldingTargetApiGenesisHashHex ===
@@ -132,7 +132,9 @@ export const useSystemHealth = defineStore("system-health", {
     getShieldingTargetImportedBlockNumberObservable({
       shieldingTargetImportedBlockNumber,
     }): ObservableNumber {
-      return shieldingTargetImportedBlockNumber ?? markRaw(new ObservableNumber(0));
+      return (
+        shieldingTargetImportedBlockNumber ?? markRaw(new ObservableNumber(0))
+      );
     },
     getShieldingTargetApiGenesisHashHex({
       shieldingTargetApiGenesisHashHex,
@@ -149,23 +151,23 @@ export const useSystemHealth = defineStore("system-health", {
     observeShieldingTargetBlockNumber(block_number: number) {
       this.shieldingTargetLastBlockNumber
         ? this.shieldingTargetLastBlockNumber?.observe(block_number)
-        : (this.shieldingTargetLastBlockNumber = markRaw(new ObservableNumber(
-            block_number,
-          )));
+        : (this.shieldingTargetLastBlockNumber = markRaw(
+            new ObservableNumber(block_number),
+          ));
     },
     observeShieldingTargetImportedBlockNumber(block_number: number) {
       this.shieldingTargetImportedBlockNumber
         ? this.shieldingTargetImportedBlockNumber?.observe(block_number)
-        : (this.shieldingTargetImportedBlockNumber = markRaw(new ObservableNumber(
-            block_number,
-          )));
+        : (this.shieldingTargetImportedBlockNumber = markRaw(
+            new ObservableNumber(block_number),
+          ));
     },
     observeIntegriteeBlockNumber(block_number: number) {
       this.integriteeLastBlockNumber
         ? this.integriteeLastBlockNumber?.observe(block_number)
-        : (this.integriteeLastBlockNumber = markRaw(new ObservableNumber(
-              block_number,
-          )));
+        : (this.integriteeLastBlockNumber = markRaw(
+            new ObservableNumber(block_number),
+          ));
     },
     setShieldingTargetApiGenesisHashHex(genesis_hash_hex: string) {
       this.shieldingTargetApiGenesisHashHex = genesis_hash_hex;

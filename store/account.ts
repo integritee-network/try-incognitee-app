@@ -11,9 +11,9 @@ import {
   sessionProxyRoleOrder,
 } from "@/lib/sessionProxyStorage.ts";
 
-let currentAccount : AddressOrPair | null = null;
+let currentAccount: AddressOrPair | null = null;
 
-type AccountInstance = InstanceType<typeof AddressOrPair>
+type AccountInstance = InstanceType<typeof AddressOrPair>;
 
 export const useAccount = defineStore("account", {
   state: () => ({
@@ -58,7 +58,7 @@ export const useAccount = defineStore("account", {
       if (!currentAccount) {
         throw new Error("No account set");
       }
-      return currentAccount as AddressOrPair
+      return currentAccount as AddressOrPair;
     },
     getShortAddress({ account }): string {
       if (!account) return "none";

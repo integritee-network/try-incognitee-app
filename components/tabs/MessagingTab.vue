@@ -686,9 +686,7 @@ const sendPrivately = async () => {
   }
   const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
   if (note == null) {
-    alert(
-        "Please enter a message to send privately",
-    );
+    alert("Please enter a message to send privately");
     return;
   }
 
@@ -700,7 +698,8 @@ const sendPrivately = async () => {
     `sending message from ${account.address} privately to ${conversationAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
-  await incogniteeStore.getWorker()
+  await incogniteeStore
+    .getWorker()
     .trustedSendNote(
       account,
       incogniteeStore.shard,

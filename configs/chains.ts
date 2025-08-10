@@ -18,7 +18,7 @@ type ChainConfig = {
   name: string;
   api: string[];
   faucetUrl?: string;
-  indexerUrls?: string[]
+  indexerUrls?: string[];
 };
 
 export const chainConfigs: Record<ChainId, ChainConfig> = {

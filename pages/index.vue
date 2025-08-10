@@ -129,7 +129,15 @@ import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import {computed, onMounted, onUnmounted, ref, watch, defineProps, markRaw} from "vue";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+  defineProps,
+  markRaw,
+} from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 import { useAccount } from "@/store/account.ts";
 import { useIncognitee } from "@/store/incognitee.ts";
@@ -137,7 +145,7 @@ import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { hexToU8a, u8aToHex } from "@polkadot/util";
-import { toRaw } from 'vue';
+import { toRaw } from "vue";
 import {
   cryptoWaitReady,
   encodeAddress,
@@ -176,8 +184,12 @@ import SwapTab from "~/components/tabs/SwapTab.vue";
 import GovTab from "~/components/tabs/GovTab.vue";
 import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
 import FaqTab from "~/components/tabs/FaqTab.vue";
-import type {AccountEssentials, NotesBucketInfo, TimestampedTrustedNote} from "@encointer/types";
-import type {Vec} from "@polkadot/types";
+import type {
+  AccountEssentials,
+  NotesBucketInfo,
+  TimestampedTrustedNote,
+} from "@encointer/types";
+import type { Vec } from "@polkadot/types";
 
 const router = useRouter();
 const accountStore = useAccount();
@@ -238,14 +250,14 @@ const fetchIncogniteeBalance = async () => {
           `fetching incognitee balance&nonce needs signing in extension: ${injector.name}`,
         );
       }
-      getterMap[currentAccount] =
-        await incogniteeStore.withWorker(
-            async (worker) => await worker.accountEssentialsGetter(
-                currentAccount,
-                incogniteeStore.shard,
-                { signer: injector?.signer },
-            )
-        );
+      getterMap[currentAccount] = await incogniteeStore.withWorker(
+        async (worker) =>
+          await worker.accountEssentialsGetter(
+            currentAccount,
+            incogniteeStore.shard,
+            { signer: injector?.signer },
+          ),
+      );
     } else {
       console.debug(`fetching incognitee balance&nonce using cached getter`);
       if (isChoosingAccount.value == false) {
@@ -346,8 +358,8 @@ const fetchNetworkStatus = async () => {
   if (!incogniteeStore.apiReady) return;
 
   console.debug("fetch network status info");
-  const getter = await incogniteeStore.withWorker(
-      (worker) => worker.parentchainsInfoGetter(incogniteeShard.value!)
+  const getter = await incogniteeStore.withWorker((worker) =>
+    worker.parentchainsInfoGetter(incogniteeShard.value!),
   );
   const p2 = getter.send().then((info) => {
     console.debug(`parentchains info: ${info}`);
@@ -374,7 +386,7 @@ const fetchNetworkStatus = async () => {
 
 const noteBucketsInfo = ref<NotesBucketInfo | null>(null);
 const firstNoteBucketIndexFetched = ref<number | null>(null);
-let lastAccount: string | null  = null;
+let lastAccount: string | null = null;
 let lastBucketIndex: number | null = null;
 const noteStore = useNotes();
 const updateNotes = async () => {
@@ -393,9 +405,15 @@ const updateNotes = async () => {
 
   // If we want to use methods of the polkadot-js type, we have to
   // remove vue's proxy which makes private fields unavailable.
-  const bucketsIndex = toRaw(noteBucketsInfo.value).last.unwrap().index.toNumber();
+  const bucketsIndex = toRaw(noteBucketsInfo.value)
+    .last.unwrap()
+    .index.toNumber();
   console.log("got buckets index: " + bucketsIndex);
-  if (bucketsIndex !== null && lastBucketIndex !== null && bucketsIndex <= lastBucketIndex) {
+  if (
+    bucketsIndex !== null &&
+    lastBucketIndex !== null &&
+    bucketsIndex <= lastBucketIndex
+  ) {
     console.log("bucket didn't change");
   } else {
     lastBucketIndex = bucketsIndex;
@@ -408,8 +426,8 @@ const fetchNoteBucketsInfo = async () => {
   if (!incogniteeStore.apiReady) return;
 
   console.log("fetch note buckets info");
-  const getter = await incogniteeStore.withWorker(
-      (worker) => worker.noteBucketsInfoGetter(incogniteeStore.shard)
+  const getter = await incogniteeStore.withWorker((worker) =>
+    worker.noteBucketsInfoGetter(incogniteeStore.shard),
   );
   await getter.send().then((info) => {
     console.log(`note buckets info: ${info}`);
@@ -447,8 +465,8 @@ const bucketsCount = computed(() => {
   // remove vue's proxy which makes private fields unavailable.
   const rawBucketsInfo = toRaw(noteBucketsInfo.value!);
   return (
-      rawBucketsInfo.last.unwrap().index.toNumber() -
-      rawBucketsInfo.first.unwrap().index.toNumber() +
+    rawBucketsInfo.last.unwrap().index.toNumber() -
+    rawBucketsInfo.first.unwrap().index.toNumber() +
     1
   );
 });
@@ -461,9 +479,7 @@ const unfetchedBucketsCount = computed(() => {
   // If we want to use methods of the polkadot-js type, we have to
   // remove vue's proxy which makes private fields unavailable.
   const rawBucketsInfo = toRaw(noteBucketsInfo.value!);
-  const firstBucketIndex = rawBucketsInfo.first
-    .unwrap()
-    .index.toNumber();
+  const firstBucketIndex = rawBucketsInfo.first.unwrap().index.toNumber();
   const lastBucketIndex = rawBucketsInfo.last.unwrap().index.toNumber();
 
   const unfetchedCount =
@@ -515,12 +531,13 @@ const fetchIncogniteeNotes = async (
         }
       }
       getterMap[mapKey] = await incogniteeStore.withWorker(
-          async (worker) => await worker.notesForTrustedGetter(
+        async (worker) =>
+          await worker.notesForTrustedGetter(
             accountStore.getAccount,
             bucketIndex,
             incogniteeStore.shard,
             { delegate: sessionProxy, signer: injector?.signer },
-          )
+          ),
       );
     } else {
       console.debug(`fetching incognitee notes using cached getter`);
@@ -577,14 +594,14 @@ async function fetchWorkerData() {
     return;
   }
 
-await incogniteeStore.withWorker((worker) => {
+  await incogniteeStore.withWorker((worker) => {
     console.debug(
-        `[IntegriteeWorker]: connections stats: ${JSON.stringify(worker.wsStats)}`,
+      `[IntegriteeWorker]: connections stats: ${JSON.stringify(worker.wsStats)}`,
     );
     console.debug(
-        `[IntegriteeWorker]: endpoint stats: ${JSON.stringify(worker.endpointStats)}`,
+      `[IntegriteeWorker]: endpoint stats: ${JSON.stringify(worker.endpointStats)}`,
     );
-  })
+  });
 
   await fetchNetworkStatus();
   await fetchIncogniteeBalance();
@@ -644,7 +661,7 @@ async function onVisible() {
   clearInterval(disconnectWsTimeout);
 
   if (!incogniteeStore.apiReady) {
-    console.debug("[onVisible] api not ready")
+    console.debug("[onVisible] api not ready");
     return;
   }
 
@@ -693,17 +710,21 @@ async function reconnectShieldingTargetIfNecessary() {
     console.log(
       "re-initializing api at " + chainConfigs[shieldingTarget.value].api,
     );
-    shieldingTargetApi.value = markRaw(await ApiPromise.create({
-      provider: wsProvider,
-    }));
+    shieldingTargetApi.value = markRaw(
+      await ApiPromise.create({
+        provider: wsProvider,
+      }),
+    );
     await shieldingTargetApi.value!.isReadyOrError;
 
     // await is quick as we only subscribe
-    await shieldingTargetApi.value!.rpc.chain.subscribeNewHeads((lastHeader) => {
-      systemHealth.observeShieldingTargetBlockNumber(
-        lastHeader.number.toNumber(),
-      );
-    });
+    await shieldingTargetApi.value!.rpc.chain.subscribeNewHeads(
+      (lastHeader) => {
+        systemHealth.observeShieldingTargetBlockNumber(
+          lastHeader.number.toNumber(),
+        );
+      },
+    );
   }
 }
 
@@ -719,7 +740,9 @@ const subscribeWhatsReady = async () => {
     "trying to init api at " + chainConfigs[shieldingTarget.value].api,
   );
   // need to mark it as raw to keep access to private fields
-  shieldingTargetApi.value = markRaw(await ApiPromise.create({ provider: wsProvider }));
+  shieldingTargetApi.value = markRaw(
+    await ApiPromise.create({ provider: wsProvider }),
+  );
   await shieldingTargetApi.value.isReadyOrError;
   accountStore.setExistentialDeposit(
     shieldingTargetApi.value.consts.balances.existentialDeposit.toBigInt(),

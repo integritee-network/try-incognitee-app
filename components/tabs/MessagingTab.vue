@@ -661,7 +661,7 @@ const submitSendForm = () => {
 const sendPrivately = async () => {
   console.log("sending message on incognitee");
   txStatus.value = "⌛ Sending message privately on incognitee";
-  const account = accountStore.account;
+  const account = accountStore.getCurrentAccount;
   if (
     accountStore.getDecimalBalanceTransferable(incogniteeChainAssetId.value) <
       3 * txFeeBase(asset.value) &&
@@ -685,6 +685,11 @@ const sendPrivately = async () => {
     return;
   }
   const note = sendPrivateNote.value.length > 0 ? sendPrivateNote.value : null;
+  if (note == null) {
+    alert("Please enter a message to send privately");
+    return;
+  }
+
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
@@ -693,7 +698,8 @@ const sendPrivately = async () => {
     `sending message from ${account.address} privately to ${conversationAddress.value} with nonce ${nonce} and note: ${note}`,
   );
 
-  await incogniteeStore.api
+  await incogniteeStore
+    .getWorker()
     .trustedSendNote(
       account,
       incogniteeStore.shard,

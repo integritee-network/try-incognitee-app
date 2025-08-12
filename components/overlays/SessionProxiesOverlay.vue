@@ -211,6 +211,7 @@ import {
   asset,
   incogniteeChainNativeAsset,
 } from "~/lib/environmentConfig";
+import type { AddressOrPair } from "@polkadot/api-base/types";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
@@ -280,7 +281,7 @@ const addSessionProxyFromSeed = async (seed: Uint8Array) => {
     name: "fresh",
   });
   const injector = accountStore.hasInjector ? accountStore.injector : null;
-  const role = incogniteeStore.api.createType(
+  const role = incogniteeStore.createType(
     "SessionProxyRole",
     selectedSessionProxyRole.value,
   );
@@ -299,9 +300,10 @@ const addSessionProxyFromSeed = async (seed: Uint8Array) => {
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
-  await incogniteeStore.api
+  await incogniteeStore
+    .getWorker()
     .trustedAddSessionProxy(
-      accountStore.account,
+      accountStore.getCurrentAccount,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
       role,
@@ -345,9 +347,10 @@ const modifySessionProxyRole = async (
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
-  await incogniteeStore.api
+  await incogniteeStore
+    .getWorker()
     .trustedAddSessionProxy(
-      accountStore.account,
+      accountStore.getCurrentAccount,
       incogniteeStore.shard,
       incogniteeStore.fingerprint,
       role,

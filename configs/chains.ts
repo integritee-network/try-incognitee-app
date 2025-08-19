@@ -16,8 +16,9 @@ export enum ChainId {
 
 type ChainConfig = {
   name: string;
-  api: string;
+  api: string[];
   faucetUrl?: string;
+  indexerUrls?: string[];
 };
 
 export const chainConfigs: Record<ChainId, ChainConfig> = {
@@ -82,24 +83,24 @@ export const chainConfigs: Record<ChainId, ChainConfig> = {
   },
   [ChainId.IntegriteePaseo]: {
     name: "Integritee Paseo",
-    api: "wss://paseo.api.integritee.network",
+    api: ["wss://paseo.api.integritee.network"],
     faucetUrl: "https://substratefaucet.xyz/integritee/ADDRESS",
   },
   [ChainId.IntegriteeDev]: {
     name: "Integritee Dev",
-    api: "ws://localhost:9944",
+    api: ["ws://localhost:9944"],
   },
   [ChainId.IncogniteeAssetHubPaseo]: {
     name: "Incognitee Asset Hub Paseo",
-    api: "wss://scv1.asset-hub-paseo.api.incognitee.io:443",
+    api: ["wss://scv1.asset-hub-paseo.api.incognitee.io:443"],
   },
   [ChainId.IncogniteeIntegriteeKusama]: {
     name: "Incognitee Integritee Kusama",
-    api: "wss://scv1.integritee-kusama.api.incognitee.io:443",
+    api: ["wss://scv1.integritee-kusama.api.incognitee.io:443"],
   },
   [ChainId.IncogniteeAssetHubPolkadot]: {
     name: "Incognitee Asset Hub Polkadot",
-    api: "wss://scv1.asset-hub-polkadot.api.incognitee.io:443",
+    api: ["wss://scv1.asset-hub-polkadot.api.incognitee.io:443"],
   },
 };
 

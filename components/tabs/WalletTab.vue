@@ -1169,19 +1169,20 @@ import {
   ChainAssetId,
   unifyAssetId,
 } from "../../configs/assets";
+import type { GuessTheNumberInfo } from "@encointer/types";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();
 const systemHealth = useSystemHealth();
 const isSignerBusy = ref(false);
-const sendAmount = ref(null);
+const sendAmount = ref<number | null>(null);
 const sendPrivateNote = ref("");
 const shieldAmount = ref(11.0);
 const unshieldAmount = ref(10.0);
 const recipientAddress = ref("");
 const unshieldingRecipientAddress = ref("");
 const guess = ref(null);
-const guessTheNumberInfo = ref(null);
+const guessTheNumberInfo = ref<GuessTheNumberInfo | null>(null);
 const currentTab = ref("public");
 const txStatus = ref("");
 const faucetUrl = ref(null);
@@ -1432,7 +1433,7 @@ const unshield = async () => {
     unshieldAmount.value,
     incogniteeChainAssetId.value,
   );
-  const account = accountStore.account;
+  const account = accountStore.getCurrentAccount;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
@@ -1441,7 +1442,8 @@ const unshield = async () => {
     `sending ${unshieldAmount.value} ${accountStore.getSymbol(asset.value)} from ${accountStore.getAddress} publicly (nonce:${nonce}) to ${unshieldingRecipientAddress.value} on L1 (shard: ${incogniteeStore.shard})`,
   );
   if (asset.value) {
-    await incogniteeStore.api
+    await incogniteeStore
+      .getWorker()
       .assetUnshieldFunds(
         account,
         incogniteeStore.shard,
@@ -1464,7 +1466,8 @@ const unshield = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.api
+    await incogniteeStore
+      .getWorker()
       .balanceUnshieldFunds(
         account,
         incogniteeStore.shard,
@@ -1492,11 +1495,16 @@ const unshield = async () => {
 const sendPrivately = async () => {
   console.log("sending funds on incognitee");
   txStatus.value = "⌛ Sending funds privately on Incognitee.";
+  if (!sendAmount.value) {
+    alert("Please enter an amount to send.");
+    return;
+  }
+
   const amount = accountStore.decimalAmountToBigInt(
-    sendAmount.value,
+    sendAmount.value!,
     incogniteeChainAssetId.value,
   );
-  const account = accountStore.account;
+  const account = accountStore.getCurrentAccount;
 
   const encoder = new TextEncoder();
   const byteLength = encoder.encode(sendPrivateNote.value).length;
@@ -1517,7 +1525,8 @@ const sendPrivately = async () => {
   );
 
   if (asset.value) {
-    await incogniteeStore.api
+    await incogniteeStore
+      .getWorker()
       .trustedAssetTransfer(
         account,
         incogniteeStore.shard,
@@ -1538,7 +1547,8 @@ const sendPrivately = async () => {
       )
       .catch((err) => handleTopError(err));
   } else {
-    await incogniteeStore.api
+    await incogniteeStore
+      .getWorker()
       .trustedBalanceTransfer(
         account,
         incogniteeStore.shard,
@@ -1561,18 +1571,24 @@ const sendPrivately = async () => {
   //todo: manually inc nonce locally avoiding clashes with fetchIncogniteeBalance
 };
 const submitGuess = async () => {
+  if (!guess.value) {
+    alert("Please enter a guess");
+    return;
+  }
+
   console.log("submit guess: ", guess.value);
   txStatus.value = "⌛ Privately submitting your guess to Incognitee.";
-  const account = accountStore.account;
+  const account = accountStore.getCurrentAccount;
   const nonce = new u32(
     new TypeRegistry(),
     accountStore.nonce[incogniteeSidechain.value],
   );
   console.log(
-    `sending guess ${guess.value} from ${account.address} privately to incognitee`,
+    `sending guess ${guess.value} from ${account} privately to incognitee`,
   );
 
-  await incogniteeStore.api
+  await incogniteeStore
+    .getWorker()
     .guessTheNumber(
       account,
       incogniteeStore.shard,
@@ -1593,9 +1609,9 @@ const submitGuess = async () => {
 const fetchGuessTheNumberInfo = async () => {
   if (!incogniteeStore.apiReady) return;
   console.log("fetch guess the number info");
-  const getter = incogniteeStore.api.guessTheNumberInfoGetter(
-    incogniteeStore.shard,
-  );
+  const getter = incogniteeStore
+    .getWorker()
+    .guessTheNumberInfoGetter(incogniteeStore.shard);
   await getter.send().then((info) => {
     console.log(`guess the number info: ${info}`);
     guessTheNumberInfo.value = info;
@@ -1739,7 +1755,7 @@ const openPrivateSendOverlay = () => {
   );
   sendAmount.value = Math.floor(
     Math.min(
-      sendAmount.value,
+      sendAmount.value!,
       accountStore.getDecimalBalanceFree(incogniteeChainAssetId.value) -
         txFeeBase(asset.value),
     ),

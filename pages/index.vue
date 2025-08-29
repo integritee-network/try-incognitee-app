@@ -37,15 +37,9 @@
   <div v-else-if="activeApp === 'faq'"><FaqTab /></div>
   <div v-else-if="activeApp === 'swap'"><SwapTab /></div>
   <div v-else-if="activeApp === 'gov'"><GovTab /></div>
-  <div v-else-if="activeApp === 'teerdays'">
-    <TeerDaysTab :isMobile="isMobile" />
-  </div>
-  <div v-else-if="activeApp === 'omnichat'">
-    <OmniChatPage />
-  </div>
-  <div v-else-if="activeApp === 'payment-success'">
-    <PaymentSuccessTab />
-  </div>
+  <div v-else-if="activeApp === 'teerdays'"><TeerDaysTab :isMobile="isMobile" /></div>
+  <div v-else-if="activeApp === 'omnichat'"><OmniChatPage /></div>
+  <div v-else-if="activeApp === 'payment-success'"><PaymentSuccessTab /></div>
   <!-- New Wallet -->
   <OverlayDialog
     :show="showNewWalletOverlay"
@@ -131,12 +125,24 @@
 </template>
 
 <script setup lang="ts">
+//Import Tabs 
 import WalletTab from "~/components/tabs/WalletTab.vue";
 import VouchersTab from "~/components/tabs/VouchersTab.vue";
-import OmniChatPage from "~/pages/omnichat.vue";
+import SwapTab from "~/components/tabs/SwapTab.vue";
+import GovTab from "~/components/tabs/GovTab.vue";
+import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
+import FaqTab from "~/components/tabs/FaqTab.vue";
+import MessagingTab from "~/components/tabs/MessagingTab.vue";
 import PaymentSuccessTab from "~/components/tabs/PaymentSuccessTab.vue";
+
+//Import Overlays
 import ChooseWalletOverlay from "~/components/overlays/ChooseWalletOverlay.vue";
 import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
+
+//Import Pages
+import OmniChatPage from "~/pages/omnichat.vue";
+
+
 import {
   computed,
   onMounted,
@@ -187,11 +193,7 @@ import {
   SessionProxyRole,
   sessionProxyRoleOrder,
 } from "@/lib/sessionProxyStorage.ts";
-import MessagingTab from "~/components/tabs/MessagingTab.vue";
-import SwapTab from "~/components/tabs/SwapTab.vue";
-import GovTab from "~/components/tabs/GovTab.vue";
-import TeerDaysTab from "~/components/tabs/TeerDaysTab.vue";
-import FaqTab from "~/components/tabs/FaqTab.vue";
+
 
 const router = useRouter();
 const accountStore = useAccount();

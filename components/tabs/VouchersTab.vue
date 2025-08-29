@@ -1,24 +1,7 @@
 <template>
-  <div class="mt-3 sm:mt-5 px-3 flex justify-between items-center">
-    <button
-      @click="eventBus.emit('toggleSidebar')"
-      class="lg:hidden text-white focus:outline-none text-2xl"
-      id="sidebar-open"
-    >
-      ☰
-    </button>
-    <div class="lg:hidden" id="vouchers-tab-health-indicator">
-      <HealthIndicator />
-    </div>
-    <div class="lg:hidden" id="vouchers-tab-wallet-indicator">
-      <WalletIndicator />
-    </div>
-    <div class="lg:hidden" id="vouchers-tab-token-indicator">
-      <TokenIndicator />
-    </div>
-  </div>
-  <div class="p-3">
-    <div class="text-center mt-10 mb-5">
+<div class="p-3 ">
+  <!-- Container adapting to screen size -->
+  <div class="text-center mt-10 mb-5">
       <span class="text-2xl font-black">Vouchers</span>
       <p class="mt-2 text-sm text-gray-400">
         Here you can create new vouchers to share tokens with your friends in
@@ -33,12 +16,9 @@
       >
         Create Voucher​
       </button>
-    </div>
-
-    <div
-      v-if="allVouchers?.length > 0"
-      class="flex items-center justify-between text-2xl font-bold tracking-tight text-white sm:text-2xl"
-    >
+  </div>
+<!-- Voucher History -->
+    <div v-if="allVouchers?.length > 0" class="flex items-center justify-between text-2xl font-bold tracking-tight text-white sm:text-2xl">
       <!-- Linke Seite: Überschrift -->
       <div>History</div>
 
@@ -51,7 +31,7 @@
         Clear all history
       </button>
     </div>
-
+<!-- Voucher History -->
     <div class="flex-1 overflow-y-auto bg-gray-900 mt-5 rounded-md">
       <table class="w-full whitespace-nowrap text-left">
         <tbody class="divide-y divide-white/10">
@@ -366,11 +346,13 @@
       :close="closeStatusOverlay"
     />
   </div>
+
+ 
 </template>
 
 <script setup lang="ts">
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { watch, ref, onMounted } from "vue";
+import { watch, ref, onMounted, onUnmounted } from "vue";
 import Qrcode from "vue-qrcode";
 import { divideBigIntToFloat, formatDecimalBalance } from "~/helpers/numbers";
 import { useAccount } from "~/store/account";
@@ -386,6 +368,7 @@ import {
 import { TypeRegistry, u32 } from "@polkadot/types";
 import StatusOverlay from "~/components/overlays/StatusOverlay.vue";
 import { Health, useSystemHealth } from "~/store/systemHealth";
+import { eventBus } from "@/helpers/eventBus";
 import {
   cryptoWaitReady,
   encodeAddress,
@@ -395,6 +378,12 @@ import {
 import { Keyring } from "@polkadot/keyring";
 import { u8aToHex } from "@polkadot/util";
 import { useRouter } from "vue-router";
+
+import { useResponsive } from '@/helpers/useResponsive';
+
+const { isMobile, isMediumScreen } = useResponsive()
+
+
 import {
   Voucher,
   storeVoucher,
@@ -402,11 +391,7 @@ import {
   forgetAllVouchersForShard,
   forgetVoucherForShard,
 } from "~/lib/voucherStorage";
-import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
-import HealthIndicator from "~/components/ui/HealthIndicator.vue";
-import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 
 const accountStore = useAccount();
 const incogniteeStore = useIncognitee();

@@ -1,16 +1,6 @@
 <template>
   <div class="p-3">
     <div class="flex mb-3 justify-between items-center">
-      <button
-        @click="eventBus.emit('toggleSidebar')"
-        class="lg:hidden text-white focus:outline-none text-2xl"
-        id="sidebar-open"
-      >
-        ☰
-      </button>
-      <div class="lg:hidden">
-        <WalletNumber />
-      </div>
     </div>
     <InfoBanner
       v-if="!accountStore.hasInjector"
@@ -22,8 +12,8 @@
         enable your extension and reload the page in case the connect button
         doesn't work."
     />
-
-    <div class="container">
+ 
+    <div class="container overflow-y-auto" style="max-height: 85vh; height: 100%;">
       <!-- interaction with the wallet -->
       <div
         v-if="accountStore.hasInjector"
@@ -298,7 +288,7 @@
       <hr
         class="my-20 border-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"
       />
-
+      <!-- TEERDAY Statistics-->
       <div class="mb-20">
         <dl
           class="mt-5 grid grid-cols-1 divide-y divide-gray-700 overflow-hidden rounded-lg bg-gray-800 shadow md:grid-cols-3 md:divide-x md:divide-y-0"
@@ -394,14 +384,17 @@
         </dl>
       </div>
 
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10">
+      
+
+        <!-- Accordion -->
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 my-10  overflow-y-auto">
         <!-- Accordion 1: TEERdays Intro -->
         <div class="sm:col-span-6">
           <button
             class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
             @click="toggleAccordion(1)"
           >
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 class="text-2xl font-bold tracking-tight sm:text-2xl">
               TEERdays Intro
             </h2>
           </button>
@@ -429,7 +422,7 @@
             class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
             @click="toggleAccordion(2)"
           >
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 class="text-2xl font-bold tracking-tight sm:text-2xl">
               Why collect TEERdays?
             </h2>
           </button>
@@ -454,7 +447,7 @@
             class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
             @click="toggleAccordion(3)"
           >
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+          <h2 class="text-2xl font-bold tracking-tight sm:text-2xl">
               How to participate?
             </h2>
           </button>
@@ -498,7 +491,9 @@
             class="accordion-header text-left text-white bg-gray-800 w-full p-4 rounded-md"
             @click="toggleAccordion(4)"
           >
-            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">Rules</h2>
+          <h2 class="text-2xl font-bold tracking-tight sm:text-2xl">
+            Rules
+          </h2>
           </button>
           <transition name="smooth-accordion">
             <div
@@ -532,6 +527,7 @@
         </div>
       </div>
 
+      <!-- Leaderboard -->
       <div class="my-40 mx-auto max-w-7xl">
         <div class="sm:flex sm:items-center">
           <div class="sm:flex-auto">
@@ -609,7 +605,8 @@
             </div>
           </div>
         </div>
-      </div>
+    
+    </div>
     </div>
 
     <div
@@ -674,9 +671,7 @@ import {
 import { Bond, PendingUnlock } from "~/lib/teerDays";
 import InfoBanner from "~/components/ui/InfoBanner.vue";
 import { formatBigDecimalBalance } from "~/helpers/numbers.ts";
-import HealthIndicator from "~/components/ui/HealthIndicator.vue";
-import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletNumber from "~/components/ui/WalletIndicator.vue";
+
 
 const activeAccordion = ref(null);
 
@@ -1055,14 +1050,28 @@ const props = defineProps({
 }
 
 /* Für mobile Bildschirme (max-width: 640px) */
-@media (max-width: 640px) {
+@media (max-width: 520px) {
   .wallet-address {
-    max-width: 10ch; /* Zeigt nur die ersten 5 Zeichen */
+    max-width: 10ch; /* Zeigt nur die ersten 10 Zeichen */
   }
 }
 
-/* Für größere Bildschirme (ab 641px) */
-@media (min-width: 641px) {
+/* Für mobile Bildschirme (max-width: 640px) */
+@media (min-width: 521px) and (max-width: 641px) {
+  .wallet-address {
+    max-width: 20ch; /* Zeigt nur die ersten 10 Zeichen */
+  }
+}
+
+/* Für mittlere Bildschirme (zwischen 641 bis 800px) */
+@media (min-width: 641px) and (max-width: 800px) {
+  .wallet-address {
+    max-width: 30ch; /* Zeigt nur die ersten 20 Zeichen */
+  }
+}
+
+/* Für größere Bildschirme (ab 801px) */
+@media (min-width: 801px) {
   .wallet-address {
     max-width: none; /* Zeigt die komplette Adresse an */
   }

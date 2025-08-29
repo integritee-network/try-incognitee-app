@@ -57,7 +57,6 @@
 import { ref, computed } from "vue";
 import { Paseo, TEER, DOT } from "@/configs/assets";
 import { ChainId } from "@/configs/chains.ts";
-import { defineProps } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 
 // Props werden übergeben

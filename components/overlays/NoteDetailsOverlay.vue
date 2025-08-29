@@ -98,7 +98,6 @@
 
 <script setup lang="ts">
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps } from "vue";
 import { Note, NoteDirection } from "~/lib/notes";
 import { formatDate } from "~/helpers/date";
 import { divideBigIntToFloat } from "~/helpers/numbers";

@@ -1,31 +1,9 @@
 <template>
-  <div class="mt-3 sm:mt-5 px-3">
-    <div class="flex justify-between items-center">
-      <button
-        @click="eventBus.emit('toggleSidebar')"
-        class="lg:hidden text-white focus:outline-none text-2xl"
-        id="sidebar-open"
-      >
-        ☰
-      </button>
-      <div class="lg:hidden">
-        <HealthIndicator id="header-health-indicator" />
-      </div>
-      <div class="lg:hidden">
-        <WalletIndicator id="header-wallet-indicator" />
-      </div>
-      <div class="lg:hidden">
-        <TokenIndicator id="header-token-indicator" />
-      </div>
-    </div>
-  </div>
-  <div class="px-5 py-5 sm:py-5 lg:px-5 lg:py-5">
+  <div class="p-3">
     <h2 class="flex text-2xl font-bold tracking-tight text-white sm:text-2xl">
       Frequently Asked Questions
     </h2>
-    <div
-      class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl"
-    >
+    <div class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl">
       Introduction
     </div>
     <p class="my-4 mb-10 text-sm text-gray-400">
@@ -34,98 +12,81 @@
       find answers to the most common questions about our product, its features,
       and how it can benefit you.
     </p>
-    <div v-for="(section, index) in faqSections" :key="index" class="mt-8">
-      <h3
-        class="flex text-lg font-bold tracking-tight text-incognitee-blue sm:text-lg mb-5"
-      >
-        {{ section.title }}
-      </h3>
-      <!-- Fragen und Antworten -->
-      <dl class="space-y-6 divide-y divide-white/10 px-4 py-2">
-        <Disclosure
-          as="div"
-          v-for="faq in section.questions"
-          :key="faq.question"
-          v-slot="{ open }"
-        >
-          <dt>
-            <DisclosureButton
-              class="flex w-full justify-between text-left text-white my-5"
-            >
-              <span class="font-semibold">{{ faq.question }}</span>
-              <span class="ml-6 flex h-7 items-center">
-                <PlusSmallIcon
-                  v-if="!open"
-                  class="w-6 h-6"
-                  aria-hidden="true"
-                />
-                <MinusSmallIcon v-else class="w-6 h-6" aria-hidden="true" />
-              </span>
-            </DisclosureButton>
-          </dt>
-          <DisclosurePanel as="dd" class="mt-2 mb-5 pr-12">
-            <p class="text-sm text-gray-400" v-html="faq.answer"></p>
-          </DisclosurePanel>
-        </Disclosure>
-      </dl>
-    </div>
-    <div
-      class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl"
-    >
+    <div class="p-4 overflow-y-auto" style="max-height: 80vh; height: 100%;">
+      <div v-for="(section, index) in faqSections" :key="index" class="mt-8">
+        <h3 class="flex text-lg font-bold tracking-tight text-incognitee-blue sm:text-lg mb-5">
+          {{ section.title }}
+        </h3>
+        <!-- Fragen und Antworten -->
+        <dl class="space-y-6 divide-y divide-white/10 px-4 py-2">
+          <Disclosure
+            v-for="(faq, faqIdx) in section.questions"
+            :key="faqIdx"
+            as="div"
+            class="pt-6"
+            v-slot="{ open }"
+          >
+            <dt>
+              <DisclosureButton
+                class="flex w-full justify-between text-left text-white my-5"
+              >
+                <span class="font-semibold">{{ faq.question }}</span>
+                <span class="ml-6 flex h-7 items-center">
+                  <PlusSmallIcon
+                    v-if="!open"
+                    class="w-6 h-6"
+                    aria-hidden="true"
+                  />
+                  <MinusSmallIcon v-else class="w-6 h-6" aria-hidden="true" />
+                </span>
+              </DisclosureButton>
+            </dt>
+            <DisclosurePanel as="dd" class="mt-2 mb-5 pr-12">
+              <p class="text-sm text-gray-400" v-html="faq.answer"></p>
+            </DisclosurePanel>
+          </Disclosure>
+        </dl>
+      </div>
+      <div class="flex mt-5 text-xl font-bold tracking-tight text-white sm:text-xl">
       Need More Help?
     </div>
-    <p class="my-4 mb-10 text-sm text-gray-400">
-      If you have any additional questions or need support, please contact us at
-      <a
-        href="mailto:support@incognitee.io"
-        class="text-incognitee-green hover:underline"
-        >support@integritee.network</a
-      >
-      or via the full documentation at<a
-        href="https://docs.incognitee.io"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-incognitee-green hover:underline"
-      >
-        docs.incognitee.io</a
-      >.
-    </p>
+        <p class="my-4 mb-10 text-sm text-gray-400 ">
+          If you have any additional questions or need support, please contact us at
+          <a
+            href="mailto:support@incognitee.io"
+            class="text-incognitee-green hover:underline"
+            >support@integritee.network</a
+          >
+          or via the full documentation at<a
+            href="https://docs.incognitee.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-incognitee-green hover:underline"
+          >
+            docs.incognitee.io</a
+          >.
+        </p>  
+    </div>
+    
+    
   </div>
 </template>
 
-<script>
+<script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/vue/24/outline";
-import { eventBus } from "@/helpers/eventBus";
-import HealthIndicator from "~/components/ui/HealthIndicator.vue";
-import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import WalletIndicator from "~/components/ui/WalletIndicator.vue";
 import {
   INCOGNITEE_SESSION_PROXY_DEPOSIT,
   INCOGNITEE_TX_FEE,
   INCOGNITEE_UNSHIELDING_FEE,
   INCOGNITEE_SHIELDING_FEE_FRACTION,
 } from "~/configs/incognitee";
+import { ref } from "vue";
+import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/vue/24/outline";
 
-export default {
-  computed: {
-    eventBus() {
-      return eventBus;
-    },
-  },
-  components: {
-    TokenIndicator,
-    WalletIndicator,
-    HealthIndicator,
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-    MinusSmallIcon,
-    PlusSmallIcon,
-  },
-  data() {
-    return {
-      faqSections: [
+
+const show = ref(true);
+
+const faqSections = ref([
         {
           title: "General Questions",
           questions: [
@@ -292,8 +253,7 @@ export default {
           ],
         },
       ],
-    };
-  },
-};
+    );
+  
 </script>
 <style scoped></style>

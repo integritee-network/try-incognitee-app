@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-screen p-8 bg-incognitee-blue text-white"
+    class="flex flex-col items-center justify-center min-h-screen p-4 sm:p-8 bg-incognitee-blue text-white"
   >
     <div
-      class="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700"
+      class="max-w-md w-full bg-gray-800 p-5 sm:p-8 rounded-lg shadow-lg border border-gray-700"
     >
-      <div v-if="isLoading" class="flex flex-col items-center">
+      <div v-if="isLoading" class="flex flex-col items-center py-4">
         <div
           class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-green-500 mb-4"
         ></div>
@@ -15,7 +15,7 @@
         </p>
       </div>
 
-      <div v-else-if="isSuccess" class="flex flex-col items-center">
+      <div v-else-if="isSuccess" class="flex flex-col items-center py-2">
         <div class="bg-green-500 rounded-full p-4 mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -37,13 +37,13 @@
           Your credits have been added to your wallet.
         </p>
 
-        <div class="bg-gray-700 p-4 rounded-lg w-full mb-6">
+        <div class="bg-gray-700 p-4 rounded-lg w-full mb-6 overflow-hidden">
           <div class="flex justify-between mb-2">
             <span class="text-gray-400">Transaction:</span>
             <a
               :href="transactionUrl"
               target="_blank"
-              class="text-blue-400 hover:text-blue-300 truncate max-w-[200px]"
+              class="text-blue-400 hover:text-blue-300 truncate max-w-[140px] sm:max-w-[200px]"
               v-if="transactionHash"
             >
               {{ transactionHash.substring(0, 10) }}...{{
@@ -60,12 +60,12 @@
           </div>
         </div>
 
-        <button @click="returnToChat" class="btn btn_gradient w-full mt-4 h-10">
+        <button @click="returnToChat" class="btn btn_gradient w-full mt-4 h-12 min-h-[3rem] text-base">
           Return to Chat
         </button>
       </div>
 
-      <div v-else class="flex flex-col items-center">
+      <div v-else class="flex flex-col items-center py-2">
         <div class="bg-red-500 rounded-full p-4 mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@
           }}
         </p>
 
-        <button @click="returnToChat" class="btn btn_gradient w-full mt-4 h-10">
+        <button @click="returnToChat" class="btn btn_gradient w-full mt-4 h-12 min-h-[3rem] text-base">
           Return to Chat
         </button>
       </div>
@@ -155,11 +155,12 @@ onMounted(async () => {
   console.log("Current URL:", window.location.href);
   console.log("Account Store State:", {
     address: accountStore.getAddress,
-    isConnected: accountStore.isConnected,
+    hasAccount: accountStore.account !== null
   });
 
-  // Check if wallet is connected
-  if (!accountStore.isConnected && !seed && !address) {
+  // Check if wallet is connected - use account directly as isConnected might not exist
+  const hasConnectedWallet = accountStore.account !== null;
+  if (!hasConnectedWallet && !seed && !address) {
     console.error("No wallet connected");
     isLoading.value = false;
     errorMessage.value =

@@ -68,6 +68,9 @@ export default defineNuxtConfig({
   experimental: {
     externalVue: false,
   },
+  nitro: {
+    compatibilityDate: '2025-08-29',
+  },
   routeRules: {
     "/": { ssr: false },
     "/dot": { ssr: false },

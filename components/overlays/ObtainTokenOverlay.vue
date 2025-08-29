@@ -100,7 +100,6 @@
 
 <script setup lang="ts">
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps } from "vue";
 
 const props = defineProps({
   show: {

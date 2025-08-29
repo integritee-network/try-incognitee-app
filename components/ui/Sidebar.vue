@@ -3,7 +3,8 @@
   <!-- Sidebar -->
   <div
     :class="[
-      'bg-incognitee-blue border-r border-gray-800 fixed top-0 left-0 h-full transform transition-transform lg:translate-x-0 w-64 z-50 flex flex-col justify-between text-white',
+      'bg-incognitee-blue border-r border-gray-800 fixed top-0 left-0 h-full transform transition-transform lg:translate-x-0 z-50 flex flex-col justify-between text-white',
+      'w-full max-w-[280px] sm:w-64',
       isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
     ]"
   >
@@ -13,10 +14,12 @@
         <Incognitee class="h-5" />
         <button
           @click="eventBus.emit('toggleSidebar')"
-          class="lg:hidden text-white focus:outline-none"
+          class="lg:hidden text-white focus:outline-none p-2 -mr-2"
           id="sidebar-close"
         >
-          ✕
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
         </button>
       </div>
 
@@ -106,6 +109,36 @@
               </svg>
 
               Messages
+            </button>
+          </li>
+
+          <li class="px-4">
+            <button
+              class="flex items-center w-full text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 px-2 py-2 rounded-md"
+              @click="
+                () => {
+                  emitEvent('switchToOmniChat');
+                  toggleSidebar();
+                }
+              "
+              id="sidebar-omnichat"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"
+                />
+              </svg>
+
+              OmniChat
             </button>
           </li>
           <li
@@ -301,12 +334,14 @@
                   />
                 </div>
                 <div v-else class="spinner"></div>
-                <div v-if="getHubIconUrlForAsset(selectedToken)">
-                  <img
-                    :src="getHubIconUrlForAsset(selectedToken)"
-                    class="w-[14px] h-[14px] mr-2"
-                  />
-                </div>
+                <template v-if="typeof selectedToken === 'string'">
+                  <div v-if="getHubIconUrlForAsset(selectedToken)">
+                    <img
+                      :src="getHubIconUrlForAsset(selectedToken) || ''"
+                      class="w-[14px] h-[14px] mr-2"
+                    />
+                  </div>
+                </template>
               </div>
 
               <!-- Token Name -->
@@ -357,7 +392,8 @@
             <!-- Dropdown Menu -->
             <div
               v-show="isOpen"
-              class="absolute bottom-full mb-2 w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
+              class="absolute w-full rounded-md bg-gray-800 border border-gray-700 shadow-lg text-gray-400 z-10"
+              :class="{'bottom-full mb-2': !isMobile, 'top-full mt-2': isMobile}"
             >
               <div
                 v-for="item in getSelectableTokens(
@@ -439,21 +475,19 @@
   <!-- Overlay: Hintergrund abdunkeln nur in mobiler Ansicht -->
   <div
     v-if="isSidebarOpen"
-    class="fixed inset-0 bg-black bg-opacity-90 z-40 lg:hidden"
+    class="fixed inset-0 bg-black bg-opacity-90 z-40 lg:hidden backdrop-blur-sm"
     @click="toggleSidebar"
   ></div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, defineProps, watch } from "vue";
+import { ref, onMounted, onUnmounted, computed, defineProps, watch, onBeforeMount } from "vue";
 import HealthIndicator from "@/components/ui/HealthIndicator.vue";
 import { useAccount } from "@/store/account";
 import { eventBus } from "@/helpers/eventBus";
-import Incognitee from "@/assets/img/incognitee-full-logo.svg";
-import TEERdays from "@/public/img/index/TEERdays-icon-white.svg";
-import Paseo from "assets/img/paseo-logo.svg";
-import DOT from "@/assets/img/polkadot-logo.svg";
-import TEER from "@/assets/img/logo-icon.svg";
+import Incognitee from "public/img/incognitee-full-logo.svg";
+import TEERdays from "public/img/index/TEERdays-icon-white.svg";
+import { DOT, TEER } from "@/configs/assets";
 import { useRouter } from "vue-router";
 import { asset, incogniteeSidechain } from "~/lib/environmentConfig";
 import {
@@ -461,11 +495,12 @@ import {
   getIconUrlForAsset,
   getMaturityForAsset,
   getSelectableTokens,
-} from "~/configs/assets.ts";
+} from "~/configs/assets";
 import { isBetaSidechain, isSidechainTestnet } from "~/configs/chains";
 
 const isOpen = ref(false);
-const selectedToken = ref("PAS");
+const selectedToken = ref<string>("PAS");
+const isMobile = ref(false);
 const router = useRouter();
 const accountStore = useAccount();
 
@@ -473,7 +508,7 @@ const toggleTokenDropdown = () => {
   isOpen.value = !isOpen.value;
 };
 
-const selectToken = (item) => {
+const selectToken = (item: { label: string; value: string }) => {
   const currentQuery = { ...router.currentRoute.value.query };
   // replace the last part of the url path with the selected token
   let newPath = router.currentRoute.value.path.replace(
@@ -498,47 +533,76 @@ const selectToken = (item) => {
 watch(
   () => accountStore.getSymbol(asset.value),
   (newValue) => {
-    selectedToken.value = newValue;
+    selectedToken.value = newValue ?? "PAS";
   },
 );
 
-// Neuer Zustand und Methode für Menü
-const isMenuOpen = ref(false);
+// // Sidebar-State
+const isSidebarOpen = ref(false);
 
-const closeMenu = () => {
-  isMenuOpen.value = false;
+const closeSidebar = () => {
+  isSidebarOpen.value = false;
 };
 
-const handleOutsideClick = (event) => {
+const handleOutsideClick = (event: MouseEvent) => {
   const dropdown = document.getElementById("menu-button");
-  if (dropdown && !dropdown.contains(event.target)) {
-    closeMenu();
+  if (
+    dropdown &&
+    event.target instanceof Node &&
+    !dropdown.contains(event.target)
+  ) {
+    closeSidebar();
   }
 };
-
-// Sidebar-State (local)
-const isSidebarOpen = ref(false);
 
 // Event-Handler für Sidebar-Toggle
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
+  
+  // When closing sidebar on mobile, also close any open dropdowns
+  if (!isSidebarOpen.value) {
+    isOpen.value = false;
+  }
 };
 
 // Event-Abonnement bei Mounten und Entfernen bei Unmounten
+const checkIfMobile = () => {
+  isMobile.value = window.innerWidth < 1024;
+  isSidebarOpen.value = false;
+};
+
+onBeforeMount(() => {
+  checkIfMobile();
+});
+
 onMounted(() => {
-  eventBus.on("toggleSidebar", toggleSidebar);
+  eventBus.on("toggleSidebar" as any, toggleSidebar);
   document.addEventListener("click", handleOutsideClick);
-  selectedToken.value = accountStore.getSymbol(asset.value);
+  window.addEventListener("resize", checkIfMobile);
+  selectedToken.value = accountStore.getSymbol(asset.value) ?? "PAS";
 });
 
 onUnmounted(() => {
-  eventBus.off("toggleSidebar", toggleSidebar);
+  eventBus.off("toggleSidebar" as any, toggleSidebar);
   document.removeEventListener("click", handleOutsideClick);
+  window.removeEventListener("resize", checkIfMobile);
 });
 
 // Event-Emitter-Funktionen
-const emitEvent = (eventName: string) => {
-  eventBus.emit(eventName);
+type EventName =
+  | "toggleSidebar"
+  | "switchToWallet"
+  | "switchToVouchers"
+  | "switchToMessaging"
+  | "openSessionProxiesOverlay"
+  | "addressClicked"
+  | "switchToTeerDays"
+  | "switchToSwap"
+  | "switchToFaq"
+  | "switchToOmniChat";
+
+const emitEvent = (eventName: EventName) => {
+  eventBus.emit(eventName as any);
 };
 </script>
 
@@ -551,10 +615,28 @@ const emitEvent = (eventName: string) => {
   max-width: 10ch; /* Maximale Länge: 10 Zeichen */
 }
 
+/* Touch-friendly adjustments for mobile */
+@media (max-width: 640px) {
+  /* Increase touch target sizes */
+  nav li button, .dropdown-trigger {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  /* Make sure text remains visible */
+  .truncate {
+    max-width: 150px;
+  }
+  
+  /* Improve modal behavior on small screens */
+  #more-popup {
+    max-width: 90vw;
+  }
+}
+
 /* Für größere Bildschirme (ab 641px) */
 @media (min-width: 641px) {
   .wallet-address {
-    max-width: 10ch; /* Begrenze auch hier auf 10 Zeichen */
+    max-width: 14ch; /* Slightly more characters visible on larger screens */
   }
 }
 </style>

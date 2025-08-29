@@ -1,23 +1,6 @@
 <template>
   <div v-if="show" class="p-3">
-    <div class="flex justify-between items-center">
-      <button
-        @click="eventBus.emit('toggleSidebar')"
-        class="lg:hidden text-white focus:outline-none text-2xl"
-        id="sidebar-open"
-      >
-        ☰
-      </button>
-      <div class="lg:hidden" id="wallet-tab-health-indicator">
-        <HealthIndicator />
-      </div>
-      <div class="lg:hidden" id="wallet-tab-wallet-indicator">
-        <WalletIndicator />
-      </div>
-      <div class="lg:hidden" id="wallet-tab-token-indicator">
-        <TokenIndicator />
-      </div>
-    </div>
+
     <WarningBanner
       v-if="
         (accountStore.getSymbol(asset) === 'TEER' ||
@@ -1158,12 +1141,7 @@ import { isNumber } from "@polkadot/util";
 import { formatMoment } from "~/helpers/date";
 import { eventBus } from "@/helpers/eventBus";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";
-import SessionProxiesOverlay from "~/components/overlays/SessionProxiesOverlay.vue";
-import HealthIndicator from "~/components/ui/HealthIndicator.vue";
-import IncogniteeLogo from "~/components/Logo/incognitee-logo.vue";
-import TokenIndicator from "~/components/ui/TokenIndicator.vue";
-import MessagingTab from "~/components/tabs/MessagingTab.vue";
-import WalletIndicator from "~/components/ui/WalletIndicator.vue";
+
 import {
   assetHubRoute,
   ChainAssetId,

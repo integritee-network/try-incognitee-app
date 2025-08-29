@@ -188,7 +188,7 @@
 </template>
 <script setup lang="ts">
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { defineProps, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
 import {
   cryptoWaitReady,

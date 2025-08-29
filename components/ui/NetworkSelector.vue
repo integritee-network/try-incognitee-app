@@ -55,12 +55,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Paseo from "assets/img/paseo-logo.svg";
-import USDC from "assets/img/usdc-logo.svg";
-import TEER from "@/assets/img/logo-icon.svg";
-import DOT from "@/assets/img/polkadot-logo.svg";
+import { Paseo, TEER, DOT } from "@/configs/assets";
 import { ChainId } from "@/configs/chains.ts";
-import { defineProps } from "vue";
 import { chainConfigs } from "@/configs/chains.ts";
 
 // Props werden übergeben

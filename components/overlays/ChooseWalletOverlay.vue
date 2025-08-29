@@ -173,7 +173,7 @@ import {
   extensionAccounts,
 } from "~/lib/signerExtensionUtils";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
-import { computed, defineProps, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useAccount } from "~/store/account.ts";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { SessionProxyRole } from "~/lib/sessionProxyStorage";

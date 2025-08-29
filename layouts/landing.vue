@@ -15,8 +15,7 @@
 </template>
 
 <script setup lang="ts">
-// Import any necessary components or utilities here
-import Incognitee from "assets/img/incognitee-mask.svg";
+const Incognitee = "/img/incognitee-mask.svg";
 </script>
 
 <style scoped>

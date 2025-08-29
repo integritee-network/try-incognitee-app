@@ -55,28 +55,13 @@
 
       <!-- Sidebar -->
       <div
-        v-if="!isMobile || !showChatDetail"
-        :class="isMobile ? 'w-full' : 'w-full'"
+        v-if="(!isMobile && !showChatDetail) || (isMobile && showSidebar && !showChatDetail)"
+        :class="isMobile ? 'w-full' : isLargeScreen ? 'md:w-1/3' : 'md:w-1/4'"
         class="bg-incognitee-blue border-r border-gray-700 flex flex-col h-screen overflow-hidden"
       >
         <div class="px-4 py-4 flex items-center justify-between">
-          <!-- Sidebar-Button -->
-          <button
-            @click="eventBus.emit('toggleSidebar')"
-            class="lg:hidden text-white focus:outline-none text-2xl"
-            id="sidebar-open"
-          >
-            ☰
-          </button>
-
-          <!-- Linksbündiger Titel -->
-          <div class="text-2xl font-bold tracking-tight text-white">Chats</div>
-          <div class="lg:hidden" id="messaging-tab-health-indicator">
-            <HealthIndicator />
-          </div>
-          <div class="lg:hidden" id="messaging-tab-token-indicator">
-            <TokenIndicator />
-          </div>
+    
+      
 
           <!-- Rechtsbündiges "Neue Nachricht" Icon -->
           <!-- Button zum Öffnen des Overlays -->
@@ -179,7 +164,7 @@
       <!-- Chat window -->
       <div
         v-if="!isMobile || showChatDetail"
-        :class="isMobile ? 'w-full' : 'md:w-2/3'"
+        :class="isMobile ? 'w-full' : isLargeScreen ? 'md:w-2/3' : 'md:w-3/4'"
         class="bg-incognitee-blue flex flex-col h-screen relative"
         :style="{ height: chatWindowHeight }"
       >
@@ -449,7 +434,7 @@ import { eventBus } from "@/helpers/eventBus";
 import { txFeeBase, txFeePerByte } from "~/configs/incognitee";
 import { Health, useSystemHealth } from "~/store/systemHealth";
 import { TypeRegistry, u32 } from "@polkadot/types";
-import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useAccount } from "~/store/account";
 import { useIncognitee } from "~/store/incognitee";
 import OverlayDialog from "~/components/overlays/OverlayDialog.vue";
@@ -483,15 +468,24 @@ const adjustChatWindowHeight = () => {
   const viewportHeight = window.innerHeight;
   chatWindowHeight.value = `${viewportHeight}px`;
 };
+// Sidebar toggle state
+const showSidebar = ref(false); // Default to hidden on mobile
+
 // Ensure overlay is shown on reload
 onMounted(() => {
   showStartOverlay.value = false;
   window.addEventListener("resize", adjustChatWindowHeight);
   adjustChatWindowHeight();
+  
+  // Listen for sidebar toggle events
+  eventBus.on('toggleSidebar', () => {
+    showSidebar.value = !showSidebar.value;
+  });
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", adjustChatWindowHeight);
+  eventBus.off('toggleSidebar'); // Cleanup event bus listener
 });
 
 // Reaktive Variable für das Overlay

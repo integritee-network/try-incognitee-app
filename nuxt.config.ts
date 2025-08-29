@@ -1,7 +1,6 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  target: "static",
   runtimeConfig: {
     public: {
       SHIELDING_TARGET: process.env.SHIELDING_TARGET,
@@ -69,6 +68,9 @@ export default defineNuxtConfig({
   experimental: {
     externalVue: false,
   },
+  nitro: {
+    compatibilityDate: '2025-08-29',
+  },
   routeRules: {
     "/": { ssr: false },
     "/dot": { ssr: false },
@@ -85,6 +87,7 @@ export default defineNuxtConfig({
     "/eth": { ssr: false },
     "/gtn": { ssr: false },
     "/teerdays-lp": { ssr: false },
+    "/omnichat": { ssr: false },
     //"/referral": { ssr: false },
     //"/referraltc": { ssr: false },
   },
@@ -103,6 +106,7 @@ export default defineNuxtConfig({
   plugins: [
     { src: "~/plugins/lockScroll", mode: "client" },
     "~/plugins/qrcode-reader.ts",
+    "~/plugins/fontawesome.ts",
   ],
   svgo: {
     defaultImport: "component",

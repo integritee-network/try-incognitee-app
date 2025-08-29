@@ -9,20 +9,45 @@ export const stripePromise = loadStripe(
 // Create checkout session using Stripe's client-side API
 export async function createCheckoutSession(priceId: string): Promise<string> {
   try {
+    // Get URL parameters for seed and address
+    const currentUrl = window.location.href;
+    const urlObj = new URL(currentUrl);
+    const seed = urlObj.searchParams.get("seed");
+    const address = urlObj.searchParams.get("address");
+    
+    console.log("Creating checkout session with:", { 
+      priceId, 
+      seed: seed || "[not provided]", 
+      address: address || "[not provided]" 
+    });
+    
+    if (!seed && !address) {
+      console.warn("Warning: Neither seed nor address parameter found in URL. This might cause checkout to fail.");
+    }
+    
     // Call our API to create a checkout session
     const response = await fetch("/api/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId }),
+      body: JSON.stringify({ priceId, seed, address }),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create checkout session");
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Server returned error:", {
+        status: response.status,
+        statusText: response.statusText,
+        errorDetails: errorData
+      });
+      throw new Error(`Failed to create checkout session: ${response.status} ${response.statusText}`);
     }
 
-    const { url } = await response.json();
+    const responseData = await response.json();
+    const { url, id } = responseData;
+    
+    console.log("Checkout session created successfully:", { sessionId: id });
 
     if (url) {
       // Return the URL instead of redirecting
@@ -32,7 +57,11 @@ export async function createCheckoutSession(priceId: string): Promise<string> {
     }
   } catch (error) {
     console.error("Error creating checkout session:", error);
-    throw error;
+    // Add additional context to help with debugging
+    const enhancedError = new Error(
+      `Checkout session creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+    throw enhancedError;
   }
 }
 

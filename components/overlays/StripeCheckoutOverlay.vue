@@ -1,16 +1,16 @@
 <template>
   <div
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 py-6 overflow-y-auto"
   >
     <div
-      class="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-700"
+      class="bg-gray-800 rounded-lg p-4 sm:p-6 max-w-md w-full border border-gray-700"
     >
       <!-- Modal Header -->
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
         <h2 class="text-xl font-bold">Buy Incognitee Credits</h2>
         <button
           @click="$emit('close')"
-          class="text-gray-400 hover:text-white p-1 rounded-full hover:bg-gray-700"
+          class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,12 +31,12 @@
       <div class="mb-4">
         <div
           v-if="!accountStore.account"
-          class="flex flex-col items-center p-3 border border-gray-700 rounded-lg"
+          class="flex flex-col items-center p-4 border border-gray-700 rounded-lg"
         >
           <p class="text-sm text-gray-400 mb-2">
             Connect your wallet to purchase credits
           </p>
-          <button @click="connectWallet" class="btn btn-outline">
+          <button @click="connectWallet" class="btn btn-outline h-12 min-h-[3rem] px-6 text-base">
             <font-awesome-icon :icon="['fas', 'wallet']" class="mr-2" /> Connect
             Wallet
           </button>
@@ -56,11 +56,11 @@
         <font-awesome-icon :icon="['fas', 'spinner']" spin class="mr-2" />
         Loading packages...
       </div>
-      <div v-else class="space-y-3">
+      <div v-else class="space-y-4">
         <div
           v-for="pkg in creditPackages"
           :key="pkg.id"
-          class="border rounded-lg p-4 cursor-pointer transition-all"
+          class="border rounded-lg p-4 sm:p-5 cursor-pointer transition-all"
           :class="
             selectedPackage?.id === pkg.id
               ? 'border-incognitee-green bg-gray-700'
@@ -68,7 +68,7 @@
           "
           @click="selectPackage(pkg)"
         >
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center flex-wrap gap-2">
             <h3 class="font-medium text-lg">{{ pkg.name }}</h3>
             <span
               v-if="pkg.bestValue"
@@ -92,7 +92,7 @@
       <button
         @click="checkout"
         :disabled="!selectedPackage || checkoutLoading || !accountStore.account"
-        class="btn btn_gradient w-full mt-4 h-10"
+        class="btn btn_gradient w-full mt-6 h-12 min-h-[3rem] text-base"
       >
         <span v-if="!accountStore.account">Connect Wallet First</span>
         <span v-else-if="checkoutLoading">
@@ -130,6 +130,7 @@ onMounted(async () => {
   try {
     // Fetch credit packages from the API
     creditPackages.value = await fetchCreditPackages();
+    console.log("creditPackages:", creditPackages);
 
     // Select the first package by default
     if (creditPackages.value.length > 0) {
@@ -143,7 +144,7 @@ onMounted(async () => {
 });
 
 // Methods
-function selectPackage(pkg) {
+function selectPackage(pkg: CreditPackage) {
   selectedPackage.value = pkg;
 }
 
@@ -152,11 +153,13 @@ async function connectWallet() {
     // This should integrate with your existing wallet connection logic
     // In a real implementation, this would connect to MetaMask, Polkadot.js, etc.
 
-    // Use the existing account store method
-    if (typeof accountStore.connectWallet === "function") {
-      await accountStore.connectWallet();
+    // Check if account store has methods we need
+    const store = accountStore as any; // Type assertion to bypass strict typing
+    
+    if (typeof store.connectWallet === "function") {
+      await store.connectWallet();
     } else if (
-      typeof accountStore.setAccount === "function" &&
+      typeof store.setAccount === "function" &&
       !accountStore.account
     ) {
       // Mock wallet connection if no connectWallet method exists

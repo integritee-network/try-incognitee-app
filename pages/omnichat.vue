@@ -1,8 +1,7 @@
 <template>
   <div class="h-screen flex flex-col overflow-hidden">
-    <div class="p-4">
-      <h1 class="text-2xl font-bold text-white">OmniChat</h1>
-    </div>
+    
+     
 
     <OmniChat
       :selectedProvider="selectedProvider"

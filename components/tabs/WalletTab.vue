@@ -31,8 +31,8 @@
     />
     <WarningBanner
       :isMobile="isMobile"
-      textMobile="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to 15:00 UTC."
-      textDesktop="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to 15:00 UTC."
+      textMobile="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to Oct 4th 9:00 UTC."
+      textDesktop="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to Oct 4th 9:00 UTC."
     />
     <!-- div v-else>
       <CampaignBanner

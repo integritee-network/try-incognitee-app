@@ -29,6 +29,11 @@
       textMobile="This is a temporary voucher with low security. Please use a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
       textDesktop="You are using a temporary voucher with low security. Everyone who knows your url (including the person who may have shared this url with you) could spend these funds. Please transfer funds to a <a href='https://docs.integritee.network/2-integritee-network/2.4-teer-token/2.4.1-how-to-set-up-a-wallet'>secure wallet</a>"
     />
+    <WarningBanner
+      :isMobile="isMobile"
+      textMobile="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to 15:00 UTC."
+      textDesktop="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to 15:00 UTC."
+    />
     <!-- div v-else>
       <CampaignBanner
         v-if="enableActions && accountStore.getSymbol(asset) === 'TEER'"

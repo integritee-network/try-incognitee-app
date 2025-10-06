@@ -681,7 +681,7 @@ const subscribeToTeerDayStats = async () => {
     "trying to init api at " + chainConfigs[teerdaysNetwork.value].api,
   );
   api = await ApiPromise.create({ provider: wsProvider });
-  accountStore.setDecimals(Number(api.registry.chainDecimals));
+  accountStore.setNativeDecimals(Number(api.registry.chainDecimals));
   accountStore.setSS58Format(Number(api.registry.chainSS58));
   accountStore.setSymbol(String(api.registry.chainTokens));
   console.log("api initialized");

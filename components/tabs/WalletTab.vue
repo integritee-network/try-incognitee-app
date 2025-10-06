@@ -31,8 +31,8 @@
     />
     <WarningBanner
       :isMobile="isMobile"
-      textMobile="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to Oct 4th 9:00 UTC."
-      textDesktop="Incognitee for AssetHub Polkadot will be down for planned maintenance from Oct 3rd. 9:00 UTC to Oct 4th 9:00 UTC."
+      textMobile="Incognitee for AssetHub Polkadot is undergoing planned maintenance since Oct 3rd. 9:00 UTC and it takes longer than planned. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE. We will keep you informed about the progress here."
+      textDesktop="Incognitee for AssetHub Polkadot is undergoing planned maintenance since Oct 3rd. 9:00 UTC and it takes longer than planned. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE. We will keep you informed about the progress here."
     />
     <!-- div v-else>
       <CampaignBanner

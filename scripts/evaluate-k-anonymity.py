@@ -4,20 +4,32 @@ from pymongo import MongoClient
 from collections import defaultdict, Counter
 import networkx as nx
 import numpy as np
+import csv
+import json
 
 # Load environment variables from .env file
 
-# token = "DOT"
-# token = "ETH"
-# token = "USDC.e"
-token = "USDT.e"
+#token = "DOT"
+#token = "ETH"
+#token = "USDC.e"
+#token = "USDT.e"
+#token = "EURC.e"
+#token = "WBTC.e"
+token = "PEPE.e"
 
+with open('../lib/polkadotPeopleIdentities.json', 'r') as f:
+    identities = json.load(f)
+    address_to_username = {entry['address']: entry['username'] for entry in identities}
+
+with open('./incognitoIdentities.json', 'r') as f2:
+    other_identities = json.load(f2)
+    address_to_username.update({entry['address']: entry['username'] for entry in other_identities})
 
 # MongoDB connection URL
 MONGODB_URL = os.getenv("MONGODB_URL")
 
 # Connect to MongoDB
-client = MongoClient(MONGODB_URL)
+client = MongoClient(MONGODB_URL, socketTimeoutMS=30000)
 db = client["asset-hub-polkadot"]
 collection = db["events"]
 
@@ -129,6 +141,59 @@ queries = {
             }
         }
     },
+    "EURC.e": {
+        "decimals": "6",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x1abaea1f7c830bd89acc67ec4af516284b1bc33c"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
     "USDT.e": {
         "decimals": "6",
         "shielding_query": {
@@ -181,6 +246,112 @@ queries = {
                 }
             }
         }
+    },
+    "WBTC.e": {
+        "decimals": "8",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "PEPE.e": {
+        "decimals": "18",
+        "shielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.to": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x6982508145454ce325ddbe47a25d4ec3d2311933"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "unshielding_query": {
+            "section": "foreignAssets",
+            "method": "Transferred",
+            "data.from": "14UsSvuFHWMTNhjkHcRt9gw1TogeWzg6zydVsHqK9EXhWHy9",
+            "data.assetId": {
+                "parents": "2",
+                "interior": {
+                    "X2": [
+                        {
+                            "GlobalConsensus": {
+                                "Ethereum": {
+                                    "chainId": "1"
+                                }
+                            }
+                        },
+                        {
+                            "AccountKey20": {
+                                "network": None,
+                                "key": "0x6982508145454ce325ddbe47a25d4ec3d2311933"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
     }
 }
 
@@ -203,19 +374,33 @@ net_transfers = defaultdict(int)
 gross_shielded = 0
 gross_unshielded = 0
 
-for event in shielding_events:
-    from_address = event["data"]["from"][:8]
-    to_address = event["data"]["to"][:8]
-    amount = int(event["data"]["amount"].replace(",", "")) / 10**decimals
-    gross_shielded += amount
-    net_transfers[(from_address, to_address)] += amount
+with open('shielding_events.csv', 'w', newline='') as shield_file, open('unshielding_events.csv', 'w', newline='') as unshield_file:
+    shield_writer = csv.writer(shield_file)
+    unshield_writer = csv.writer(unshield_file)
+    shield_writer.writerow(['owner', 'from_address', 'to_address', 'amount'])
+    unshield_writer.writerow(['owner', 'from_address', 'to_address', 'amount'])
+    for event in shielding_events:
+        from_address = event["data"]["from"] # [:8]
+        to_address = event["data"]["to"] # [:8]
+        amount = int(str(event["data"]["amount"]).replace(",", "")) / 10**decimals
+        gross_shielded += amount
+        net_transfers[(from_address, to_address)] += amount
+        shield_writer.writerow([event["data"]["from"], event["data"]["to"], amount])
 
-for event in unshielding_events:
-    from_address = event["data"]["from"][:8]
-    to_address = event["data"]["to"][:8]
-    amount = int(event["data"]["amount"].replace(",", "")) / 10**decimals
-    gross_unshielded += amount
-    net_transfers[(to_address, from_address)] -= amount
+    for event in unshielding_events:
+        from_address = event["data"]["from"] #[:8]
+        to_address = event["data"]["to"] #[:8]
+        amount = int(str(event["data"]["amount"]).replace(",", "")) / 10**decimals
+        gross_unshielded += amount
+        net_transfers[(to_address, from_address)] -= amount
+        unshield_writer.writerow([event["data"]["from"], event["data"]["to"], amount])
+
+with open('net_shielding_by_address.csv', 'w', newline='') as net_file:
+    net_writer = csv.writer(net_file)
+    net_writer.writerow(['owner', 'from_address', 'to_address', 'net_amount'])
+    for (from_address, to_address), net_amount in net_transfers.items():
+        username = address_to_username.get(from_address, '')
+        net_writer.writerow([username, from_address, to_address, net_amount])
 
 print(f"Gross shielded amount: {gross_shielded} " + token)
 print(f"Gross unshielded amount: {gross_unshielded} " + token)

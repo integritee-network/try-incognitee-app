@@ -20,7 +20,7 @@ async function main() {
   for (const [key, identity] of identities) {
     const address = key.args[0].toString(); // Extract account address
     try {
-      const display = identity.unwrap()[0].info.display.asRaw.toHuman(); // Extract display name
+      const display = identity.unwrap().info.display.asRaw.toHuman(); // Extract display name
 
       if (display) {
         lut.push({ username: display, address });
@@ -40,6 +40,7 @@ async function main() {
 
   // Write the LUT to a TypeScript file
   fs.writeFileSync(outputFile, lutTs);
+  fs.writeFileSync('../lib/polkadotPeopleIdentities.json', JSON.stringify(lut, null, 2));
 
   console.log(`LUT generated and saved to ${outputFile}`);
 

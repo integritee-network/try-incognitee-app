@@ -31,8 +31,8 @@
     />
     <WarningBanner
       :isMobile="isMobile"
-      textMobile="Incognitee for AssetHub Polkadot is undergoing planned maintenance since Oct 3rd. 9:00 UTC and it takes longer than planned. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE. We will keep you informed about the progress here."
-      textDesktop="Incognitee for AssetHub Polkadot is undergoing planned maintenance since Oct 3rd. 9:00 UTC and it takes longer than planned. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE. We will keep you informed about the progress here."
+      textMobile="Incognitee for AssetHub Polkadot suffered a critical failure. Please read <a href='https://medium.com/@integritee/hardware-failure-incogniteeahp-cc1-incident-post-mortem-64a5797027b6'>our statement</a>. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE."
+      textDesktop="Incognitee for AssetHub Polkadot suffered a critical failure. Please read <a href='https://medium.com/@integritee/hardware-failure-incogniteeahp-cc1-incident-post-mortem-64a5797027b6'>our statement</a>. Affected tokens: DOT, USDC, USDT, EURC, ETH, WBTC, PEPE."
     />
     <!-- div v-else>
       <CampaignBanner
